@@ -1,0 +1,38 @@
+{
+  "activeVersion": "v1.4.2-Live",
+  "serverName": "WoW Forever (Custom Vanilla)",
+  "lastSynced": "2026-11-14",
+  "patchHistory": [
+    {
+      "version": "v1.4.2-Live",
+      "releaseDate": "2026-11-10",
+      "title": "Twink Balance, Foods & Item Stat Adjustments",
+      "summary": "Custom scaling adjustments for level 19 & 29 twinking, food buffs, profession constraints, and faction filtering.",
+      "changes": [
+        "Food Buffs Expansion: Added Sagefish Delight (+6 MP5, Req Lvl 25), Soothing Turtle Bisque (+8 Sta, +8 Spi), Dragonbreath Chili, and Rumsey Rum Black Label.",
+        "Auto-BiS Food Optimization: BiS engine now tests and selects the highest-value food buff per spec and level bracket.",
+        "The Stockade: Confirmed Alliance capital city dungeon. Drops strictly filtered out for Horde characters.",
+        "Polished Driftwood Icon: Enforced Enchanting profession requirement (BoP crafted relic).",
+        "Totem of Charged Flames: Accessible for Horde Shamans in Ragefire Chasm.",
+        "Shaman Talents: Two-Handed Axes and Maces accessible with 1 point in Enhancement.",
+        "Windfury Weapon: Custom AP bonus and proc scaling applied for sub-40 ranks."
+      ]
+    },
+    {
+      "version": "v1.4.1",
+      "releaseDate": "2026-10-25",
+      "title": "Dungeon Drop Rates & Twink Normalization",
+      "summary": "Normalization of dungeon item level requirements and BoE world drops.",
+      "changes": [
+        "Shadowfang Keep: Assassin's Blade and Shadowfang drop rates verified.",
+        "Blackfathom Deeps: Strike of the Hydra normalized for Level 27+.",
+        "Warsong Gulch: Level 18 PvP reputation rewards available at Friendly/Honored."
+      ]
+    }
+  ],
+  "updateStrategy": {
+    "gitSync": "Synchronizes upstream mechanics and spell protos from wowsims-forever repository.",
+    "patchDelta": "Layers server-specific custom stat overrides, spell coefficients, and item adjustments in patch delta files.",
+    "automatedAuditing": "Checks catalog item stats against official WoW Forever patch diffs on server restart."
+  }
+}

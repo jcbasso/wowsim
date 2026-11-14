@@ -1,0 +1,3780 @@
+[
+  {
+    "effectId": 15,
+    "name": "Light Armor Kit",
+    "shortName": "Light Armor Kit",
+    "icon": "inv_misc_armorkit_17",
+    "slots": [
+      "chest",
+      "hands",
+      "legs",
+      "feet"
+    ],
+    "stats": {
+      "Sta": 1,
+      "Armor": 8
+    },
+    "summary": "+1 Sta, +8 Armor",
+    "quality": 1,
+    "reqLvl": 5,
+    "enchantType": 0
+  },
+  {
+    "effectId": 24,
+    "name": "Enchant Chest - Minor Intellect",
+    "shortName": "Minor Intellect",
+    "icon": "inv_misc_note_01",
+    "slots": [
+      "chest"
+    ],
+    "stats": {
+      "Int": 2
+    },
+    "summary": "+2 Int",
+    "quality": 2,
+    "reqLvl": 12,
+    "enchantType": 0
+  },
+  {
+    "effectId": 34,
+    "name": "Weapon Counterweight",
+    "shortName": "Weapon Counterweight",
+    "icon": "inv_misc_orb_01",
+    "slots": [
+      "mainhand",
+      "offhand"
+    ],
+    "stats": {},
+    "summary": "Weapon Counterweight",
+    "quality": 1,
+    "reqLvl": 33,
+    "enchantType": 1
+  },
+  {
+    "effectId": 36,
+    "name": "Enchant: Fiery Blaze",
+    "shortName": "Enchant: Fiery Blaze",
+    "icon": "inv_jewelry_talisman_01",
+    "slots": [
+      "mainhand",
+      "offhand"
+    ],
+    "stats": {},
+    "summary": "Enchant: Fiery Blaze",
+    "quality": 1,
+    "reqLvl": 45,
+    "enchantType": 0
+  },
+  {
+    "effectId": 37,
+    "name": "Weapon Chain",
+    "shortName": "Weapon Chain",
+    "icon": "spell_frost_chainsofice",
+    "slots": [
+      "mainhand",
+      "offhand"
+    ],
+    "stats": {},
+    "summary": "Weapon Chain",
+    "quality": 1,
+    "reqLvl": 38,
+    "enchantType": 0
+  },
+  {
+    "effectId": 41,
+    "name": "Enchant Chest - Inferior Stamina",
+    "shortName": "Inferior Stamina",
+    "icon": "inv_misc_enchantedscroll",
+    "slots": [
+      "chest"
+    ],
+    "stats": {
+      "Sta": 2
+    },
+    "summary": "+2 Sta",
+    "quality": 1,
+    "reqLvl": 0,
+    "enchantType": 0
+  },
+  {
+    "effectId": 41,
+    "name": "Enchant Bracer - Inferior Stamina",
+    "shortName": "Inferior Stamina",
+    "icon": "inv_misc_enchantedscroll",
+    "slots": [
+      "wrist"
+    ],
+    "stats": {
+      "Sta": 2
+    },
+    "summary": "+2 Sta",
+    "quality": 1,
+    "reqLvl": 0,
+    "enchantType": 0
+  },
+  {
+    "effectId": 43,
+    "name": "Iron Shield Spike",
+    "shortName": "Iron Shield Spike",
+    "icon": "inv_misc_armorkit_01",
+    "slots": [
+      "mainhand",
+      "offhand"
+    ],
+    "stats": {},
+    "summary": "Iron Shield Spike",
+    "quality": 1,
+    "reqLvl": 30,
+    "enchantType": 2
+  },
+  {
+    "effectId": 44,
+    "name": "Enchant Chest - Minor Absorption",
+    "shortName": "Minor Absorption",
+    "icon": "inv_misc_enchantedscroll",
+    "slots": [
+      "chest"
+    ],
+    "stats": {},
+    "summary": "Enchant Chest - Minor Absorption",
+    "quality": 1,
+    "reqLvl": 0,
+    "enchantType": 0
+  },
+  {
+    "effectId": 63,
+    "name": "Enchant Chest - Lesser Absorption",
+    "shortName": "Lesser Absorption",
+    "icon": "inv_misc_enchantedscroll",
+    "slots": [
+      "chest"
+    ],
+    "stats": {},
+    "summary": "Enchant Chest - Lesser Absorption",
+    "quality": 1,
+    "reqLvl": 0,
+    "enchantType": 0
+  },
+  {
+    "effectId": 65,
+    "name": "Enchant Cloak - Minor Resistance",
+    "shortName": "Minor Resistance",
+    "icon": "inv_misc_enchantedscroll",
+    "slots": [
+      "back"
+    ],
+    "stats": {},
+    "summary": "Enchant Cloak - Minor Resistance",
+    "quality": 1,
+    "reqLvl": 0,
+    "enchantType": 0
+  },
+  {
+    "effectId": 66,
+    "name": "Enchant Bracer - Minor Stamina",
+    "shortName": "Minor Stamina",
+    "icon": "inv_misc_enchantedscroll",
+    "slots": [
+      "wrist"
+    ],
+    "stats": {
+      "Sta": 3
+    },
+    "summary": "+3 Sta",
+    "quality": 1,
+    "reqLvl": 0,
+    "enchantType": 0
+  },
+  {
+    "effectId": 66,
+    "name": "Enchant Boots - Minor Stamina",
+    "shortName": "Minor Stamina",
+    "icon": "inv_misc_note_01",
+    "slots": [
+      "feet"
+    ],
+    "stats": {
+      "Sta": 3
+    },
+    "summary": "+3 Sta",
+    "quality": 2,
+    "reqLvl": 25,
+    "enchantType": 0
+  },
+  {
+    "effectId": 66,
+    "name": "Enchant Shield - Minor Stamina",
+    "shortName": "Minor Stamina",
+    "icon": "inv_misc_enchantedscroll",
+    "slots": [
+      "mainhand",
+      "offhand"
+    ],
+    "stats": {
+      "Sta": 3
+    },
+    "summary": "+3 Sta",
+    "quality": 1,
+    "reqLvl": 0,
+    "enchantType": 2
+  },
+  {
+    "effectId": 241,
+    "name": "Enchant Weapon - Lesser Striking",
+    "shortName": "Lesser Striking",
+    "icon": "inv_misc_enchantedscroll",
+    "slots": [
+      "mainhand",
+      "offhand"
+    ],
+    "stats": {},
+    "summary": "Enchant Weapon - Lesser Striking",
+    "quality": 1,
+    "reqLvl": 0,
+    "enchantType": 0
+  },
+  {
+    "effectId": 242,
+    "name": "Enchant Chest - Lesser Stamina",
+    "shortName": "Lesser Stamina",
+    "icon": "inv_misc_enchantedscroll",
+    "slots": [
+      "chest"
+    ],
+    "stats": {
+      "Sta": 3
+    },
+    "summary": "+3 Sta",
+    "quality": 1,
+    "reqLvl": 0,
+    "enchantType": 0
+  },
+  {
+    "effectId": 243,
+    "name": "Enchant Bracer - Minor Spirit",
+    "shortName": "Minor Spirit",
+    "icon": "inv_misc_note_01",
+    "slots": [
+      "wrist"
+    ],
+    "stats": {
+      "Spirit": 3
+    },
+    "summary": "+3 Spirit",
+    "quality": 2,
+    "reqLvl": 17,
+    "enchantType": 0
+  },
+  {
+    "effectId": 246,
+    "name": "Enchant Chest - Lesser Intellect",
+    "shortName": "Lesser Intellect",
+    "icon": "inv_misc_note_01",
+    "slots": [
+      "chest"
+    ],
+    "stats": {
+      "Int": 3
+    },
+    "summary": "+3 Int",
+    "quality": 2,
+    "reqLvl": 19,
+    "enchantType": 0
+  },
+  {
+    "effectId": 246,
+    "name": "Enchant Bracer - Minor Intellect",
+    "shortName": "Minor Intellect",
+    "icon": "inv_misc_note_01",
+    "slots": [
+      "wrist"
+    ],
+    "stats": {
+      "Int": 3
+    },
+    "summary": "+3 Int",
+    "quality": 2,
+    "reqLvl": 14,
+    "enchantType": 0
+  },
+  {
+    "effectId": 247,
+    "name": "Enchant Cloak - Minor Agility",
+    "shortName": "Minor Agility",
+    "icon": "inv_misc_note_01",
+    "slots": [
+      "back"
+    ],
+    "stats": {
+      "Agi": 3
+    },
+    "summary": "+3 Agi",
+    "quality": 2,
+    "reqLvl": 22,
+    "enchantType": 0
+  },
+  {
+    "effectId": 247,
+    "name": "Enchant Bracer - Minor Agility",
+    "shortName": "Minor Agility",
+    "icon": "inv_misc_enchantedscroll",
+    "slots": [
+      "wrist"
+    ],
+    "stats": {
+      "Agi": 3
+    },
+    "summary": "+3 Agi",
+    "quality": 1,
+    "reqLvl": 0,
+    "enchantType": 0
+  },
+  {
+    "effectId": 247,
+    "name": "Enchant Boots - Minor Agility",
+    "shortName": "Minor Agility",
+    "icon": "inv_misc_note_01",
+    "slots": [
+      "feet"
+    ],
+    "stats": {
+      "Agi": 3
+    },
+    "summary": "+3 Agi",
+    "quality": 2,
+    "reqLvl": 25,
+    "enchantType": 0
+  },
+  {
+    "effectId": 248,
+    "name": "Enchant Bracer - Minor Strength",
+    "shortName": "Minor Strength",
+    "icon": "inv_misc_note_01",
+    "slots": [
+      "wrist"
+    ],
+    "stats": {
+      "Str": 3
+    },
+    "summary": "+3 Str",
+    "quality": 2,
+    "reqLvl": 19,
+    "enchantType": 0
+  },
+  {
+    "effectId": 249,
+    "name": "Enchant Weapon - Minor Beastslayer",
+    "shortName": "Minor Beastslayer",
+    "icon": "inv_misc_note_01",
+    "slots": [
+      "mainhand",
+      "offhand"
+    ],
+    "stats": {},
+    "summary": "Enchant Weapon - Minor Beastslayer",
+    "quality": 2,
+    "reqLvl": 20,
+    "enchantType": 0
+  },
+  {
+    "effectId": 250,
+    "name": "Enchant Weapon - Minor Striking",
+    "shortName": "Minor Striking",
+    "icon": "inv_misc_enchantedscroll",
+    "slots": [
+      "mainhand",
+      "offhand"
+    ],
+    "stats": {},
+    "summary": "Enchant Weapon - Minor Striking",
+    "quality": 1,
+    "reqLvl": 0,
+    "enchantType": 0
+  },
+  {
+    "effectId": 254,
+    "name": "Enchant Chest - Stamina",
+    "shortName": "Stamina",
+    "icon": "inv_misc_enchantedscroll",
+    "slots": [
+      "chest"
+    ],
+    "stats": {
+      "Sta": 4
+    },
+    "summary": "+4 Sta",
+    "quality": 1,
+    "reqLvl": 0,
+    "enchantType": 0
+  },
+  {
+    "effectId": 254,
+    "name": "Enchant Bracer - Lesser Stamina",
+    "shortName": "Lesser Stamina",
+    "icon": "inv_misc_enchantedscroll",
+    "slots": [
+      "wrist"
+    ],
+    "stats": {
+      "Sta": 4
+    },
+    "summary": "+4 Sta",
+    "quality": 1,
+    "reqLvl": 0,
+    "enchantType": 0
+  },
+  {
+    "effectId": 254,
+    "name": "Enchant Boots - Lesser Stamina",
+    "shortName": "Lesser Stamina",
+    "icon": "inv_misc_enchantedscroll",
+    "slots": [
+      "feet"
+    ],
+    "stats": {
+      "Sta": 4
+    },
+    "summary": "+4 Sta",
+    "quality": 1,
+    "reqLvl": 0,
+    "enchantType": 0
+  },
+  {
+    "effectId": 255,
+    "name": "Enchant Shield - Lesser Spirit",
+    "shortName": "Lesser Spirit",
+    "icon": "inv_misc_enchantedscroll",
+    "slots": [
+      "mainhand",
+      "offhand"
+    ],
+    "stats": {
+      "Spirit": 3
+    },
+    "summary": "+3 Spirit",
+    "quality": 1,
+    "reqLvl": 0,
+    "enchantType": 2
+  },
+  {
+    "effectId": 256,
+    "name": "Enchant Cloak - Lesser Fire Resistance",
+    "shortName": "Lesser Fire Resistance",
+    "icon": "inv_misc_enchantedscroll",
+    "slots": [
+      "back"
+    ],
+    "stats": {},
+    "summary": "Enchant Cloak - Lesser Fire Resistance",
+    "quality": 1,
+    "reqLvl": 0,
+    "enchantType": 0
+  },
+  {
+    "effectId": 463,
+    "name": "Mithril Shield Spike",
+    "shortName": "Mithril Shield Spike",
+    "icon": "inv_misc_armorkit_02",
+    "slots": [
+      "mainhand",
+      "offhand"
+    ],
+    "stats": {},
+    "summary": "Mithril Shield Spike",
+    "quality": 2,
+    "reqLvl": 43,
+    "enchantType": 2
+  },
+  {
+    "effectId": 464,
+    "name": "Mithril Spurs",
+    "shortName": "Mithril Spurs",
+    "icon": "ability_rogue_sprint",
+    "slots": [
+      "feet"
+    ],
+    "stats": {},
+    "summary": "Mithril Spurs",
+    "quality": 2,
+    "reqLvl": 43,
+    "enchantType": 0
+  },
+  {
+    "effectId": 723,
+    "name": "Enchant 2H Weapon - Lesser Intellect",
+    "shortName": "Lesser Intellect",
+    "icon": "inv_misc_note_01",
+    "slots": [
+      "mainhand",
+      "offhand"
+    ],
+    "stats": {
+      "Int": 5
+    },
+    "summary": "+5 Int",
+    "quality": 1,
+    "reqLvl": 20,
+    "enchantType": 1
+  },
+  {
+    "effectId": 744,
+    "name": "Enchant Cloak - Lesser Protection",
+    "shortName": "Lesser Protection",
+    "icon": "inv_misc_enchantedscroll",
+    "slots": [
+      "back"
+    ],
+    "stats": {
+      "Armor": 20
+    },
+    "summary": "+20 Armor",
+    "quality": 1,
+    "reqLvl": 0,
+    "enchantType": 0
+  },
+  {
+    "effectId": 783,
+    "name": "Enchant Cloak - Minor Protection",
+    "shortName": "Minor Protection",
+    "icon": "inv_misc_note_01",
+    "slots": [
+      "back"
+    ],
+    "stats": {
+      "Armor": 10
+    },
+    "summary": "+10 Armor",
+    "quality": 2,
+    "reqLvl": 18,
+    "enchantType": 0
+  },
+  {
+    "effectId": 803,
+    "name": "Enchant Weapon - Fiery Weapon",
+    "shortName": "Fiery Weapon",
+    "icon": "spell_fire_fireweapon",
+    "slots": [
+      "mainhand",
+      "offhand"
+    ],
+    "stats": {
+      "ProcDPS": 6.0
+    },
+    "summary": "Chance on hit: 40 Fire Damage",
+    "quality": 2,
+    "reqLvl": 53,
+    "enchantType": 0
+  },
+  {
+    "effectId": 804,
+    "name": "Enchant Cloak - Lesser Shadow Resistance",
+    "shortName": "Lesser Shadow Resistance",
+    "icon": "inv_misc_note_01",
+    "slots": [
+      "back"
+    ],
+    "stats": {},
+    "summary": "Enchant Cloak - Lesser Shadow Resistance",
+    "quality": 2,
+    "reqLvl": 27,
+    "enchantType": 0
+  },
+  {
+    "effectId": 805,
+    "name": "Enchant 2H Weapon - Minor Impact",
+    "shortName": "Minor Impact",
+    "icon": "inv_misc_enchantedscroll",
+    "slots": [
+      "mainhand",
+      "offhand"
+    ],
+    "stats": {},
+    "summary": "Enchant 2H Weapon - Minor Impact",
+    "quality": 1,
+    "reqLvl": 0,
+    "enchantType": 1
+  },
+  {
+    "effectId": 805,
+    "name": "Enchant Weapon - Greater Striking",
+    "shortName": "Greater Striking",
+    "icon": "inv_misc_enchantedscroll",
+    "slots": [
+      "mainhand",
+      "offhand"
+    ],
+    "stats": {},
+    "summary": "Enchant Weapon - Greater Striking",
+    "quality": 1,
+    "reqLvl": 0,
+    "enchantType": 0
+  },
+  {
+    "effectId": 823,
+    "name": "Enchant Bracer - Lesser Strength",
+    "shortName": "Lesser Strength",
+    "icon": "inv_misc_note_01",
+    "slots": [
+      "wrist"
+    ],
+    "stats": {
+      "Str": 4
+    },
+    "summary": "+4 Str",
+    "quality": 2,
+    "reqLvl": 28,
+    "enchantType": 0
+  },
+  {
+    "effectId": 843,
+    "name": "Enchant Chest - Intellect",
+    "shortName": "Intellect",
+    "icon": "inv_misc_enchantedscroll",
+    "slots": [
+      "chest"
+    ],
+    "stats": {
+      "Int": 4
+    },
+    "summary": "+4 Int",
+    "quality": 1,
+    "reqLvl": 0,
+    "enchantType": 0
+  },
+  {
+    "effectId": 844,
+    "name": "Enchant Gloves - Mining",
+    "shortName": "Mining",
+    "icon": "inv_misc_note_01",
+    "slots": [
+      "hands"
+    ],
+    "stats": {},
+    "summary": "Enchant Gloves - Mining",
+    "quality": 2,
+    "reqLvl": 29,
+    "enchantType": 0
+  },
+  {
+    "effectId": 845,
+    "name": "Enchant Gloves - Herbalism",
+    "shortName": "Herbalism",
+    "icon": "inv_misc_note_01",
+    "slots": [
+      "hands"
+    ],
+    "stats": {},
+    "summary": "Enchant Gloves - Herbalism",
+    "quality": 2,
+    "reqLvl": 29,
+    "enchantType": 0
+  },
+  {
+    "effectId": 846,
+    "name": "Enchant Gloves - Fishing",
+    "shortName": "Fishing",
+    "icon": "inv_misc_note_01",
+    "slots": [
+      "hands"
+    ],
+    "stats": {},
+    "summary": "Enchant Gloves - Fishing",
+    "quality": 2,
+    "reqLvl": 29,
+    "enchantType": 0
+  },
+  {
+    "effectId": 847,
+    "name": "Enchant Chest - Minor Stats",
+    "shortName": "Minor Stats",
+    "icon": "inv_misc_enchantedscroll",
+    "slots": [
+      "chest"
+    ],
+    "stats": {
+      "Str": 1,
+      "Agi": 1,
+      "Sta": 1,
+      "Int": 1,
+      "Spirit": 1
+    },
+    "summary": "+1 Str, +1 Agi, +1 Sta, +1 Int, +1 Spirit",
+    "quality": 1,
+    "reqLvl": 0,
+    "enchantType": 0
+  },
+  {
+    "effectId": 848,
+    "name": "Enchant Cloak - Defense",
+    "shortName": "Defense",
+    "icon": "inv_misc_enchantedscroll",
+    "slots": [
+      "back"
+    ],
+    "stats": {
+      "Armor": 30
+    },
+    "summary": "+30 Armor",
+    "quality": 1,
+    "reqLvl": 0,
+    "enchantType": 0
+  },
+  {
+    "effectId": 848,
+    "name": "Enchant Shield - Lesser Protection",
+    "shortName": "Lesser Protection",
+    "icon": "inv_misc_note_01",
+    "slots": [
+      "mainhand",
+      "offhand"
+    ],
+    "stats": {
+      "Armor": 30
+    },
+    "summary": "+30 Armor",
+    "quality": 2,
+    "reqLvl": 22,
+    "enchantType": 2
+  },
+  {
+    "effectId": 849,
+    "name": "Enchant Cloak - Greater Agility (+3)",
+    "shortName": "+3 Agility",
+    "icon": "spell_ninja_agility",
+    "slots": [
+      "back"
+    ],
+    "stats": {
+      "Agi": 3
+    },
+    "summary": "+3 Agi",
+    "quality": 2,
+    "reqLvl": 45,
+    "enchantType": 0
+  },
+  {
+    "effectId": 850,
+    "name": "Enchant Chest - Greater Stamina",
+    "shortName": "Greater Stamina",
+    "icon": "inv_misc_enchantedscroll",
+    "slots": [
+      "chest"
+    ],
+    "stats": {
+      "Sta": 6
+    },
+    "summary": "+6 Sta",
+    "quality": 1,
+    "reqLvl": 0,
+    "enchantType": 0
+  },
+  {
+    "effectId": 851,
+    "name": "Enchant Bracer - Spirit",
+    "shortName": "Spirit",
+    "icon": "inv_misc_enchantedscroll",
+    "slots": [
+      "wrist"
+    ],
+    "stats": {
+      "Spirit": 5
+    },
+    "summary": "+5 Spirit",
+    "quality": 1,
+    "reqLvl": 0,
+    "enchantType": 0
+  },
+  {
+    "effectId": 851,
+    "name": "Enchant Boots - Spirit",
+    "shortName": "Spirit",
+    "icon": "inv_misc_note_01",
+    "slots": [
+      "feet"
+    ],
+    "stats": {
+      "Spirit": 5
+    },
+    "summary": "+5 Spirit",
+    "quality": 2,
+    "reqLvl": 55,
+    "enchantType": 0
+  },
+  {
+    "effectId": 851,
+    "name": "Enchant 2H Weapon - Lesser Spirit",
+    "shortName": "Lesser Spirit",
+    "icon": "inv_misc_note_01",
+    "slots": [
+      "mainhand",
+      "offhand"
+    ],
+    "stats": {
+      "Spirit": 5
+    },
+    "summary": "+5 Spirit",
+    "quality": 2,
+    "reqLvl": 22,
+    "enchantType": 1
+  },
+  {
+    "effectId": 851,
+    "name": "Enchant Shield - Spirit",
+    "shortName": "Spirit",
+    "icon": "inv_misc_enchantedscroll",
+    "slots": [
+      "mainhand",
+      "offhand"
+    ],
+    "stats": {
+      "Spirit": 5
+    },
+    "summary": "+5 Spirit",
+    "quality": 1,
+    "reqLvl": 0,
+    "enchantType": 2
+  },
+  {
+    "effectId": 852,
+    "name": "Enchant Boots - Greater Agility (+7)",
+    "shortName": "+7 Agility",
+    "icon": "spell_ninja_agility",
+    "slots": [
+      "wrist"
+    ],
+    "stats": {
+      "Sta": 5
+    },
+    "summary": "+5 Sta",
+    "quality": 1,
+    "reqLvl": 0,
+    "enchantType": 0
+  },
+  {
+    "effectId": 853,
+    "name": "Enchant Gloves - Minor Haste (+1%)",
+    "shortName": "+1% Haste",
+    "icon": "spell_nature_bloodlust",
+    "slots": [
+      "mainhand",
+      "offhand"
+    ],
+    "stats": {},
+    "summary": "Enchant Gloves - Minor Haste (+1%)",
+    "quality": 2,
+    "reqLvl": 35,
+    "enchantType": 0
+  },
+  {
+    "effectId": 854,
+    "name": "Enchant Weapon - Lesser Elemental Slayer",
+    "shortName": "Lesser Elemental Slayer",
+    "icon": "inv_misc_note_01",
+    "slots": [
+      "mainhand",
+      "offhand"
+    ],
+    "stats": {},
+    "summary": "Enchant Weapon - Lesser Elemental Slayer",
+    "quality": 2,
+    "reqLvl": 35,
+    "enchantType": 0
+  },
+  {
+    "effectId": 856,
+    "name": "Enchant Bracer - Strength",
+    "shortName": "Strength",
+    "icon": "inv_misc_enchantedscroll",
+    "slots": [
+      "wrist"
+    ],
+    "stats": {
+      "Str": 5
+    },
+    "summary": "+5 Str",
+    "quality": 1,
+    "reqLvl": 0,
+    "enchantType": 0
+  },
+  {
+    "effectId": 857,
+    "name": "Enchant Chest - Greater Intellect",
+    "shortName": "Greater Intellect",
+    "icon": "inv_misc_enchantedscroll",
+    "slots": [
+      "chest"
+    ],
+    "stats": {
+      "Int": 6
+    },
+    "summary": "+6 Int",
+    "quality": 1,
+    "reqLvl": 0,
+    "enchantType": 0
+  },
+  {
+    "effectId": 863,
+    "name": "Enchant Shield - Lesser Block",
+    "shortName": "Lesser Block",
+    "icon": "inv_misc_note_01",
+    "slots": [
+      "mainhand",
+      "offhand"
+    ],
+    "stats": {},
+    "summary": "Enchant Shield - Lesser Block",
+    "quality": 2,
+    "reqLvl": 39,
+    "enchantType": 2
+  },
+  {
+    "effectId": 865,
+    "name": "Enchant Gloves - Skinning",
+    "shortName": "Skinning",
+    "icon": "inv_misc_note_01",
+    "slots": [
+      "hands"
+    ],
+    "stats": {},
+    "summary": "Enchant Gloves - Skinning",
+    "quality": 2,
+    "reqLvl": 40,
+    "enchantType": 0
+  },
+  {
+    "effectId": 866,
+    "name": "Enchant Chest - Lesser Stats",
+    "shortName": "Lesser Stats",
+    "icon": "inv_misc_enchantedscroll",
+    "slots": [
+      "chest"
+    ],
+    "stats": {
+      "Str": 2,
+      "Agi": 2,
+      "Sta": 2,
+      "Int": 2,
+      "Spirit": 2
+    },
+    "summary": "+2 Str, +2 Agi, +2 Sta, +2 Int, +2 Spirit",
+    "quality": 1,
+    "reqLvl": 0,
+    "enchantType": 0
+  },
+  {
+    "effectId": 884,
+    "name": "Enchant Cloak - Greater Defense",
+    "shortName": "Greater Defense",
+    "icon": "inv_misc_enchantedscroll",
+    "slots": [
+      "back"
+    ],
+    "stats": {
+      "Armor": 60
+    },
+    "summary": "+60 Armor",
+    "quality": 1,
+    "reqLvl": 0,
+    "enchantType": 0
+  },
+  {
+    "effectId": 903,
+    "name": "Enchant Cloak - Resistance",
+    "shortName": "Resistance",
+    "icon": "inv_misc_enchantedscroll",
+    "slots": [
+      "back"
+    ],
+    "stats": {},
+    "summary": "Enchant Cloak - Resistance",
+    "quality": 1,
+    "reqLvl": 0,
+    "enchantType": 0
+  },
+  {
+    "effectId": 904,
+    "name": "Enchant Bracer - Agility",
+    "shortName": "Agility",
+    "icon": "inv_misc_note_01",
+    "slots": [
+      "wrist"
+    ],
+    "stats": {
+      "Agi": 5
+    },
+    "summary": "+5 Agi",
+    "quality": 2,
+    "reqLvl": 38,
+    "enchantType": 0
+  },
+  {
+    "effectId": 904,
+    "name": "Enchant Boots - Agility",
+    "shortName": "Agility",
+    "icon": "inv_misc_enchantedscroll",
+    "slots": [
+      "feet"
+    ],
+    "stats": {
+      "Agi": 5
+    },
+    "summary": "+5 Agi",
+    "quality": 1,
+    "reqLvl": 0,
+    "enchantType": 0
+  },
+  {
+    "effectId": 905,
+    "name": "Enchant Bracer - Intellect",
+    "shortName": "Intellect",
+    "icon": "inv_misc_enchantedscroll",
+    "slots": [
+      "wrist"
+    ],
+    "stats": {
+      "Int": 5
+    },
+    "summary": "+5 Int",
+    "quality": 1,
+    "reqLvl": 0,
+    "enchantType": 0
+  },
+  {
+    "effectId": 906,
+    "name": "Enchant Gloves - Advanced Mining",
+    "shortName": "Advanced Mining",
+    "icon": "inv_misc_note_01",
+    "slots": [
+      "hands"
+    ],
+    "stats": {},
+    "summary": "Enchant Gloves - Advanced Mining",
+    "quality": 2,
+    "reqLvl": 43,
+    "enchantType": 0
+  },
+  {
+    "effectId": 907,
+    "name": "Enchant Bracer - Greater Spirit",
+    "shortName": "Greater Spirit",
+    "icon": "inv_misc_note_01",
+    "slots": [
+      "wrist"
+    ],
+    "stats": {
+      "Spirit": 7
+    },
+    "summary": "+7 Spirit",
+    "quality": 2,
+    "reqLvl": 44,
+    "enchantType": 0
+  },
+  {
+    "effectId": 907,
+    "name": "Enchant Shield - Greater Spirit",
+    "shortName": "Greater Spirit",
+    "icon": "inv_misc_enchantedscroll",
+    "slots": [
+      "mainhand",
+      "offhand"
+    ],
+    "stats": {
+      "Spirit": 7
+    },
+    "summary": "+7 Spirit",
+    "quality": 1,
+    "reqLvl": 0,
+    "enchantType": 2
+  },
+  {
+    "effectId": 908,
+    "name": "Enchant Chest - Superior Stamina",
+    "shortName": "Superior Stamina",
+    "icon": "inv_misc_enchantedscroll",
+    "slots": [
+      "chest"
+    ],
+    "stats": {
+      "Sta": 8
+    },
+    "summary": "+8 Sta",
+    "quality": 1,
+    "reqLvl": 0,
+    "enchantType": 0
+  },
+  {
+    "effectId": 909,
+    "name": "Enchant Gloves - Advanced Herbalism",
+    "shortName": "Advanced Herbalism",
+    "icon": "inv_misc_note_01",
+    "slots": [
+      "hands"
+    ],
+    "stats": {},
+    "summary": "Enchant Gloves - Advanced Herbalism",
+    "quality": 2,
+    "reqLvl": 45,
+    "enchantType": 0
+  },
+  {
+    "effectId": 910,
+    "name": "Enchant Cloak - Stealth",
+    "shortName": "Stealth",
+    "icon": "inv_misc_note_01",
+    "slots": [
+      "back"
+    ],
+    "stats": {},
+    "summary": "Enchant Cloak - Stealth",
+    "quality": 3,
+    "reqLvl": 70,
+    "enchantType": 0
+  },
+  {
+    "effectId": 911,
+    "name": "Enchant Boots - Minor Speed (+8%)",
+    "shortName": "Minor Speed",
+    "icon": "spell_nature_invisibility",
+    "slots": [
+      "feet"
+    ],
+    "stats": {
+      "Speed": 8
+    },
+    "summary": "Increases movement speed by 8%",
+    "quality": 1,
+    "reqLvl": 0,
+    "enchantType": 0
+  },
+  {
+    "effectId": 912,
+    "name": "Enchant Weapon - Demonslaying",
+    "shortName": "Demonslaying",
+    "icon": "inv_misc_note_01",
+    "slots": [
+      "mainhand",
+      "offhand"
+    ],
+    "stats": {},
+    "summary": "Enchant Weapon - Demonslaying",
+    "quality": 2,
+    "reqLvl": 46,
+    "enchantType": 0
+  },
+  {
+    "effectId": 913,
+    "name": "Enchant Chest - Superior Intellect",
+    "shortName": "Superior Intellect",
+    "icon": "inv_misc_enchantedscroll",
+    "slots": [
+      "chest"
+    ],
+    "stats": {
+      "Int": 8
+    },
+    "summary": "+8 Int",
+    "quality": 1,
+    "reqLvl": 0,
+    "enchantType": 0
+  },
+  {
+    "effectId": 923,
+    "name": "Enchant Bracer - Deflection",
+    "shortName": "Deflection",
+    "icon": "inv_misc_note_01",
+    "slots": [
+      "wrist"
+    ],
+    "stats": {},
+    "summary": "Enchant Bracer - Deflection",
+    "quality": 2,
+    "reqLvl": 47,
+    "enchantType": 0
+  },
+  {
+    "effectId": 924,
+    "name": "Enchant Bracer - Minor Deflect",
+    "shortName": "Minor Deflect",
+    "icon": "inv_misc_enchantedscroll",
+    "slots": [
+      "wrist"
+    ],
+    "stats": {},
+    "summary": "Enchant Bracer - Minor Deflect",
+    "quality": 1,
+    "reqLvl": 0,
+    "enchantType": 0
+  },
+  {
+    "effectId": 925,
+    "name": "Enchant Bracer - Lesser Deflection",
+    "shortName": "Lesser Deflection",
+    "icon": "inv_misc_note_01",
+    "slots": [
+      "wrist"
+    ],
+    "stats": {},
+    "summary": "Enchant Bracer - Lesser Deflection",
+    "quality": 2,
+    "reqLvl": 34,
+    "enchantType": 0
+  },
+  {
+    "effectId": 926,
+    "name": "Enchant Shield - Frost Resistance",
+    "shortName": "Frost Resistance",
+    "icon": "inv_misc_note_01",
+    "slots": [
+      "mainhand",
+      "offhand"
+    ],
+    "stats": {},
+    "summary": "Enchant Shield - Frost Resistance",
+    "quality": 2,
+    "reqLvl": 47,
+    "enchantType": 2
+  },
+  {
+    "effectId": 927,
+    "name": "Enchant Bracer - Greater Strength",
+    "shortName": "Greater Strength",
+    "icon": "inv_misc_enchantedscroll",
+    "slots": [
+      "wrist"
+    ],
+    "stats": {
+      "Str": 7
+    },
+    "summary": "+7 Str",
+    "quality": 1,
+    "reqLvl": 0,
+    "enchantType": 0
+  },
+  {
+    "effectId": 927,
+    "name": "Enchant Gloves - Strength",
+    "shortName": "Strength",
+    "icon": "inv_misc_enchantedscroll",
+    "slots": [
+      "hands"
+    ],
+    "stats": {
+      "Str": 7
+    },
+    "summary": "+7 Str",
+    "quality": 1,
+    "reqLvl": 0,
+    "enchantType": 0
+  },
+  {
+    "effectId": 928,
+    "name": "Enchant Chest - Major Health (+100)",
+    "shortName": "+100 Health",
+    "icon": "spell_holy_sealofsacrifice",
+    "slots": [
+      "chest"
+    ],
+    "stats": {
+      "Str": 3,
+      "Agi": 3,
+      "Sta": 3,
+      "Int": 3,
+      "Spirit": 3
+    },
+    "summary": "+3 Str, +3 Agi, +3 Sta, +3 Int, +3 Spirit",
+    "quality": 1,
+    "reqLvl": 0,
+    "enchantType": 0
+  },
+  {
+    "effectId": 929,
+    "name": "Enchant Bracer - Greater Stamina",
+    "shortName": "Greater Stamina",
+    "icon": "inv_misc_note_01",
+    "slots": [
+      "wrist"
+    ],
+    "stats": {
+      "Sta": 7
+    },
+    "summary": "+7 Sta",
+    "quality": 2,
+    "reqLvl": 49,
+    "enchantType": 0
+  },
+  {
+    "effectId": 929,
+    "name": "Enchant Boots - Greater Stamina",
+    "shortName": "Greater Stamina",
+    "icon": "inv_misc_note_01",
+    "slots": [
+      "feet"
+    ],
+    "stats": {
+      "Sta": 7
+    },
+    "summary": "+7 Sta",
+    "quality": 2,
+    "reqLvl": 52,
+    "enchantType": 0
+  },
+  {
+    "effectId": 929,
+    "name": "Enchant Shield - Stamina",
+    "shortName": "Stamina",
+    "icon": "inv_misc_note_01",
+    "slots": [
+      "mainhand",
+      "offhand"
+    ],
+    "stats": {
+      "Sta": 7
+    },
+    "summary": "+7 Sta",
+    "quality": 2,
+    "reqLvl": 42,
+    "enchantType": 2
+  },
+  {
+    "effectId": 930,
+    "name": "Enchant Gloves - Riding Skill",
+    "shortName": "Riding Skill",
+    "icon": "inv_misc_note_01",
+    "slots": [
+      "hands"
+    ],
+    "stats": {},
+    "summary": "Enchant Gloves - Riding Skill",
+    "quality": 2,
+    "reqLvl": 50,
+    "enchantType": 0
+  },
+  {
+    "effectId": 931,
+    "name": "Enchant Gloves - Minor Haste",
+    "shortName": "Minor Haste",
+    "icon": "inv_misc_enchantedscroll",
+    "slots": [
+      "hands"
+    ],
+    "stats": {
+      "Haste": 1
+    },
+    "summary": "+1 Haste",
+    "quality": 1,
+    "reqLvl": 0,
+    "enchantType": 0
+  },
+  {
+    "effectId": 943,
+    "name": "Enchant Weapon - Striking",
+    "shortName": "Striking",
+    "icon": "inv_misc_enchantedscroll",
+    "slots": [
+      "mainhand",
+      "offhand"
+    ],
+    "stats": {},
+    "summary": "Enchant Weapon - Striking",
+    "quality": 1,
+    "reqLvl": 0,
+    "enchantType": 0
+  },
+  {
+    "effectId": 963,
+    "name": "Enchant 2H Weapon - Greater Impact",
+    "shortName": "Greater Impact",
+    "icon": "inv_misc_enchantedscroll",
+    "slots": [
+      "mainhand",
+      "offhand"
+    ],
+    "stats": {},
+    "summary": "Enchant 2H Weapon - Greater Impact",
+    "quality": 1,
+    "reqLvl": 0,
+    "enchantType": 1
+  },
+  {
+    "effectId": 1483,
+    "name": "Lesser Arcane Amalgamation",
+    "shortName": "Lesser Arcane Amalgamation",
+    "icon": "inv_misc_gem_03",
+    "slots": [
+      "head",
+      "legs"
+    ],
+    "stats": {
+      "Mana": 150
+    },
+    "summary": "+150 Mana",
+    "quality": 2,
+    "reqLvl": 50,
+    "enchantType": 0
+  },
+  {
+    "effectId": 1503,
+    "name": "Libram of Constitution (+100 Health)",
+    "shortName": "+100 Health",
+    "icon": "spell_holy_sealofsacrifice",
+    "slots": [
+      "head",
+      "legs"
+    ],
+    "stats": {
+      "Health": 100
+    },
+    "summary": "+100 Health",
+    "quality": 2,
+    "reqLvl": 50,
+    "enchantType": 0
+  },
+  {
+    "effectId": 1504,
+    "name": "Libram of Resilience (+125 Armor)",
+    "shortName": "+125 Armor",
+    "icon": "inv_misc_armorkit_17",
+    "slots": [
+      "head",
+      "legs"
+    ],
+    "stats": {},
+    "summary": "Libram of Resilience (+125 Armor)",
+    "quality": 2,
+    "reqLvl": 50,
+    "enchantType": 0
+  },
+  {
+    "effectId": 1505,
+    "name": "Libram of Resilience (+20 Fire Resist)",
+    "shortName": "+20 Fire Resist",
+    "icon": "spell_fire_firearmor",
+    "slots": [
+      "head",
+      "legs"
+    ],
+    "stats": {},
+    "summary": "Libram of Resilience (+20 Fire Resist)",
+    "quality": 2,
+    "reqLvl": 50,
+    "enchantType": 0
+  },
+  {
+    "effectId": 1506,
+    "name": "Lesser Arcanum of Voracity (+8 Strength)",
+    "shortName": "+8 Strength",
+    "icon": "spell_nature_strength",
+    "slots": [
+      "head",
+      "legs"
+    ],
+    "stats": {
+      "Str": 8
+    },
+    "summary": "+8 Str",
+    "quality": 2,
+    "reqLvl": 50,
+    "enchantType": 0
+  },
+  {
+    "effectId": 1507,
+    "name": "Lesser Arcanum of Voracity (+8 Stamina)",
+    "shortName": "+8 Stamina",
+    "icon": "spell_nature_unyeildingstamina",
+    "slots": [
+      "head",
+      "legs"
+    ],
+    "stats": {
+      "Sta": 8
+    },
+    "summary": "+8 Sta",
+    "quality": 2,
+    "reqLvl": 50,
+    "enchantType": 0
+  },
+  {
+    "effectId": 1508,
+    "name": "Lesser Arcanum of Voracity (+8 Agility)",
+    "shortName": "+8 Agility",
+    "icon": "spell_nature_invisibility",
+    "slots": [
+      "head",
+      "legs"
+    ],
+    "stats": {
+      "Agi": 8
+    },
+    "summary": "+8 Agi",
+    "quality": 2,
+    "reqLvl": 50,
+    "enchantType": 0
+  },
+  {
+    "effectId": 1509,
+    "name": "Lesser Arcanum of Voracity (+8 Intellect)",
+    "shortName": "+8 Intellect",
+    "icon": "spell_holy_magicalsentry",
+    "slots": [
+      "head",
+      "legs"
+    ],
+    "stats": {
+      "Int": 8
+    },
+    "summary": "+8 Int",
+    "quality": 2,
+    "reqLvl": 50,
+    "enchantType": 0
+  },
+  {
+    "effectId": 1510,
+    "name": "Lesser Arcanum of Voracity (+8 Spirit)",
+    "shortName": "+8 Spirit",
+    "icon": "spell_holy_divinespirit",
+    "slots": [
+      "head",
+      "legs"
+    ],
+    "stats": {
+      "Spirit": 8
+    },
+    "summary": "+8 Spirit",
+    "quality": 2,
+    "reqLvl": 50,
+    "enchantType": 0
+  },
+  {
+    "effectId": 1704,
+    "name": "Thorium Shield Spike",
+    "shortName": "Thorium Shield Spike",
+    "icon": "inv_misc_armorkit_20",
+    "slots": [
+      "mainhand",
+      "offhand"
+    ],
+    "stats": {},
+    "summary": "Thorium Shield Spike",
+    "quality": 2,
+    "reqLvl": 55,
+    "enchantType": 2
+  },
+  {
+    "effectId": 1883,
+    "name": "Enchant Bracer - Greater Intellect",
+    "shortName": "Greater Intellect",
+    "icon": "inv_misc_note_01",
+    "slots": [
+      "wrist"
+    ],
+    "stats": {
+      "Int": 7
+    },
+    "summary": "+7 Int",
+    "quality": 2,
+    "reqLvl": 51,
+    "enchantType": 0
+  },
+  {
+    "effectId": 1884,
+    "name": "Enchant Bracer - Superior Spirit",
+    "shortName": "Superior Spirit",
+    "icon": "inv_misc_note_01",
+    "slots": [
+      "wrist"
+    ],
+    "stats": {
+      "Spirit": 9
+    },
+    "summary": "+9 Spirit",
+    "quality": 2,
+    "reqLvl": 54,
+    "enchantType": 0
+  },
+  {
+    "effectId": 1885,
+    "name": "Enchant Bracer - Superior Strength",
+    "shortName": "Superior Strength",
+    "icon": "inv_misc_note_01",
+    "slots": [
+      "wrist"
+    ],
+    "stats": {
+      "Str": 9
+    },
+    "summary": "+9 Str",
+    "quality": 2,
+    "reqLvl": 59,
+    "enchantType": 0
+  },
+  {
+    "effectId": 1886,
+    "name": "Enchant Bracer - Superior Stamina",
+    "shortName": "Superior Stamina",
+    "icon": "inv_misc_note_01",
+    "slots": [
+      "wrist"
+    ],
+    "stats": {
+      "Sta": 9
+    },
+    "summary": "+9 Sta",
+    "quality": 2,
+    "reqLvl": 60,
+    "enchantType": 0
+  },
+  {
+    "effectId": 1886,
+    "name": "Enchant Shield - Greater Stamina",
+    "shortName": "Greater Stamina",
+    "icon": "inv_misc_note_01",
+    "slots": [
+      "mainhand",
+      "offhand"
+    ],
+    "stats": {
+      "Sta": 9
+    },
+    "summary": "+9 Sta",
+    "quality": 1,
+    "reqLvl": 53,
+    "enchantType": 2
+  },
+  {
+    "effectId": 1887,
+    "name": "Enchant Bracer - Greater Agility",
+    "shortName": "Greater Agility",
+    "icon": "inv_misc_note_01",
+    "slots": [
+      "wrist"
+    ],
+    "stats": {
+      "Agi": 7
+    },
+    "summary": "+7 Agi",
+    "quality": 2,
+    "reqLvl": 48,
+    "enchantType": 0
+  },
+  {
+    "effectId": 1887,
+    "name": "Enchant Gloves - Agility",
+    "shortName": "Agility",
+    "icon": "inv_misc_enchantedscroll",
+    "slots": [
+      "hands"
+    ],
+    "stats": {
+      "Agi": 7
+    },
+    "summary": "+7 Agi",
+    "quality": 1,
+    "reqLvl": 0,
+    "enchantType": 0
+  },
+  {
+    "effectId": 1887,
+    "name": "Enchant Boots - Greater Agility",
+    "shortName": "Greater Agility",
+    "icon": "inv_misc_note_01",
+    "slots": [
+      "feet"
+    ],
+    "stats": {
+      "Agi": 7
+    },
+    "summary": "+7 Agi",
+    "quality": 2,
+    "reqLvl": 59,
+    "enchantType": 0
+  },
+  {
+    "effectId": 1888,
+    "name": "Enchant Cloak - Greater Resistance",
+    "shortName": "Greater Resistance",
+    "icon": "inv_misc_note_01",
+    "slots": [
+      "back"
+    ],
+    "stats": {},
+    "summary": "Enchant Cloak - Greater Resistance",
+    "quality": 2,
+    "reqLvl": 53,
+    "enchantType": 0
+  },
+  {
+    "effectId": 1889,
+    "name": "Enchant Cloak - Superior Defense (+70)",
+    "shortName": "+70 Armor",
+    "icon": "inv_misc_armorkit_17",
+    "slots": [
+      "back"
+    ],
+    "stats": {
+      "Armor": 70
+    },
+    "summary": "+70 Armor",
+    "quality": 1,
+    "reqLvl": 57,
+    "enchantType": 0
+  },
+  {
+    "effectId": 1890,
+    "name": "Enchant Shield - Superior Spirit",
+    "shortName": "Superior Spirit",
+    "icon": "inv_misc_note_01",
+    "slots": [
+      "mainhand",
+      "offhand"
+    ],
+    "stats": {
+      "Spirit": 9
+    },
+    "summary": "+9 Spirit",
+    "quality": 2,
+    "reqLvl": 56,
+    "enchantType": 2
+  },
+  {
+    "effectId": 1891,
+    "name": "Enchant Chest - Greater Stats (+4)",
+    "shortName": "+4 All Stats",
+    "icon": "spell_holy_greaterblessingofkings",
+    "slots": [
+      "chest"
+    ],
+    "stats": {
+      "Str": 4,
+      "Agi": 4,
+      "Sta": 4,
+      "Int": 4,
+      "Spirit": 4
+    },
+    "summary": "+4 Str, +4 Agi, +4 Sta, +4 Int, +4 Spirit",
+    "quality": 2,
+    "reqLvl": 62,
+    "enchantType": 0
+  },
+  {
+    "effectId": 1892,
+    "name": "Enchant Bracer - Superior Stamina (+9)",
+    "shortName": "+9 Stamina",
+    "icon": "spell_nature_unyeildingstamina",
+    "slots": [
+      "chest"
+    ],
+    "stats": {
+      "Sta": 10
+    },
+    "summary": "+10 Sta",
+    "quality": 1,
+    "reqLvl": 55,
+    "enchantType": 0
+  },
+  {
+    "effectId": 1893,
+    "name": "Enchant Bracer - Superior Strength (+9)",
+    "shortName": "+9 Strength",
+    "icon": "spell_nature_strength",
+    "slots": [
+      "chest"
+    ],
+    "stats": {
+      "Int": 10
+    },
+    "summary": "+10 Int",
+    "quality": 2,
+    "reqLvl": 58,
+    "enchantType": 0
+  },
+  {
+    "effectId": 1894,
+    "name": "Enchant Weapon - Agility (+15)",
+    "shortName": "+15 Agility",
+    "icon": "spell_ninja_agility",
+    "slots": [
+      "mainhand",
+      "offhand"
+    ],
+    "stats": {},
+    "summary": "Enchant Weapon - Agility (+15)",
+    "quality": 2,
+    "reqLvl": 57,
+    "enchantType": 0
+  },
+  {
+    "effectId": 1896,
+    "name": "Enchant 2H Weapon - Superior Impact",
+    "shortName": "Superior Impact",
+    "icon": "inv_misc_note_01",
+    "slots": [
+      "mainhand",
+      "offhand"
+    ],
+    "stats": {},
+    "summary": "Enchant 2H Weapon - Superior Impact",
+    "quality": 2,
+    "reqLvl": 59,
+    "enchantType": 1
+  },
+  {
+    "effectId": 1897,
+    "name": "Enchant 2H Weapon - Lesser Impact",
+    "shortName": "Lesser Impact",
+    "icon": "inv_misc_enchantedscroll",
+    "slots": [
+      "mainhand",
+      "offhand"
+    ],
+    "stats": {},
+    "summary": "Enchant 2H Weapon - Lesser Impact",
+    "quality": 1,
+    "reqLvl": 0,
+    "enchantType": 1
+  },
+  {
+    "effectId": 1897,
+    "name": "Enchant Weapon - Superior Striking",
+    "shortName": "Superior Striking",
+    "icon": "inv_misc_note_01",
+    "slots": [
+      "mainhand",
+      "offhand"
+    ],
+    "stats": {},
+    "summary": "Enchant Weapon - Superior Striking",
+    "quality": 2,
+    "reqLvl": 60,
+    "enchantType": 0
+  },
+  {
+    "effectId": 1898,
+    "name": "Enchant 2H Weapon - Agility (+25)",
+    "shortName": "+25 Agility",
+    "icon": "spell_ninja_agility",
+    "slots": [
+      "mainhand",
+      "offhand"
+    ],
+    "stats": {
+      "ProcDPS": 3.5
+    },
+    "summary": "Chance on hit: 30 Shadow Damage & Heal 30",
+    "quality": 3,
+    "reqLvl": 62,
+    "enchantType": 0
+  },
+  {
+    "effectId": 1899,
+    "name": "Enchant Weapon - Lifestealing",
+    "shortName": "Lifestealing",
+    "icon": "spell_shadow_lifedrain02",
+    "slots": [
+      "mainhand",
+      "offhand"
+    ],
+    "stats": {},
+    "summary": "Enchant Weapon - Lifestealing",
+    "quality": 2,
+    "reqLvl": 59,
+    "enchantType": 0
+  },
+  {
+    "effectId": 1900,
+    "name": "Enchant Weapon - Crusader",
+    "shortName": "Crusader",
+    "icon": "spell_holy_blessingofstrength",
+    "slots": [
+      "mainhand",
+      "offhand"
+    ],
+    "stats": {
+      "Str": 100,
+      "AP": 140
+    },
+    "summary": "Chance on hit: Heal 73-118 & +100 Str (15s)",
+    "quality": 2,
+    "reqLvl": 61,
+    "enchantType": 0
+  },
+  {
+    "effectId": 1901,
+    "name": "Enchant Bracer - Superior Intellect",
+    "shortName": "Superior Intellect",
+    "icon": "inv_misc_note_01",
+    "slots": [
+      "wrist"
+    ],
+    "stats": {
+      "Int": 9
+    },
+    "summary": "+9 Int",
+    "quality": 2,
+    "reqLvl": 60,
+    "enchantType": 0
+  },
+  {
+    "effectId": 1903,
+    "name": "Enchant 2H Weapon - Major Spirit",
+    "shortName": "Major Spirit",
+    "icon": "inv_misc_note_01",
+    "slots": [
+      "mainhand",
+      "offhand"
+    ],
+    "stats": {
+      "Spirit": 9
+    },
+    "summary": "+9 Spirit",
+    "quality": 2,
+    "reqLvl": 62,
+    "enchantType": 1
+  },
+  {
+    "effectId": 1904,
+    "name": "Enchant 2H Weapon - Major Intellect",
+    "shortName": "Major Intellect",
+    "icon": "inv_misc_note_01",
+    "slots": [
+      "mainhand",
+      "offhand"
+    ],
+    "stats": {
+      "Int": 9
+    },
+    "summary": "+9 Int",
+    "quality": 2,
+    "reqLvl": 60,
+    "enchantType": 1
+  },
+  {
+    "effectId": 2443,
+    "name": "Enchant Weapon - Winter's Might",
+    "shortName": "Winter's Might",
+    "icon": "inv_misc_note_01",
+    "slots": [
+      "mainhand",
+      "offhand"
+    ],
+    "stats": {
+      "FrostDamage": 15
+    },
+    "summary": "Enchant Weapon - Winter's Might",
+    "quality": 2,
+    "reqLvl": 38,
+    "enchantType": 0
+  },
+  {
+    "effectId": 2463,
+    "name": "Enchant Cloak - Fire Resistance",
+    "shortName": "Fire Resistance",
+    "icon": "inv_misc_enchantedscroll",
+    "slots": [
+      "back"
+    ],
+    "stats": {},
+    "summary": "Enchant Cloak - Fire Resistance",
+    "quality": 1,
+    "reqLvl": 0,
+    "enchantType": 0
+  },
+  {
+    "effectId": 2483,
+    "name": "Flame Mantle of the Dawn",
+    "shortName": "Flame Mantle of the Dawn",
+    "icon": "spell_fire_flameshock",
+    "slots": [
+      "shoulders"
+    ],
+    "stats": {},
+    "summary": "Flame Mantle of the Dawn",
+    "quality": 2,
+    "reqLvl": 60,
+    "enchantType": 0
+  },
+  {
+    "effectId": 2484,
+    "name": "Frost Mantle of the Dawn",
+    "shortName": "Frost Mantle of the Dawn",
+    "icon": "spell_frost_frostshock",
+    "slots": [
+      "shoulders"
+    ],
+    "stats": {},
+    "summary": "Frost Mantle of the Dawn",
+    "quality": 2,
+    "reqLvl": 60,
+    "enchantType": 0
+  },
+  {
+    "effectId": 2485,
+    "name": "Arcane Mantle of the Dawn",
+    "shortName": "Arcane Mantle of the Dawn",
+    "icon": "spell_holy_wordfortitude",
+    "slots": [
+      "shoulders"
+    ],
+    "stats": {},
+    "summary": "Arcane Mantle of the Dawn",
+    "quality": 2,
+    "reqLvl": 60,
+    "enchantType": 0
+  },
+  {
+    "effectId": 2486,
+    "name": "Nature Mantle of the Dawn",
+    "shortName": "Nature Mantle of the Dawn",
+    "icon": "spell_nature_protectionformnature",
+    "slots": [
+      "shoulders"
+    ],
+    "stats": {},
+    "summary": "Nature Mantle of the Dawn",
+    "quality": 2,
+    "reqLvl": 60,
+    "enchantType": 0
+  },
+  {
+    "effectId": 2487,
+    "name": "Shadow Mantle of the Dawn",
+    "shortName": "Shadow Mantle of the Dawn",
+    "icon": "spell_shadow_ragingscream",
+    "slots": [
+      "shoulders"
+    ],
+    "stats": {},
+    "summary": "Shadow Mantle of the Dawn",
+    "quality": 2,
+    "reqLvl": 60,
+    "enchantType": 0
+  },
+  {
+    "effectId": 2488,
+    "name": "Chromatic Mantle of the Dawn",
+    "shortName": "Chromatic Mantle of the Dawn",
+    "icon": "inv_misc_gem_variety_02",
+    "slots": [
+      "shoulders"
+    ],
+    "stats": {},
+    "summary": "Chromatic Mantle of the Dawn",
+    "quality": 2,
+    "reqLvl": 60,
+    "enchantType": 0
+  },
+  {
+    "effectId": 2503,
+    "name": "Core Armor Kit",
+    "shortName": "Core Armor Kit",
+    "icon": "inv_misc_armorkit_05",
+    "slots": [
+      "chest",
+      "hands",
+      "legs",
+      "feet"
+    ],
+    "stats": {},
+    "summary": "Core Armor Kit",
+    "quality": 3,
+    "reqLvl": 60,
+    "enchantType": 0
+  },
+  {
+    "effectId": 2504,
+    "name": "Enchant Weapon - Spell Power (+30)",
+    "shortName": "+30 Spell Power",
+    "icon": "spell_holy_greaterblessingofkings",
+    "slots": [
+      "mainhand",
+      "offhand"
+    ],
+    "stats": {
+      "Healing": 30,
+      "SpellDamage": 30
+    },
+    "summary": "+30 Healing, +30 SpellDamage",
+    "quality": 3,
+    "reqLvl": 60,
+    "enchantType": 0
+  },
+  {
+    "effectId": 2505,
+    "name": "Enchant Weapon - Healing Power (+55)",
+    "shortName": "+55 Healing",
+    "icon": "spell_holy_greaterblessingoflight",
+    "slots": [
+      "mainhand",
+      "offhand"
+    ],
+    "stats": {
+      "Healing": 55,
+      "SpellDamage": 19
+    },
+    "summary": "+55 Healing, +19 SpellDamage",
+    "quality": 3,
+    "reqLvl": 60,
+    "enchantType": 0
+  },
+  {
+    "effectId": 2543,
+    "name": "Arcanum of Rapidity",
+    "shortName": "Arcanum of Rapidity",
+    "icon": "inv_misc_gem_02",
+    "slots": [
+      "head",
+      "legs"
+    ],
+    "stats": {},
+    "summary": "Arcanum of Rapidity",
+    "quality": 2,
+    "reqLvl": 50,
+    "enchantType": 0
+  },
+  {
+    "effectId": 2544,
+    "name": "Arcanum of Focus",
+    "shortName": "Arcanum of Focus",
+    "icon": "inv_misc_gem_02",
+    "slots": [
+      "head",
+      "legs"
+    ],
+    "stats": {
+      "Healing": 8,
+      "SpellDamage": 8
+    },
+    "summary": "+8 Healing, +8 SpellDamage",
+    "quality": 2,
+    "reqLvl": 50,
+    "enchantType": 0
+  },
+  {
+    "effectId": 2545,
+    "name": "Arcanum of Protection",
+    "shortName": "Arcanum of Protection",
+    "icon": "inv_misc_gem_02",
+    "slots": [
+      "head",
+      "legs"
+    ],
+    "stats": {},
+    "summary": "Arcanum of Protection",
+    "quality": 2,
+    "reqLvl": 50,
+    "enchantType": 0
+  },
+  {
+    "effectId": 2563,
+    "name": "Enchant Gloves - Superior Strength",
+    "shortName": "Superior Strength",
+    "icon": "inv_misc_enchantedscroll",
+    "slots": [
+      "hands"
+    ],
+    "stats": {
+      "Str": 15
+    },
+    "summary": "+15 Str",
+    "quality": 1,
+    "reqLvl": 0,
+    "enchantType": 0
+  },
+  {
+    "effectId": 2563,
+    "name": "Enchant Weapon - Strength",
+    "shortName": "Strength",
+    "icon": "inv_misc_note_01",
+    "slots": [
+      "mainhand",
+      "offhand"
+    ],
+    "stats": {
+      "Str": 15
+    },
+    "summary": "+15 Str",
+    "quality": 1,
+    "reqLvl": 58,
+    "enchantType": 0
+  },
+  {
+    "effectId": 2563,
+    "name": "Enchant 2H Weapon - Lesser Strength",
+    "shortName": "Lesser Strength",
+    "icon": "inv_misc_note_01",
+    "slots": [
+      "mainhand",
+      "offhand"
+    ],
+    "stats": {
+      "Str": 15
+    },
+    "summary": "+15 Str",
+    "quality": 2,
+    "reqLvl": 44,
+    "enchantType": 1
+  },
+  {
+    "effectId": 2564,
+    "name": "Enchant Gloves - Superior Agility",
+    "shortName": "Superior Agility",
+    "icon": "inv_misc_note_01",
+    "slots": [
+      "hands"
+    ],
+    "stats": {
+      "Agi": 15
+    },
+    "summary": "+15 Agi",
+    "quality": 3,
+    "reqLvl": 70,
+    "enchantType": 0
+  },
+  {
+    "effectId": 2564,
+    "name": "Enchant Weapon - Agility",
+    "shortName": "Agility",
+    "icon": "inv_misc_note_01",
+    "slots": [
+      "mainhand",
+      "offhand"
+    ],
+    "stats": {
+      "Agi": 15
+    },
+    "summary": "+15 Agi",
+    "quality": 1,
+    "reqLvl": 58,
+    "enchantType": 0
+  },
+  {
+    "effectId": 2565,
+    "name": "Enchant Bracer - Greater Agility (+7)",
+    "shortName": "+7 Agility",
+    "icon": "spell_ninja_agility",
+    "slots": [
+      "wrist"
+    ],
+    "stats": {
+      "MP5": 4
+    },
+    "summary": "+4 MP5",
+    "quality": 1,
+    "reqLvl": 58,
+    "enchantType": 0
+  },
+  {
+    "effectId": 2566,
+    "name": "Enchant Gloves - Greater Agility (+15)",
+    "shortName": "+15 Agility",
+    "icon": "spell_ninja_agility",
+    "slots": [
+      "wrist"
+    ],
+    "stats": {
+      "Healing": 55,
+      "SpellDamage": 19
+    },
+    "summary": "+55 Healing, +19 SpellDamage",
+    "quality": 1,
+    "reqLvl": 64,
+    "enchantType": 0
+  },
+  {
+    "effectId": 2567,
+    "name": "Enchant Weapon - Mighty Spirit",
+    "shortName": "Mighty Spirit",
+    "icon": "inv_misc_note_01",
+    "slots": [
+      "mainhand",
+      "offhand"
+    ],
+    "stats": {
+      "Spirit": 22
+    },
+    "summary": "+22 Spirit",
+    "quality": 1,
+    "reqLvl": 66,
+    "enchantType": 0
+  },
+  {
+    "effectId": 2568,
+    "name": "Enchant Weapon - Mighty Intellect",
+    "shortName": "Mighty Intellect",
+    "icon": "inv_misc_note_01",
+    "slots": [
+      "mainhand",
+      "offhand"
+    ],
+    "stats": {
+      "Int": 22
+    },
+    "summary": "+22 Int",
+    "quality": 1,
+    "reqLvl": 70,
+    "enchantType": 0
+  },
+  {
+    "effectId": 2583,
+    "name": "Presence of Might",
+    "shortName": "Presence of Might",
+    "icon": "spell_holy_sealofwrath",
+    "slots": [
+      "head",
+      "legs"
+    ],
+    "stats": {
+      "Sta": 10,
+      "BlockValue": 15
+    },
+    "summary": "+10 Sta, +15 BlockValue",
+    "quality": 3,
+    "reqLvl": 60,
+    "enchantType": 0
+  },
+  {
+    "effectId": 2584,
+    "name": "Syncretist's Sigil",
+    "shortName": "Syncretist's Sigil",
+    "icon": "spell_holy_prayerofhealing",
+    "slots": [
+      "head",
+      "legs"
+    ],
+    "stats": {
+      "Sta": 10,
+      "Healing": 24
+    },
+    "summary": "+10 Sta, +24 Healing",
+    "quality": 3,
+    "reqLvl": 60,
+    "enchantType": 0
+  },
+  {
+    "effectId": 2585,
+    "name": "Death's Embrace",
+    "shortName": "Death's Embrace",
+    "icon": "spell_shadow_scourgebuild",
+    "slots": [
+      "head",
+      "legs"
+    ],
+    "stats": {
+      "AP": 28
+    },
+    "summary": "+28 AP",
+    "quality": 3,
+    "reqLvl": 60,
+    "enchantType": 0
+  },
+  {
+    "effectId": 2586,
+    "name": "Falcon's Call",
+    "shortName": "Falcon's Call",
+    "icon": "spell_nature_forceofnature",
+    "slots": [
+      "head",
+      "legs"
+    ],
+    "stats": {
+      "Sta": 10
+    },
+    "summary": "+10 Sta",
+    "quality": 3,
+    "reqLvl": 60,
+    "enchantType": 0
+  },
+  {
+    "effectId": 2587,
+    "name": "Vodouisant's Vigilant Embrace",
+    "shortName": "Vodouisant's Vigilant Embrace",
+    "icon": "spell_nature_purge",
+    "slots": [
+      "head",
+      "legs"
+    ],
+    "stats": {
+      "Int": 15,
+      "Healing": 13,
+      "SpellDamage": 13
+    },
+    "summary": "+15 Int, +13 Healing, +13 SpellDamage",
+    "quality": 3,
+    "reqLvl": 60,
+    "enchantType": 0
+  },
+  {
+    "effectId": 2588,
+    "name": "Presence of Sight",
+    "shortName": "Presence of Sight",
+    "icon": "spell_shadow_detectlesserinvisibility",
+    "slots": [
+      "head",
+      "legs"
+    ],
+    "stats": {
+      "Healing": 18,
+      "SpellDamage": 18
+    },
+    "summary": "+18 Healing, +18 SpellDamage",
+    "quality": 3,
+    "reqLvl": 60,
+    "enchantType": 0
+  },
+  {
+    "effectId": 2589,
+    "name": "Hoodoo Hex",
+    "shortName": "Hoodoo Hex",
+    "icon": "spell_shadow_impphaseshift",
+    "slots": [
+      "head",
+      "legs"
+    ],
+    "stats": {
+      "Sta": 10,
+      "Healing": 18,
+      "SpellDamage": 18
+    },
+    "summary": "+10 Sta, +18 Healing, +18 SpellDamage",
+    "quality": 3,
+    "reqLvl": 60,
+    "enchantType": 0
+  },
+  {
+    "effectId": 2590,
+    "name": "Prophetic Aura",
+    "shortName": "Prophetic Aura",
+    "icon": "spell_holy_holyprotection",
+    "slots": [
+      "head",
+      "legs"
+    ],
+    "stats": {
+      "Sta": 10,
+      "Healing": 24,
+      "MP5": 4
+    },
+    "summary": "+10 Sta, +24 Healing, +4 MP5",
+    "quality": 3,
+    "reqLvl": 60,
+    "enchantType": 0
+  },
+  {
+    "effectId": 2591,
+    "name": "Animist's Caress",
+    "shortName": "Animist's Caress",
+    "icon": "spell_nature_reincarnation",
+    "slots": [
+      "head",
+      "legs"
+    ],
+    "stats": {
+      "Sta": 10,
+      "Int": 10,
+      "Healing": 24
+    },
+    "summary": "+10 Sta, +10 Int, +24 Healing",
+    "quality": 3,
+    "reqLvl": 60,
+    "enchantType": 0
+  },
+  {
+    "effectId": 2603,
+    "name": "Eternium Fishing Line",
+    "shortName": "Eternium Fishing Line",
+    "icon": "inv_fabric_mageweave_02",
+    "slots": [
+      "mainhand",
+      "offhand"
+    ],
+    "stats": {},
+    "summary": "Eternium Fishing Line",
+    "quality": 2,
+    "reqLvl": 45,
+    "enchantType": 0
+  },
+  {
+    "effectId": 2604,
+    "name": "Zandalar Signet of Serenity (+33 Heal)",
+    "shortName": "+33 Healing",
+    "icon": "inv_misc_armorkit_24",
+    "slots": [
+      "shoulders"
+    ],
+    "stats": {
+      "Healing": 33
+    },
+    "summary": "+33 Healing",
+    "quality": 3,
+    "reqLvl": 60,
+    "enchantType": 0
+  },
+  {
+    "effectId": 2605,
+    "name": "Zandalar Signet of Mojo (+18 SP)",
+    "shortName": "+18 Spell Power",
+    "icon": "inv_misc_armorkit_24",
+    "slots": [
+      "shoulders"
+    ],
+    "stats": {
+      "Healing": 18,
+      "SpellDamage": 18
+    },
+    "summary": "+18 Healing, +18 SpellDamage",
+    "quality": 3,
+    "reqLvl": 60,
+    "enchantType": 0
+  },
+  {
+    "effectId": 2606,
+    "name": "Zandalar Signet of Might (+30 AP)",
+    "shortName": "+30 AP",
+    "icon": "inv_misc_armorkit_24",
+    "slots": [
+      "shoulders"
+    ],
+    "stats": {
+      "AP": 30
+    },
+    "summary": "+30 AP",
+    "quality": 3,
+    "reqLvl": 60,
+    "enchantType": 0
+  },
+  {
+    "effectId": 2613,
+    "name": "Enchant Gloves - Threat",
+    "shortName": "Threat",
+    "icon": "inv_misc_note_01",
+    "slots": [
+      "hands"
+    ],
+    "stats": {},
+    "summary": "Enchant Gloves - Threat",
+    "quality": 3,
+    "reqLvl": 70,
+    "enchantType": 0
+  },
+  {
+    "effectId": 2614,
+    "name": "Enchant Gloves - Shadow Power",
+    "shortName": "Shadow Power",
+    "icon": "inv_misc_note_01",
+    "slots": [
+      "hands"
+    ],
+    "stats": {
+      "ShadowDamage": 20
+    },
+    "summary": "Enchant Gloves - Shadow Power",
+    "quality": 3,
+    "reqLvl": 70,
+    "enchantType": 0
+  },
+  {
+    "effectId": 2615,
+    "name": "Enchant Gloves - Frost Power",
+    "shortName": "Frost Power",
+    "icon": "inv_misc_note_01",
+    "slots": [
+      "hands"
+    ],
+    "stats": {
+      "FrostDamage": 15
+    },
+    "summary": "Enchant Gloves - Frost Power",
+    "quality": 3,
+    "reqLvl": 70,
+    "enchantType": 0
+  },
+  {
+    "effectId": 2616,
+    "name": "Enchant Gloves - Fire Power",
+    "shortName": "Fire Power",
+    "icon": "inv_misc_note_01",
+    "slots": [
+      "hands"
+    ],
+    "stats": {
+      "FireDamage": 20
+    },
+    "summary": "Enchant Gloves - Fire Power",
+    "quality": 3,
+    "reqLvl": 70,
+    "enchantType": 0
+  },
+  {
+    "effectId": 2617,
+    "name": "Enchant Gloves - Healing Power",
+    "shortName": "Healing Power",
+    "icon": "inv_misc_note_01",
+    "slots": [
+      "hands"
+    ],
+    "stats": {
+      "Healing": 55,
+      "SpellDamage": 19
+    },
+    "summary": "+55 Healing, +19 SpellDamage",
+    "quality": 3,
+    "reqLvl": 70,
+    "enchantType": 0
+  },
+  {
+    "effectId": 2618,
+    "name": "Enchant 2H Weapon - Lesser Agility",
+    "shortName": "Lesser Agility",
+    "icon": "inv_misc_note_01",
+    "slots": [
+      "mainhand",
+      "offhand"
+    ],
+    "stats": {
+      "Agi": 9
+    },
+    "summary": "+9 Agi",
+    "quality": 2,
+    "reqLvl": 42,
+    "enchantType": 1
+  },
+  {
+    "effectId": 2619,
+    "name": "Enchant Cloak - Greater Fire Resistance",
+    "shortName": "Greater Fire Resistance",
+    "icon": "inv_misc_note_01",
+    "slots": [
+      "back"
+    ],
+    "stats": {},
+    "summary": "Enchant Cloak - Greater Fire Resistance",
+    "quality": 1,
+    "reqLvl": 70,
+    "enchantType": 0
+  },
+  {
+    "effectId": 2620,
+    "name": "Enchant Cloak - Greater Nature Resistance",
+    "shortName": "Greater Nature Resistance",
+    "icon": "inv_misc_note_01",
+    "slots": [
+      "back"
+    ],
+    "stats": {},
+    "summary": "Enchant Cloak - Greater Nature Resistance",
+    "quality": 1,
+    "reqLvl": 70,
+    "enchantType": 0
+  },
+  {
+    "effectId": 2621,
+    "name": "Enchant Cloak - Subtlety",
+    "shortName": "Subtlety",
+    "icon": "inv_misc_note_01",
+    "slots": [
+      "back"
+    ],
+    "stats": {},
+    "summary": "Enchant Cloak - Subtlety",
+    "quality": 3,
+    "reqLvl": 70,
+    "enchantType": 0
+  },
+  {
+    "effectId": 2622,
+    "name": "Enchant Cloak - Dodge",
+    "shortName": "Dodge",
+    "icon": "inv_misc_note_01",
+    "slots": [
+      "back"
+    ],
+    "stats": {},
+    "summary": "Enchant Cloak - Dodge",
+    "quality": 3,
+    "reqLvl": 70,
+    "enchantType": 0
+  },
+  {
+    "effectId": 2646,
+    "name": "Enchant 2H Weapon - Agility",
+    "shortName": "Agility",
+    "icon": "inv_misc_note_01",
+    "slots": [
+      "mainhand",
+      "offhand"
+    ],
+    "stats": {
+      "Agi": 25
+    },
+    "summary": "+25 Agi",
+    "quality": 1,
+    "reqLvl": 58,
+    "enchantType": 1
+  },
+  {
+    "effectId": 2681,
+    "name": "Savage Guard",
+    "shortName": "Savage Guard",
+    "icon": "spell_nature_spiritarmor",
+    "slots": [
+      "head",
+      "legs"
+    ],
+    "stats": {},
+    "summary": "Savage Guard",
+    "quality": 3,
+    "reqLvl": 60,
+    "enchantType": 0
+  },
+  {
+    "effectId": 2682,
+    "name": "Ice Guard",
+    "shortName": "Ice Guard",
+    "icon": "spell_frost_frostshock",
+    "slots": [
+      "head",
+      "legs"
+    ],
+    "stats": {},
+    "summary": "Ice Guard",
+    "quality": 3,
+    "reqLvl": 60,
+    "enchantType": 0
+  },
+  {
+    "effectId": 2683,
+    "name": "Shadow Guard",
+    "shortName": "Shadow Guard",
+    "icon": "spell_shadow_antishadow",
+    "slots": [
+      "head",
+      "legs"
+    ],
+    "stats": {},
+    "summary": "Shadow Guard",
+    "quality": 3,
+    "reqLvl": 60,
+    "enchantType": 0
+  },
+  {
+    "effectId": 2715,
+    "name": "Resilience of the Scourge",
+    "shortName": "Resilience of the Scourge",
+    "icon": "spell_shadow_deadofnight",
+    "slots": [
+      "shoulders"
+    ],
+    "stats": {
+      "Healing": 31,
+      "MP5": 5
+    },
+    "summary": "+31 Healing, +5 MP5",
+    "quality": 4,
+    "reqLvl": 60,
+    "enchantType": 0
+  },
+  {
+    "effectId": 2716,
+    "name": "Fortitude of the Scourge",
+    "shortName": "Fortitude of the Scourge",
+    "icon": "spell_shadow_antishadow",
+    "slots": [
+      "shoulders"
+    ],
+    "stats": {
+      "Sta": 16
+    },
+    "summary": "+16 Sta",
+    "quality": 4,
+    "reqLvl": 60,
+    "enchantType": 0
+  },
+  {
+    "effectId": 2717,
+    "name": "Might of the Scourge",
+    "shortName": "Might of the Scourge",
+    "icon": "spell_shadow_deathpact",
+    "slots": [
+      "shoulders"
+    ],
+    "stats": {
+      "AP": 26
+    },
+    "summary": "+26 AP",
+    "quality": 4,
+    "reqLvl": 60,
+    "enchantType": 0
+  },
+  {
+    "effectId": 2721,
+    "name": "Power of the Scourge",
+    "shortName": "Power of the Scourge",
+    "icon": "spell_shadow_darkritual",
+    "slots": [
+      "shoulders"
+    ],
+    "stats": {
+      "Healing": 15,
+      "SpellDamage": 15
+    },
+    "summary": "+15 Healing, +15 SpellDamage",
+    "quality": 4,
+    "reqLvl": 60,
+    "enchantType": 0
+  },
+  {
+    "effectId": 7210,
+    "name": "Enchant Weapon - Dismantle",
+    "shortName": "Dismantle",
+    "icon": "inv_misc_enchantedscroll",
+    "slots": [
+      "mainhand",
+      "offhand"
+    ],
+    "stats": {},
+    "summary": "Enchant Weapon - Dismantle",
+    "quality": 1,
+    "reqLvl": 0,
+    "enchantType": 0
+  },
+  {
+    "effectId": 7223,
+    "name": "Enchant Chest - Retricutioner",
+    "shortName": "Retricutioner",
+    "icon": "inv_misc_enchantedscroll",
+    "slots": [
+      "chest"
+    ],
+    "stats": {},
+    "summary": "Enchant Chest - Retricutioner",
+    "quality": 1,
+    "reqLvl": 0,
+    "enchantType": 0
+  },
+  {
+    "effectId": 7603,
+    "name": "Enchant Shield - Law of Nature",
+    "shortName": "Law of Nature",
+    "icon": "inv_misc_enchantedscroll",
+    "slots": [
+      "mainhand",
+      "offhand"
+    ],
+    "stats": {
+      "Healing": 55,
+      "SpellDamage": 30
+    },
+    "summary": "+55 Healing, +30 SpellDamage",
+    "quality": 1,
+    "reqLvl": 0,
+    "enchantType": 2
+  },
+  {
+    "effectId": 7645,
+    "name": "Enchant Chest - Living Stats",
+    "shortName": "Living Stats",
+    "icon": "inv_misc_enchantedscroll",
+    "slots": [
+      "chest"
+    ],
+    "stats": {
+      "Str": 4,
+      "Agi": 4,
+      "Sta": 4,
+      "Int": 4,
+      "Spirit": 4
+    },
+    "summary": "+4 Str, +4 Agi, +4 Sta, +4 Int, +4 Spirit",
+    "quality": 1,
+    "reqLvl": 0,
+    "enchantType": 0
+  },
+  {
+    "effectId": 7646,
+    "name": "Enchant Gloves - Holy Power",
+    "shortName": "Holy Power",
+    "icon": "inv_misc_note_01",
+    "slots": [
+      "hands"
+    ],
+    "stats": {
+      "HolyDamage": 20
+    },
+    "summary": "Enchant Gloves - Holy Power",
+    "quality": 2,
+    "reqLvl": 60,
+    "enchantType": 0
+  },
+  {
+    "effectId": 7647,
+    "name": "Enchant Gloves - Arcane Power",
+    "shortName": "Arcane Power",
+    "icon": "inv_misc_note_01",
+    "slots": [
+      "hands"
+    ],
+    "stats": {
+      "ArcaneDamage": 20
+    },
+    "summary": "Enchant Gloves - Arcane Power",
+    "quality": 2,
+    "reqLvl": 60,
+    "enchantType": 0
+  },
+  {
+    "effectId": 7655,
+    "name": "Enchant Bracer - Spell Power",
+    "shortName": "Spell Power",
+    "icon": "inv_misc_enchantedscroll",
+    "slots": [
+      "wrist"
+    ],
+    "stats": {
+      "Healing": 30,
+      "SpellDamage": 30
+    },
+    "summary": "+30 Healing, +30 SpellDamage",
+    "quality": 1,
+    "reqLvl": 0,
+    "enchantType": 0
+  },
+  {
+    "effectId": 7656,
+    "name": "Enchant Bracer - Agility",
+    "shortName": "Agility",
+    "icon": "inv_misc_enchantedscroll",
+    "slots": [
+      "wrist"
+    ],
+    "stats": {
+      "Agi": 9
+    },
+    "summary": "+9 Agi",
+    "quality": 1,
+    "reqLvl": 0,
+    "enchantType": 0
+  },
+  {
+    "effectId": 7656,
+    "name": "Enchant Bracer - Superior Agility",
+    "shortName": "Superior Agility",
+    "icon": "inv_misc_note_01",
+    "slots": [
+      "wrist"
+    ],
+    "stats": {
+      "Agi": 9
+    },
+    "summary": "+9 Agi",
+    "quality": 2,
+    "reqLvl": 59,
+    "enchantType": 0
+  },
+  {
+    "effectId": 7659,
+    "name": "Enchant Off-Hand - Superior Intellect",
+    "shortName": "Enchant Off-Hand - Superior Intellect",
+    "icon": "inv_misc_enchantedscroll",
+    "slots": [
+      "mainhand",
+      "offhand"
+    ],
+    "stats": {
+      "Int": 9
+    },
+    "summary": "+9 Int",
+    "quality": 1,
+    "reqLvl": 0,
+    "enchantType": 5
+  },
+  {
+    "effectId": 7660,
+    "name": "Enchant Off-Hand - Excellent Spirit",
+    "shortName": "Enchant Off-Hand - Excellent Spirit",
+    "icon": "inv_misc_enchantedscroll",
+    "slots": [
+      "mainhand",
+      "offhand"
+    ],
+    "stats": {
+      "Spirit": 12
+    },
+    "summary": "+12 Spirit",
+    "quality": 1,
+    "reqLvl": 0,
+    "enchantType": 5
+  },
+  {
+    "effectId": 7661,
+    "name": "Enchant Off-Hand - Wisdom",
+    "shortName": "Enchant Off-Hand - Wisdom",
+    "icon": "inv_misc_enchantedscroll",
+    "slots": [
+      "mainhand",
+      "offhand"
+    ],
+    "stats": {
+      "Int": 6,
+      "Spirit": 5
+    },
+    "summary": "+6 Int, +5 Spirit",
+    "quality": 1,
+    "reqLvl": 0,
+    "enchantType": 5
+  },
+  {
+    "effectId": 7662,
+    "name": "Enchant 2H Weapon - Spellblasting",
+    "shortName": "Spellblasting",
+    "icon": "inv_misc_enchantedscroll",
+    "slots": [
+      "mainhand",
+      "offhand"
+    ],
+    "stats": {
+      "Healing": 65,
+      "SpellDamage": 65
+    },
+    "summary": "+65 Healing, +65 SpellDamage",
+    "quality": 1,
+    "reqLvl": 0,
+    "enchantType": 1
+  },
+  {
+    "effectId": 7663,
+    "name": "Enchant Shield - Excellent Stamina",
+    "shortName": "Excellent Stamina",
+    "icon": "inv_misc_enchantedscroll",
+    "slots": [
+      "mainhand",
+      "offhand"
+    ],
+    "stats": {
+      "Sta": 12
+    },
+    "summary": "+12 Sta",
+    "quality": 1,
+    "reqLvl": 0,
+    "enchantType": 2
+  },
+  {
+    "effectId": 7664,
+    "name": "Enchant Shield - Critical Strike",
+    "shortName": "Critical Strike",
+    "icon": "inv_misc_enchantedscroll",
+    "slots": [
+      "mainhand",
+      "offhand"
+    ],
+    "stats": {},
+    "summary": "Enchant Shield - Critical Strike",
+    "quality": 1,
+    "reqLvl": 0,
+    "enchantType": 2
+  },
+  {
+    "effectId": 7665,
+    "name": "Enchant Bracer - Greater Spellpower",
+    "shortName": "Greater Spellpower",
+    "icon": "inv_misc_enchantedscroll",
+    "slots": [
+      "wrist"
+    ],
+    "stats": {
+      "Healing": 16,
+      "SpellDamage": 16
+    },
+    "summary": "+16 Healing, +16 SpellDamage",
+    "quality": 1,
+    "reqLvl": 0,
+    "enchantType": 0
+  },
+  {
+    "effectId": 7667,
+    "name": "Enchant Cloak - Agility",
+    "shortName": "Agility",
+    "icon": "inv_misc_enchantedscroll",
+    "slots": [
+      "back"
+    ],
+    "stats": {
+      "Agi": 5
+    },
+    "summary": "+5 Agi",
+    "quality": 1,
+    "reqLvl": 0,
+    "enchantType": 0
+  },
+  {
+    "effectId": 7940,
+    "name": "Enchant Weapon - Grand Crusader",
+    "shortName": "Grand Crusader",
+    "icon": "inv_misc_enchantedscroll",
+    "slots": [
+      "mainhand",
+      "offhand"
+    ],
+    "stats": {
+      "Str": 100,
+      "AP": 140
+    },
+    "summary": "Chance on hit: Heal 73-118 & +100 Str (15s)",
+    "quality": 1,
+    "reqLvl": 0,
+    "enchantType": 0
+  },
+  {
+    "effectId": 7941,
+    "name": "Enchant 2H Weapon - Grand Arcanist",
+    "shortName": "Grand Arcanist",
+    "icon": "inv_misc_enchantedscroll",
+    "slots": [
+      "mainhand",
+      "offhand"
+    ],
+    "stats": {},
+    "summary": "Enchant 2H Weapon - Grand Arcanist",
+    "quality": 1,
+    "reqLvl": 0,
+    "enchantType": 1
+  },
+  {
+    "effectId": 7942,
+    "name": "Enchant Weapon - Grand Sorcerer",
+    "shortName": "Grand Sorcerer",
+    "icon": "inv_misc_enchantedscroll",
+    "slots": [
+      "mainhand",
+      "offhand"
+    ],
+    "stats": {},
+    "summary": "Enchant Weapon - Grand Sorcerer",
+    "quality": 1,
+    "reqLvl": 0,
+    "enchantType": 0
+  },
+  {
+    "effectId": 7943,
+    "name": "Enchant 2H Weapon - Grand Inquisitor",
+    "shortName": "Grand Inquisitor",
+    "icon": "inv_misc_enchantedscroll",
+    "slots": [
+      "mainhand",
+      "offhand"
+    ],
+    "stats": {},
+    "summary": "Enchant 2H Weapon - Grand Inquisitor",
+    "quality": 1,
+    "reqLvl": 0,
+    "enchantType": 0
+  },
+  {
+    "effectId": 8203,
+    "name": "Enchant Bracer - Lesser Spirit",
+    "shortName": "Lesser Spirit",
+    "icon": "inv_misc_note_01",
+    "slots": [
+      "wrist"
+    ],
+    "stats": {
+      "Spirit": 4
+    },
+    "summary": "+4 Spirit",
+    "quality": 2,
+    "reqLvl": 24,
+    "enchantType": 0
+  },
+  {
+    "effectId": 8203,
+    "name": "Enchant Boots - Lesser Spirit",
+    "shortName": "Lesser Spirit",
+    "icon": "inv_misc_note_01",
+    "slots": [
+      "feet"
+    ],
+    "stats": {
+      "Spirit": 4
+    },
+    "summary": "+4 Spirit",
+    "quality": 2,
+    "reqLvl": 38,
+    "enchantType": 0
+  },
+  {
+    "effectId": 8204,
+    "name": "Enchant Bracer - Lesser Agility",
+    "shortName": "Lesser Agility",
+    "icon": "inv_misc_note_01",
+    "slots": [
+      "wrist"
+    ],
+    "stats": {
+      "Agi": 4
+    },
+    "summary": "+4 Agi",
+    "quality": 2,
+    "reqLvl": 0,
+    "enchantType": 0
+  },
+  {
+    "effectId": 8204,
+    "name": "Enchant Boots - Lesser Agility",
+    "shortName": "Lesser Agility",
+    "icon": "inv_misc_enchantedscroll",
+    "slots": [
+      "feet"
+    ],
+    "stats": {
+      "Agi": 4
+    },
+    "summary": "+4 Agi",
+    "quality": 1,
+    "reqLvl": 0,
+    "enchantType": 0
+  },
+  {
+    "effectId": 8205,
+    "name": "Enchant 2H Weapon - Impact",
+    "shortName": "Impact",
+    "icon": "inv_misc_enchantedscroll",
+    "slots": [
+      "mainhand",
+      "offhand"
+    ],
+    "stats": {},
+    "summary": "Enchant 2H Weapon - Impact",
+    "quality": 1,
+    "reqLvl": 0,
+    "enchantType": 1
+  },
+  {
+    "effectId": 8206,
+    "name": "Enchant Gloves - Greater Agility",
+    "shortName": "Greater Agility",
+    "icon": "inv_misc_note_01",
+    "slots": [
+      "hands"
+    ],
+    "stats": {
+      "Agi": 10
+    },
+    "summary": "+10 Agi",
+    "quality": 2,
+    "reqLvl": 54,
+    "enchantType": 0
+  },
+  {
+    "effectId": 8207,
+    "name": "Enchant Gloves - Greater Strength",
+    "shortName": "Greater Strength",
+    "icon": "inv_misc_note_01",
+    "slots": [
+      "hands"
+    ],
+    "stats": {
+      "Str": 10
+    },
+    "summary": "+10 Str",
+    "quality": 2,
+    "reqLvl": 59,
+    "enchantType": 0
+  },
+  {
+    "effectId": 8208,
+    "name": "Enchant Bracer - Minor Healing Power",
+    "shortName": "Minor Healing Power",
+    "icon": "inv_misc_note_01",
+    "slots": [
+      "wrist"
+    ],
+    "stats": {
+      "Healing": 55,
+      "SpellDamage": 19
+    },
+    "summary": "+55 Healing, +19 SpellDamage",
+    "quality": 2,
+    "reqLvl": 18,
+    "enchantType": 0
+  },
+  {
+    "effectId": 8209,
+    "name": "Enchant Bracer - Lesser Healing Power",
+    "shortName": "Lesser Healing Power",
+    "icon": "inv_misc_note_01",
+    "slots": [
+      "wrist"
+    ],
+    "stats": {
+      "Healing": 55,
+      "SpellDamage": 19
+    },
+    "summary": "+55 Healing, +19 SpellDamage",
+    "quality": 2,
+    "reqLvl": 0,
+    "enchantType": 0
+  },
+  {
+    "effectId": 8210,
+    "name": "Enchant Gloves - Advanced Skinning",
+    "shortName": "Advanced Skinning",
+    "icon": "inv_misc_note_01",
+    "slots": [
+      "hands"
+    ],
+    "stats": {},
+    "summary": "Enchant Gloves - Advanced Skinning",
+    "quality": 2,
+    "reqLvl": 50,
+    "enchantType": 0
+  },
+  {
+    "effectId": 8211,
+    "name": "Enchant 2H Weapon - Mighty Spell Power",
+    "shortName": "Mighty Spell Power",
+    "icon": "inv_misc_note_01",
+    "slots": [
+      "mainhand",
+      "offhand"
+    ],
+    "stats": {
+      "Healing": 30,
+      "SpellDamage": 30
+    },
+    "summary": "+30 Healing, +30 SpellDamage",
+    "quality": 2,
+    "reqLvl": 60,
+    "enchantType": 1
+  },
+  {
+    "effectId": 8212,
+    "name": "Enchant 2H Weapon - Mighty Healing Power",
+    "shortName": "Mighty Healing Power",
+    "icon": "inv_misc_note_01",
+    "slots": [
+      "mainhand",
+      "offhand"
+    ],
+    "stats": {
+      "Healing": 55,
+      "SpellDamage": 19
+    },
+    "summary": "+55 Healing, +19 SpellDamage",
+    "quality": 2,
+    "reqLvl": 60,
+    "enchantType": 1
+  },
+  {
+    "effectId": 8213,
+    "name": "Enchant Gloves - Natural Power",
+    "shortName": "Natural Power",
+    "icon": "inv_misc_note_01",
+    "slots": [
+      "hands"
+    ],
+    "stats": {
+      "NatureDamage": 20
+    },
+    "summary": "Enchant Gloves - Natural Power",
+    "quality": 2,
+    "reqLvl": 60,
+    "enchantType": 0
+  },
+  {
+    "effectId": 8214,
+    "name": "Enchant Bracer - Superior Deflection",
+    "shortName": "Superior Deflection",
+    "icon": "inv_misc_note_01",
+    "slots": [
+      "wrist"
+    ],
+    "stats": {},
+    "summary": "Enchant Bracer - Superior Deflection",
+    "quality": 2,
+    "reqLvl": 60,
+    "enchantType": 0
+  },
+  {
+    "effectId": 8215,
+    "name": "Enchant 2H Weapon - Strength",
+    "shortName": "Strength",
+    "icon": "inv_misc_note_01",
+    "slots": [
+      "mainhand",
+      "offhand"
+    ],
+    "stats": {
+      "Str": 25
+    },
+    "summary": "+25 Str",
+    "quality": 2,
+    "reqLvl": 58,
+    "enchantType": 1
+  },
+  {
+    "effectId": 8216,
+    "name": "Enchant Weapon - Insight",
+    "shortName": "Insight",
+    "icon": "inv_misc_note_01",
+    "slots": [
+      "mainhand",
+      "offhand"
+    ],
+    "stats": {},
+    "summary": "Enchant Weapon - Insight",
+    "quality": 2,
+    "reqLvl": 28,
+    "enchantType": 0
+  },
+  {
+    "effectId": 8217,
+    "name": "Enchant Weapon - Revelation",
+    "shortName": "Revelation",
+    "icon": "inv_misc_note_01",
+    "slots": [
+      "mainhand",
+      "offhand"
+    ],
+    "stats": {},
+    "summary": "Enchant Weapon - Revelation",
+    "quality": 2,
+    "reqLvl": 28,
+    "enchantType": 0
+  },
+  {
+    "effectId": 8220,
+    "name": "Enchant Chest - Absorption",
+    "shortName": "Absorption",
+    "icon": "inv_misc_note_01",
+    "slots": [
+      "chest"
+    ],
+    "stats": {},
+    "summary": "Enchant Chest - Absorption",
+    "quality": 2,
+    "reqLvl": 44,
+    "enchantType": 0
+  },
+  {
+    "effectId": 8481,
+    "name": "Medium Armor Kit",
+    "shortName": "Medium Armor Kit",
+    "icon": "inv_misc_armorkit_15",
+    "slots": [
+      "chest",
+      "hands",
+      "legs",
+      "feet"
+    ],
+    "stats": {
+      "Sta": 2,
+      "Armor": 16
+    },
+    "summary": "+2 Sta, +16 Armor",
+    "quality": 1,
+    "reqLvl": 15,
+    "enchantType": 0
+  },
+  {
+    "effectId": 8482,
+    "name": "Mystic Medium Armor Kit",
+    "shortName": "Mystic Medium Armor Kit",
+    "icon": "inv_misc_armorkit_15",
+    "slots": [
+      "chest",
+      "hands",
+      "legs",
+      "feet"
+    ],
+    "stats": {
+      "Healing": 2,
+      "SpellDamage": 2,
+      "Armor": 16
+    },
+    "summary": "+2 Healing, +2 SpellDamage, +16 Armor",
+    "quality": 2,
+    "reqLvl": 15,
+    "enchantType": 0
+  },
+  {
+    "effectId": 8483,
+    "name": "Forceful Medium Armor Kit",
+    "shortName": "Forceful Medium Armor Kit",
+    "icon": "inv_misc_armorkit_15",
+    "slots": [
+      "chest",
+      "hands",
+      "legs",
+      "feet"
+    ],
+    "stats": {
+      "AP": 4,
+      "Armor": 16
+    },
+    "summary": "+4 AP, +16 Armor",
+    "quality": 2,
+    "reqLvl": 15,
+    "enchantType": 0
+  },
+  {
+    "effectId": 8484,
+    "name": "Heavy Armor Kit",
+    "shortName": "Heavy Armor Kit",
+    "icon": "inv_misc_armorkit_16",
+    "slots": [
+      "chest",
+      "hands",
+      "legs",
+      "feet"
+    ],
+    "stats": {
+      "Sta": 3,
+      "Armor": 24
+    },
+    "summary": "+3 Sta, +24 Armor",
+    "quality": 1,
+    "reqLvl": 30,
+    "enchantType": 0
+  },
+  {
+    "effectId": 8485,
+    "name": "Mystic Heavy Armor Kit",
+    "shortName": "Mystic Heavy Armor Kit",
+    "icon": "inv_misc_armorkit_16",
+    "slots": [
+      "chest",
+      "hands",
+      "legs",
+      "feet"
+    ],
+    "stats": {
+      "Healing": 4,
+      "SpellDamage": 4,
+      "Armor": 24
+    },
+    "summary": "+4 Healing, +4 SpellDamage, +24 Armor",
+    "quality": 2,
+    "reqLvl": 30,
+    "enchantType": 0
+  },
+  {
+    "effectId": 8486,
+    "name": "Forceful Heavy Armor Kit",
+    "shortName": "Forceful Heavy Armor Kit",
+    "icon": "inv_misc_armorkit_16",
+    "slots": [
+      "chest",
+      "hands",
+      "legs",
+      "feet"
+    ],
+    "stats": {
+      "AP": 6,
+      "Armor": 24
+    },
+    "summary": "+6 AP, +24 Armor",
+    "quality": 2,
+    "reqLvl": 30,
+    "enchantType": 0
+  },
+  {
+    "effectId": 8487,
+    "name": "Thick Armor Kit",
+    "shortName": "Thick Armor Kit",
+    "icon": "inv_misc_armorkit_07",
+    "slots": [
+      "chest",
+      "hands",
+      "legs",
+      "feet"
+    ],
+    "stats": {
+      "Sta": 4,
+      "Armor": 32
+    },
+    "summary": "+4 Sta, +32 Armor",
+    "quality": 1,
+    "reqLvl": 40,
+    "enchantType": 0
+  },
+  {
+    "effectId": 8488,
+    "name": "Forceful Thick Armor Kit",
+    "shortName": "Forceful Thick Armor Kit",
+    "icon": "inv_misc_armorkit_07",
+    "slots": [
+      "chest",
+      "hands",
+      "legs",
+      "feet"
+    ],
+    "stats": {
+      "AP": 8,
+      "Armor": 32
+    },
+    "summary": "+8 AP, +32 Armor",
+    "quality": 2,
+    "reqLvl": 40,
+    "enchantType": 0
+  },
+  {
+    "effectId": 8489,
+    "name": "Mystic Thick Armor Kit",
+    "shortName": "Mystic Thick Armor Kit",
+    "icon": "inv_misc_armorkit_07",
+    "slots": [
+      "chest",
+      "hands",
+      "legs",
+      "feet"
+    ],
+    "stats": {
+      "Healing": 5,
+      "SpellDamage": 5,
+      "Armor": 32
+    },
+    "summary": "+5 Healing, +5 SpellDamage, +32 Armor",
+    "quality": 2,
+    "reqLvl": 40,
+    "enchantType": 0
+  },
+  {
+    "effectId": 8490,
+    "name": "Rugged Armor Kit",
+    "shortName": "Rugged Armor Kit",
+    "icon": "inv_misc_armorkit_09",
+    "slots": [
+      "chest",
+      "hands",
+      "legs",
+      "feet"
+    ],
+    "stats": {
+      "Sta": 5,
+      "Armor": 40
+    },
+    "summary": "+5 Sta, +40 Armor",
+    "quality": 1,
+    "reqLvl": 50,
+    "enchantType": 0
+  },
+  {
+    "effectId": 8491,
+    "name": "Forceful Rugged Armor Kit",
+    "shortName": "Forceful Rugged Armor Kit",
+    "icon": "inv_misc_armorkit_09",
+    "slots": [
+      "chest",
+      "hands",
+      "legs",
+      "feet"
+    ],
+    "stats": {
+      "AP": 10,
+      "Armor": 40
+    },
+    "summary": "+10 AP, +40 Armor",
+    "quality": 2,
+    "reqLvl": 50,
+    "enchantType": 0
+  },
+  {
+    "effectId": 8492,
+    "name": "Mystic Rugged Armor Kit",
+    "shortName": "Mystic Rugged Armor Kit",
+    "icon": "inv_misc_armorkit_09",
+    "slots": [
+      "chest",
+      "hands",
+      "legs",
+      "feet"
+    ],
+    "stats": {
+      "Healing": 6,
+      "SpellDamage": 6,
+      "Armor": 40
+    },
+    "summary": "+6 Healing, +6 SpellDamage, +40 Armor",
+    "quality": 2,
+    "reqLvl": 50,
+    "enchantType": 0
+  },
+  {
+    "effectId": 8695,
+    "name": "Enchant Gloves - Lotus Claw",
+    "shortName": "Lotus Claw",
+    "icon": "inv_misc_note_01",
+    "slots": [
+      "hands"
+    ],
+    "stats": {},
+    "summary": "Enchant Gloves - Lotus Claw",
+    "quality": 2,
+    "reqLvl": 55,
+    "enchantType": 0
+  },
+  {
+    "effectId": 8719,
+    "name": "Wild Leather Armor Kit",
+    "shortName": "Wild Leather Armor Kit",
+    "icon": "inv_10_inscription_runedwrithebark_color1",
+    "slots": [
+      "chest",
+      "hands",
+      "legs",
+      "feet"
+    ],
+    "stats": {
+      "Sta": 10
+    },
+    "summary": "+10 Sta",
+    "quality": 3,
+    "reqLvl": 65,
+    "enchantType": 0
+  },
+  {
+    "effectId": 8721,
+    "name": "Enchant Weapon - Recovery",
+    "shortName": "Recovery",
+    "icon": "inv_misc_note_01",
+    "slots": [
+      "mainhand",
+      "offhand"
+    ],
+    "stats": {},
+    "summary": "Enchant Weapon - Recovery",
+    "quality": 2,
+    "reqLvl": 28,
+    "enchantType": 0
+  },
+  {
+    "effectId": 8734,
+    "name": "Enchant Bracer - Lesser Intellect",
+    "shortName": "Lesser Intellect",
+    "icon": "inv_misc_enchantedscroll",
+    "slots": [
+      "wrist"
+    ],
+    "stats": {
+      "Int": 3
+    },
+    "summary": "+3 Int",
+    "quality": 1,
+    "reqLvl": 0,
+    "enchantType": 0
+  },
+  {
+    "effectId": 8737,
+    "name": "Enchant Boots - Speed",
+    "shortName": "Speed",
+    "icon": "inv_misc_enchantedscroll",
+    "slots": [
+      "feet"
+    ],
+    "stats": {
+      "Speed": 8
+    },
+    "summary": "Enchant Boots - Speed",
+    "quality": 1,
+    "reqLvl": 50,
+    "enchantType": 0
+  }
+]
