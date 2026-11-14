@@ -1735,71 +1735,181 @@
 
 
 
-    /* SPEC SEGMENTED TOGGLE IN SUBNAV */
+    /* SPEC SEGMENTED TOGGLE IN TOPBAR & SUBNAV */
     .spec-selector-container {
       display: flex;
       align-items: center;
       gap: 10px;
     }
-    .spec-segmented-toggle {
-      display: flex;
-      background: #0f1218;
-      border: 1px solid var(--border-color);
-      border-radius: 6px;
-      padding: 2px;
-      gap: 2px;
-    }
-    .spec-toggle-btn {
-      background: transparent;
-      border: 1px solid transparent;
-      color: var(--text-muted);
-      font-size: 0.74rem;
-      font-weight: 700;
-      padding: 4px 10px;
-      border-radius: 4px;
-      cursor: pointer;
-      display: flex;
+    .spec-segmented-toggle,
+    .spec-pills-group {
+      display: inline-flex;
       align-items: center;
-      gap: 5px;
-      transition: all 0.15s ease;
+      background: linear-gradient(180deg, #0b0e15 0%, #111622 100%);
+      border: 1px solid #2b3548;
+      border-radius: 8px;
+      padding: 3px;
+      gap: 4px;
+      box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.65), 0 1px 0 rgba(255, 255, 255, 0.04);
     }
-    .spec-toggle-btn:hover {
-      color: #ffffff;
-      background: rgba(255, 255, 255, 0.05);
+    .spec-toggle-btn,
+    .spec-tab-pill {
+      background: rgba(22, 28, 40, 0.55);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      color: #94a3b8;
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 5px 11px;
+      border-radius: 6px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      transition: all 0.16s cubic-bezier(0.2, 0.8, 0.2, 1);
+      white-space: nowrap;
+      position: relative;
+      letter-spacing: 0.2px;
     }
-    .spec-toggle-btn.active {
-      color: var(--gold-bright);
-      background: var(--bg-card);
-      border-color: rgba(243, 156, 18, 0.5);
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+    .spec-toggle-btn .spec-wow-icon,
+    .spec-tab-pill .spec-wow-icon {
+      width: 18px;
+      height: 18px;
+      border-radius: 4px;
+      background-size: cover;
+      background-position: center;
+      border: 1px solid #475569;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.65);
+      flex-shrink: 0;
+      transition: border-color 0.15s ease, transform 0.15s ease;
     }
-    .spec-toggle-btn.active.spec-enh, .spec-toggle-btn.active.spec-arms, .spec-toggle-btn.active.spec-fury, .spec-toggle-btn.active.spec-ret, .spec-toggle-btn.active.spec-com, .spec-toggle-btn.active.spec-sin, .spec-toggle-btn.active.spec-sub, .spec-toggle-btn.active.spec-feral {
-      color: var(--gold-bright);
-      border-color: rgba(243, 156, 18, 0.5);
+    .spec-toggle-btn .spec-role-tag,
+    .spec-tab-pill .spec-role-tag {
+      font-size: 0.62rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      padding: 1px 5px;
+      border-radius: 3px;
+      background: rgba(255, 255, 255, 0.06);
+      color: #64748b;
+      letter-spacing: 0.4px;
     }
-    .spec-toggle-btn.active.spec-res, .spec-toggle-btn.active.spec-resto, .spec-toggle-btn.active.spec-holy, .spec-toggle-btn.active.spec-disc {
-      color: #2ecc71;
-      border-color: rgba(46, 204, 113, 0.5);
+    .spec-toggle-btn:hover,
+    .spec-tab-pill:hover {
+      color: #f8fafc;
+      background: rgba(38, 48, 68, 0.85);
+      border-color: rgba(255, 255, 255, 0.18);
+      transform: translateY(-1px);
     }
-    .spec-toggle-btn.active.spec-ele, .spec-toggle-btn.active.spec-frost, .spec-toggle-btn.active.spec-arcane {
-      color: #3498db;
-      border-color: rgba(52, 152, 219, 0.5);
+    .spec-toggle-btn:hover .spec-wow-icon,
+    .spec-tab-pill:hover .spec-wow-icon {
+      transform: scale(1.06);
+      border-color: #cbd5e1;
     }
-    .spec-toggle-btn.active.spec-fire, .spec-toggle-btn.active.spec-destro {
-      color: #e67e22;
-      border-color: rgba(230, 126, 34, 0.5);
+    .spec-toggle-btn.active,
+    .spec-tab-pill.active {
+      color: #fef3c7;
+      background: linear-gradient(180deg, rgba(245, 158, 11, 0.22) 0%, rgba(180, 83, 9, 0.14) 100%);
+      border-color: #f59e0b;
+      box-shadow: 0 0 12px rgba(245, 158, 11, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.15);
     }
-    .spec-toggle-btn.active.spec-shadow, .spec-toggle-btn.active.spec-aff, .spec-toggle-btn.active.spec-demo {
-      color: #9b59b6;
-      border-color: rgba(155, 89, 182, 0.5);
+    .spec-toggle-btn.active .spec-wow-icon,
+    .spec-tab-pill.active .spec-wow-icon {
+      border-color: #fbbf24;
     }
-    .spec-toggle-btn.active.spec-mm, .spec-toggle-btn.active.spec-bm, .spec-toggle-btn.active.spec-surv {
-      color: #a8e063;
-      border-color: rgba(168, 224, 99, 0.5);
+    .spec-toggle-btn.active .spec-role-tag,
+    .spec-tab-pill.active .spec-role-tag {
+      background: rgba(245, 158, 11, 0.25);
+      color: #fde68a;
     }
-    .spec-toggle-btn.active.spec-prot {
-      color: #3498db;
-      border-color: rgba(52, 152, 219, 0.5);
+    /* Melee DPS Specs (Amber/Gold) */
+    .spec-toggle-btn.active.spec-enh, .spec-tab-pill.active.spec-enh,
+    .spec-toggle-btn.active.spec-arms, .spec-tab-pill.active.spec-arms,
+    .spec-toggle-btn.active.spec-fury, .spec-tab-pill.active.spec-fury,
+    .spec-toggle-btn.active.spec-ret, .spec-tab-pill.active.spec-ret,
+    .spec-toggle-btn.active.spec-com, .spec-tab-pill.active.spec-com,
+    .spec-toggle-btn.active.spec-sin, .spec-tab-pill.active.spec-sin,
+    .spec-toggle-btn.active.spec-sub, .spec-tab-pill.active.spec-sub,
+    .spec-toggle-btn.active.spec-feral, .spec-tab-pill.active.spec-feral {
+      color: #fde68a;
+      background: linear-gradient(180deg, rgba(245, 158, 11, 0.24) 0%, rgba(146, 64, 14, 0.18) 100%);
+      border-color: #f59e0b;
+      box-shadow: 0 0 12px rgba(245, 158, 11, 0.28);
+    }
+    /* Tank Specs (Steel Cyan / Shield Blue) */
+    .spec-toggle-btn.active.spec-prot, .spec-tab-pill.active.spec-prot,
+    .spec-toggle-btn.active.spec-tank, .spec-tab-pill.active.spec-tank {
+      color: #e0f2fe;
+      background: linear-gradient(180deg, rgba(56, 189, 248, 0.26) 0%, rgba(3, 105, 161, 0.2) 100%);
+      border-color: #38bdf8;
+      box-shadow: 0 0 12px rgba(56, 189, 248, 0.3);
+    }
+    .spec-toggle-btn.active.spec-prot .spec-wow-icon, .spec-tab-pill.active.spec-prot .spec-wow-icon,
+    .spec-toggle-btn.active.spec-tank .spec-wow-icon, .spec-tab-pill.active.spec-tank .spec-wow-icon {
+      border-color: #38bdf8;
+    }
+    .spec-toggle-btn.active.spec-prot .spec-role-tag, .spec-tab-pill.active.spec-prot .spec-role-tag,
+    .spec-toggle-btn.active.spec-tank .spec-role-tag, .spec-tab-pill.active.spec-tank .spec-role-tag {
+      background: rgba(56, 189, 248, 0.25);
+      color: #bae6fd;
+    }
+    /* Healer Specs (Emerald Green) */
+    .spec-toggle-btn.active.spec-res, .spec-tab-pill.active.spec-res,
+    .spec-toggle-btn.active.spec-resto, .spec-tab-pill.active.spec-resto,
+    .spec-toggle-btn.active.spec-holy, .spec-tab-pill.active.spec-holy,
+    .spec-toggle-btn.active.spec-disc, .spec-tab-pill.active.spec-disc {
+      color: #d1fae5;
+      background: linear-gradient(180deg, rgba(16, 185, 129, 0.24) 0%, rgba(6, 95, 70, 0.2) 100%);
+      border-color: #10b981;
+      box-shadow: 0 0 12px rgba(16, 185, 129, 0.28);
+    }
+    .spec-toggle-btn.active.spec-res .spec-wow-icon, .spec-tab-pill.active.spec-res .spec-wow-icon,
+    .spec-toggle-btn.active.spec-resto .spec-wow-icon, .spec-tab-pill.active.spec-resto .spec-wow-icon {
+      border-color: #34d399;
+    }
+    .spec-toggle-btn.active.spec-res .spec-role-tag, .spec-tab-pill.active.spec-res .spec-role-tag,
+    .spec-toggle-btn.active.spec-resto .spec-role-tag, .spec-tab-pill.active.spec-resto .spec-role-tag {
+      background: rgba(16, 185, 129, 0.25);
+      color: #a7f3d0;
+    }
+    /* Caster Specs (Arcane Violet / Lightning Blue) */
+    .spec-toggle-btn.active.spec-ele, .spec-tab-pill.active.spec-ele,
+    .spec-toggle-btn.active.spec-frost, .spec-tab-pill.active.spec-frost,
+    .spec-toggle-btn.active.spec-arcane, .spec-tab-pill.active.spec-arcane,
+    .spec-toggle-btn.active.spec-bal, .spec-tab-pill.active.spec-bal {
+      color: #ede9fe;
+      background: linear-gradient(180deg, rgba(168, 85, 247, 0.25) 0%, rgba(109, 40, 217, 0.2) 100%);
+      border-color: #a855f7;
+      box-shadow: 0 0 12px rgba(168, 85, 247, 0.28);
+    }
+    .spec-toggle-btn.active.spec-ele .spec-wow-icon, .spec-tab-pill.active.spec-ele .spec-wow-icon {
+      border-color: #c084fc;
+    }
+    .spec-toggle-btn.active.spec-ele .spec-role-tag, .spec-tab-pill.active.spec-ele .spec-role-tag {
+      background: rgba(168, 85, 247, 0.25);
+      color: #ddd6fe;
+    }
+    .spec-toggle-btn.active.spec-fire, .spec-tab-pill.active.spec-fire,
+    .spec-toggle-btn.active.spec-destro, .spec-tab-pill.active.spec-destro {
+      color: #ffedd5;
+      background: linear-gradient(180deg, rgba(234, 88, 12, 0.25) 0%, rgba(154, 52, 18, 0.2) 100%);
+      border-color: #ea580c;
+    }
+    .spec-toggle-btn.active.spec-shadow, .spec-tab-pill.active.spec-shadow,
+    .spec-toggle-btn.active.spec-aff, .spec-tab-pill.active.spec-aff,
+    .spec-toggle-btn.active.spec-demo, .spec-tab-pill.active.spec-demo {
+      color: #f3e8ff;
+      border-color: #9333ea;
+    }
+    .spec-toggle-btn.active.spec-mm, .spec-tab-pill.active.spec-mm,
+    .spec-toggle-btn.active.spec-bm, .spec-tab-pill.active.spec-bm,
+    .spec-toggle-btn.active.spec-surv, .spec-tab-pill.active.spec-surv {
+      color: #ecfccb;
+      border-color: #84cc16;
+    }
+    .scen-type-badge.cat-pve_tank {
+      background: rgba(56, 189, 248, 0.18);
+      color: #38bdf8;
+      border: 1px solid rgba(56, 189, 248, 0.45);
     }
     .spec-meta-pill {
       display: flex;
@@ -2586,14 +2696,25 @@
       </div>
 
       <div class="spec-pills-group" id="class-specs-list">
-        <button class="spec-tab-pill active" onclick="switchSpecRole('enhancement')">
-          <span>⚔️</span> Enhancement
+        <button id="spec-btn-enhancement" class="spec-tab-pill active spec-enh" onclick="switchSpecRole('enhancement')" title="Enhancement Shaman — Melee DPS">
+          <span class="spec-wow-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/medium/spell_nature_lightningshield.jpg');"></span>
+          <span>Enhancement</span>
+          <span class="spec-role-tag">DPS</span>
         </button>
-        <button class="spec-tab-pill" onclick="switchSpecRole('resto')">
-          <span>💚</span> Restoration
+        <button id="spec-btn-tank" class="spec-tab-pill spec-prot" onclick="switchSpecRole('tank')" title="Warden Shaman Tank — Armor Mitigation, EHP & Rockbiter/Earth Shock Threat">
+          <span class="spec-wow-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/medium/spell_nature_stoneclawtotem.jpg');"></span>
+          <span>Warden Tank</span>
+          <span class="spec-role-tag">TANK</span>
         </button>
-        <button class="spec-tab-pill" onclick="switchSpecRole('elemental')">
-          <span>⚡</span> Elemental
+        <button id="spec-btn-resto" class="spec-tab-pill spec-res" onclick="switchSpecRole('resto')" title="Restoration Shaman — Healing Throughput & Mana Efficiency">
+          <span class="spec-wow-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/medium/spell_nature_magicimmunity.jpg');"></span>
+          <span>Restoration</span>
+          <span class="spec-role-tag">HEAL</span>
+        </button>
+        <button id="spec-btn-elemental" class="spec-tab-pill spec-ele" onclick="switchSpecRole('elemental')" title="Elemental Shaman — Nature/Fire Spell Burst">
+          <span class="spec-wow-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/medium/spell_nature_lightning.jpg');"></span>
+          <span>Elemental</span>
+          <span class="spec-role-tag">CAST</span>
         </button>
       </div>
 
@@ -2605,20 +2726,22 @@
 
     <!-- 3. MASTER ACTIONS (SINGLE AUTO-BIS BUILDER + SINGLE SIMULATE BUTTON) -->
     <div class="master-actions-bar">
-      <div class="unified-bis-group" title="Choose an optimization target and auto-equip the mathematically best Gear, Enchants, Talents, and Food/Consumables">
+      <div class="unified-bis-group" title="Choose an optimization target and auto-equip the mathematically best Gear, Enchants, Talents, Imbue, and Food/Consumables">
         <span style="font-size: 0.68rem; font-weight: 800; color: #f59e0b; text-transform: uppercase;">BiS Target:</span>
-        <select id="cfg-bis-target" class="unified-bis-select">
-          <option value="all" selected>⭐ All-Around Spec BiS</option>
-          <option value="pve_single_target">🎯 PvE: Single Target</option>
-          <option value="pve_aoe_cleave">🔥 PvE: AoE Dungeon Pull</option>
-          <option value="pve_dungeon_boss">💀 PvE: Dungeon Boss (+3 Lvl)</option>
-          <option value="pve_raid_boss">🐉 PvE: Raid / World Boss</option>
-          <option value="pvp_melee_duel">⚔️ PvP: 1v1 vs Melee</option>
-          <option value="pvp_caster_duel">🔮 PvP: 1v1 vs Caster</option>
-          <option value="pvp_wsg_flag_runner">🚩 WSG: Flag Runner & Survival</option>
-          <option value="pvp_wsg_midfield">💥 WSG: Midfield Teamfight</option>
-          <option value="pvp_burst_healing">💚 Heal: Burst Emergency</option>
-          <option value="pve_sustained_healing">💧 Heal: Sustained Mana</option>
+        <select id="cfg-bis-target" class="unified-bis-select" onchange="runUnifiedAutoBiS()">
+          <option value="all" selected>⭐ All-Around Active Spec BiS</option>
+          <option value="pve_dungeon_tank">🛡️ Tank: Dungeon Boss (Main Tank)</option>
+          <option value="pve_aoe_tank_pack">🛡️ Tank: AoE 4-Mob Pack Tanking</option>
+          <option value="pve_single_target">🎯 PvE: Single Target DPS</option>
+          <option value="aoe_dungeon_trash">🔥 PvE: AoE Dungeon Cleave (4 Mobs)</option>
+          <option value="pve_dungeon_boss">💀 PvE: Dungeon Boss (+3 Lvl Hit Cap)</option>
+          <option value="pve_raid_boss">🐉 PvE: 90s Raid / World Boss</option>
+          <option value="pvp_melee_brawler">⚔️ PvP: 1v1 vs Warrior / Rogue</option>
+          <option value="pvp_caster_duel">🔮 PvP: 1v1 vs Mage / Warlock</option>
+          <option value="pvp_flag_runner">🚩 WSG: Flag Runner & Survival</option>
+          <option value="pvp_burst_skirmish">💥 WSG: 10s Midfield Burst</option>
+          <option value="pve_dungeon_healing">💧 Heal: Sustained Dungeon (MP5)</option>
+          <option value="pvp_arena_healing">💚 Heal: PvP Focus Fire Triage</option>
         </select>
         <button class="btn-bis-master" onclick="runUnifiedAutoBiS()">
           <span>✨</span> Auto-Build BiS
@@ -2803,8 +2926,9 @@
             </div>
             <div class="chips-row" style="align-items: center; gap: 8px;">
               <span class="toolbar-group-label">Preset Tree:</span>
-              <select id="tal-strategy-select" class="toolbar-select" onchange="onTalentStrategyChanged(); autoOptimizeTalentsForLevel();" style="font-size: 0.78rem; padding: 4px 8px; font-weight: 700; max-width: 240px;">
+              <select id="tal-strategy-select" class="toolbar-select" onchange="autoOptimizeTalentsForLevel(); onSettingChanged();" style="font-size: 0.78rem; padding: 4px 8px; font-weight: 700; max-width: 260px;">
                 <option value="enhancement_pve" selected>⚔️ Enhancement (PvE / Top DPS)</option>
+                <option value="shaman_tank">🛡️ Warden Tank (Mitigation, Dodge & Threat)</option>
                 <option value="enhancement_pvp">🐺 Enhancement (PvP / Instant Wolf)</option>
                 <option value="resto">💚 Restoration (Healer)</option>
                 <option value="elemental">⚡ Elemental (Caster)</option>
@@ -2856,11 +2980,12 @@
             <div class="imbue-card" id="card-imbue-RockbiterWeapon" onclick="setImbue('RockbiterWeapon')" onmouseenter="showImbueTooltip(event, 'RockbiterWeapon')" onmousemove="moveUnifiedTooltip(event)" onmouseleave="hideUnifiedTooltip()">
               <div class="imbue-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/medium/spell_nature_rockbiter.jpg');"></div>
               <div style="flex: 1;">
-                <div style="font-weight: 700;">
+                <div style="font-weight: 700; display: flex; align-items: center; gap: 8px;">
                   <span style="color: var(--text-main);">Rockbiter Weapon (Rank 3)</span>
+                  <span class="badge-rec" style="background: rgba(56, 189, 248, 0.2); border-color: #38bdf8; color: #38bdf8;">WARDEN TANK BIS (+THREAT & AP)</span>
                 </div>
                 <div style="font-size: 0.78rem; color: var(--text-muted); margin-top: 3px;">
-                  Increases Attack Power by 111. All damage is physical and reduced by target armor.
+                  Increases Attack Power by 111 and generates massive bonus threat per swing for Shaman Tanking.
                 </div>
               </div>
             </div>
@@ -2889,6 +3014,7 @@
             </div>
             <div class="chips-row" style="margin-bottom: 8px;">
               <span class="chip active" id="chip-rot-burst" onclick="loadRotationPreset('burst')">⚡ BiS Burst L19 (Flame DoT ➔ Earth ➔ Totem)</span>
+              <span class="chip" id="chip-rot-tank_threat" onclick="loadRotationPreset('tank_threat')" style="border-color: rgba(56, 189, 248, 0.55); color: #38bdf8; font-weight: 700;">🛡️ Warden Tank Threat (Earth Shock ➔ Lightning Shield)</span>
               <span class="chip" id="chip-rot-twink29_burst" onclick="loadRotationPreset('twink29_burst')" style="border-color: #ffd700; color: #ffd700; font-weight: 700;">⚡ Twink 29 Burst (Stormstrike #1)</span>
               <span class="chip" id="chip-rot-sustain" onclick="loadRotationPreset('sustain')">💧 Mana Conservation</span>
               <span class="chip" id="chip-rot-kiting" onclick="loadRotationPreset('kiting')">❄️ PvP Frost Kiting</span>
@@ -2970,11 +3096,14 @@
               <button class="btn btn-secondary btn-sm" onclick="applyBuffPreset('melee_twink')">
                 ⚔️ Melee DPS
               </button>
+              <button class="btn btn-secondary btn-sm" onclick="applyBuffPreset('tank_warden')" style="border-color: rgba(56, 189, 248, 0.5); color: #38bdf8;">
+                🛡️ Warden Tank
+              </button>
               <button class="btn btn-secondary btn-sm" onclick="applyBuffPreset('caster_resto')">
                 💚 Healer / Caster
               </button>
               <button class="btn btn-secondary btn-sm" onclick="applyBuffPreset('flag_runner')">
-                🛡️ WSG Flag Runner
+                🚩 WSG Flag Runner
               </button>
               <button class="btn btn-secondary btn-sm" onclick="applyBuffPreset('full_raid')">
                 ⭐ Full Raid Buffed
@@ -3046,17 +3175,22 @@
 
       <!-- ALWAYS-VISIBLE 3-CARD TELEMETRY STRIP -->
       <div class="telemetry-kpi-strip">
-        <!-- Card 1: Single-Target DPS -->
+        <!-- Card 1: Single-Target DPS / Tank Telemetry -->
         <div class="telemetry-card dps-card">
-          <div class="telemetry-label">Single-Target DPS</div>
+          <div class="telemetry-label" id="telemetry-primary-label">Single-Target DPS</div>
           <div class="telemetry-main-row">
             <span class="telemetry-big-val" id="res-dps">--.-</span>
             <span id="res-diff-badge" style="display: none; font-size: 0.68rem; padding: 2px 6px;" class="dps-diff"></span>
           </div>
-          <div class="telemetry-sub-row">
+          <div class="telemetry-sub-row" id="telemetry-primary-subrow">
             <span>Min: <strong id="res-min" style="color: #e2e8f0;">--.-</strong></span>
             <span>Max: <strong id="res-max" style="color: #e2e8f0;">--.-</strong></span>
             <span>±<strong id="res-stdev" style="color: #e2e8f0;">--.-</strong></span>
+          </div>
+          <div id="telemetry-tank-mini-bar" style="display: none; margin-top: 4px; padding-top: 4px; border-top: 1px solid rgba(56, 189, 248, 0.25); font-size: 0.69rem; color: #bae6fd; justify-content: space-between; gap: 6px;">
+            <span>🛡️ EHP: <strong id="tel-tank-ehp" style="color: #38bdf8;">--</strong></span>
+            <span>⚡ Threat: <strong id="tel-tank-tps" style="color: #fbbf24;">-- TPS</strong></span>
+            <span>DR: <strong id="tel-tank-dr" style="color: #4ade80;">--%</strong></span>
           </div>
         </div>
 
@@ -3068,7 +3202,7 @@
             <span class="score-grade-pill" id="suite-composite-grade">Evaluating...</span>
           </div>
           <div class="telemetry-sub-row">
-            <span id="sim-meta">10-Scenario Benchmark Ready</span>
+            <span id="sim-meta">12-Scenario Benchmark Ready</span>
           </div>
         </div>
 
@@ -3088,21 +3222,21 @@
       <!-- RIGHT ANALYSIS VIEW TABS -->
       <div class="cockpit-right-tabs">
         <button id="btn-cockpit-tab-scenarios" class="cockpit-tab-btn active" onclick="switchCockpitRightTab('scenarios')">
-          <span>🌐</span> 10-Scenario Radar & Matrix
+          <span>🌐</span> 12-Scenario Radar & Matrix
         </button>
         <button id="btn-cockpit-tab-single" class="cockpit-tab-btn" onclick="switchCockpitRightTab('single')">
-          <span>📊</span> Combat & Spell Breakdown
+          <span>📊</span> Combat, Tank & Spell Breakdown
         </button>
       </div>
 
-      <!-- ANALYSIS PANE 1: 10 SCENARIOS & 7-AXIS RADAR -->
+      <!-- ANALYSIS PANE 1: 12 SCENARIOS & 8-AXIS RADAR -->
       <div id="view-scenarios" class="cockpit-pane">
         <div class="panel">
           <!-- RADAR + SCENARIO CONTROLS COMPACT ROW -->
           <div style="display: grid; grid-template-columns: 310px 1fr; gap: 14px; margin-bottom: 14px; align-items: center;">
             <div class="radar-container-card" style="padding: 10px;">
               <div style="display: flex; justify-content: space-between; width: 100%; margin-bottom: 4px; font-size: 0.74rem;">
-                <span style="font-weight: 700; color: var(--gold-bright);">7-Axis Balance Radar</span>
+                <span style="font-weight: 700; color: var(--gold-bright);">8-Axis Balance Radar</span>
                 <span style="color: #94a3b8; font-size: 0.68rem;">0 - 100 Scale</span>
               </div>
               <canvas id="scenarios-radar-canvas" width="300" height="195" style="max-width: 100%;"></canvas>
@@ -3112,15 +3246,16 @@
               <div>
                 <h2 style="font-size: 1rem; margin-bottom: 4px;"><span>🌐</span> Multi-Environment Benchmark Matrix</h2>
                 <div style="font-size: 0.75rem; color: var(--text-muted); line-height: 1.4;">
-                  Simultaneously evaluates your build across PvE Single-Target, AoE Dungeon Pulls, +3 Level Bosses, 1v1 Duels, and Warsong Gulch Flag Running.
+                  Simultaneously evaluates your build across Dungeon Tanking, PvE Single-Target, AoE Pulls, +3 Level Bosses, 1v1 Duels, WSG Flag Running, and Healing.
                 </div>
               </div>
 
               <div>
                 <div style="font-size: 0.7rem; font-weight: 700; color: #94a3b8; text-transform: uppercase; margin-bottom: 6px;">Filter Environment Category:</div>
                 <div class="chips-row" style="margin: 0;">
-                  <span class="chip active" id="filter-sc-all" onclick="filterScenariosView('all')">All (<span id="sc-count-all">10</span>)</span>
-                  <span class="chip" id="filter-sc-pve_dps" onclick="filterScenariosView('pve_dps')">⚔️ PvE (<span id="sc-count-pve">4</span>)</span>
+                  <span class="chip active" id="filter-sc-all" onclick="filterScenariosView('all')">All (<span id="sc-count-all">12</span>)</span>
+                  <span class="chip" id="filter-sc-pve_tank" onclick="filterScenariosView('pve_tank')" style="border-color: rgba(56, 189, 248, 0.45); color: #38bdf8;">🛡️ Tanking (<span id="sc-count-tank">2</span>)</span>
+                  <span class="chip" id="filter-sc-pve_dps" onclick="filterScenariosView('pve_dps')">⚔️ PvE DPS (<span id="sc-count-pve">4</span>)</span>
                   <span class="chip" id="filter-sc-pvp_dps" onclick="filterScenariosView('pvp_dps')">🚩 PvP & WSG (<span id="sc-count-pvp">4</span>)</span>
                   <span class="chip" id="filter-sc-healing" onclick="filterScenariosView('healing')">💚 Healing (<span id="sc-count-heal">2</span>)</span>
                   <span class="chip" id="filter-sc-custom" onclick="filterScenariosView('custom')" style="display: none;">🛠 Custom (<span id="sc-count-custom">0</span>)</span>
@@ -3149,8 +3284,44 @@
         </div>
       </div>
 
-      <!-- ANALYSIS PANE 2: COMBAT & SPELL BREAKDOWN -->
+      <!-- ANALYSIS PANE 2: COMBAT, TANK & SPELL BREAKDOWN -->
       <div id="cockpit-pane-single" class="cockpit-pane" style="display: none; flex-direction: column; gap: 10px;">
+        <!-- TANK SURVIVABILITY, MITIGATION & THREAT CARD -->
+        <div class="panel" id="card-tank-metrics" style="border: 1px solid rgba(56, 189, 248, 0.65); background: linear-gradient(180deg, rgba(56, 189, 248, 0.14) 0%, rgba(13, 17, 23, 0.96) 100%); padding: 14px 18px; border-radius: 8px;">
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+            <div style="font-size: 0.78rem; font-weight: 800; color: #38bdf8; text-transform: uppercase; letter-spacing: 0.6px; display: flex; align-items: center; gap: 6px;">
+              <span>🛡️</span> Warden Tank Survivability, Mitigation & Threat
+            </div>
+            <div style="display: flex; gap: 6px; align-items: center;">
+              <span class="badge-rec" id="tank-shield-badge" style="background: rgba(56, 189, 248, 0.2); border-color: #38bdf8; color: #bae6fd;">1H + SHIELD</span>
+              <span class="score-grade-pill" id="tank-grade-badge" style="border-color: #38bdf8; color: #38bdf8; background: rgba(56, 189, 248, 0.16);">GRADE A</span>
+            </div>
+          </div>
+          <div style="display: flex; align-items: baseline; gap: 16px; flex-wrap: wrap;">
+            <div style="display: flex; align-items: baseline; gap: 6px;">
+              <div style="font-size: 2.1rem; font-weight: 900; color: #38bdf8; line-height: 1;" id="tank-ehp-val">--</div>
+              <span style="font-size: 0.8rem; color: #bae6fd; font-weight: 700;">EHP (Effective Health)</span>
+            </div>
+            <div style="display: flex; align-items: baseline; gap: 6px; margin-left: auto;">
+              <div style="font-size: 1.65rem; font-weight: 900; color: #fbbf24; line-height: 1;" id="tank-tps-val">--.-</div>
+              <span style="font-size: 0.78rem; color: #fde68a; font-weight: 700;">TPS (Threat/s)</span>
+            </div>
+          </div>
+          <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px 12px; margin-top: 10px; font-size: 0.73rem; background: rgba(0,0,0,0.4); padding: 9px 12px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.06);">
+            <div>Max Health: <strong id="tank-max-hp" style="color: #fff;">-- HP</strong> <span id="tank-sta-sub" style="color: #94a3b8; font-size: 0.68rem;">(-- Sta)</span></div>
+            <div>Armor DR: <strong id="tank-armor-dr" style="color: #38bdf8;">--%</strong> <span id="tank-armor-sub" style="color: #94a3b8; font-size: 0.68rem;">(-- Armor)</span></div>
+            <div>Avoidance: <strong id="tank-avoidance" style="color: #4ade80;">--%</strong></div>
+            <div>Dodge / Parry: <strong id="tank-dodge-parry" style="color: #e2e8f0;">--% / --%</strong></div>
+            <div>Shield Block: <strong id="tank-block-info" style="color: #bae6fd;">--% (-- BV)</strong></div>
+            <div>Mitigated DTPS: <strong id="tank-dtps" style="color: #ff7675;">--/s</strong> <span id="tank-ttd" style="color: #94a3b8; font-size: 0.68rem;">(TTD: --s)</span></div>
+          </div>
+          <div style="font-size: 0.71rem; color: #94a3b8; margin-top: 7px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px;">
+            <span>Rockbiter Bonus Threat: <strong id="tank-rb-tps" style="color: #fbbf24;">+0.0 TPS</strong></span>
+            <span>Earth Shock 2x Threat: <strong id="tank-es-tps" style="color: #fbbf24;">+0.0 TPS</strong></span>
+            <span>Lightning Shield Thorns: <strong id="tank-ls-tps" style="color: #38bdf8;">+0.0 TPS</strong></span>
+          </div>
+        </div>
+
         <!-- HEALING & SUSTAIN CARD (ACTIVE ON HEALING ROTATION) -->
         <div class="panel" id="card-healing-metrics" style="display: none; border: 1px solid #2ecc71; background: linear-gradient(180deg, rgba(46, 204, 113, 0.12) 0%, rgba(13, 17, 23, 0.95) 100%); padding: 14px 18px; border-radius: 8px;">
           <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px;">
@@ -3781,7 +3952,26 @@
         { spellId: 8045, condition: "on_cd", enabled: true },
         { spellId: 3599, condition: "totem_le_1s", enabled: true }
       ],
+      tank_threat: [
+        { spellId: 8045, condition: "on_cd", enabled: true },
+        { spellId: 324, condition: "buff_not_active", enabled: true },
+        { spellId: 8052, condition: "dot_not_active", enabled: true },
+        { spellId: 3599, condition: "totem_le_1s", enabled: true }
+      ],
+      sustain: [
+        { spellId: 8052, condition: "dot_not_active", enabled: true },
+        { spellId: 3599, condition: "totem_le_1s", enabled: true }
+      ],
+      kiting: [
+        { spellId: 2484, condition: "on_cd", enabled: true },
+        { spellId: 8045, condition: "on_cd", enabled: true },
+        { spellId: 8052, condition: "dot_not_active", enabled: true }
+      ],
       resto_burst: [
+        { spellId: 913, condition: "continuous_heal", enabled: true },
+        { spellId: 3599, condition: "totem_le_1s", enabled: true }
+      ],
+      heal_burst: [
         { spellId: 913, condition: "continuous_heal", enabled: true },
         { spellId: 3599, condition: "totem_le_1s", enabled: true }
       ],
@@ -3789,7 +3979,17 @@
         { spellId: 547, condition: "continuous_heal", enabled: true },
         { spellId: 3599, condition: "totem_le_1s", enabled: true }
       ],
+      heal_sustain: [
+        { spellId: 547, condition: "continuous_heal", enabled: true },
+        { spellId: 3599, condition: "totem_le_1s", enabled: true }
+      ],
       hybrid_twink: [
+        { spellId: 913, condition: "self_heal_hp50", enabled: true },
+        { spellId: 8052, condition: "dot_not_active", enabled: true },
+        { spellId: 8045, condition: "on_cd", enabled: true },
+        { spellId: 3599, condition: "totem_le_1s", enabled: true }
+      ],
+      heal_hybrid: [
         { spellId: 913, condition: "self_heal_hp50", enabled: true },
         { spellId: 8052, condition: "dot_not_active", enabled: true },
         { spellId: 8045, condition: "on_cd", enabled: true },
@@ -3810,6 +4010,7 @@
       flame_only: [
         { spellId: 8052, condition: "on_cd", enabled: true }
       ],
+      melee: [],
       melee_only: []
     };
 
@@ -3817,7 +4018,7 @@
     let currentRotation = JSON.parse(JSON.stringify(rotationPresets.burst));
 
     function renderRotationUI() {
-      const container = document.getElementById('rotation-actions-list');
+      const container = document.getElementById('rotation-actions-list') || document.getElementById('rotation-list-container');
       if (!container) return;
       container.innerHTML = '';
 
@@ -3884,7 +4085,7 @@
     }
 
     function renderRotationFlowSummary() {
-      const banner = document.getElementById('rotation-flow-summary');
+      const banner = document.getElementById('rotation-flow-summary') || document.getElementById('rotation-flow-steps');
       if (!banner) return;
       banner.innerHTML = '<span style="font-weight: 700; color: var(--gold-bright); margin-right: 4px;">Sequence Flow:</span>';
 
@@ -4465,16 +4666,21 @@
       const targetVal = sel ? sel.value : 'all';
       if (!targetVal || targetVal === 'all') {
         // Restore active spec profile weights and run full BiS (Gear + Enchants + Talents + Consumes)
-        if (typeof activeSpecRole !== 'undefined') {
-          const specProfile = activeSpecRole === 'resto' ? 'resto_pvp' : (activeSpecRole === 'elemental' ? 'elemental' : 'enhancement');
-          if (defaultStatWeightProfiles[specProfile]) {
-            activeWeightProfileKey = specProfile;
-            customWeights = { ...defaultStatWeightProfiles[specProfile].weights };
-          }
+        const cSpec = currentCharacterSpec || 'enhancement';
+        const specProfile = cSpec === 'tank' ? 'shaman_tank' : (cSpec === 'resto' ? 'resto' : (cSpec === 'elemental' ? 'elemental' : 'enhancement'));
+        if (defaultStatWeightProfiles[specProfile]) {
+          selectWeightProfile(specProfile);
+        }
+        const styleSelect = document.getElementById('cfg-weapon-style');
+        if (styleSelect && activeCharacterClass === 'shaman') {
+          styleSelect.value = (cSpec === 'tank' || cSpec === 'resto') ? 'onehand_shield' : 'auto';
+        }
+        if (activeCharacterClass === 'shaman') {
+          setImbue(cSpec === 'tank' ? 'RockbiterWeapon' : 'FlametongueWeapon');
         }
         autoOptimizeTalentsForLevel();
         autoOptimizeFullBiS();
-        showToastNotice('✨ Equipped All-Around Spec BiS (Gear, Enchants, Talents & Consumables)!');
+        showToastNotice(`✨ Equipped All-Around ${cSpec.toUpperCase()} BiS (Gear, Enchants, Talents & Consumables)!`);
       } else {
         optimizeForScenario(targetVal);
       }
@@ -4530,9 +4736,10 @@
         maxArmorOver40: 'Mail',
         defaultSpec: 'enhancement',
         specs: [
-          { id: 'enhancement', name: 'Enhancement', icon: '⚔️', role: 'melee', classSuffix: 'enh' },
-          { id: 'resto', name: 'Restoration', icon: '💚', role: 'healer', classSuffix: 'res' },
-          { id: 'elemental', name: 'Elemental', icon: '⚡', role: 'caster', classSuffix: 'ele' }
+          { id: 'enhancement', name: 'Enhancement', icon: '⚔️', wowIcon: 'spell_nature_lightningshield', roleTag: 'DPS', role: 'melee', classSuffix: 'enh' },
+          { id: 'tank', name: 'Warden Tank', icon: '🛡️', wowIcon: 'spell_nature_stoneclawtotem', roleTag: 'TANK', role: 'tank', classSuffix: 'prot' },
+          { id: 'resto', name: 'Restoration', icon: '💚', wowIcon: 'spell_nature_magicimmunity', roleTag: 'HEAL', role: 'healer', classSuffix: 'res' },
+          { id: 'elemental', name: 'Elemental', icon: '⚡', wowIcon: 'spell_nature_lightning', roleTag: 'CAST', role: 'caster', classSuffix: 'ele' }
         ],
         weaponStyles: [
           { value: 'auto', label: '⚡ Best DPS (Auto)' },
@@ -4551,9 +4758,9 @@
         maxArmorOver40: 'Plate',
         defaultSpec: 'arms',
         specs: [
-          { id: 'arms', name: 'Arms', icon: '⚔️', role: 'melee', classSuffix: 'arms' },
-          { id: 'fury', name: 'Fury', icon: '🪓', role: 'melee', classSuffix: 'fury' },
-          { id: 'protection', name: 'Protection', icon: '🛡️', role: 'tank', classSuffix: 'prot' }
+          { id: 'arms', name: 'Arms', icon: '⚔️', wowIcon: 'ability_warrior_savageblow', roleTag: 'DPS', role: 'melee', classSuffix: 'arms' },
+          { id: 'fury', name: 'Fury', icon: '🪓', wowIcon: 'ability_warrior_innerrage', roleTag: 'DPS', role: 'melee', classSuffix: 'fury' },
+          { id: 'protection', name: 'Protection', icon: '🛡️', wowIcon: 'ability_warrior_defensivestance', roleTag: 'TANK', role: 'tank', classSuffix: 'prot' }
         ],
         weaponStyles: [
           { value: 'auto', label: '⚡ Best DPS (Auto)' },
@@ -4572,9 +4779,9 @@
         maxArmorOver40: 'Plate',
         defaultSpec: 'retribution',
         specs: [
-          { id: 'retribution', name: 'Retribution', icon: '⚔️', role: 'melee', classSuffix: 'ret' },
-          { id: 'holy', name: 'Holy', icon: '✨', role: 'healer', classSuffix: 'holy' },
-          { id: 'protection', name: 'Protection', icon: '🛡️', role: 'tank', classSuffix: 'prot' }
+          { id: 'retribution', name: 'Retribution', icon: '⚔️', wowIcon: 'spell_holy_auraoflight', roleTag: 'DPS', role: 'melee', classSuffix: 'ret' },
+          { id: 'holy', name: 'Holy', icon: '✨', wowIcon: 'spell_holy_holybolt', roleTag: 'HEAL', role: 'healer', classSuffix: 'holy' },
+          { id: 'protection', name: 'Protection', icon: '🛡️', wowIcon: 'spell_holy_devotionaura', roleTag: 'TANK', role: 'tank', classSuffix: 'prot' }
         ],
         weaponStyles: [
           { value: 'auto', label: '⚡ Best DPS (Auto)' },
@@ -4592,9 +4799,9 @@
         maxArmorOver40: 'Mail',
         defaultSpec: 'marksmanship',
         specs: [
-          { id: 'marksmanship', name: 'Marksmanship', icon: '🏹', role: 'ranged', classSuffix: 'mm' },
-          { id: 'beastmastery', name: 'Beast Mastery', icon: '🐾', role: 'ranged', classSuffix: 'bm' },
-          { id: 'survival', name: 'Survival', icon: '🗡️', role: 'melee', classSuffix: 'surv' }
+          { id: 'marksmanship', name: 'Marksmanship', icon: '🏹', wowIcon: 'ability_marksmanship', roleTag: 'RNG', role: 'ranged', classSuffix: 'mm' },
+          { id: 'beastmastery', name: 'Beast Mastery', icon: '🐾', wowIcon: 'ability_hunter_beasttaming', roleTag: 'PET', role: 'ranged', classSuffix: 'bm' },
+          { id: 'survival', name: 'Survival', icon: '🗡️', wowIcon: 'ability_hunter_swiftstrike', roleTag: 'DPS', role: 'melee', classSuffix: 'surv' }
         ],
         weaponStyles: [
           { value: 'auto', label: '⚡ Best Ranged DPS (Auto)' },
@@ -4612,9 +4819,9 @@
         maxArmorOver40: 'Leather',
         defaultSpec: 'combat',
         specs: [
-          { id: 'combat', name: 'Combat Swords/Maces', icon: '⚔️', role: 'melee', classSuffix: 'com' },
-          { id: 'assassination', name: 'Assassination', icon: '🗡️', role: 'melee', classSuffix: 'sin' },
-          { id: 'subtlety', name: 'Subtlety', icon: '👤', role: 'melee', classSuffix: 'sub' }
+          { id: 'combat', name: 'Combat', icon: '⚔️', wowIcon: 'ability_backstab', roleTag: 'DPS', role: 'melee', classSuffix: 'com' },
+          { id: 'assassination', name: 'Assassination', icon: '🗡️', wowIcon: 'ability_rogue_eviscerate', roleTag: 'DPS', role: 'melee', classSuffix: 'sin' },
+          { id: 'subtlety', name: 'Subtlety', icon: '👤', wowIcon: 'ability_stealth', roleTag: 'PVP', role: 'melee', classSuffix: 'sub' }
         ],
         weaponStyles: [
           { value: 'auto', label: '⚡ Best DPS (Auto)' },
@@ -4632,9 +4839,9 @@
         maxArmorOver40: 'Cloth',
         defaultSpec: 'shadow',
         specs: [
-          { id: 'shadow', name: 'Shadow DPS', icon: '🔮', role: 'caster', classSuffix: 'shadow' },
-          { id: 'holy', name: 'Holy Healer', icon: '✨', role: 'healer', classSuffix: 'holy' },
-          { id: 'discipline', name: 'Discipline', icon: '🛡️', role: 'healer', classSuffix: 'disc' }
+          { id: 'shadow', name: 'Shadow', icon: '🔮', wowIcon: 'spell_shadow_shadowwordpain', roleTag: 'CAST', role: 'caster', classSuffix: 'shadow' },
+          { id: 'holy', name: 'Holy', icon: '✨', wowIcon: 'spell_holy_guardianspirit', roleTag: 'HEAL', role: 'healer', classSuffix: 'holy' },
+          { id: 'discipline', name: 'Discipline', icon: '🛡️', wowIcon: 'spell_holy_powerwordshield', roleTag: 'HEAL', role: 'healer', classSuffix: 'disc' }
         ],
         weaponStyles: [
           { value: 'auto', label: '⚡ Best Spell Power (Auto)' },
@@ -4652,9 +4859,9 @@
         maxArmorOver40: 'Cloth',
         defaultSpec: 'frost',
         specs: [
-          { id: 'frost', name: 'Frost', icon: '❄️', role: 'caster', classSuffix: 'frost' },
-          { id: 'fire', name: 'Fire', icon: '🔥', role: 'caster', classSuffix: 'fire' },
-          { id: 'arcane', name: 'Arcane', icon: '✨', role: 'caster', classSuffix: 'arcane' }
+          { id: 'frost', name: 'Frost', icon: '❄️', wowIcon: 'spell_frost_frostbolt02', roleTag: 'CAST', role: 'caster', classSuffix: 'frost' },
+          { id: 'fire', name: 'Fire', icon: '🔥', wowIcon: 'spell_fire_flamebolt', roleTag: 'CAST', role: 'caster', classSuffix: 'fire' },
+          { id: 'arcane', name: 'Arcane', icon: '✨', wowIcon: 'spell_holy_magicalsentry', roleTag: 'CAST', role: 'caster', classSuffix: 'arcane' }
         ],
         weaponStyles: [
           { value: 'auto', label: '⚡ Best Spell Power (Auto)' },
@@ -4672,9 +4879,9 @@
         maxArmorOver40: 'Cloth',
         defaultSpec: 'affliction',
         specs: [
-          { id: 'affliction', name: 'Affliction', icon: '💀', role: 'caster', classSuffix: 'aff' },
-          { id: 'destruction', name: 'Destruction', icon: '🔥', role: 'caster', classSuffix: 'destro' },
-          { id: 'demonology', name: 'Demonology', icon: '👿', role: 'caster', classSuffix: 'demo' }
+          { id: 'affliction', name: 'Affliction', icon: '💀', wowIcon: 'spell_shadow_deathcoil', roleTag: 'DOT', role: 'caster', classSuffix: 'aff' },
+          { id: 'destruction', name: 'Destruction', icon: '🔥', wowIcon: 'spell_shadow_rainoffire', roleTag: 'CAST', role: 'caster', classSuffix: 'destro' },
+          { id: 'demonology', name: 'Demonology', icon: '👿', wowIcon: 'spell_shadow_metamorphosis', roleTag: 'PET', role: 'caster', classSuffix: 'demo' }
         ],
         weaponStyles: [
           { value: 'auto', label: '⚡ Best Spell Power (Auto)' },
@@ -4692,9 +4899,9 @@
         maxArmorOver40: 'Leather',
         defaultSpec: 'feral',
         specs: [
-          { id: 'feral', name: 'Feral (Cat/Bear)', icon: '🐾', role: 'melee', classSuffix: 'feral' },
-          { id: 'balance', name: 'Balance', icon: '🌙', role: 'caster', classSuffix: 'bal' },
-          { id: 'resto', name: 'Restoration', icon: '🌿', role: 'healer', classSuffix: 'resto' }
+          { id: 'feral', name: 'Feral', icon: '🐾', wowIcon: 'ability_racial_bearform', roleTag: 'MELEE', role: 'melee', classSuffix: 'feral' },
+          { id: 'balance', name: 'Balance', icon: '🌙', wowIcon: 'spell_nature_starfall', roleTag: 'CAST', role: 'caster', classSuffix: 'bal' },
+          { id: 'resto', name: 'Restoration', icon: '🌿', wowIcon: 'spell_nature_healingtouch', roleTag: 'HEAL', role: 'healer', classSuffix: 'resto' }
         ],
         weaponStyles: [
           { value: 'auto', label: '⚡ Best Power (Auto)' },
@@ -4737,6 +4944,7 @@
         classSelect.value = classKey;
       }
 
+      currentCharacterSpec = cDef.defaultSpec;
       renderSpecButtons();
       renderWeaponStyles();
       selectCharacterSpec(cDef.defaultSpec);
@@ -4760,17 +4968,25 @@
 
     function renderSpecButtons() {
       const cDef = WOW_CLASSES[activeCharacterClass] || WOW_CLASSES.shaman;
-      const container = document.getElementById('spec-segmented-toggle-container');
+      const container = document.getElementById('class-specs-list') || document.getElementById('spec-segmented-toggle-container');
       if (!container) return;
       container.innerHTML = '';
 
       cDef.specs.forEach(spec => {
         const btn = document.createElement('button');
         btn.id = `spec-btn-${spec.id}`;
-        btn.className = `spec-toggle-btn ${spec.id === currentCharacterSpec ? 'active spec-' + (spec.classSuffix || spec.id.slice(0, 3)) : ''}`;
+        const isActive = spec.id === currentCharacterSpec;
+        const suffix = spec.classSuffix || spec.id.slice(0, 3);
+        btn.className = `spec-tab-pill ${isActive ? 'active spec-' + suffix : ''}`;
         btn.title = `${spec.name} (${spec.role.toUpperCase()})`;
-        btn.innerHTML = `<span>${spec.icon}</span> ${spec.name}`;
-        btn.onclick = () => selectCharacterSpec(spec.id);
+        const iconName = spec.wowIcon || cDef.icon || 'spell_nature_lightningshield';
+        const rTag = spec.roleTag || spec.role.toUpperCase();
+        btn.innerHTML = `
+          <span class="spec-wow-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/medium/${iconName}.jpg');"></span>
+          <span>${spec.name}</span>
+          <span class="spec-role-tag">${rTag}</span>
+        `;
+        btn.onclick = () => switchSpecRole(spec.id);
         container.appendChild(btn);
       });
     }
@@ -4791,55 +5007,18 @@
       select.value = targetVal;
     }
 
-    
     function switchSpecRole(specKey) {
       if (specKey === 'restoration') specKey = 'resto';
-      selectCharacterSpec(specKey);
-
-      // Update pills in .spec-pills-group
-      document.querySelectorAll('.spec-tab-pill').forEach(btn => {
-        const onclickAttr = btn.getAttribute('onclick') || '';
-        if (onclickAttr.includes(`'${specKey}'`) || (specKey === 'resto' && onclickAttr.includes("'resto'"))) {
-          btn.classList.add('active');
-        } else {
-          btn.classList.remove('active');
-        }
-      });
-
-      // Update spec name in meta pill
-      const specNameEl = document.getElementById('spec-name');
-      if (specNameEl) {
-        if (specKey === 'resto') specNameEl.innerText = 'Restoration (Healer)';
-        else if (specKey === 'elemental') specNameEl.innerText = 'Elemental (Caster)';
-        else specNameEl.innerText = 'Enhancement (Melee)';
-      }
-
-      // Re-render food recommendation tags
-      renderBuffsView();
-      validateAndSanitizeEquippedGear();
-      renderGearSlots();
-      onSettingChanged();
-      saveUserSettings();
-
-      showToastNotice(`Switched spec to ${specKey.toUpperCase()}! Stat weights and recommendations updated.`);
+      selectCharacterSpec(specKey, true);
     }
     window.switchSpecRole = switchSpecRole;
 
-    function selectCharacterSpec(specKey) {
+    function selectCharacterSpec(specKey, buildBiSOnSwitch = false) {
       currentCharacterSpec = specKey;
       const cDef = WOW_CLASSES[activeCharacterClass] || WOW_CLASSES.shaman;
 
-      // 1. Update active spec toggle buttons
-      cDef.specs.forEach(s => {
-        const btn = document.getElementById(`spec-btn-${s.id}`);
-        if (btn) {
-          if (s.id === specKey) {
-            btn.className = `spec-toggle-btn active spec-${s.classSuffix || s.id.slice(0, 3)}`;
-          } else {
-            btn.className = 'spec-toggle-btn';
-          }
-        }
-      });
+      // 1. Re-render active spec buttons with full WoW icon + role tag styling
+      renderSpecButtons();
 
       // 2. Select corresponding stat weight profile
       const profKey = `${activeCharacterClass}_${specKey}`;
@@ -4853,32 +5032,64 @@
       if (activeCharacterClass === 'shaman') {
         const talStrat = document.getElementById('tal-strategy-select');
         if (talStrat) {
-          if (specKey === 'enhancement') talStrat.value = 'enhancement_pve';
+          if (specKey === 'tank') talStrat.value = 'shaman_tank';
           else if (specKey === 'resto') talStrat.value = 'resto';
           else if (specKey === 'elemental') talStrat.value = 'elemental';
+          else talStrat.value = 'enhancement_pve';
         }
         autoOptimizeTalentsForLevel();
 
-        if (specKey === 'resto') {
-          currentImbue = 'FlametongueWeapon';
+        if (specKey === 'tank') {
+          setImbue('RockbiterWeapon');
+          loadRotationPreset('tank_threat');
+        } else if (specKey === 'resto') {
+          setImbue('FlametongueWeapon');
           loadRotationPreset('resto_burst');
         } else if (specKey === 'elemental') {
-          currentImbue = 'FlametongueWeapon';
+          setImbue('FlametongueWeapon');
           loadRotationPreset('smart');
         } else {
-          currentImbue = 'FlametongueWeapon';
-          loadRotationPreset('burst');
+          setImbue('FlametongueWeapon');
+          if (talentPoints[1] && talentPoints[1][11] > 0) {
+            loadRotationPreset('twink29_burst');
+          } else {
+            loadRotationPreset('burst');
+          }
         }
 
         const styleSelect = document.getElementById('cfg-weapon-style');
         if (styleSelect) {
-          if (specKey === 'resto') styleSelect.value = 'onehand_shield';
+          if (specKey === 'tank' || specKey === 'resto') styleSelect.value = 'onehand_shield';
           else styleSelect.value = 'auto';
         }
-        runSimulation();
+
+        const bisTargetSel = document.getElementById('cfg-bis-target');
+        if (bisTargetSel && buildBiSOnSwitch) {
+          if (specKey === 'tank') bisTargetSel.value = 'pve_dungeon_tank';
+          else if (specKey === 'resto') bisTargetSel.value = 'pve_dungeon_healing';
+          else bisTargetSel.value = 'all';
+        }
       }
 
-      renderGearSlots();
+      if (buildBiSOnSwitch && !isInitializing) {
+        autoEquipLevelingBiS();
+        autoEnchantAllSlots();
+        autoOptimizeBiSConsumables();
+        renderBuffsView();
+        validateAndSanitizeEquippedGear();
+        renderGearSlots();
+        onSettingChanged();
+        saveUserSettings();
+        runOneStopSimulate();
+        const specObj = (cDef.specs || []).find(s => s.id === specKey);
+        const label = specObj ? specObj.name : specKey.toUpperCase();
+        showToastNotice(`🛡️ Switched to ${label}! Equipped Spec BiS Gear, Enchants, Talents & Consumables.`);
+      } else {
+        renderGearSlots();
+        if (activeCharacterClass === 'shaman' && !isInitializing) {
+          runSimulation();
+        }
+      }
 
       const badge = document.getElementById('res-diff-badge');
       if (badge && activeCharacterClass === 'shaman') {
@@ -4997,6 +5208,40 @@
           Armor: 0.04,
           Dodge: 1.0,
           Def: 0.8
+        }
+      },
+      shaman_tank: {
+        name: "Shaman Warden Tank (EHP, Armor & Threat)",
+        weights: {
+          Sta: 4.2,
+          Armor: 0.35,
+          Def: 4.5,
+          Dodge: 5.0,
+          Agi: 2.2,
+          Str: 1.5,
+          Hit: 12.0,
+          dps: 3.0,
+          AP: 0.8,
+          SP: 0.8,
+          MP5: 1.5,
+          Int: 0.8
+        }
+      },
+      tank: {
+        name: "Shaman Warden Tank (EHP, Armor & Threat)",
+        weights: {
+          Sta: 4.2,
+          Armor: 0.35,
+          Def: 4.5,
+          Dodge: 5.0,
+          Agi: 2.2,
+          Str: 1.5,
+          Hit: 12.0,
+          dps: 3.0,
+          AP: 0.8,
+          SP: 0.8,
+          MP5: 1.5,
+          Int: 0.8
         }
       },
       // Scenario-Specific BiS Tuning Profiles
@@ -6552,10 +6797,22 @@
         [0, 2, 1, "Elemental Devastation 1/3"],   // Cap 20 pts
         [0, 14, 5, "Elemental Fury 5/5"],
         [0, 15, 1, "Lightning Mastery 1/1"]
+      ],
+      shaman_tank: [
+        [1, 0, 2, "Earth's Grasp 2/2"],           // Tier 1: Stoneclaw HP & Earthbind radius
+        [1, 1, 3, "Thundering Strikes 3/5"],      // Tier 1: +3% Crit (Unlocks Tier 2 at 5 pts)
+        [1, 3, 2, "Guardian Totems 2/2"],         // Tier 2: Stoneskin & Windwall Totem mitigation
+        [1, 5, 3, "Improved Lightning Shield 3/3"], // Tier 2: +15% Lightning Shield damage & threat (Cap 10 pts @ Lvl 19!)
+        [1, 8, 3, "Anticipation 3/3"],            // Tier 3: +3% Dodge avoidance
+        [1, 6, 2, "Elemental Weapons 2/3"],       // Tier 3: +Rockbiter AP & Threat (Unlocks Tier 4 at 15 pts)
+        [1, 9, 5, "Toughness 5/5"],               // Tier 3/4: +10% Armor from items & slow reduction (Cap 20 pts @ Lvl 29!)
+        [1, 13, 1, "Spirit Weapons 1/1"],         // Tier 5: Enables Parry!
+        [1, 11, 1, "Stormstrike 1/1"],
+        [1, 10, 5, "Flurry 5/5"]
       ]
     };
 
-    function autoOptimizeTalentsForLevel() {
+    function autoOptimizeTalentsForLevel(preserveCurrentWeights = false) {
       const lvl = parseInt(document.getElementById('cfg-level').value) || 19;
       maxTalentPoints = Math.max(0, lvl - 9);
       const stratSelect = document.getElementById('tal-strategy-select');
@@ -6567,6 +6824,7 @@
 
       for (const [treeIdx, talentIdx, targetRank] of ruleList) {
         if (pointsLeft <= 0) break;
+        if (!talentPoints[treeIdx] || talentIdx >= talentPoints[treeIdx].length) continue;
         const cur = talentPoints[treeIdx][talentIdx] || 0;
         const needed = targetRank - cur;
         if (needed > 0) {
@@ -6577,20 +6835,17 @@
       }
 
       // Sync appropriate rotation and role
-      if (stratKey === 'resto') {
+      if (stratKey === 'shaman_tank') {
+        loadRotationPreset('tank_threat');
+        if (!preserveCurrentWeights) selectWeightProfile('shaman_tank');
+      } else if (stratKey === 'resto') {
         loadRotationPreset('resto_burst');
-        const dpsBtn = document.getElementById('role-btn-dps');
-        const restoBtn = document.getElementById('role-btn-resto');
-        if (dpsBtn) dpsBtn.classList.remove('active');
-        if (restoBtn) restoBtn.classList.add('active');
-        selectWeightProfile('resto');
+        if (!preserveCurrentWeights) selectWeightProfile('resto');
+      } else if (stratKey === 'elemental') {
+        loadRotationPreset('smart');
+        if (!preserveCurrentWeights) selectWeightProfile('elemental');
       } else {
-        const dpsBtn = document.getElementById('role-btn-dps');
-        const restoBtn = document.getElementById('role-btn-resto');
-        if (restoBtn) restoBtn.classList.remove('active');
-        if (dpsBtn) dpsBtn.classList.add('active');
-        selectWeightProfile('enhancement');
-
+        if (!preserveCurrentWeights) selectWeightProfile('enhancement');
         if (talentPoints[1] && talentPoints[1][11] > 0) {
           loadRotationPreset('twink29_burst');
         } else {
@@ -7358,6 +7613,57 @@
       }
       previousDps = dps.avg;
 
+      // Tank Survivability, Mitigation & Threat Card
+      const tankCard = document.getElementById('card-tank-metrics');
+      const tankMiniBar = document.getElementById('telemetry-tank-mini-bar');
+      if (data.tank) {
+        const t = data.tank;
+        if (tankCard) {
+          tankCard.style.display = 'block';
+          const ehpEl = document.getElementById('tank-ehp-val');
+          if (ehpEl) ehpEl.innerText = Math.round(t.ehp || 0).toLocaleString();
+          const tpsEl = document.getElementById('tank-tps-val');
+          if (tpsEl) tpsEl.innerText = (t.tps || 0).toFixed(1);
+          const maxHpEl = document.getElementById('tank-max-hp');
+          if (maxHpEl) maxHpEl.innerText = `${Math.round(t.max_hp || 0)} HP`;
+          const staSubEl = document.getElementById('tank-sta-sub');
+          if (staSubEl) staSubEl.innerText = `(${t.total_sta || 0} Sta)`;
+          const armorDrEl = document.getElementById('tank-armor-dr');
+          if (armorDrEl) armorDrEl.innerText = `${(t.armor_dr_pct || 0).toFixed(1)}%`;
+          const armorSubEl = document.getElementById('tank-armor-sub');
+          if (armorSubEl) armorSubEl.innerText = `(${t.total_armor || 0} Armor)`;
+          const avoidEl = document.getElementById('tank-avoidance');
+          if (avoidEl) avoidEl.innerText = `${(t.total_avoidance_pct || 0).toFixed(1)}%`;
+          const dpEl = document.getElementById('tank-dodge-parry');
+          if (dpEl) dpEl.innerText = `${(t.dodge_pct || 0).toFixed(1)}% / ${(t.parry_pct || 0).toFixed(1)}%`;
+          const blkEl = document.getElementById('tank-block-info');
+          if (blkEl) blkEl.innerText = t.has_shield ? `${(t.block_pct || 0).toFixed(1)}% (${t.block_value || 0} BV)` : `No Shield (2H)`;
+          const dtpsEl = document.getElementById('tank-dtps');
+          if (dtpsEl) dtpsEl.innerText = `${(t.dtps || 0).toFixed(1)}/s`;
+          const ttdEl = document.getElementById('tank-ttd');
+          if (ttdEl) ttdEl.innerText = `(TTD: ${(t.ttd || 0).toFixed(1)}s)`;
+          const rbEl = document.getElementById('tank-rb-tps');
+          if (rbEl) rbEl.innerText = `+${(t.rockbiter_tps || 0).toFixed(1)} TPS`;
+          const esEl = document.getElementById('tank-es-tps');
+          if (esEl) esEl.innerText = `+${(t.earth_shock_bonus_tps || 0).toFixed(1)} TPS`;
+          const lsEl = document.getElementById('tank-ls-tps');
+          if (lsEl) lsEl.innerText = `+${(t.lightning_shield_tps || 0).toFixed(1)} TPS`;
+          const shBadge = document.getElementById('tank-shield-badge');
+          if (shBadge) shBadge.innerText = t.has_shield ? '🛡️ 1H + SHIELD ACTIVE' : '⚔️ 2H WEAPON EQUIPPED';
+          const grBadge = document.getElementById('tank-grade-badge');
+          if (grBadge) grBadge.innerText = `TANK ${t.tank_grade || 'A'} (${Math.round(t.tank_score || 0)})`;
+        }
+        if (tankMiniBar) {
+          tankMiniBar.style.display = 'flex';
+          const telEhp = document.getElementById('tel-tank-ehp');
+          if (telEhp) telEhp.innerText = Math.round(t.ehp || 0).toLocaleString();
+          const telTps = document.getElementById('tel-tank-tps');
+          if (telTps) telTps.innerText = `${(t.tps || 0).toFixed(1)} TPS`;
+          const telDr = document.getElementById('tel-tank-dr');
+          if (telDr) telDr.innerText = `${(t.armor_dr_pct || 0).toFixed(1)}%`;
+        }
+      }
+
       // Healing & Sustain Card
       const healCard = document.getElementById('card-healing-metrics');
       if (data.healing && data.healing.active) {
@@ -7656,8 +7962,8 @@
 
     function filterScenariosView(cat) {
       activeScenarioCategoryFilter = cat;
-      document.querySelectorAll('.scen-cat-btn').forEach(btn => {
-        if (btn.getAttribute('data-cat') === cat) {
+      document.querySelectorAll('.scen-cat-btn, [id^="filter-sc-"]').forEach(btn => {
+        if (btn.getAttribute('data-cat') === cat || btn.id === 'filter-sc-' + cat) {
           btn.classList.add('active');
         } else {
           btn.classList.remove('active');
@@ -7696,6 +8002,10 @@
       if (badge) {
         badge.innerText = `${activeCount}/${all.length} Active`;
       }
+      const allFilterBtn = document.getElementById('filter-sc-all');
+      if (allFilterBtn) {
+        allFilterBtn.innerText = `All (${all.length})`;
+      }
     }
 
     function renderScenariosView() {
@@ -7720,7 +8030,7 @@
         }
         if (bestText) bestText.innerText = 'Simulate suite to evaluate';
         if (weakText) weakText.innerText = 'Simulate suite to evaluate';
-        if (descVal) descVal.innerText = 'Click "⚡ Run All Scenarios (Suite)" above to benchmark your twink setup across all active PvE, PvP, Dungeon & Healing encounters.';
+        if (descVal) descVal.innerText = 'Click "⚡ Run All Scenarios (Suite)" above to benchmark your twink setup across all active PvE, Tanking, PvP & Healing encounters.';
         if (statSummary) {
           statSummary.innerHTML = `
             <div class="stat-box"><span class="stat-lbl">Scenarios Ready</span><span class="stat-num">${getAllScenariosMerged().length}</span></div>
@@ -7749,7 +8059,7 @@
       }
 
       let summaryText = `Evaluated across ${suiteResultsData.scenarios_run || getAllScenariosMerged().length} scenarios with an execution time of ${Math.round(suiteResultsData.execution_time_ms || 0)}ms.`;
-      if (score >= 90) summaryText += ' 🏆 Outstanding Twink Build! Dominates across PvE, Dungeon cleave, and PvP arenas.';
+      if (score >= 90) summaryText += ' 🏆 Outstanding Twink Build! Dominates across PvE, Dungeon Tanking, Cleave, and PvP arenas.';
       else if (score >= 80) summaryText += ' ⭐ Strong competitive build with solid balance between DPS burst and survivability.';
       else if (score >= 70) summaryText += ' 👍 Solid mid-tier setup. Consider specializing gear for specific encounters below.';
       else summaryText += ' ⚠️ Noticeable weaknesses in specific environments. Check individual cards below for optimization tips.';
@@ -7789,7 +8099,7 @@
       const cx = w / 2;
       const cy = h / 2;
       const radius = Math.min(cx, cy) - 36;
-      const dimensions = ['Single DPS', 'AoE Cleave', 'Raid/Boss', 'PvP Anti-Caster', 'PvP Anti-Melee', 'WSG Survival', 'Healing Sustain'];
+      const dimensions = ['Single DPS', 'AoE Cleave', 'Raid/Boss', 'Tank Mitig.', 'PvP Anti-Caster', 'PvP Anti-Melee', 'WSG Survival', 'Healing Sustain'];
       const numPoints = dimensions.length;
 
       for (let level = 1; level <= 4; level++) {
@@ -7845,6 +8155,17 @@
       const cy = h / 2;
       const radius = Math.min(cx, cy) - 38;
 
+      const radarLabels = {
+        single_dps: 'Single DPS',
+        aoe_cleave: 'AoE Cleave',
+        raid_boss: 'Raid/Boss',
+        tank_mitigation: 'Tank Mitig.',
+        pvp_caster: 'PvP Anti-Caster',
+        pvp_melee: 'PvP Anti-Melee',
+        wsg_survival: 'WSG Survival',
+        healing_sustain: 'Healing Sustain'
+      };
+
       const keys = Object.keys(radarData);
       const numPoints = keys.length;
       if (numPoints < 3) return;
@@ -7882,7 +8203,7 @@
         const lx = cx + (radius + 20) * Math.cos(angle);
         const ly = cy + (radius + 20) * Math.sin(angle);
         ctx.fillStyle = '#cbd5e1';
-        ctx.fillText(keys[i], lx, ly);
+        ctx.fillText(radarLabels[keys[i]] || keys[i], lx, ly);
       }
 
       ctx.beginPath();
@@ -7935,6 +8256,9 @@
       const filtered = all.filter(s => {
         if (activeScenarioCategoryFilter === 'all') return true;
         if (activeScenarioCategoryFilter === 'custom') return s.is_custom;
+        if (activeScenarioCategoryFilter === 'healing') {
+          return s.category === 'pve_healing' || s.category === 'pvp_healing' || s.category === 'healing';
+        }
         return s.category === activeScenarioCategoryFilter;
       });
 
@@ -7947,7 +8271,16 @@
         return;
       }
 
-      const resultsMap = (suiteResultsData && suiteResultsData.results) || {};
+      const resultsMap = {};
+      if (suiteResultsData && suiteResultsData.results) {
+        if (Array.isArray(suiteResultsData.results)) {
+          suiteResultsData.results.forEach(r => {
+            if (r && r.id) resultsMap[r.id] = r;
+          });
+        } else {
+          Object.assign(resultsMap, suiteResultsData.results);
+        }
+      }
 
       let html = '';
       filtered.forEach(scen => {
@@ -7961,11 +8294,12 @@
           const grade = res.grade || 'B';
           gradeBadge = `<span class="grade-badge grade-${grade.toLowerCase().replace('+', '-plus')}">${grade}</span>`;
 
-          const dpsHpsLabel = res.primary_metric || (res.hps > 0 && res.dps === 0 ? 'HPS' : 'DPS');
-          const primaryVal = res.primary_metric || (res.metric_value ? res.metric_value : (res.dps ? res.dps.toFixed(1) : '0.0'));
+          const primaryVal = res.primary_metric || (res.metric_value ? res.metric_value : (res.dps ? res.dps.toFixed(1) + ' DPS' : '0.0'));
 
           let secMetrics = '';
-          if (res.details) {
+          if (res.secondary_metric) {
+            secMetrics = `<span style="color:#93c5fd; font-size:11px; font-weight:600;">${res.secondary_metric}</span>`;
+          } else if (res.details) {
             secMetrics = `<span style="color:#cbd5e1; font-size:11px;">${res.details}</span>`;
           } else {
             if (res.survival_rate !== undefined) {
@@ -7979,7 +8313,7 @@
           metricsHtml = `
             <div class="scen-metric-row">
               <div>
-                <span class="scen-metric-val" style="font-size:18px; font-weight:bold; color:var(--gold-bright);">${primaryVal}</span>
+                <span class="scen-metric-val" style="font-size:16px; font-weight:bold; color:var(--gold-bright);">${primaryVal}</span>
               </div>
               <div style="font-size:11px; text-align:right;">
                 ${secMetrics}
@@ -7994,7 +8328,7 @@
           `;
         }
 
-        const tip = (res && res.tip) || scen.notes || 'Equip optimized gear for this encounter to maximize performance.';
+        const tip = (res && res.tactical_note) || (res && res.tip) || scen.notes || 'Equip optimized gear for this encounter to maximize performance.';
         const dur = scen.duration || scen.duration_s || 30;
         const targets = scen.targetCount || scen.targets || 1;
         const mobLvl = scen.targetLevelOffset !== undefined ? (currentLvl + scen.targetLevelOffset) : (scen.mob_level || currentLvl);
@@ -8141,13 +8475,26 @@
         if (!resp.ok) throw new Error('Failed to simulate scenario: ' + resp.status);
 
         const data = await resp.json();
-        const singleResult = data.results && data.results[scenarioId];
+        let singleResult = null;
+        if (data.results) {
+          if (Array.isArray(data.results)) {
+            singleResult = data.results.find(r => r.id === scenarioId) || data.results[0];
+          } else {
+            singleResult = data.results[scenarioId];
+          }
+        }
 
         if (singleResult) {
           if (!suiteResultsData) {
-            suiteResultsData = { results: {}, composite_score: singleResult.score || 75, composite_grade: singleResult.grade || 'B' };
+            suiteResultsData = { results: [], composite_score: singleResult.score || 75, composite_grade: singleResult.grade || 'B' };
           }
-          suiteResultsData.results[scenarioId] = singleResult;
+          if (Array.isArray(suiteResultsData.results)) {
+            const idx = suiteResultsData.results.findIndex(r => r.id === scenarioId);
+            if (idx >= 0) suiteResultsData.results[idx] = singleResult;
+            else suiteResultsData.results.push(singleResult);
+          } else {
+            suiteResultsData.results[scenarioId] = singleResult;
+          }
 
           if (data.radar) {
             suiteResultsData.radar = { ...(suiteResultsData.radar || {}), ...data.radar };
@@ -8166,40 +8513,116 @@
 
     function optimizeForScenario(scenarioId) {
       const all = getAllScenariosMerged();
-      const scen = all.find(s => s.id === scenarioId);
-      if (!scen) return;
+      let scen = all.find(s => s.id === scenarioId);
+
+      // Fallback map if scenarioId is a short alias
+      if (!scen) {
+        const aliasMap = {
+          'pve_single': 'pve_single_mob',
+          'pve_aoe': 'pve_aoe_pack',
+          'pve_boss': 'pve_dungeon_boss',
+          'pve_tank': 'pve_dungeon_tank',
+          'pvp_caster': 'pvp_duel_caster',
+          'pvp_melee': 'pvp_duel_melee',
+          'pvp_flag': 'pvp_flag_runner',
+          'resto_heal': 'pve_dungeon_healing'
+        };
+        if (aliasMap[scenarioId]) {
+          scenarioId = aliasMap[scenarioId];
+          scen = all.find(s => s.id === scenarioId);
+        }
+      }
+
+      if (!scen) {
+        // Still allow optimizing by profile key directly
+        if (defaultStatWeightProfiles[scenarioId]) {
+          selectWeightProfile(scenarioId);
+          autoOptimizeFullBiS();
+        }
+        return;
+      }
 
       let targetProfileKey = 'enhancement';
+      let targetWeights = null;
+
       if (scen.stat_weights) {
-        customWeights = { ...scen.stat_weights };
+        targetWeights = { ...scen.stat_weights };
         targetProfileKey = 'custom';
       } else if (scen.statWeightProfile && defaultStatWeightProfiles[scen.statWeightProfile]) {
         targetProfileKey = scen.statWeightProfile;
-        customWeights = { ...defaultStatWeightProfiles[scen.statWeightProfile].weights };
+        targetWeights = { ...defaultStatWeightProfiles[scen.statWeightProfile].weights };
       } else if (defaultStatWeightProfiles[scenarioId]) {
         targetProfileKey = scenarioId;
-        customWeights = { ...defaultStatWeightProfiles[scenarioId].weights };
+        targetWeights = { ...defaultStatWeightProfiles[scenarioId].weights };
+      } else if (scen.category === 'pve_tank') {
+        targetProfileKey = 'shaman_tank';
+        targetWeights = { ...defaultStatWeightProfiles['shaman_tank'].weights };
       } else if (scen.category === 'pve_healing' || scen.category === 'pvp_healing') {
         targetProfileKey = 'resto_pvp';
-        customWeights = { ...defaultStatWeightProfiles['resto_pvp'].weights };
+        targetWeights = { ...defaultStatWeightProfiles['resto_pvp'].weights };
       } else if (scen.category === 'pvp_dps') {
         targetProfileKey = 'pvp_burst';
-        customWeights = { ...defaultStatWeightProfiles['pvp_burst'].weights };
+        targetWeights = { ...defaultStatWeightProfiles['pvp_burst'].weights };
+      } else {
+        targetWeights = { ...defaultStatWeightProfiles['enhancement'].weights };
       }
 
-      activeWeightProfileKey = targetProfileKey;
-      const select = document.getElementById('stat-profile-select');
-      if (select) {
-        select.value = targetProfileKey;
+      // CRITICAL FIX: Update currentStatWeights and activeWeightProfile (used by calculateItemScore & calculateEnchantScore)
+      activeWeightProfile = targetProfileKey;
+      currentStatWeights = { ...targetWeights };
+      saveStatWeightsToStorage();
+
+      // Update Stat Weight Profile UI buttons if visible
+      document.querySelectorAll('.weight-profile-btn').forEach(btn => btn.classList.remove('active'));
+      const profBtn = document.getElementById(`prof-btn-${targetProfileKey}`);
+      if (profBtn) profBtn.classList.add('active');
+      if (typeof renderStatWeightSliders === 'function') {
+        renderStatWeightSliders();
       }
-      if (typeof renderWeightInputs === 'function') {
-        renderWeightInputs();
+
+      // Configure Weapon Style & Imbue & Talents for the target Scenario
+      const wepStyleEl = document.getElementById('cfg-weapon-style');
+      const imbueEl = document.getElementById('cfg-imbue');
+      const talSelect = document.getElementById('tal-strategy-select');
+
+      if (scen.category === 'pve_tank' || targetProfileKey === 'shaman_tank') {
+        if (wepStyleEl) wepStyleEl.value = 'onehand_shield';
+        if (imbueEl) imbueEl.value = 'RockbiterWeapon';
+        if (talSelect) talSelect.value = 'shaman_tank';
+        if (typeof applyRotationPreset === 'function') applyRotationPreset('tank_threat');
+      } else if (scenarioId === 'pvp_flag_runner' || scenarioId === 'pvp_duel_melee' || scen.category === 'pve_healing' || scen.category === 'pvp_healing') {
+        if (wepStyleEl) wepStyleEl.value = 'onehand_shield';
+        if (imbueEl && (scen.category === 'pve_healing' || scen.category === 'pvp_healing')) {
+          imbueEl.value = 'FlametongueWeapon';
+        }
+        if (talSelect) {
+          talSelect.value = (scen.category === 'pve_healing' || scen.category === 'pvp_healing') ? 'resto' : 'flag_carrier';
+        }
+        if (typeof applyRotationPreset === 'function') {
+          applyRotationPreset((scen.category === 'pve_healing' || scen.category === 'pvp_healing') ? 'heal_sustain' : 'kiting');
+        }
+      } else {
+        if (wepStyleEl) wepStyleEl.value = 'auto';
+        if (imbueEl && imbueEl.value === 'RockbiterWeapon') {
+          imbueEl.value = 'FlametongueWeapon';
+        }
+        if (talSelect) {
+          talSelect.value = (scen.category === 'pvp_dps') ? 'pvp_hybrid' : 'melee_dps';
+        }
+      }
+
+      if (typeof autoOptimizeTalentsForLevel === 'function') {
+        autoOptimizeTalentsForLevel(true); // preserve scenario weights!
       }
 
       const bisTargetSel = document.getElementById('cfg-bis-target');
       if (bisTargetSel) bisTargetSel.value = scenarioId;
+
       autoOptimizeFullBiS();
-      showToastNotice(`✨ Auto-Built BiS (Gear, Enchants & Consumes) for: ${scen.name}!`);
+      if (typeof autoOptimizeBiSConsumables === 'function') {
+        autoOptimizeBiSConsumables();
+      }
+      showToastNotice(`🎯 Auto-Built BiS for Scenario: ${scen.name}!`);
     }
 
     function showToastNotice(msg) {
@@ -8428,7 +8851,16 @@
       const cSpec = currentCharacterSpec || 'enhancement';
       const cDef = WOW_CLASSES[activeCharacterClass] || WOW_CLASSES.shaman;
       const specObj = (cDef.specs || []).find(s => s.id === cSpec);
-      const role = specObj ? specObj.role : 'melee';
+      let role = specObj ? specObj.role : 'melee';
+
+      // Also inspect BiS Target dropdown so scenario-specific consumables are chosen
+      const bisTargetEl = document.getElementById('cfg-bis-target');
+      const bisTarget = bisTargetEl ? bisTargetEl.value : 'current_spec';
+      if (bisTarget === 'pve_dungeon_tank' || bisTarget === 'pve_aoe_tank_pack' || bisTarget === 'pvp_flag_runner' || activeWeightProfile === 'shaman_tank') {
+        role = 'tank';
+      } else if (bisTarget === 'pve_dungeon_healing' || bisTarget === 'pvp_arena_healer' || bisTarget === 'resto_heal') {
+        role = 'healer';
+      }
 
       // Clear existing active food buffs
       if (buffsCatalog) {
@@ -8439,7 +8871,7 @@
         });
       }
 
-      // 1. Food selection based on Spec and Level Tier
+      // 1. Food selection based on Spec/Scenario Role and Level Tier
       let chosenFood = null;
       if (role === 'healer' || cSpec === 'resto') {
         // Restoration -> MP5 is top priority for healing sustain
@@ -8452,8 +8884,9 @@
         else if (currentLvl >= 10 && buffsCatalog['food_sagefish']) chosenFood = 'food_sagefish';
         else chosenFood = 'food_eggs';
       } else {
-        // Melee / Enhancement -> Top Stamina / Str / Agi food
+        // Tank & Melee / Enhancement -> Top Stamina & Spirit food
         if (currentLvl >= 25 && buffsCatalog['food_heavy_croc']) chosenFood = 'food_heavy_croc';
+        else if (currentLvl >= 15 && buffsCatalog['food_raptor']) chosenFood = 'food_raptor';
         else if (currentLvl >= 15 && buffsCatalog['food_lion']) chosenFood = 'food_lion';
         else if (currentLvl >= 15 && buffsCatalog['food_digrat']) chosenFood = 'food_digrat';
         else if (currentLvl >= 10 && buffsCatalog['food_crispy_bat']) chosenFood = 'food_crispy_bat';
@@ -8464,16 +8897,24 @@
         activeBuffs[chosenFood] = true;
       }
 
-      // 2. Spec-aligned Elixirs and Scrolls
-      if (role === 'healer' || cSpec === 'resto') {
+      // 2. Spec/Scenario-aligned Elixirs and Scrolls
+      if (role === 'tank' || cSpec === 'tank') {
+        if (buffsCatalog['elixir_defense']) activeBuffs['elixir_defense'] = true;
+        if (currentLvl >= 20 && buffsCatalog['elixir_fortitude']) activeBuffs['elixir_fortitude'] = true;
+        else if (buffsCatalog['elixir_troll_blood']) activeBuffs['elixir_troll_blood'] = true;
+        if (buffsCatalog['scroll_prot_2']) activeBuffs['scroll_prot_2'] = true;
+        if (buffsCatalog['scroll_sta_2']) activeBuffs['scroll_sta_2'] = true;
+      } else if (role === 'healer' || cSpec === 'resto') {
         if (currentLvl >= 17 && buffsCatalog['elixir_wisdom']) activeBuffs['elixir_wisdom'] = true;
-        if (currentLvl >= 20 && buffsCatalog['scroll_intellect_ii']) activeBuffs['scroll_intellect_ii'] = true;
+        if (currentLvl >= 20 && buffsCatalog['scroll_int_2']) activeBuffs['scroll_int_2'] = true;
+        else if (buffsCatalog['scroll_intellect_ii']) activeBuffs['scroll_intellect_ii'] = true;
         else if (buffsCatalog['scroll_intellect_i']) activeBuffs['scroll_intellect_i'] = true;
       } else if (role === 'melee' || cSpec === 'enhancement') {
         if (currentLvl >= 8 && buffsCatalog['elixir_giant_growth']) activeBuffs['elixir_giant_growth'] = true;
         if (currentLvl >= 18 && buffsCatalog['elixir_lesser_agility']) activeBuffs['elixir_lesser_agility'] = true;
         else if (currentLvl >= 2 && buffsCatalog['elixir_minor_agility']) activeBuffs['elixir_minor_agility'] = true;
-        if (currentLvl >= 20 && buffsCatalog['scroll_strength_ii']) activeBuffs['scroll_strength_ii'] = true;
+        if (buffsCatalog['scroll_str_2']) activeBuffs['scroll_str_2'] = true;
+        else if (currentLvl >= 20 && buffsCatalog['scroll_strength_ii']) activeBuffs['scroll_strength_ii'] = true;
         else if (buffsCatalog['scroll_strength_i']) activeBuffs['scroll_strength_i'] = true;
       }
 
@@ -8555,6 +8996,14 @@
         activeBuffs['scroll_str_2'] = true;
         activeBuffs['scroll_agi_2'] = true;
         showToastNotice('✨ Applied Melee DPS Twink Consumes (+19 Str, +19 Agi, +6 Sta)!');
+      } else if (preset === 'tank_warden') {
+        activeBuffs['food_raptor'] = true;
+        activeBuffs['elixir_defense'] = true;
+        if (buffsCatalog['elixir_fortitude']) activeBuffs['elixir_fortitude'] = true;
+        else activeBuffs['elixir_troll_blood'] = true;
+        activeBuffs['scroll_prot_2'] = true;
+        activeBuffs['scroll_sta_2'] = true;
+        showToastNotice('🛡️ Applied Warden Tank Loadout (+110 Armor, +11 Sta, Defense & Fortitude Elixirs)!');
       } else if (preset === 'caster_resto') {
         activeBuffs['food_sagefish'] = true;
         activeBuffs['elixir_wisdom'] = true;
@@ -8664,6 +9113,8 @@
         if (buff.category === 'food') {
           if (cSpec === 'resto' && (buff.id === 'food_sagefish_delight' || buff.id === 'food_sagefish')) {
             recBadge = '<span style="background: rgba(46, 204, 113, 0.2); border: 1px solid #2ecc71; color: #2ecc71; font-size: 0.65rem; padding: 1px 5px; border-radius: 3px; font-weight: 700; margin-left: 6px;">⭐ Resto BiS</span>';
+          } else if (cSpec === 'tank' && (buff.id === 'food_heavy_croc' || buff.id === 'food_raptor')) {
+            recBadge = '<span style="background: rgba(56, 189, 248, 0.2); border: 1px solid #38bdf8; color: #7dd3fc; font-size: 0.65rem; padding: 1px 5px; border-radius: 3px; font-weight: 700; margin-left: 6px;">🛡️ Tank BiS</span>';
           } else if (cSpec === 'enhancement' && (buff.id === 'food_heavy_croc' || buff.id === 'food_lion' || buff.id === 'food_raptor')) {
             recBadge = '<span style="background: rgba(245, 158, 11, 0.2); border: 1px solid #f59e0b; color: #f59e0b; font-size: 0.65rem; padding: 1px 5px; border-radius: 3px; font-weight: 700; margin-left: 6px;">⭐ Enhance BiS</span>';
           }

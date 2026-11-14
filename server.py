@@ -1185,6 +1185,97 @@ def simulate(req: SimRequest):
     w_mode = "1h_shield" if is_1h else "2h_staff"
     imb_flag = "flametongue" if "Flametongue" in req.imbue else ("rockbiter" if "Rockbiter" in req.imbue else "frostbrand")
 
+    # --- TANK SURVIVABILITY, MITIGATION & THREAT CALCULATIONS ---
+    gear_stats_tank = calculate_gear_stats_from_catalog(req.gear)
+    for bk, bv in bonus_dict.items():
+        if bk in gear_stats_tank:
+            gear_stats_tank[bk] += bv
+
+    # Check if offhand is a shield
+    oh_id = req.gear.get("offhand", 0)
+    oh_item = item_lookup.get(oh_id, {}) if oh_id else {}
+    has_shield = bool(oh_item.get("isShield", False) or (oh_item.get("armor", 0) > 80))
+
+    # Parse tanking talents from Tree 1 (Enhancement):
+    # [1][0] Earth's Grasp, [1][3] Guardian Totems, [1][5] Imp Lightning Shield,
+    # [1][8] Anticipation (+1% Dodge/rank), [1][9] Toughness (+2% Stamina/rank), [1][13] Spirit Weapons (+5% Parry)
+    anticipation_rank = int(t1[8]) if len(t1) > 8 and t1[8].isdigit() else 0
+    toughness_rank = int(t1[9]) if len(t1) > 9 and t1[9].isdigit() else 0
+    spirit_wpn_rank = int(t1[13]) if len(t1) > 13 and t1[13].isdigit() else 0
+    imp_ls_rank = int(t1[5]) if len(t1) > 5 and t1[5].isdigit() else 0
+
+    total_sta = 32 + int(req.level * 1.4) + gear_stats_tank.get("Sta", 0)
+    if toughness_rank > 0:
+        total_sta = int(round(total_sta * (1.0 + 0.02 * toughness_rank)))
+    max_hp = 260 + (req.level * 24) + (total_sta * 10)
+
+    total_agi = 20 + int(req.level * 0.9) + gear_stats_tank.get("Agi", 0)
+    total_str = 28 + int(req.level * 1.2) + gear_stats_tank.get("Str", 0)
+    total_def = gear_stats_tank.get("Def", 0)
+    total_armor = 120 + (total_agi * 2) + gear_stats_tank.get("Armor", 0)
+
+    boss_lvl = req.level + 2
+    armor_denom = total_armor + 400 + (85 * boss_lvl)
+    armor_dr = min(0.75, max(0.05, total_armor / armor_denom)) if armor_denom > 0 else 0.15
+    armor_dr_pct = round(armor_dr * 100, 1)
+
+    dodge_pct = round(4.2 + (total_agi / 14.5) + (anticipation_rank * 1.0) + (total_def * 0.04) + gear_stats_tank.get("Dodge", 0), 1)
+    parry_pct = round(5.0 + (total_def * 0.04), 1) if spirit_wpn_rank > 0 else 0.0
+    block_pct = round(5.0 + (total_def * 0.04) + (anticipation_rank * 1.0), 1) if has_shield else 0.0
+    block_val = int(8 + (req.level * 0.65) + (total_str / 20)) if has_shield else 0
+    miss_pct = round(5.0 + (total_def * 0.04), 1)
+    total_avoidance_pct = round(miss_pct + dodge_pct + parry_pct + block_pct, 1)
+
+    avoid_mult = max(0.20, 1.0 - ((miss_pct + dodge_pct + parry_pct) / 100.0))
+    ehp = int(round(max_hp / max(0.12, (1.0 - armor_dr) * avoid_mult)))
+
+    raw_boss_dps = 42.0 + (req.level * 1.9)
+    mitigated_dps = raw_boss_dps * (1.0 - armor_dr) * avoid_mult
+    block_mitigation_dps = (block_pct / 100.0) * (block_val / 2.0)
+    stoneskin_mitigation = 5.5 + (req.level * 0.25)
+    hp5_regen_s = bonus_dict.get("HP5", 0) / 5.0
+    dtps = round(max(6.0, mitigated_dps - block_mitigation_dps - stoneskin_mitigation - hp5_regen_s), 1)
+    ttd = round(max_hp / max(1.0, dtps), 1)
+
+    # Threat Per Second (TPS):
+    # - Base Damage DPS = 1.0 threat per dmg
+    # - Earth Shock has a 2.0x threat multiplier in Classic WoW
+    # - Rockbiter Weapon adds massive flat bonus threat per second (~32-48 TPS scaled by level)
+    # - Lightning Shield adds reflective threat when hit (~14 TPS)
+    earth_shock_dps = sum(a["dps"] for a in actions_list if "Earth Shock" in a["name"])
+    rockbiter_tps = round((26.0 + req.level * 0.85) if "Rockbiter" in req.imbue else 0.0, 1)
+    ls_tps = round((11.0 + req.level * 0.45) * (1.0 + 0.05 * imp_ls_rank), 1)
+    total_tps = round(p["dps"]["avg"] + earth_shock_dps + rockbiter_tps + ls_tps, 1)
+
+    tank_score = min(100, int((ehp / (18 + req.level * 1.1)) * 0.45 + (total_tps * 0.35) + (armor_dr_pct * 0.45) + (12 if has_shield else 0)))
+    tank_grade = "S+" if tank_score >= 92 else ("S" if tank_score >= 84 else ("A" if tank_score >= 72 else ("B" if tank_score >= 60 else "C")))
+
+    is_tank_active = bool(req.rotation_preset in ["tank_threat", "tank_mitigation"] or (has_shield and "Rockbiter" in req.imbue))
+
+    tank_summary = {
+        "active": is_tank_active,
+        "ehp": ehp,
+        "max_hp": max_hp,
+        "total_sta": total_sta,
+        "total_armor": total_armor,
+        "armor_dr_pct": armor_dr_pct,
+        "has_shield": has_shield,
+        "dodge_pct": dodge_pct,
+        "parry_pct": parry_pct,
+        "block_pct": block_pct,
+        "block_value": block_val,
+        "miss_pct": miss_pct,
+        "total_avoidance_pct": total_avoidance_pct,
+        "dtps": dtps,
+        "ttd": ttd,
+        "tps": total_tps,
+        "rockbiter_tps": rockbiter_tps,
+        "earth_shock_bonus_tps": round(earth_shock_dps, 1),
+        "lightning_shield_tps": ls_tps,
+        "tank_score": tank_score,
+        "tank_grade": tank_grade
+    }
+
     res_data = {
         "status": "success",
         "dps": {
@@ -1194,6 +1285,7 @@ def simulate(req: SimRequest):
             "stdev": round(p["dps"]["stdev"], 2),
         },
         "healing": healing_summary,
+        "tank": tank_summary,
         "fight_duration": req.duration,
         "iterations": req.iterations,
         "character_level": req.level,
@@ -1287,6 +1379,87 @@ def run_single_scenario_sim(scenario: Dict[str, Any], req: ScenarioSuiteRequest)
             "detail_label": "Party Triage & Sustain",
             "details": f"HW R4: ~{int(hw_heal)} heal/cast • {casts_to_oom} casts to OOM (~{time_to_oom}s sustain)",
             "tip": "Stacking MP5 and +Healing increases party survival during high-damage encounters."
+        }
+
+    # 1.5 TANKING & MITIGATION SCENARIOS (MAIN TANK & AOE PACK TANK)
+    if cat == "pve_tank":
+        oh_id = req.gear.get("offhand", 0)
+        oh_item = ITEM_LOOKUP.get(oh_id, {}) if oh_id else {}
+        has_shield = bool(oh_item.get("isShield", False) or (oh_item.get("armor", 0) > 80))
+
+        # Parse tanking talents from req.talents (Tree 1: [8]=Anticipation, [9]=Toughness, [13]=Spirit Weapons, [5]=Imp LS)
+        tal_parts = (req.talents or "").split("-")
+        t1 = tal_parts[1] if len(tal_parts) > 1 else ""
+        anticipation_rank = int(t1[8]) if len(t1) > 8 and t1[8].isdigit() else 0
+        toughness_rank = int(t1[9]) if len(t1) > 9 and t1[9].isdigit() else 0
+        spirit_wpn_rank = int(t1[13]) if len(t1) > 13 and t1[13].isdigit() else 0
+        imp_ls_rank = int(t1[5]) if len(t1) > 5 and t1[5].isdigit() else 0
+
+        total_sta = 32 + int(char_lvl * 1.4) + gear_stats.get("Sta", 0)
+        if toughness_rank > 0:
+            total_sta = int(round(total_sta * (1.0 + 0.02 * toughness_rank)))
+        max_hp = 260 + (char_lvl * 24) + (total_sta * 10)
+
+        total_agi = 20 + int(char_lvl * 0.9) + gear_stats.get("Agi", 0)
+        total_str = 28 + int(char_lvl * 1.2) + gear_stats.get("Str", 0)
+        total_def = gear_stats.get("Def", 0)
+        total_armor = 120 + (total_agi * 2) + gear_stats.get("Armor", 0)
+
+        denom = total_armor + 400 + (85 * target_lvl)
+        armor_dr = min(0.75, max(0.05, total_armor / denom)) if denom > 0 else 0.15
+        armor_dr_pct = round(armor_dr * 100, 1)
+
+        dodge_pct = round(4.2 + (total_agi / 14.5) + (anticipation_rank * 1.0) + (total_def * 0.04) + gear_stats.get("Dodge", 0), 1)
+        parry_pct = round(5.0 + (total_def * 0.04), 1) if spirit_wpn_rank > 0 else 0.0
+        block_pct = round(5.0 + (total_def * 0.04) + (anticipation_rank * 1.0), 1) if has_shield else 0.0
+        block_val = int(8 + (char_lvl * 0.65) + (total_str / 20)) if has_shield else 0
+        miss_pct = round(5.0 + (total_def * 0.04), 1)
+
+        avoid_mult = max(0.20, 1.0 - ((miss_pct + dodge_pct + parry_pct) / 100.0))
+        ehp = int(round(max_hp / max(0.12, (1.0 - armor_dr) * avoid_mult)))
+
+        incoming_raw = scenario.get("incomingDps", 68)
+        mitigated = incoming_raw * (1.0 - armor_dr) * avoid_mult
+        block_mit = (block_pct / 100.0) * (block_val * max(1, target_count * 0.6))
+        stoneskin = (5.5 + char_lvl * 0.25) * max(1, target_count * 0.5)
+        dtps = round(max(6.0, mitigated - block_mit - stoneskin), 1)
+        ttd = round(max_hp / max(1.0, dtps), 1)
+
+        # Estimate Tank Threat Per Second (TPS)
+        ap_est = (total_str * 2) + gear_stats.get("AP", 0) + (80 if "Rockbiter" in req.imbue else 0)
+        base_melee_tps = 22.0 + (char_lvl * 1.1) + (ap_est * 0.14)
+        rockbiter_tps = (28.0 + char_lvl * 0.9) if "Rockbiter" in req.imbue else 0.0
+        earth_shock_tps = 24.0 + (gear_stats.get("SP", 0) * 0.5) + (gear_stats.get("Hit", 0) * 1.5)
+        ls_tps = (12.0 + char_lvl * 0.5) * (1.0 + 0.05 * imp_ls_rank) * (1.6 if target_count > 1 else 1.0)
+        aoe_totem_tps = (18.0 + gear_stats.get("FireSP", 0) * 0.8) if target_count > 1 else 0.0
+        tps = round(base_melee_tps + rockbiter_tps + earth_shock_tps + ls_tps + aoe_totem_tps, 1)
+
+        shield_bonus = 14 if has_shield else 0
+        if s_id == "pve_aoe_tank_pack":
+            score = min(100, int((ehp / (22 + char_lvl * 1.2)) * 0.42 + (tps * 0.34) + (armor_dr_pct * 0.42) + shield_bonus))
+            metric_str = f"{ehp} EHP • {tps} AoE TPS"
+            detail_lbl = "4-Mob Pack Mitigation & Aggro"
+            tip_str = "1H + Shield with Rockbiter, Lightning Shield, and Stoneclaw/Fire Nova Totem holds multi-mob aggro while minimizing DTPS."
+        else:
+            score = min(100, int((ehp / (20 + char_lvl * 1.15)) * 0.45 + (tps * 0.35) + (armor_dr_pct * 0.45) + shield_bonus))
+            metric_str = f"{ehp} EHP • {tps} TPS"
+            detail_lbl = "Main Tank EHP, Mitigation & Threat"
+            tip_str = "Equipping a high-Armor Shield + Stamina gear and Rockbiter Weapon maximizes Effective Health (EHP) and Boss Threat."
+
+        grade = "S+" if score >= 92 else ("S" if score >= 84 else ("A" if score >= 72 else ("B" if score >= 60 else "C")))
+
+        return {
+            "id": s_id,
+            "name": scenario["name"],
+            "badge": scenario.get("badge", "Tank"),
+            "category": cat,
+            "primary_metric": metric_str,
+            "metric_value": ehp,
+            "score": score,
+            "grade": grade,
+            "detail_label": detail_lbl,
+            "details": f"{max_hp} HP • {total_armor} Armor ({armor_dr_pct}% DR) • {dtps} DTPS • {ttd}s Unhealed TTD",
+            "tip": tip_str
         }
 
     # 2. WSG FLAG RUNNER & ESCAPE SCENARIO
@@ -1449,13 +1622,14 @@ def simulate_suite(req: ScenarioSuiteRequest):
 
     res_map = {r["id"]: r["score"] for r in results}
     radar = {
-        "Single DPS": res_map.get("pve_single_target", composite_score),
-        "AoE Cleave": res_map.get("aoe_dungeon_trash", composite_score),
+        "Single DPS": res_map.get("pve_single_mob", res_map.get("pve_single_target", composite_score)),
+        "AoE Cleave": res_map.get("pve_aoe_pack", res_map.get("aoe_dungeon_trash", composite_score)),
         "Raid/Boss": max(res_map.get("pve_dungeon_boss", 0), res_map.get("pve_raid_boss", 0)) or composite_score,
-        "PvP Anti-Caster": res_map.get("pvp_caster_duel", composite_score),
-        "PvP Anti-Melee": res_map.get("pvp_melee_brawler", composite_score),
+        "Tank Mitig.": max(res_map.get("pve_dungeon_tank", 0), res_map.get("pve_aoe_tank_pack", 0)) or composite_score,
+        "PvP Anti-Caster": res_map.get("pvp_duel_caster", res_map.get("pvp_caster_duel", composite_score)),
+        "PvP Anti-Melee": res_map.get("pvp_duel_melee", res_map.get("pvp_melee_brawler", composite_score)),
         "WSG Survival": res_map.get("pvp_flag_runner", composite_score),
-        "Healing Sustain": max(res_map.get("pve_dungeon_healing", 0), res_map.get("pvp_arena_healing", 0)) or composite_score
+        "Healing Sustain": max(res_map.get("pve_dungeon_healing", 0), res_map.get("pvp_arena_healer", 0), res_map.get("pvp_arena_healing", 0)) or composite_score
     }
 
     best_sc = max(results, key=lambda x: x["score"]) if results else {"name": "None", "score": 0, "primary_metric": "--"}
@@ -2148,6 +2322,97 @@ def simulate(req: SimRequest):
     w_mode = "1h_shield" if is_1h else "2h_staff"
     imb_flag = "flametongue" if "Flametongue" in req.imbue else ("rockbiter" if "Rockbiter" in req.imbue else "frostbrand")
 
+    # --- TANK SURVIVABILITY, MITIGATION & THREAT CALCULATIONS ---
+    gear_stats_tank = calculate_gear_stats_from_catalog(req.gear)
+    for bk, bv in bonus_dict.items():
+        if bk in gear_stats_tank:
+            gear_stats_tank[bk] += bv
+
+    # Check if offhand is a shield
+    oh_id = req.gear.get("offhand", 0)
+    oh_item = item_lookup.get(oh_id, {}) if oh_id else {}
+    has_shield = bool(oh_item.get("isShield", False) or (oh_item.get("armor", 0) > 80))
+
+    # Parse tanking talents from Tree 1 (Enhancement):
+    # [1][0] Earth's Grasp, [1][3] Guardian Totems, [1][5] Imp Lightning Shield,
+    # [1][8] Anticipation (+1% Dodge/rank), [1][9] Toughness (+2% Stamina/rank), [1][13] Spirit Weapons (+5% Parry)
+    anticipation_rank = int(t1[8]) if len(t1) > 8 and t1[8].isdigit() else 0
+    toughness_rank = int(t1[9]) if len(t1) > 9 and t1[9].isdigit() else 0
+    spirit_wpn_rank = int(t1[13]) if len(t1) > 13 and t1[13].isdigit() else 0
+    imp_ls_rank = int(t1[5]) if len(t1) > 5 and t1[5].isdigit() else 0
+
+    total_sta = 32 + int(req.level * 1.4) + gear_stats_tank.get("Sta", 0)
+    if toughness_rank > 0:
+        total_sta = int(round(total_sta * (1.0 + 0.02 * toughness_rank)))
+    max_hp = 260 + (req.level * 24) + (total_sta * 10)
+
+    total_agi = 20 + int(req.level * 0.9) + gear_stats_tank.get("Agi", 0)
+    total_str = 28 + int(req.level * 1.2) + gear_stats_tank.get("Str", 0)
+    total_def = gear_stats_tank.get("Def", 0)
+    total_armor = 120 + (total_agi * 2) + gear_stats_tank.get("Armor", 0)
+
+    boss_lvl = req.level + 2
+    armor_denom = total_armor + 400 + (85 * boss_lvl)
+    armor_dr = min(0.75, max(0.05, total_armor / armor_denom)) if armor_denom > 0 else 0.15
+    armor_dr_pct = round(armor_dr * 100, 1)
+
+    dodge_pct = round(4.2 + (total_agi / 14.5) + (anticipation_rank * 1.0) + (total_def * 0.04) + gear_stats_tank.get("Dodge", 0), 1)
+    parry_pct = round(5.0 + (total_def * 0.04), 1) if spirit_wpn_rank > 0 else 0.0
+    block_pct = round(5.0 + (total_def * 0.04) + (anticipation_rank * 1.0), 1) if has_shield else 0.0
+    block_val = int(8 + (req.level * 0.65) + (total_str / 20)) if has_shield else 0
+    miss_pct = round(5.0 + (total_def * 0.04), 1)
+    total_avoidance_pct = round(miss_pct + dodge_pct + parry_pct + block_pct, 1)
+
+    avoid_mult = max(0.20, 1.0 - ((miss_pct + dodge_pct + parry_pct) / 100.0))
+    ehp = int(round(max_hp / max(0.12, (1.0 - armor_dr) * avoid_mult)))
+
+    raw_boss_dps = 42.0 + (req.level * 1.9)
+    mitigated_dps = raw_boss_dps * (1.0 - armor_dr) * avoid_mult
+    block_mitigation_dps = (block_pct / 100.0) * (block_val / 2.0)
+    stoneskin_mitigation = 5.5 + (req.level * 0.25)
+    hp5_regen_s = bonus_dict.get("HP5", 0) / 5.0
+    dtps = round(max(6.0, mitigated_dps - block_mitigation_dps - stoneskin_mitigation - hp5_regen_s), 1)
+    ttd = round(max_hp / max(1.0, dtps), 1)
+
+    # Threat Per Second (TPS):
+    # - Base Damage DPS = 1.0 threat per dmg
+    # - Earth Shock has a 2.0x threat multiplier in Classic WoW
+    # - Rockbiter Weapon adds massive flat bonus threat per second (~32-48 TPS scaled by level)
+    # - Lightning Shield adds reflective threat when hit (~14 TPS)
+    earth_shock_dps = sum(a["dps"] for a in actions_list if "Earth Shock" in a["name"])
+    rockbiter_tps = round((26.0 + req.level * 0.85) if "Rockbiter" in req.imbue else 0.0, 1)
+    ls_tps = round((11.0 + req.level * 0.45) * (1.0 + 0.05 * imp_ls_rank), 1)
+    total_tps = round(p["dps"]["avg"] + earth_shock_dps + rockbiter_tps + ls_tps, 1)
+
+    tank_score = min(100, int((ehp / (18 + req.level * 1.1)) * 0.45 + (total_tps * 0.35) + (armor_dr_pct * 0.45) + (12 if has_shield else 0)))
+    tank_grade = "S+" if tank_score >= 92 else ("S" if tank_score >= 84 else ("A" if tank_score >= 72 else ("B" if tank_score >= 60 else "C")))
+
+    is_tank_active = bool(req.rotation_preset in ["tank_threat", "tank_mitigation"] or (has_shield and "Rockbiter" in req.imbue))
+
+    tank_summary = {
+        "active": is_tank_active,
+        "ehp": ehp,
+        "max_hp": max_hp,
+        "total_sta": total_sta,
+        "total_armor": total_armor,
+        "armor_dr_pct": armor_dr_pct,
+        "has_shield": has_shield,
+        "dodge_pct": dodge_pct,
+        "parry_pct": parry_pct,
+        "block_pct": block_pct,
+        "block_value": block_val,
+        "miss_pct": miss_pct,
+        "total_avoidance_pct": total_avoidance_pct,
+        "dtps": dtps,
+        "ttd": ttd,
+        "tps": total_tps,
+        "rockbiter_tps": rockbiter_tps,
+        "earth_shock_bonus_tps": round(earth_shock_dps, 1),
+        "lightning_shield_tps": ls_tps,
+        "tank_score": tank_score,
+        "tank_grade": tank_grade
+    }
+
     res_data = {
         "status": "success",
         "dps": {
@@ -2157,6 +2422,7 @@ def simulate(req: SimRequest):
             "stdev": round(p["dps"]["stdev"], 2),
         },
         "healing": healing_summary,
+        "tank": tank_summary,
         "fight_duration": req.duration,
         "iterations": req.iterations,
         "character_level": req.level,
@@ -2250,6 +2516,87 @@ def run_single_scenario_sim(scenario: Dict[str, Any], req: ScenarioSuiteRequest)
             "detail_label": "Party Triage & Sustain",
             "details": f"HW R4: ~{int(hw_heal)} heal/cast • {casts_to_oom} casts to OOM (~{time_to_oom}s sustain)",
             "tip": "Stacking MP5 and +Healing increases party survival during high-damage encounters."
+        }
+
+    # 1.5 TANKING & MITIGATION SCENARIOS (MAIN TANK & AOE PACK TANK)
+    if cat == "pve_tank":
+        oh_id = req.gear.get("offhand", 0)
+        oh_item = ITEM_LOOKUP.get(oh_id, {}) if oh_id else {}
+        has_shield = bool(oh_item.get("isShield", False) or (oh_item.get("armor", 0) > 80))
+
+        # Parse tanking talents from req.talents (Tree 1: [8]=Anticipation, [9]=Toughness, [13]=Spirit Weapons, [5]=Imp LS)
+        tal_parts = (req.talents or "").split("-")
+        t1 = tal_parts[1] if len(tal_parts) > 1 else ""
+        anticipation_rank = int(t1[8]) if len(t1) > 8 and t1[8].isdigit() else 0
+        toughness_rank = int(t1[9]) if len(t1) > 9 and t1[9].isdigit() else 0
+        spirit_wpn_rank = int(t1[13]) if len(t1) > 13 and t1[13].isdigit() else 0
+        imp_ls_rank = int(t1[5]) if len(t1) > 5 and t1[5].isdigit() else 0
+
+        total_sta = 32 + int(char_lvl * 1.4) + gear_stats.get("Sta", 0)
+        if toughness_rank > 0:
+            total_sta = int(round(total_sta * (1.0 + 0.02 * toughness_rank)))
+        max_hp = 260 + (char_lvl * 24) + (total_sta * 10)
+
+        total_agi = 20 + int(char_lvl * 0.9) + gear_stats.get("Agi", 0)
+        total_str = 28 + int(char_lvl * 1.2) + gear_stats.get("Str", 0)
+        total_def = gear_stats.get("Def", 0)
+        total_armor = 120 + (total_agi * 2) + gear_stats.get("Armor", 0)
+
+        denom = total_armor + 400 + (85 * target_lvl)
+        armor_dr = min(0.75, max(0.05, total_armor / denom)) if denom > 0 else 0.15
+        armor_dr_pct = round(armor_dr * 100, 1)
+
+        dodge_pct = round(4.2 + (total_agi / 14.5) + (anticipation_rank * 1.0) + (total_def * 0.04) + gear_stats.get("Dodge", 0), 1)
+        parry_pct = round(5.0 + (total_def * 0.04), 1) if spirit_wpn_rank > 0 else 0.0
+        block_pct = round(5.0 + (total_def * 0.04) + (anticipation_rank * 1.0), 1) if has_shield else 0.0
+        block_val = int(8 + (char_lvl * 0.65) + (total_str / 20)) if has_shield else 0
+        miss_pct = round(5.0 + (total_def * 0.04), 1)
+
+        avoid_mult = max(0.20, 1.0 - ((miss_pct + dodge_pct + parry_pct) / 100.0))
+        ehp = int(round(max_hp / max(0.12, (1.0 - armor_dr) * avoid_mult)))
+
+        incoming_raw = scenario.get("incomingDps", 68)
+        mitigated = incoming_raw * (1.0 - armor_dr) * avoid_mult
+        block_mit = (block_pct / 100.0) * (block_val * max(1, target_count * 0.6))
+        stoneskin = (5.5 + char_lvl * 0.25) * max(1, target_count * 0.5)
+        dtps = round(max(6.0, mitigated - block_mit - stoneskin), 1)
+        ttd = round(max_hp / max(1.0, dtps), 1)
+
+        # Estimate Tank Threat Per Second (TPS)
+        ap_est = (total_str * 2) + gear_stats.get("AP", 0) + (80 if "Rockbiter" in req.imbue else 0)
+        base_melee_tps = 22.0 + (char_lvl * 1.1) + (ap_est * 0.14)
+        rockbiter_tps = (28.0 + char_lvl * 0.9) if "Rockbiter" in req.imbue else 0.0
+        earth_shock_tps = 24.0 + (gear_stats.get("SP", 0) * 0.5) + (gear_stats.get("Hit", 0) * 1.5)
+        ls_tps = (12.0 + char_lvl * 0.5) * (1.0 + 0.05 * imp_ls_rank) * (1.6 if target_count > 1 else 1.0)
+        aoe_totem_tps = (18.0 + gear_stats.get("FireSP", 0) * 0.8) if target_count > 1 else 0.0
+        tps = round(base_melee_tps + rockbiter_tps + earth_shock_tps + ls_tps + aoe_totem_tps, 1)
+
+        shield_bonus = 14 if has_shield else 0
+        if s_id == "pve_aoe_tank_pack":
+            score = min(100, int((ehp / (22 + char_lvl * 1.2)) * 0.42 + (tps * 0.34) + (armor_dr_pct * 0.42) + shield_bonus))
+            metric_str = f"{ehp} EHP • {tps} AoE TPS"
+            detail_lbl = "4-Mob Pack Mitigation & Aggro"
+            tip_str = "1H + Shield with Rockbiter, Lightning Shield, and Stoneclaw/Fire Nova Totem holds multi-mob aggro while minimizing DTPS."
+        else:
+            score = min(100, int((ehp / (20 + char_lvl * 1.15)) * 0.45 + (tps * 0.35) + (armor_dr_pct * 0.45) + shield_bonus))
+            metric_str = f"{ehp} EHP • {tps} TPS"
+            detail_lbl = "Main Tank EHP, Mitigation & Threat"
+            tip_str = "Equipping a high-Armor Shield + Stamina gear and Rockbiter Weapon maximizes Effective Health (EHP) and Boss Threat."
+
+        grade = "S+" if score >= 92 else ("S" if score >= 84 else ("A" if score >= 72 else ("B" if score >= 60 else "C")))
+
+        return {
+            "id": s_id,
+            "name": scenario["name"],
+            "badge": scenario.get("badge", "Tank"),
+            "category": cat,
+            "primary_metric": metric_str,
+            "metric_value": ehp,
+            "score": score,
+            "grade": grade,
+            "detail_label": detail_lbl,
+            "details": f"{max_hp} HP • {total_armor} Armor ({armor_dr_pct}% DR) • {dtps} DTPS • {ttd}s Unhealed TTD",
+            "tip": tip_str
         }
 
     # 2. WSG FLAG RUNNER & ESCAPE SCENARIO
@@ -2410,6 +2757,7 @@ def simulate_suite(req: ScenarioSuiteRequest):
         "single_target": res_map.get("pve_single_target", composite_score),
         "aoe_cleave": res_map.get("aoe_dungeon_trash", composite_score),
         "dungeon_boss": res_map.get("pve_dungeon_boss", composite_score),
+        "tank_mitigation": max(res_map.get("pve_dungeon_tank", 0), res_map.get("pve_aoe_tank_pack", 0)) or composite_score,
         "raid_endurance": res_map.get("pve_raid_boss", composite_score),
         "pvp_burst": max(res_map.get("pvp_burst_skirmish", 0), res_map.get("pvp_caster_duel", 0)) or composite_score,
         "flag_escape": res_map.get("pvp_flag_runner", composite_score),
