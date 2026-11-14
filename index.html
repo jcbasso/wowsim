@@ -2261,68 +2261,315 @@
       color: #fef3c7;
     }
 
+
+    /* ==========================================================================
+       COHESIVE STUDIO UI/UX REDESIGN (v1.5)
+       ========================================================================== */
+    header.studio-topbar {
+      position: sticky;
+      top: 0;
+      z-index: 200;
+      background: linear-gradient(180deg, #161922 0%, #0e1017 100%);
+      border-bottom: 1px solid var(--border-gold);
+      padding: 8px 20px;
+      display: flex;
+      align-items: safe center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.75);
+    }
+    .studio-topbar > * {
+      min-inline-size: 0;
+    }
+    .character-identity-bar {
+      display: flex;
+      align-items: safe center;
+      gap: 8px;
+      flex-wrap: wrap;
+      background: rgba(10, 12, 18, 0.65);
+      border: 1px solid #283040;
+      padding: 4px 10px;
+      border-radius: 8px;
+    }
+    .master-actions-bar {
+      display: flex;
+      align-items: safe center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .unified-bis-group {
+      display: inline-flex;
+      align-items: center;
+      background: #121620;
+      border: 1px solid rgba(245, 158, 11, 0.5);
+      border-radius: 6px;
+      padding: 2px 3px 2px 8px;
+      gap: 6px;
+      box-shadow: 0 0 12px rgba(245, 158, 11, 0.12);
+    }
+    .unified-bis-select {
+      background: transparent;
+      color: #fde68a;
+      border: none;
+      font-size: 0.76rem;
+      font-weight: 700;
+      cursor: pointer;
+      outline: none;
+      max-width: 195px;
+    }
+    .unified-bis-select option {
+      background: #141720;
+      color: #e2e8f0;
+    }
+    .btn-bis-master {
+      background: linear-gradient(180deg, #f59e0b 0%, #b45309 100%);
+      color: #fffbeb;
+      border: 1px solid #fbbf24;
+      border-radius: 4px;
+      padding: 5px 11px;
+      font-size: 0.76rem;
+      font-weight: 800;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      transition: all 0.15s ease;
+      white-space: nowrap;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.7);
+    }
+    .btn-bis-master:hover {
+      background: linear-gradient(180deg, #fbbf24 0%, #d97706 100%);
+      box-shadow: 0 0 14px rgba(245, 158, 11, 0.55);
+      transform: translateY(-1px);
+    }
+
+    /* COMPACT DETAILS POPOVERS (SIM SETTINGS & GEAR SOURCES) */
+    details.popover-details {
+      position: relative;
+      display: inline-block;
+    }
+    details.popover-details > summary {
+      list-style: none;
+      cursor: pointer;
+      user-select: none;
+    }
+    details.popover-details > summary::-webkit-details-marker {
+      display: none;
+    }
+    .popover-card {
+      position: absolute;
+      right: 0;
+      top: calc(100% + 6px);
+      background: #151922;
+      border: 1px solid var(--border-gold);
+      border-radius: 8px;
+      padding: 12px 14px;
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.9);
+      z-index: 250;
+      min-width: 280px;
+    }
+    .popover-card.sources-card {
+      min-width: 480px;
+      right: 0;
+    }
+    @media (max-width: 768px) {
+      .popover-card.sources-card {
+        min-width: 300px;
+        left: 0;
+        right: auto;
+      }
+    }
+
+    /* LEFT COLUMN: TOP CHARACTER SHEET TABS */
+    .char-sheet-tabs {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 6px;
+      background: #10131a;
+      padding: 6px;
+      border-radius: 8px;
+      border: 1px solid var(--border-color);
+      margin-bottom: 10px;
+    }
+    .char-sheet-tab {
+      background: #161a24;
+      color: var(--text-muted);
+      border: 1px solid transparent;
+      border-radius: 6px;
+      padding: 8px 10px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: all 0.15s ease;
+      white-space: nowrap;
+    }
+    .char-sheet-tab:hover {
+      color: #fff;
+      background: #1e2433;
+    }
+    .char-sheet-tab.active {
+      background: linear-gradient(180deg, rgba(255, 209, 0, 0.16) 0%, rgba(217, 119, 6, 0.08) 100%);
+      color: var(--gold-bright);
+      border-color: var(--border-gold);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15), 0 2px 8px rgba(0, 0, 0, 0.4);
+    }
+    .tab-pill-badge {
+      font-size: 0.68rem;
+      padding: 1px 6px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.08);
+      color: #cbd5e1;
+      font-weight: 700;
+    }
+    .char-sheet-tab.active .tab-pill-badge {
+      background: rgba(255, 209, 0, 0.22);
+      color: #fef08a;
+    }
+
+    /* RIGHT COLUMN: ALWAYS-VISIBLE TELEMETRY KPI STRIP */
+    .sim-panel-sticky {
+      scrollbar-gutter: stable;
+      overscroll-behavior: contain;
+    }
+    .modal-body-scroll {
+      scrollbar-gutter: stable;
+      overscroll-behavior: contain;
+    }
+    .telemetry-kpi-strip {
+      display: grid;
+      grid-template-columns: 1.15fr 1fr 1.25fr;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+    @media (max-width: 1200px) {
+      .telemetry-kpi-strip {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+    .telemetry-card {
+      background: linear-gradient(180deg, #161a24 0%, #0f1219 100%);
+      border: 1px solid #2b3242;
+      border-radius: 8px;
+      padding: 10px 14px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      position: relative;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.45);
+      min-inline-size: 0;
+    }
+    .telemetry-card.dps-card {
+      border-color: rgba(255, 209, 0, 0.45);
+      background: radial-gradient(circle at top right, rgba(255, 209, 0, 0.1), transparent 70%), linear-gradient(180deg, #171b24 0%, #0f1218 100%);
+    }
+    .telemetry-label {
+      font-size: 0.66rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.7px;
+      color: #94a3b8;
+      margin-bottom: 3px;
+    }
+    .telemetry-main-row {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .telemetry-big-val {
+      font-size: 1.95rem;
+      font-weight: 900;
+      color: var(--gold-bright);
+      line-height: 1.05;
+      text-shadow: 0 0 14px rgba(255, 209, 0, 0.35);
+    }
+    .telemetry-sub-row {
+      font-size: 0.7rem;
+      color: #94a3b8;
+      margin-top: 4px;
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .score-grade-pill {
+      font-size: 0.74rem;
+      font-weight: 800;
+      padding: 2px 8px;
+      border-radius: 4px;
+      background: rgba(255, 209, 0, 0.18);
+      border: 1px solid var(--gold-bright);
+      color: var(--gold-bright);
+      text-transform: uppercase;
+    }
+    .scenario-link-btn {
+      background: transparent;
+      border: 1px solid #333c4d;
+      color: #cbd5e1;
+      border-radius: 4px;
+      padding: 4px 9px;
+      font-size: 0.72rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .scenario-link-btn:hover {
+      border-color: var(--gold-bright);
+      color: var(--gold-bright);
+      background: rgba(255, 209, 0, 0.08);
+    }
+    details.cli-details-drawer {
+      background: #10131a;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 8px 14px;
+    }
+    details.cli-details-drawer > summary {
+      font-size: 0.76rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      cursor: pointer;
+      user-select: none;
+    }
+
   </style>
 </head>
 <body>
 
-  <!-- STICKY TOP HEADER -->
-  <header>
+  <!-- UNIFIED STUDIO TOP COMMAND BAR -->
+  <header class="studio-topbar">
+    <!-- 1. BRAND & SERVER PATCH PILL -->
     <div class="brand">
       <div class="shaman-icon"></div>
       <div class="brand-title">
         <div style="display: flex; align-items: center; gap: 8px;">
-          <h1>WoW Forever • Twink Level 19 Simulator</h1>
+          <h1 style="font-size: 1.02rem;">WoW Forever • Twink Studio</h1>
           <div class="patch-version-pill" onclick="openPatchNotesModal()" title="Click to view WoW Forever Patch Notes & Server Version">
             <span style="color: #4ade80; font-size: 0.65rem;">●</span>
             <span id="patch-pill-text">v1.4.2-Live</span>
           </div>
         </div>
-        <p>Cotto • Enhancement Shaman • Tauren • Realm Earthshaker</p>
+        <p style="font-size: 0.7rem;">Cotto • Level <span class="cur-lvl-label">19</span> Theorycrafting & Simulation Engine</p>
       </div>
-    </div>
-    
-    <div class="header-controls">
-      <div class="config-pill">
-        <label for="cfg-level">Level</label>
-        <input type="number" id="cfg-level" value="19" min="10" max="60" onchange="onLevelChanged()" oninput="onLevelChanged()">
-      </div>
-      <div class="config-pill">
-        <label for="cfg-duration">Duration</label>
-        <select id="cfg-duration" onchange="onSettingChanged()">
-          <option value="15">15s (Short)</option>
-          <option value="30" selected>30s (Standard)</option>
-          <option value="60">60s (Long)</option>
-        </select>
-      </div>
-      <div class="config-pill">
-        <label for="cfg-iterations">Iters</label>
-        <select id="cfg-iterations" onchange="onSettingChanged()">
-          <option value="100">100 (Fast)</option>
-          <option value="200" selected>200 (Balanced)</option>
-          <option value="500">500 (Precise)</option>
-        </select>
-      </div>
-      <div class="config-pill" style="cursor: pointer;" onclick="switchWorkbenchTab('buffs')" title="Manage Food, Potions, Elixirs & Buffs">
-        <label style="cursor: pointer;">Consumes</label>
-        <span id="header-buffs-summary" style="font-size: 0.74rem; font-weight: 700; color: #94a3b8;">0 Active</span>
-      </div>
-      <button id="btn-simulate" class="btn-sim" onclick="runOneStopSimulate()" title="Simulate current setup and benchmark all scenarios">
-        <span id="btn-text">▶ SIMULATE</span>
-      </button>
-    </div>
-  </header>
-
-  <!-- ONE-STOP COCKPIT MASTER SUB-NAVIGATION BAR -->
-  <div class="workbench-nav" style="display: flex; justify-content: space-between; align-items: center; padding: 10px 24px; gap: 14px; flex-wrap: wrap;">
-    <!-- LEFT: UNIFIED PRIMARY ACTION BUTTON -->
-    <div class="cockpit-master-actions" style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
-      <button class="btn btn-primary btn-sm btn-glow" onclick="autoOptimizeFullBiS()" style="background: linear-gradient(180deg, #d97706 0%, #b45309 100%); border-color: #f59e0b; box-shadow: 0 0 10px rgba(245, 158, 11, 0.35);" title="Auto-equip #1 BiS gear & enchants for active spec and level">
-        <span>⚡</span> Auto-Optimize BiS
-      </button>
     </div>
 
-    <!-- RIGHT: CLASS & SPEC SELECTOR PILLS -->
-    <div class="spec-selector-container" style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+    <!-- 2. CHARACTER IDENTITY CONTROLS (FACTION, CLASS, SPEC, LEVEL) -->
+    <div class="character-identity-bar">
+      <div class="class-selector-pill" style="border-color: rgba(239, 68, 68, 0.45);" title="Select your character's faction side to filter dungeon drops, quest rewards, and vendor items">
+        <span class="class-pill-label">Side:</span>
+        <select id="cfg-active-faction" class="class-dropdown-select" onchange="onFactionChanged(this.value)" style="font-weight: 700;">
+          <option value="Horde" selected>🔴 Horde</option>
+          <option value="Alliance">🔵 Alliance</option>
+        </select>
+      </div>
+
       <div class="class-selector-pill">
         <span class="class-pill-label">Class:</span>
         <select id="cfg-active-class" class="class-dropdown-select" onchange="onClassSelected(this.value)">
@@ -2338,14 +2585,6 @@
         </select>
       </div>
 
-      <div class="class-selector-pill" style="border-color: rgba(239, 68, 68, 0.45);" title="Select your character's faction side to filter dungeon drops, quest rewards, and vendor items">
-        <span class="class-pill-label">Faction:</span>
-        <select id="cfg-active-faction" class="class-dropdown-select" onchange="onFactionChanged(this.value)" style="font-weight: 700;">
-          <option value="Horde" selected>🔴 Horde</option>
-          <option value="Alliance">🔵 Alliance</option>
-        </select>
-      </div>
-
       <div class="spec-pills-group" id="class-specs-list">
         <button class="spec-tab-pill active" onclick="switchSpecRole('enhancement')">
           <span>⚔️</span> Enhancement
@@ -2357,33 +2596,102 @@
           <span>⚡</span> Elemental
         </button>
       </div>
-      <div class="spec-meta-pill">
-        <span id="spec-name" style="font-weight: 700; color: var(--gold-bright);">Enhancement (0/10/0)</span>
-        <span style="color: var(--border-color);">•</span>
-        <span>Points: <strong id="spec-points-spent" style="color: #2ecc71;">10/10</strong></span>
-        <span style="color: var(--border-color);">•</span>
-        <code id="spec-string" style="color: #55efc4; font-size: 0.75rem;">-05203-</code>
+
+      <div class="config-pill" style="padding: 2px 8px;">
+        <label for="cfg-level">Lvl</label>
+        <input type="number" id="cfg-level" value="19" min="10" max="60" onchange="onLevelChanged()" oninput="onLevelChanged()" style="width: 42px;">
       </div>
     </div>
-  </div>
 
-  <!-- MAIN APP CONTAINER -->
+    <!-- 3. MASTER ACTIONS (SINGLE AUTO-BIS BUILDER + SINGLE SIMULATE BUTTON) -->
+    <div class="master-actions-bar">
+      <div class="unified-bis-group" title="Choose an optimization target and auto-equip the mathematically best Gear, Enchants, Talents, and Food/Consumables">
+        <span style="font-size: 0.68rem; font-weight: 800; color: #f59e0b; text-transform: uppercase;">BiS Target:</span>
+        <select id="cfg-bis-target" class="unified-bis-select">
+          <option value="all" selected>⭐ All-Around Spec BiS</option>
+          <option value="pve_single_target">🎯 PvE: Single Target</option>
+          <option value="pve_aoe_cleave">🔥 PvE: AoE Dungeon Pull</option>
+          <option value="pve_dungeon_boss">💀 PvE: Dungeon Boss (+3 Lvl)</option>
+          <option value="pve_raid_boss">🐉 PvE: Raid / World Boss</option>
+          <option value="pvp_melee_duel">⚔️ PvP: 1v1 vs Melee</option>
+          <option value="pvp_caster_duel">🔮 PvP: 1v1 vs Caster</option>
+          <option value="pvp_wsg_flag_runner">🚩 WSG: Flag Runner & Survival</option>
+          <option value="pvp_wsg_midfield">💥 WSG: Midfield Teamfight</option>
+          <option value="pvp_burst_healing">💚 Heal: Burst Emergency</option>
+          <option value="pve_sustained_healing">💧 Heal: Sustained Mana</option>
+        </select>
+        <button class="btn-bis-master" onclick="runUnifiedAutoBiS()">
+          <span>✨</span> Auto-Build BiS
+        </button>
+      </div>
+
+      <!-- COMPACT SIM CONFIG POPOVER -->
+      <details class="popover-details">
+        <summary class="config-pill" style="cursor: pointer; padding: 5px 10px;" title="Configure combat duration and Monte Carlo iterations">
+          <span>⚙️</span>
+          <span id="sim-cfg-summary-lbl" style="font-size: 0.74rem; font-weight: 700; color: #cbd5e1;">30s • 200</span>
+          <span style="font-size: 0.65rem; color: #94a3b8;">▾</span>
+        </summary>
+        <div class="popover-card">
+          <div style="font-size: 0.74rem; font-weight: 800; color: var(--gold-bright); text-transform: uppercase; margin-bottom: 10px;">
+            Simulation Engine Parameters
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 10px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; gap: 10px;">
+              <label for="cfg-duration" style="font-size: 0.76rem; color: #cbd5e1;">Fight Duration:</label>
+              <select id="cfg-duration" class="filter-select" onchange="updateSimCfgSummaryLabel(); onSettingChanged();">
+                <option value="15">15s (Short Skirmish)</option>
+                <option value="30" selected>30s (Standard Combat)</option>
+                <option value="60">60s (Extended Fight)</option>
+              </select>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center; gap: 10px;">
+              <label for="cfg-iterations" style="font-size: 0.76rem; color: #cbd5e1;">Iterations:</label>
+              <select id="cfg-iterations" class="filter-select" onchange="updateSimCfgSummaryLabel(); onSettingChanged();">
+                <option value="100">100 (Fast)</option>
+                <option value="200" selected>200 (Balanced)</option>
+                <option value="500">500 (High Precision)</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </details>
+
+      <!-- SINGLE MASTER SIMULATE BUTTON -->
+      <button id="btn-simulate" class="btn-sim" onclick="runOneStopSimulate()" title="Run Single-Target Simulation and 10-Scenario Benchmark Suite simultaneously">
+        <span id="btn-text">▶ SIMULATE</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- MAIN TWO-COLUMN STUDIO WORKSPACE -->
   <div class="app-layout">
-    
-    <!-- LEFT: WORKBENCH -->
+
+    <!-- LEFT COLUMN: TABBED CHARACTER SHEET (GEAR, TALENTS, ROTATION, CONSUMABLES) -->
     <div class="workbench-area">
-      
-      <!-- TAB 1: EQUIPMENT & GEAR -->
+
+      <!-- TOP CHARACTER SHEET TABS (NO VERTICAL SCROLLING REQUIRED) -->
+      <div class="char-sheet-tabs">
+        <button id="btn-build-gear" class="char-sheet-tab active" onclick="toggleBuildSubPanel('gear')">
+          <span>🛡️</span> Equipment <span class="tab-pill-badge">17</span>
+        </button>
+        <button id="btn-build-talents" class="char-sheet-tab" onclick="toggleBuildSubPanel('talents')">
+          <span>🌳</span> Talents <span class="tab-pill-badge" id="spec-points-spent">10/10</span>
+        </button>
+        <button id="btn-build-rotation" class="char-sheet-tab" onclick="toggleBuildSubPanel('rotation')">
+          <span>⚡</span> Rotation & Healing
+        </button>
+        <button id="btn-build-buffs" class="char-sheet-tab" onclick="toggleBuildSubPanel('buffs')">
+          <span>🍲</span> Consumables <span class="tab-pill-badge" id="drawer-active-consumes-badge">0</span>
+          <span id="header-buffs-summary" style="display: none;">0 Active</span>
+        </button>
+      </div>
+
+      <!-- CHARACTER TAB 1: EQUIPMENT & GEAR -->
       <div id="view-gear" class="workbench-view">
         <div class="panel">
-          <div class="panel-header" style="flex-wrap: wrap; gap: 12px; align-items: center;">
-            <div>
-              <h2><span>⚔</span> Equipment & Leveling BiS Engine</h2>
-              <div style="font-size: 0.76rem; color: var(--text-muted); margin-top: 2px;">
-                Stat-weighted gear & enchant ranking for Level <strong class="cur-lvl-label" style="color: var(--gold-bright);">19</strong> (9,185 Items)
-              </div>
-            </div>
-            <div class="gear-toolbar-controls">
+          <div class="panel-header" style="flex-wrap: wrap; gap: 10px; align-items: center; padding-bottom: 10px; margin-bottom: 12px;">
+            <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
               <div class="toolbar-group">
                 <span class="toolbar-group-label">Weapon:</span>
                 <select id="cfg-weapon-style" class="toolbar-select" onchange="onWeaponStyleChanged()">
@@ -2394,8 +2702,70 @@
                 </select>
               </div>
 
+              <div class="toolbar-group">
+                <span class="toolbar-group-label">Professions:</span>
+                <select id="cfg-prof1" class="filter-select" onchange="onProfessionChanged()" title="Primary Profession 1">
+                  <option value="none">None</option>
+                  <option value="engineering" selected>🛠️ Engineering</option>
+                  <option value="leatherworking">🧵 Leatherworking</option>
+                  <option value="tailoring">🧶 Tailoring</option>
+                  <option value="blacksmithing">🔨 Blacksmithing</option>
+                  <option value="alchemy">🧪 Alchemy</option>
+                  <option value="enchanting">✨ Enchanting</option>
+                  <option value="mining">⛏️ Mining</option>
+                  <option value="herbalism">🌿 Herbalism</option>
+                  <option value="skinning">🔪 Skinning</option>
+                </select>
+                <select id="cfg-prof2" class="filter-select" onchange="onProfessionChanged()" title="Primary Profession 2">
+                  <option value="none">None</option>
+                  <option value="engineering">🛠️ Engineering</option>
+                  <option value="leatherworking" selected>🧵 Leatherworking</option>
+                  <option value="tailoring">🧶 Tailoring</option>
+                  <option value="blacksmithing">🔨 Blacksmithing</option>
+                  <option value="alchemy">🧪 Alchemy</option>
+                  <option value="enchanting">✨ Enchanting</option>
+                  <option value="mining">⛏️ Mining</option>
+                  <option value="herbalism">🌿 Herbalism</option>
+                  <option value="skinning">🔪 Skinning</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="gear-toolbar-controls" style="margin-left: auto;">
+              <!-- COLLAPSIBLE GEAR SOURCES POPOVER -->
+              <details class="popover-details">
+                <summary class="btn btn-secondary btn-sm" title="Filter allowed item sources (Dungeons, Quests, Crafted, BoE, PvP)">
+                  <span>🎯 Gear Sources</span>
+                  <span style="font-size: 0.65rem; color: var(--gold-bright);">▾</span>
+                </summary>
+                <div class="popover-card sources-card">
+                  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                    <span class="filter-group-title">Quick Source Presets:</span>
+                    <div style="display: flex; gap: 4px; flex-wrap: wrap;">
+                      <button class="btn btn-secondary btn-xs" onclick="setSourcePreset('all')">All Sources</button>
+                      <button class="btn btn-secondary btn-xs" onclick="setSourcePreset('dungeon_quest')">🏰 Dungeons + 📜 Quests</button>
+                      <button class="btn btn-secondary btn-xs" onclick="setSourcePreset('quest_only')">📜 Quests Only</button>
+                      <button class="btn btn-secondary btn-xs" onclick="setSourcePreset('dungeon_only')">🏰 Dungeons Only</button>
+                      <button class="btn btn-secondary btn-xs" onclick="setSourcePreset('boe_only')">🌍 BoE Only (AH)</button>
+                    </div>
+                  </div>
+                  <div style="border-top: 1px solid #283040; padding-top: 8px;">
+                    <div class="filter-group-title" style="margin-bottom: 6px;">Include Items From:</div>
+                    <div class="source-checkbox-group">
+                      <label class="source-toggle"><input type="checkbox" id="src-filter-dungeon" checked onchange="onSourceFilterChanged()"><span class="toggle-pill dungeon">🏰 Dungeons</span></label>
+                      <label class="source-toggle"><input type="checkbox" id="src-filter-quest" checked onchange="onSourceFilterChanged()"><span class="toggle-pill quest">📜 Quests</span></label>
+                      <label class="source-toggle"><input type="checkbox" id="src-filter-crafted" checked onchange="onSourceFilterChanged()"><span class="toggle-pill crafted">🔨 Crafted</span></label>
+                      <label class="source-toggle"><input type="checkbox" id="src-filter-world" checked onchange="onSourceFilterChanged()"><span class="toggle-pill world">🌍 World (BoE)</span></label>
+                      <label class="source-toggle"><input type="checkbox" id="src-filter-pvp" checked onchange="onSourceFilterChanged()"><span class="toggle-pill pvp">⚔️ PvP / Rep</span></label>
+                      <label class="source-toggle"><input type="checkbox" id="src-filter-vendor" checked onchange="onSourceFilterChanged()"><span class="toggle-pill vendor">💰 Vendors</span></label>
+                      <label class="source-toggle"><input type="checkbox" id="src-filter-bop" checked onchange="onSourceFilterChanged()"><span class="toggle-pill bop">🔒 BoP Items</span></label>
+                    </div>
+                  </div>
+                </div>
+              </details>
+
               <button class="btn btn-secondary btn-sm" onclick="openWeightsModal()" title="Customize Pawn stat weights and formulas">
-                <span>⚙️</span> Stat Weights
+                <span>⚖️</span> Stat Weights
               </button>
 
               <div class="dropdown-wrapper">
@@ -2414,141 +2784,33 @@
               </div>
             </div>
           </div>
-          
-          <!-- BIS SOURCES & PROFESSIONS FILTER BAR -->
-          <div class="bis-filter-bar">
-            <div class="bis-filter-row">
-              <div class="bis-filter-group">
-                <span class="filter-group-title">🛠️ Professions:</span>
-                <select id="cfg-prof1" class="filter-select" onchange="onProfessionChanged()" title="Character Primary Profession 1">
-                  <option value="none">None (Prof 1)</option>
-                  <option value="engineering" selected>🛠️ Engineering</option>
-                  <option value="leatherworking">🧵 Leatherworking</option>
-                  <option value="tailoring">🧶 Tailoring</option>
-                  <option value="blacksmithing">🔨 Blacksmithing</option>
-                  <option value="alchemy">🧪 Alchemy</option>
-                  <option value="enchanting">✨ Enchanting</option>
-                  <option value="mining">⛏️ Mining</option>
-                  <option value="herbalism">🌿 Herbalism</option>
-                  <option value="skinning">🔪 Skinning</option>
-                </select>
-                <select id="cfg-prof2" class="filter-select" onchange="onProfessionChanged()" title="Character Primary Profession 2">
-                  <option value="none">None (Prof 2)</option>
-                  <option value="engineering">🛠️ Engineering</option>
-                  <option value="leatherworking" selected>🧵 Leatherworking</option>
-                  <option value="tailoring">🧶 Tailoring</option>
-                  <option value="blacksmithing">🔨 Blacksmithing</option>
-                  <option value="alchemy">🧪 Alchemy</option>
-                  <option value="enchanting">✨ Enchanting</option>
-                  <option value="mining">⛏️ Mining</option>
-                  <option value="herbalism">🌿 Herbalism</option>
-                  <option value="skinning">🔪 Skinning</option>
-                </select>
-              </div>
 
-              <div class="filter-presets">
-                <span style="font-size: 0.72rem; color: var(--text-muted); margin-right: 2px;">Presets:</span>
-                <button class="btn btn-secondary btn-xs" onclick="setSourcePreset('all')" title="Enable all gear sources">All Sources</button>
-                <button class="btn btn-secondary btn-xs" onclick="setSourcePreset('dungeon_quest')" title="Only suggest Dungeon Drops and Quest Rewards (SSF / Leveling)">🏰 Dungeons + 📜 Quests Only</button>
-                <button class="btn btn-secondary btn-xs" onclick="setSourcePreset('quest_only')" title="Only suggest Quest rewards">📜 Quests Only</button>
-                <button class="btn btn-secondary btn-xs" onclick="setSourcePreset('dungeon_only')" title="Only suggest Dungeon boss drops">🏰 Dungeons Only</button>
-                <button class="btn btn-secondary btn-xs" onclick="setSourcePreset('boe_only')" title="Only suggest tradeable BoE gear that can be bought on the Auction House">🌍 BoE Only (AH)</button>
-              </div>
-            </div>
-
-            <div class="bis-filter-row">
-              <div class="bis-filter-group" style="width: 100%; justify-content: space-between;">
-                <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
-                  <span class="filter-group-title">Suggest BiS From:</span>
-                  <div class="source-checkbox-group">
-                    <label class="source-toggle" title="Include Dungeon boss drops in BiS suggestions">
-                      <input type="checkbox" id="src-filter-dungeon" checked onchange="onSourceFilterChanged()">
-                      <span class="toggle-pill dungeon">🏰 Dungeons</span>
-                    </label>
-                    <label class="source-toggle" title="Include Quest rewards in BiS suggestions">
-                      <input type="checkbox" id="src-filter-quest" checked onchange="onSourceFilterChanged()">
-                      <span class="toggle-pill quest">📜 Quests</span>
-                    </label>
-                    <label class="source-toggle" title="Include Crafted gear (Leatherworking, Tailoring, Engineering, etc.)">
-                      <input type="checkbox" id="src-filter-crafted" checked onchange="onSourceFilterChanged()">
-                      <span class="toggle-pill crafted">🔨 Crafted</span>
-                    </label>
-                    <label class="source-toggle" title="Include Rare/Green World Drops & AH BoE gear">
-                      <input type="checkbox" id="src-filter-world" checked onchange="onSourceFilterChanged()">
-                      <span class="toggle-pill world">🌍 World (BoE)</span>
-                    </label>
-                    <label class="source-toggle" title="Include PvP & Warsong Gulch / Honor gear">
-                      <input type="checkbox" id="src-filter-pvp" checked onchange="onSourceFilterChanged()">
-                      <span class="toggle-pill pvp">⚔️ PvP / Rep</span>
-                    </label>
-                    <label class="source-toggle" title="Include NPC Vendor gear">
-                      <input type="checkbox" id="src-filter-vendor" checked onchange="onSourceFilterChanged()">
-                      <span class="toggle-pill vendor">💰 Vendors</span>
-                    </label>
-                    <label class="source-toggle" title="Include Bind on Pick up items (Dungeons, Raids, Quests, Rep). Uncheck to only suggest tradable BoE items.">
-                      <input type="checkbox" id="src-filter-bop" checked onchange="onSourceFilterChanged()">
-                      <span class="toggle-pill bop">🔒 BoP Items</span>
-                    </label>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          
           <div class="gear-grid" id="gear-grid-container">
-            <!-- Rendered 15 slot cards dynamically with authentic Wowhead links and icons -->
+            <!-- Rendered 17 slot cards dynamically with authentic Wowhead links and icons -->
           </div>
         </div>
       </div>
 
-      
-
-      <!-- ONE-STOP COCKPIT: EXPANDABLE BUILD CONFIGURATION DRAWER -->
-      <div class="build-drawer-section">
-        <div class="build-drawer-header">
-          <div style="display: flex; align-items: center; gap: 8px;">
-            <span style="font-weight: 700; font-size: 0.88rem; color: var(--gold-bright);">⚙️ BUILD CONFIGURATION:</span>
-            <span style="font-size: 0.74rem; color: var(--text-muted);">(Fine-tune talents, rotation & consumables)</span>
-          </div>
-          <div class="build-drawer-tabs">
-            <button id="btn-build-talents" class="build-drawer-tab active" onclick="toggleBuildSubPanel('talents')">
-              <span>🌳</span> Talents (Wowhead 3-Tree)
-            </button>
-            <button id="btn-build-rotation" class="build-drawer-tab" onclick="toggleBuildSubPanel('rotation')">
-              <span>⚡</span> Rotation, Imbues & Healing
-            </button>
-            <button id="btn-build-buffs" class="build-drawer-tab" onclick="toggleBuildSubPanel('buffs')">
-              <span>🧪</span> Consumables & Buffs (<span id="drawer-active-consumes-badge">0</span>)
-            </button>
-            <button class="build-drawer-tab close-tab" onclick="toggleBuildSubPanel('none')" title="Minimize build configuration drawer">
-              <span>✕</span> Minimize
-            </button>
-          </div>
-        </div>
-
-        <!-- SUBPANEL 1: TALENTS CALCULATOR -->
-        <div id="view-talents" class="build-subpanel">
-          <div class="panel">
+      <!-- CHARACTER TAB 2: TALENTS CALCULATOR -->
+      <div id="view-talents" class="build-subpanel" style="display: none;">
+        <div class="panel">
           <div class="panel-header" style="flex-wrap: wrap; gap: 10px;">
             <div>
-              <h2><span>🌳</span> Shaman Talent Calculator & Leveling Optimizer</h2>
+              <h2><span>🌳</span> Talent Calculator & Tree Optimizer</h2>
               <div style="font-size: 0.76rem; color: var(--text-muted); margin-top: 2px;">
-                Calculates mathematically optimal talent progression for any level (10 - 60)
+                Active Build: <strong id="spec-name" style="color: var(--gold-bright);">Enhancement (0/10/0)</strong> • Code: <code id="spec-string" style="color: #55efc4;">-05203-</code>
               </div>
             </div>
             <div class="chips-row" style="align-items: center; gap: 8px;">
-              <span class="toolbar-group-label">STRATEGY:</span>
-              <select id="tal-strategy-select" class="toolbar-select" onchange="onTalentStrategyChanged()" style="font-size: 0.78rem; padding: 4px 8px; font-weight: 700; max-width: 250px;">
+              <span class="toolbar-group-label">Preset Tree:</span>
+              <select id="tal-strategy-select" class="toolbar-select" onchange="onTalentStrategyChanged(); autoOptimizeTalentsForLevel();" style="font-size: 0.78rem; padding: 4px 8px; font-weight: 700; max-width: 240px;">
                 <option value="enhancement_pve" selected>⚔️ Enhancement (PvE / Top DPS)</option>
                 <option value="enhancement_pvp">🐺 Enhancement (PvP / Instant Wolf)</option>
                 <option value="resto">💚 Restoration (Healer)</option>
                 <option value="elemental">⚡ Elemental (Caster)</option>
               </select>
-              <button class="btn btn-primary btn-sm btn-glow" onclick="autoOptimizeTalentsForLevel()">
-                <span>⚡</span> Auto-Fill Optimal (Lvl <span class="cur-lvl-label">19</span>)
-              </button>
               <button class="btn btn-secondary btn-sm" onclick="resetAllTalents()" style="color: #ff7675;">
-                Reset All
+                Reset Points
               </button>
             </div>
           </div>
@@ -2561,28 +2823,23 @@
               <span id="calc-max-points">10</span>
             </div>
             <div style="font-size: 0.78rem; color: var(--text-muted);">
-              🖱 <span style="color: #2ecc71; font-weight: 600;">Left-Click</span> to allocate • 
+              🖱 <span style="color: #2ecc71; font-weight: 600;">Left-Click</span> to allocate •
               🖱 <span style="color: #ff7675; font-weight: 600;">Right-Click</span> to refund
             </div>
           </div>
 
-          <div class="talent-trees-grid" id="talent-trees-container">
-            <!-- 3 authentic trees rendered with background art, icons, points, and Wowhead links -->
-          </div>
+          <div class="talent-trees-grid" id="talent-trees-container"></div>
         </div>
-        </div>
+      </div>
 
-        <!-- SUBPANEL 2: ROTATION, IMBUES & HEALING MATRIX -->
-        <div id="view-rotation" class="build-subpanel" style="display: none;">
-          <div class="panel">
+      <!-- CHARACTER TAB 3: ROTATION, IMBUES & HEALING -->
+      <div id="view-rotation" class="build-subpanel" style="display: none;">
+        <div class="panel">
           <div class="panel-header">
-            <h2>
-              <span>🔥</span> Weapon Imbues
-            </h2>
+            <h2><span>🔥</span> Weapon Imbues</h2>
           </div>
-          
+
           <div style="display: flex; flex-direction: column; gap: 10px;">
-            <!-- Flametongue -->
             <div class="imbue-card active" id="card-imbue-FlametongueWeapon" onclick="setImbue('FlametongueWeapon')" onmouseenter="showImbueTooltip(event, 'FlametongueWeapon')" onmousemove="moveUnifiedTooltip(event)" onmouseleave="hideUnifiedTooltip()">
               <div class="imbue-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/medium/spell_fire_flametounge.jpg');"></div>
               <div style="flex: 1;">
@@ -2591,12 +2848,11 @@
                   <span class="badge-rec">RECOMMENDED FOR 2.20 - 2.70s WEAPONS</span>
                 </div>
                 <div style="font-size: 0.78rem; color: var(--text-muted); margin-top: 3px;">
-                  Adds flat magical Fire damage on every melee hit. Ignores enemy physical armor! Yields +40% higher DPS than Rockbiter at Level 19.
+                  Adds flat magical Fire damage on every melee hit. Ignores enemy physical armor!
                 </div>
               </div>
             </div>
 
-            <!-- Rockbiter -->
             <div class="imbue-card" id="card-imbue-RockbiterWeapon" onclick="setImbue('RockbiterWeapon')" onmouseenter="showImbueTooltip(event, 'RockbiterWeapon')" onmousemove="moveUnifiedTooltip(event)" onmouseleave="hideUnifiedTooltip()">
               <div class="imbue-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/medium/spell_nature_rockbiter.jpg');"></div>
               <div style="flex: 1;">
@@ -2604,12 +2860,11 @@
                   <span style="color: var(--text-main);">Rockbiter Weapon (Rank 3)</span>
                 </div>
                 <div style="font-size: 0.78rem; color: var(--text-muted); margin-top: 3px;">
-                  Increases Attack Power by 111. All damage is physical and heavily reduced by Level 19 enemy armor (25% - 40% mitigation).
+                  Increases Attack Power by 111. All damage is physical and reduced by target armor.
                 </div>
               </div>
             </div>
 
-            <!-- Frostbrand -->
             <div class="imbue-card" id="card-imbue-FrostbrandWeapon" onclick="setImbue('FrostbrandWeapon')" onmouseenter="showImbueTooltip(event, 'FrostbrandWeapon')" onmousemove="moveUnifiedTooltip(event)" onmouseleave="hideUnifiedTooltip()">
               <div class="imbue-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/medium/spell_frost_frostbrand.jpg');"></div>
               <div style="flex: 1;">
@@ -2617,22 +2872,17 @@
                   <span style="color: var(--text-main);">Frostbrand Weapon (Rank 1)</span>
                 </div>
                 <div style="font-size: 0.78rem; color: var(--text-muted); margin-top: 3px;">
-                  Chance on hit to deal minor Frost damage and slow target movement by 50% for 8 sec.
+                  Chance on hit to deal Frost damage and slow target movement by 50% for 8 sec.
                 </div>
               </div>
             </div>
           </div>
 
           <div class="panel-header" style="margin-top: 20px; display: flex; justify-content: space-between; align-items: center;">
-            <h2>
-              <span>⚡</span> Action Priority List (APL Rotation Studio)
-            </h2>
-            <div style="font-size: 0.74rem; color: var(--text-muted);">
-              Evaluated Top-to-Bottom every 1.5s GCD
-            </div>
+            <h2><span>⚡</span> Action Priority List (APL Rotation)</h2>
+            <div style="font-size: 0.74rem; color: var(--text-muted);">Evaluated Top-to-Bottom every 1.5s GCD</div>
           </div>
-          
-          <!-- PRESETS BAR -->
+
           <div style="margin-top: 10px;">
             <div style="font-size: 0.74rem; font-weight: 700; color: var(--gold-bright); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px;">
               Rotation Presets:
@@ -2640,190 +2890,108 @@
             <div class="chips-row" style="margin-bottom: 8px;">
               <span class="chip active" id="chip-rot-burst" onclick="loadRotationPreset('burst')">⚡ BiS Burst L19 (Flame DoT ➔ Earth ➔ Totem)</span>
               <span class="chip" id="chip-rot-twink29_burst" onclick="loadRotationPreset('twink29_burst')" style="border-color: #ffd700; color: #ffd700; font-weight: 700;">⚡ Twink 29 Burst (Stormstrike #1)</span>
-              <span class="chip" id="chip-rot-smart" onclick="loadRotationPreset('smart')">🛡️ Standard PvE (Totem ➔ Flame DoT ➔ Earth)</span>
-              <span class="chip" id="chip-rot-resto_burst" onclick="loadRotationPreset('resto_burst')">💚 Resto Burst (HW R4)</span>
-              <span class="chip" id="chip-rot-resto_sustain" onclick="loadRotationPreset('resto_sustain')">💧 Resto Sustain (HW R3)</span>
-              <span class="chip" id="chip-rot-hybrid_twink" onclick="loadRotationPreset('hybrid_twink')">⚔️ Hybrid Twink (DPS + HW &lt;50%)</span>
-              <span class="chip" id="chip-rot-no_totem" onclick="loadRotationPreset('no_totem')">🚫 Mobile / No Totems</span>
-              <span class="chip" id="chip-rot-earth_only" onclick="loadRotationPreset('earth_only')">⚡ Earth Shock Spam</span>
-              <span class="chip" id="chip-rot-flame_only" onclick="loadRotationPreset('flame_only')">🔥 Flame Shock Only</span>
-              <span class="chip" id="chip-rot-melee_only" onclick="loadRotationPreset('melee_only')">🥋 Pure Melee</span>
-              <span class="chip" id="chip-rot-custom" style="display: none; border-color: var(--gold-bright); color: var(--gold-bright);">🛠️ Custom APL</span>
+              <span class="chip" id="chip-rot-sustain" onclick="loadRotationPreset('sustain')">💧 Mana Conservation</span>
+              <span class="chip" id="chip-rot-kiting" onclick="loadRotationPreset('kiting')">❄️ PvP Frost Kiting</span>
+              <span class="chip" id="chip-rot-melee" onclick="loadRotationPreset('melee')">🗡️ Melee Only (0 Mana)</span>
+            </div>
+            <div class="chips-row" style="margin-bottom: 12px;">
+              <span class="chip" id="chip-rot-heal_burst" onclick="loadRotationPreset('heal_burst')" style="border-color: rgba(46, 204, 113, 0.5); color: #2ecc71;">💚 Max HPS (Healing Wave Rank 4)</span>
+              <span class="chip" id="chip-rot-heal_sustain" onclick="loadRotationPreset('heal_sustain')" style="border-color: rgba(46, 204, 113, 0.5); color: #2ecc71;">💚 Mana Efficient Healer (Rank 3)</span>
+              <span class="chip" id="chip-rot-heal_hybrid" onclick="loadRotationPreset('heal_hybrid')" style="border-color: rgba(46, 204, 113, 0.5); color: #2ecc71;">💚 Hybrid Healer + Flame Shock</span>
             </div>
           </div>
 
-          <!-- VISUAL SEQUENCE TIMELINE -->
-          <div class="prio-flow-banner" id="rotation-flow-summary">
-            <!-- Dynamic flow steps rendered here -->
+          <div id="rotation-flow-banner" style="background: rgba(16, 22, 34, 0.85); border: 1px solid #2b3548; border-radius: 6px; padding: 10px 14px; margin-bottom: 14px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;">
+            <div style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap;" id="rotation-flow-steps"></div>
+            <div style="font-size: 0.72rem; color: var(--text-muted);" id="rotation-mana-estimate">Est. Mana/30s: --</div>
           </div>
 
-          <!-- PRIORITY LIST CARDS -->
-          <div class="apl-container" id="rotation-actions-list">
-            <!-- Dynamic list of priority cards -->
-          </div>
+          <div class="rot-list" id="rotation-list-container"></div>
 
-          <!-- ADD NEW ACTION CONTROLS -->
-          <div style="background: #0f1522; border: 1px dashed #303a4c; border-radius: 6px; padding: 10px 14px; margin-top: 12px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
-            <span style="font-weight: 700; font-size: 0.8rem; color: var(--gold-bright);">+ Add Ability:</span>
-            <select id="add-spell-select" class="prio-cond-select" onchange="onAddSpellSelectChanged()" style="max-width: 220px;">
-              <option value="17364">⚡ Stormstrike (Rank 1)</option>
-              <option value="913">💚 Healing Wave (Rank 4)</option>
-              <option value="547">💚 Healing Wave (Rank 3)</option>
-              <option value="332">💚 Healing Wave (Rank 2)</option>
-              <option value="8052" selected>🔥 Flame Shock (Rank 2)</option>
-              <option value="8045">⚡ Earth Shock (Rank 3)</option>
-              <option value="3599">🔥 Searing Totem (Rank 1)</option>
-              <option value="324">⚡ Lightning Shield (Rank 2)</option>
-              <option value="403">⚡ Lightning Bolt (Rank 3)</option>
-              <option value="2484">🌱 Earthbind Totem (Rank 1)</option>
-              <option value="5730">🛡️ Stoneclaw Totem (Rank 1)</option>
-              <option value="370">✨ Purge (Rank 1)</option>
-            </select>
-            <select id="add-condition-select" class="prio-cond-select" style="max-width: 280px;">
-              <option value="dot_not_active">Cast only if DoT NOT active on target</option>
-              <option value="on_cd">Cast on cooldown</option>
-            </select>
-            <button class="chip" onclick="addNewActionToRotation()" style="background: rgba(255, 209, 0, 0.15); border-color: var(--gold-bright); color: var(--gold-bright); font-weight: 700;">+ Add to Priority List</button>
-            <button class="chip" onclick="resetRotationToDefault()" style="margin-left: auto;">Reset to BiS</button>
-          </div>
-
-          <div style="font-size: 0.74rem; color: var(--text-muted); margin-top: 10px; line-height: 1.45; background: rgba(0,0,0,0.25); padding: 8px 12px; border-radius: 4px; border-left: 3px solid var(--gold-bright);">
-            💡 <strong>Cómo funciona la Action Priority List (APL):</strong> En combate, el simulador evalúa las habilidades de arriba hacia abajo (P1 ➔ P2 ➔ ...) en cada tiempo de reutilización global (GCD de 1.5s). Si una habilidad está lista y cumple su condición (ej. DoT ausente o tótem por expirar), se ejecuta inmediatamente. Los ataques automáticos y los procs de <em>Flametongue/Rockbiter</em> se ejecutan continuamente en paralelo sin interrumpir el casteo de instantáneos.
-          </div>
-        </div>
-          <div style="margin-top: 14px;"></div>
-          <div id="view-healing">
-            <div class="panel" style="border-color: rgba(46, 204, 113, 0.4); background: linear-gradient(180deg, rgba(46, 204, 113, 0.05) 0%, var(--bg-panel) 100%);">
-          <div class="panel-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
-            <div>
-              <h2><span style="color: #2ecc71;">💚</span> Level 19 Restoration & Healing Studio</h2>
-              <div style="font-size: 0.76rem; color: var(--text-muted); margin-top: 2px;">
-                Calculate exact Healing Wave throughput (HPS), mana efficiency (HPM), talent reductions & gear scaling
-              </div>
-            </div>
-            <div class="chips-row">
-              <span class="chip" onclick="quickSwitchRole('resto')" style="background: rgba(46, 204, 113, 0.15); border-color: #2ecc71; color: #2ecc71; font-weight: 700;">★ 1-Click: Equip Resto 19 Spec & Rotation</span>
-              <span class="chip" onclick="quickSwitchRole('dps')">⚔ Switch back to Enhance BiS</span>
-            </div>
-          </div>
-
-          <!-- CHARACTER HEALING STATS BANNER -->
-          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; margin-top: 14px;">
-            <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 6px; padding: 10px 14px;">
-              <div style="font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase;">Bonus +Healing</div>
-              <div style="font-size: 1.4rem; font-weight: 800; color: #2ecc71;" id="resto-stat-heal">+0 HP</div>
-              <div style="font-size: 0.68rem; color: var(--text-muted);" id="resto-stat-sp">+0 Spell Power</div>
-            </div>
-
-            <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 6px; padding: 10px 14px;">
-              <div style="font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase;">Total Mana Pool</div>
-              <div style="font-size: 1.4rem; font-weight: 800; color: #58a6ff;" id="resto-stat-mana">-- Mana</div>
-              <div style="font-size: 0.68rem; color: var(--text-muted);" id="resto-stat-int">-- Intellect</div>
-            </div>
-
-            <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 6px; padding: 10px 14px;">
-              <div style="font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase;">Spell Crit Chance</div>
-              <div style="font-size: 1.4rem; font-weight: 800; color: var(--gold-bright);" id="resto-stat-crit">--%</div>
-              <div style="font-size: 0.68rem; color: var(--text-muted);">150% Crit Heals</div>
-            </div>
-
-            <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 6px; padding: 10px 14px;">
-              <div style="font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase;">Talent Reductions</div>
-              <div style="font-size: 0.88rem; font-weight: 700; color: #55efc4;" id="resto-stat-tal-cast">-0.0s Cast Speed</div>
-              <div style="font-size: 0.75rem; color: #2ecc71;" id="resto-stat-tal-mana">-0% Mana Cost</div>
-            </div>
-          </div>
-
-          <!-- HEALING WAVE RANK MATRIX -->
-          <div class="panel-header" style="margin-top: 18px; display: flex; justify-content: space-between; align-items: center;">
-            <h2><span>📋</span> Healing Wave Ranks Comparison Matrix</h2>
-            <button class="chip" onclick="switchWorkbenchTab('gear'); setModalStatFilter('heal'); openPickerModal('mainhand');" style="border-color: #2ecc71; color: #2ecc71;">Browse +Healing Gear ↗</button>
-          </div>
-
-          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; margin-top: 10px;" id="healing-ranks-grid">
-            <!-- Dynamically populated with Rank 4, Rank 3, Rank 2, Rank 1 cards -->
-          </div>
-
-          <!-- HEALING STRATEGY GUIDANCE -->
-          <div style="margin-top: 18px; background: rgba(10, 14, 23, 0.7); border: 1px solid #222b3a; border-radius: 6px; padding: 12px 16px;">
-            <div style="font-size: 0.78rem; font-weight: 700; color: var(--gold-bright); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px;">
-              Level 19 Resto Twink Healing Guide:
-            </div>
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; font-size: 0.76rem; color: var(--text-muted); line-height: 1.45;">
+          <div class="panel" style="margin-top: 16px;">
+            <div class="panel-header" style="flex-wrap: wrap; gap: 10px;">
               <div>
-                <strong style="color: #2ecc71;">🌊 Heavy Throughput (Rank 4):</strong> With 5/5 Improved Healing Wave, cast time drops from 2.5s down to 2.0s! Delivers the highest HPS to catch players under burst fire or protect flag carriers in Warsong Gulch.
-              </div>
-              <div>
-                <strong style="color: #58a6ff;">💧 Mana Sustain (Rank 3):</strong> 1.5s cast speed with 5/5 Imp HW! Delivers the highest healing-per-mana (1.18+ HP/Mana), allowing you to heal twice as long without going OOM in long skirmishes.
+                <h2><span>💚</span> Restoration & Healing Throughput Analysis</h2>
+                <div style="font-size: 0.76rem; color: var(--text-muted); margin-top: 2px;">
+                  Healing Wave throughput (HPS), mana efficiency (HPM) & rank scaling
+                </div>
               </div>
             </div>
-          </div>
-        </div>
-          </div>
-        </div>
 
-        <!-- SUBPANEL 3: CONSUMABLES & BUFFS -->
-        <div id="view-buffs" class="build-subpanel" style="display: none;">
-          <div class="panel">
-          <!-- TOOLBAR -->
-          <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 14px; margin-bottom: 16px; flex-wrap: wrap; gap: 12px;">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; margin-top: 12px;">
+              <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 6px; padding: 10px 14px;">
+                <div style="font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase;">Bonus +Healing</div>
+                <div style="font-size: 1.4rem; font-weight: 800; color: #2ecc71;" id="resto-stat-heal">+0 HP</div>
+                <div style="font-size: 0.68rem; color: var(--text-muted);" id="resto-stat-sp">+0 Spell Power</div>
+              </div>
+              <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 6px; padding: 10px 14px;">
+                <div style="font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase;">Total Mana Pool</div>
+                <div style="font-size: 1.4rem; font-weight: 800; color: #58a6ff;" id="resto-stat-mana">-- Mana</div>
+                <div style="font-size: 0.68rem; color: var(--text-muted);" id="resto-stat-int">-- Intellect</div>
+              </div>
+              <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 6px; padding: 10px 14px;">
+                <div style="font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase;">Spell Crit Chance</div>
+                <div style="font-size: 1.4rem; font-weight: 800; color: var(--gold-bright);" id="resto-stat-crit">--%</div>
+                <div style="font-size: 0.68rem; color: var(--text-muted);">150% Crit Heals</div>
+              </div>
+              <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 6px; padding: 10px 14px;">
+                <div style="font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase;">Talent Reductions</div>
+                <div style="font-size: 0.88rem; font-weight: 700; color: #55efc4;" id="resto-stat-tal-cast">-0.0s Cast Speed</div>
+                <div style="font-size: 0.75rem; color: #2ecc71;" id="resto-stat-tal-mana">-0% Mana Cost</div>
+              </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; margin-top: 14px;" id="healing-ranks-grid"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CHARACTER TAB 4: CONSUMABLES & BUFFS -->
+      <div id="view-buffs" class="build-subpanel" style="display: none;">
+        <div class="panel">
+          <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 12px; margin-bottom: 14px; flex-wrap: wrap; gap: 10px;">
             <div>
-              <h2 style="font-size: 1.15rem; margin-bottom: 2px; display: flex; align-items: center; gap: 8px;">
-                <span>🧪</span> Consumables, Food & Buffs Studio
+              <h2 style="font-size: 1.05rem; margin-bottom: 2px; display: flex; align-items: center; gap: 8px;">
+                <span>🍲</span> Consumables, Food & World Buffs
               </h2>
-              <div style="font-size: 0.76rem; color: var(--text-muted);">
-                Toggle optional Food (Well Fed), Potions, Battle Elixirs, Scrolls, and Class Buffs to benchmark Unbuffed vs Full-Buffed performance.
+              <div style="font-size: 0.74rem; color: var(--text-muted);">
+                Select Food (Well Fed), Elixirs, Scrolls, and Party Buffs.
               </div>
             </div>
 
-            <!-- PRESET BUTTONS -->
             <div style="display: flex; gap: 6px; flex-wrap: wrap; align-items: center;">
-              <button class="btn btn-primary btn-sm btn-glow" onclick="autoOptimizeBiSConsumables(); onSettingChanged();" style="background: linear-gradient(180deg, #d97706 0%, #b45309 100%); border-color: #f59e0b; font-weight: 700;" title="Auto-select optimal Food & Consumables for active spec and level">
-                <span>⚡</span> Auto-BiS Consumes
+              <span style="font-size: 0.72rem; color: #a0aec0; font-weight: 700; text-transform: uppercase;">Loadouts:</span>
+              <button class="btn btn-secondary btn-sm" onclick="autoOptimizeBiSConsumables(); onSettingChanged();" style="border-color: var(--gold-bright); color: var(--gold-bright);">
+                ✨ Spec BiS Consumes
               </button>
-              <span style="font-size: 0.72rem; color: #a0aec0; font-weight: 700; text-transform: uppercase; margin-left: 4px;">Presets:</span>
-              <button class="btn btn-secondary btn-sm" onclick="applyBuffPreset('unbuffed')" title="Clear all active consumables and buffs">
+              <button class="btn btn-secondary btn-sm" onclick="applyBuffPreset('unbuffed')">
                 🚫 Unbuffed
               </button>
-              <button class="btn btn-secondary btn-sm" onclick="applyBuffPreset('melee_twink')" title="Giant Growth, Lesser Agi, Raptor Food, Scrolls">
+              <button class="btn btn-secondary btn-sm" onclick="applyBuffPreset('melee_twink')">
                 ⚔️ Melee DPS
               </button>
-              <button class="btn btn-secondary btn-sm" onclick="applyBuffPreset('caster_resto')" title="Sagefish MP5, Elixir of Wisdom, Minor Wizard/Mana Oil">
+              <button class="btn btn-secondary btn-sm" onclick="applyBuffPreset('caster_resto')">
                 💚 Healer / Caster
               </button>
-              <button class="btn btn-secondary btn-sm" onclick="applyBuffPreset('flag_runner')" title="Elixir of Defense, Stamina Food, Troll's Blood, Scroll Protection">
+              <button class="btn btn-secondary btn-sm" onclick="applyBuffPreset('flag_runner')">
                 🛡️ WSG Flag Runner
               </button>
-              <button class="btn btn-secondary btn-sm" onclick="applyBuffPreset('full_raid')" title="Full raid buffed with Mark of the Wild, Fortitude, Battle Shout and consumables">
+              <button class="btn btn-secondary btn-sm" onclick="applyBuffPreset('full_raid')">
                 ⭐ Full Raid Buffed
               </button>
             </div>
           </div>
 
-          <!-- ACTIVE BUFFS STAT SUMMARY BANNER -->
-          <div id="buffs-active-summary-card" style="background: linear-gradient(135deg, rgba(217, 119, 6, 0.12), rgba(0,0,0,0.4)); border: 1px solid var(--gold-dark); border-radius: 8px; padding: 12px 16px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
-            <div>
-              <div style="font-size: 0.72rem; font-weight: 700; color: var(--gold-bright); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px;">
-                Active Consumable Bonus Stats
-              </div>
-              <div id="buffs-summary-chips" style="display: flex; flex-wrap: wrap; gap: 6px; font-size: 0.8rem; font-weight: 600; color: #fef3c7;">
-                <span style="color: #94a3b8; font-size: 0.76rem;">No consumables active (Unbuffed baseline). Select food and potions below to enhance your twink stats.</span>
-              </div>
+          <div id="buffs-active-summary-card" style="background: linear-gradient(135deg, rgba(217, 119, 6, 0.12), rgba(0,0,0,0.4)); border: 1px solid var(--gold-dark); border-radius: 8px; padding: 10px 14px; margin-bottom: 16px;">
+            <div style="font-size: 0.7rem; font-weight: 700; color: var(--gold-bright); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 4px;">
+              Active Consumable Bonus Stats
             </div>
-            <div style="display: flex; gap: 8px;">
-              <button class="btn btn-primary btn-sm" onclick="runSimulation()" style="box-shadow: 0 0 10px rgba(217,119,6,0.3);">
-                ▶ Re-Simulate
-              </button>
-              <button class="btn btn-secondary btn-sm" onclick="switchWorkbenchTab('scenarios')">
-                🌐 Test in Scenarios Lab
-              </button>
+            <div id="buffs-summary-chips" style="display: flex; flex-wrap: wrap; gap: 6px; font-size: 0.8rem; font-weight: 600; color: #fef3c7;">
+              <span style="color: #94a3b8; font-size: 0.76rem;">No consumables active (Unbuffed baseline).</span>
             </div>
           </div>
 
-          <!-- 4 CATEGORY GRIDS -->
-          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 18px;">
-            
-            <!-- 1. FOOD & DRINK -->
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 14px;">
             <div class="buff-category-box">
               <div class="buff-cat-header">
                 <span style="font-size: 1.1rem;">🍖</span>
@@ -2835,7 +3003,6 @@
               <div id="buffs-list-food" class="buffs-list-items"></div>
             </div>
 
-            <!-- 2. BATTLE & GUARDIAN ELIXIRS -->
             <div class="buff-category-box">
               <div class="buff-cat-header">
                 <span style="font-size: 1.1rem;">🧪</span>
@@ -2847,19 +3014,17 @@
               <div id="buffs-list-potion" class="buffs-list-items"></div>
             </div>
 
-            <!-- 3. SCROLLS & WEAPON OILS -->
             <div class="buff-category-box">
               <div class="buff-cat-header">
                 <span style="font-size: 1.1rem;">📜</span>
                 <div>
                   <div style="font-weight: 700; color: var(--gold-bright); font-size: 0.85rem;">Scrolls & Weapon Oils</div>
-                  <div style="font-size: 0.7rem; color: #a0aec0;">Rank II stat scrolls & temporary oils</div>
+                  <div style="font-size: 0.7rem; color: #a0aec0;">Stat scrolls & temporary weapon oils</div>
                 </div>
               </div>
               <div id="buffs-list-scrolls" class="buffs-list-items"></div>
             </div>
 
-            <!-- 4. CLASS & PARTY BUFFS -->
             <div class="buff-category-box">
               <div class="buff-cat-header">
                 <span style="font-size: 1.1rem;">✨</span>
@@ -2870,204 +3035,188 @@
               </div>
               <div id="buffs-list-class" class="buffs-list-items"></div>
             </div>
-
           </div>
-        </div>
         </div>
       </div>
 
     </div>
 
-
-    <!-- RIGHT: UNIFIED ONE-STOP TESTING & PERFORMANCE CENTER -->
+    <!-- RIGHT COLUMN: LIVE TELEMETRY STRIP & SCENARIO ANALYSIS -->
     <div class="sim-panel-sticky">
-      
-      <!-- COCKPIT RIGHT PANEL SWITCHER -->
+
+      <!-- ALWAYS-VISIBLE 3-CARD TELEMETRY STRIP -->
+      <div class="telemetry-kpi-strip">
+        <!-- Card 1: Single-Target DPS -->
+        <div class="telemetry-card dps-card">
+          <div class="telemetry-label">Single-Target DPS</div>
+          <div class="telemetry-main-row">
+            <span class="telemetry-big-val" id="res-dps">--.-</span>
+            <span id="res-diff-badge" style="display: none; font-size: 0.68rem; padding: 2px 6px;" class="dps-diff"></span>
+          </div>
+          <div class="telemetry-sub-row">
+            <span>Min: <strong id="res-min" style="color: #e2e8f0;">--.-</strong></span>
+            <span>Max: <strong id="res-max" style="color: #e2e8f0;">--.-</strong></span>
+            <span>±<strong id="res-stdev" style="color: #e2e8f0;">--.-</strong></span>
+          </div>
+        </div>
+
+        <!-- Card 2: Overall Composite Twink Score -->
+        <div class="telemetry-card">
+          <div class="telemetry-label">Composite Twink Score</div>
+          <div class="telemetry-main-row">
+            <span class="telemetry-big-val" id="suite-composite-score" style="color: #fff;">--</span>
+            <span class="score-grade-pill" id="suite-composite-grade">Evaluating...</span>
+          </div>
+          <div class="telemetry-sub-row">
+            <span id="sim-meta">10-Scenario Benchmark Ready</span>
+          </div>
+        </div>
+
+        <!-- Card 3: Build Highlights (Best Area & Bottleneck) -->
+        <div class="telemetry-card" style="gap: 5px;">
+          <div style="font-size: 0.72rem; background: rgba(46, 204, 113, 0.08); padding: 4px 8px; border-radius: 4px; border-left: 3px solid #2ecc71; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" id="suite-best-pill">
+            <span style="color: #2ecc71; font-weight: 700;">★ Best:</span>
+            <span id="suite-best-text" style="color: #f1f5f9;">Evaluating...</span>
+          </div>
+          <div style="font-size: 0.72rem; background: rgba(231, 76, 60, 0.08); padding: 4px 8px; border-radius: 4px; border-left: 3px solid #e74c3c; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" id="suite-weak-pill">
+            <span style="color: #ff7675; font-weight: 700;">⚠ Weakest:</span>
+            <span id="suite-weak-text" style="color: #f1f5f9;">Evaluating...</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT ANALYSIS VIEW TABS -->
       <div class="cockpit-right-tabs">
-        <button id="btn-cockpit-tab-scenarios" class="cockpit-tab-btn active" onclick="switchCockpitRightTab('scenarios')" title="Benchmark Twink across 10 combat environments and 7-axis radar chart">
-          <span>🌐</span> 10 Scenarios & Radar
+        <button id="btn-cockpit-tab-scenarios" class="cockpit-tab-btn active" onclick="switchCockpitRightTab('scenarios')">
+          <span>🌐</span> 10-Scenario Radar & Matrix
         </button>
-        <button id="btn-cockpit-tab-single" class="cockpit-tab-btn" onclick="switchCockpitRightTab('single')" title="Detailed spell damage breakdown and single-target DPS log">
-          <span>🎯</span> Single Target Breakdown
+        <button id="btn-cockpit-tab-single" class="cockpit-tab-btn" onclick="switchCockpitRightTab('single')">
+          <span>📊</span> Combat & Spell Breakdown
         </button>
       </div>
 
-      <!-- COCKPIT PANE A: 10 SCENARIOS & RADAR SUITE -->
+      <!-- ANALYSIS PANE 1: 10 SCENARIOS & 7-AXIS RADAR -->
       <div id="view-scenarios" class="cockpit-pane">
         <div class="panel">
-          
-          <div class="scenarios-toolbar-bar">
-            <div>
-              <h2 style="font-size: 1.15rem; margin-bottom: 2px;"><span>🌐</span> Multi-Environment Simulation & Scenario Lab</h2>
-              <div style="font-size: 0.76rem; color: var(--text-muted);">
-                Test and optimize your Twink build across 10 diverse PvE, PvP, Dungeon, Raid, and WSG Flag Running scenarios.
+          <!-- RADAR + SCENARIO CONTROLS COMPACT ROW -->
+          <div style="display: grid; grid-template-columns: 310px 1fr; gap: 14px; margin-bottom: 14px; align-items: center;">
+            <div class="radar-container-card" style="padding: 10px;">
+              <div style="display: flex; justify-content: space-between; width: 100%; margin-bottom: 4px; font-size: 0.74rem;">
+                <span style="font-weight: 700; color: var(--gold-bright);">7-Axis Balance Radar</span>
+                <span style="color: #94a3b8; font-size: 0.68rem;">0 - 100 Scale</span>
               </div>
+              <canvas id="scenarios-radar-canvas" width="300" height="195" style="max-width: 100%;"></canvas>
             </div>
-            <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
-              <button class="btn btn-secondary btn-sm" onclick="openCustomScenarioModal()">
-                <span>⚙️</span> Custom Scenario
-              </button>
-              <button class="btn btn-secondary btn-sm" onclick="exportScenariosJson()">
-                <span>📤</span> Export JSON
-              </button>
-              <label class="btn btn-secondary btn-sm" style="margin: 0; cursor: pointer;">
-                <span>📥</span> Import JSON
-                <input type="file" id="scenarios-import-input" accept=".json" style="display: none;" onchange="importScenariosJson(event)">
-              </label>
-              <button class="btn btn-primary btn-sm btn-glow" id="btn-run-all-scenarios" onclick="runAllScenariosSuite()" title="Simulate your current setup across all active scenarios">
-                <span>⚡</span> Run All Scenarios (Suite)
-              </button>
-            </div>
-          </div>
 
-          <!-- KPI & RADAR SECTION -->
-          <div class="scenarios-kpi-grid">
-            <!-- Left: Composite Twink Scorecard -->
-            <div class="twink-scorecard-card">
-              <div style="font-size: 0.75rem; font-weight: 700; color: #a0aec0; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px;">
-                Composite Twink Power Index
-              </div>
-              <div class="twink-score-circle">
-                <span class="twink-score-num" id="suite-composite-score">--</span>
-                <span class="twink-score-grade" id="suite-composite-grade">Unranked</span>
-              </div>
-              <div style="width: 100%; display: flex; flex-direction: column; gap: 6px; font-size: 0.76rem; text-align: left;">
-                <div style="background: rgba(255,255,255,0.04); padding: 5px 8px; border-radius: 4px; border-left: 3px solid #2ecc71;" id="suite-best-pill">
-                  <span style="color: #2ecc71; font-weight: 700;">★ Best Area:</span> <span id="suite-best-text" style="color: #fff;">Simulate suite to evaluate</span>
-                </div>
-                <div style="background: rgba(255,255,255,0.04); padding: 5px 8px; border-radius: 4px; border-left: 3px solid #e74c3c;" id="suite-weak-pill">
-                  <span style="color: #e74c3c; font-weight: 700;">⚠ Bottleneck:</span> <span id="suite-weak-text" style="color: #fff;">Simulate suite to evaluate</span>
+            <div style="display: flex; flex-direction: column; justify-content: space-between; gap: 10px; height: 100%;">
+              <div>
+                <h2 style="font-size: 1rem; margin-bottom: 4px;"><span>🌐</span> Multi-Environment Benchmark Matrix</h2>
+                <div style="font-size: 0.75rem; color: var(--text-muted); line-height: 1.4;">
+                  Simultaneously evaluates your build across PvE Single-Target, AoE Dungeon Pulls, +3 Level Bosses, 1v1 Duels, and Warsong Gulch Flag Running.
                 </div>
               </div>
-            </div>
 
-            <!-- Right: Radar Chart -->
-            <div class="radar-container-card">
-              <div style="display: flex; justify-content: space-between; width: 100%; margin-bottom: 6px; font-size: 0.78rem;">
-                <span style="font-weight: 700; color: var(--gold-bright);">Twink Performance Balance (Radar)</span>
-                <span style="color: #a0aec0; font-size: 0.72rem;">7 Dimensions (0 - 100)</span>
+              <div>
+                <div style="font-size: 0.7rem; font-weight: 700; color: #94a3b8; text-transform: uppercase; margin-bottom: 6px;">Filter Environment Category:</div>
+                <div class="chips-row" style="margin: 0;">
+                  <span class="chip active" id="filter-sc-all" onclick="filterScenariosView('all')">All (<span id="sc-count-all">10</span>)</span>
+                  <span class="chip" id="filter-sc-pve_dps" onclick="filterScenariosView('pve_dps')">⚔️ PvE (<span id="sc-count-pve">4</span>)</span>
+                  <span class="chip" id="filter-sc-pvp_dps" onclick="filterScenariosView('pvp_dps')">🚩 PvP & WSG (<span id="sc-count-pvp">4</span>)</span>
+                  <span class="chip" id="filter-sc-healing" onclick="filterScenariosView('healing')">💚 Healing (<span id="sc-count-heal">2</span>)</span>
+                  <span class="chip" id="filter-sc-custom" onclick="filterScenariosView('custom')" style="display: none;">🛠 Custom (<span id="sc-count-custom">0</span>)</span>
+                </div>
               </div>
-              <canvas id="scenarios-radar-canvas" width="380" height="230" style="max-width: 100%;"></canvas>
-            </div>
-          </div>
 
-          <!-- FILTER BAR FOR SCENARIOS -->
-          <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; margin-bottom: 12px; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 10px;">
-            <div class="chips-row" style="margin: 0;">
-              <span class="chip active" id="filter-sc-all" onclick="filterScenariosView('all')">All Scenarios (<span id="sc-count-all">10</span>)</span>
-              <span class="chip" id="filter-sc-pve_dps" onclick="filterScenariosView('pve_dps')">⚔️ PvE Combat (<span id="sc-count-pve">4</span>)</span>
-              <span class="chip" id="filter-sc-pvp_dps" onclick="filterScenariosView('pvp_dps')">🚩 PvP & WSG (<span id="sc-count-pvp">4</span>)</span>
-              <span class="chip" id="filter-sc-healing" onclick="filterScenariosView('healing')">💚 Resto / Healing (<span id="sc-count-heal">2</span>)</span>
-              <span class="chip" id="filter-sc-custom" onclick="filterScenariosView('custom')" style="display: none;">🛠 Custom (<span id="sc-count-custom">0</span>)</span>
-            </div>
-            <div style="display: flex; gap: 6px;">
-              <button class="chip" onclick="toggleAllScenariosSelection(true)">Select All</button>
-              <button class="chip" onclick="toggleAllScenariosSelection(false)">Deselect All</button>
+              <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 6px; border-top: 1px solid rgba(255,255,255,0.07); padding-top: 8px;">
+                <div style="display: flex; gap: 6px;">
+                  <button class="chip" onclick="toggleAllScenariosSelection(true)">Select All</button>
+                  <button class="chip" onclick="toggleAllScenariosSelection(false)">Deselect All</button>
+                </div>
+                <div style="display: flex; gap: 6px;">
+                  <button class="chip" onclick="openCustomScenarioModal()">+ Custom Scenario</button>
+                  <button class="chip" onclick="exportScenariosJson()">Export JSON</button>
+                  <label class="chip" style="margin: 0; cursor: pointer;">
+                    Import JSON
+                    <input type="file" id="scenarios-import-input" accept=".json" style="display: none;" onchange="importScenariosJson(event)">
+                  </label>
+                </div>
+              </div>
             </div>
           </div>
 
           <!-- SCENARIO CARDS GRID -->
-          <div class="scenario-cards-grid" id="scenarios-grid-container">
-            <!-- Cards populated dynamically by renderScenariosCards() -->
-          </div>
-
+          <div class="scenario-cards-grid" id="scenarios-grid-container"></div>
         </div>
       </div>
 
-      <!-- COCKPIT PANE B: SINGLE TARGET BREAKDOWN & METRICS -->
+      <!-- ANALYSIS PANE 2: COMBAT & SPELL BREAKDOWN -->
       <div id="cockpit-pane-single" class="cockpit-pane" style="display: none; flex-direction: column; gap: 10px;">
-        <!-- HERO DPS CARD -->
-      <div class="dps-hero">
-        <div class="dps-label">Simulated Damage Per Second</div>
-        <div class="dps-value" id="res-dps">--.-</div>
-        <div class="dps-sub">
-          <span>Min: <strong id="res-min" style="color: #fff;">--.-</strong></span>
-          <span>Max: <strong id="res-max" style="color: #fff;">--.-</strong></span>
-          <span>StDev: <strong id="res-stdev" style="color: #fff;">--.-</strong></span>
-        </div>
-        <div id="res-diff-badge" style="display: none;" class="dps-diff"></div>
-      </div>
-
-      <!-- HEALING & SUSTAIN CARD (ACTIVE ON HEALING ROTATION) -->
-      <div class="panel" id="card-healing-metrics" style="display: none; border: 1px solid #2ecc71; background: linear-gradient(180deg, rgba(46, 204, 113, 0.12) 0%, rgba(13, 17, 23, 0.95) 100%); padding: 14px 18px; border-radius: 8px;">
-        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px;">
-          <div style="font-size: 0.76rem; font-weight: 700; color: #2ecc71; text-transform: uppercase; letter-spacing: 0.5px;">
-            <span>💚</span> Healing & Sustain Analysis
+        <!-- HEALING & SUSTAIN CARD (ACTIVE ON HEALING ROTATION) -->
+        <div class="panel" id="card-healing-metrics" style="display: none; border: 1px solid #2ecc71; background: linear-gradient(180deg, rgba(46, 204, 113, 0.12) 0%, rgba(13, 17, 23, 0.95) 100%); padding: 14px 18px; border-radius: 8px;">
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px;">
+            <div style="font-size: 0.76rem; font-weight: 700; color: #2ecc71; text-transform: uppercase; letter-spacing: 0.5px;">
+              <span>💚</span> Healing & Sustain Analysis
+            </div>
+            <span class="badge-rec" id="heal-primary-badge" style="background: rgba(46, 204, 113, 0.2); border-color: #2ecc71; color: #2ecc71;">HEALING WAVE R4</span>
           </div>
-          <span class="badge-rec" id="heal-primary-badge" style="background: rgba(46, 204, 113, 0.2); border-color: #2ecc71; color: #2ecc71;">HEALING WAVE R4</span>
-        </div>
-        <div style="display: flex; align-items: baseline; gap: 8px;">
-          <div style="font-size: 2.3rem; font-weight: 800; color: #2ecc71; line-height: 1;" id="heal-hps">--.-</div>
-          <span style="font-size: 0.85rem; color: #2ecc71; font-weight: 700;">HPS</span>
-          <span style="font-size: 0.78rem; color: var(--text-muted); margin-left: auto;" id="heal-avg-sub">Avg: -- HP</span>
-        </div>
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px 10px; margin-top: 10px; font-size: 0.74rem; background: rgba(0,0,0,0.35); padding: 8px 10px; border-radius: 5px;">
-          <div>Cast Time: <strong id="heal-cast-time" style="color: #fff;">--s</strong> <span id="heal-cast-badge" style="color: #2ecc71; font-size: 0.68rem;"></span></div>
-          <div>Mana Cost: <strong id="heal-mana-cost" style="color: #fff;">-- Mana</strong> <span id="heal-mana-badge" style="color: #2ecc71; font-size: 0.68rem;"></span></div>
-          <div>Efficiency: <strong id="heal-hpm" style="color: var(--gold-bright);">-- HP/Mana</strong></div>
-          <div>Spell Crit: <strong id="heal-crit" style="color: #2ecc71;">--%</strong></div>
-          <div>Total Mana: <strong id="heal-total-mana" style="color: #58a6ff;">--</strong></div>
-          <div>Sustain: <strong id="heal-oom" style="color: #ff7675;">-- casts</strong></div>
-        </div>
-        <div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 6px; display: flex; justify-content: space-between;">
-          <span>Bonus +Heal/SP: <strong id="heal-gear-bonus" style="color: #fff;">+0</strong></span>
-          <span>Max Capacity: <strong id="heal-capacity" style="color: #2ecc71;">-- HP</strong></span>
-        </div>
-      </div>
-
-      <!-- SIMULATION CONTROLS & STATUS -->
-      <div class="panel" style="padding: 12px 16px;">
-        <div style="display: flex; align-items: center; justify-content: space-between;">
-          <span style="font-size: 0.78rem; color: var(--text-muted);" id="sim-meta">Status: Ready</span>
-          <button class="btn-sim" style="padding: 6px 16px; font-size: 0.85rem;" onclick="runSimulation()">
-            <span>▶ Re-Simulate</span>
-          </button>
-        </div>
-      </div>
-
-      <!-- DAMAGE BREAKDOWN TABLE (WITH WOWHEAD SPELL TOOLTIPS) -->
-      <div class="panel">
-        <div class="panel-header">
-          <h2><span>📊</span> Damage Breakdown</h2>
+          <div style="display: flex; align-items: baseline; gap: 8px;">
+            <div style="font-size: 2.3rem; font-weight: 800; color: #2ecc71; line-height: 1;" id="heal-hps">--.-</div>
+            <span style="font-size: 0.85rem; color: #2ecc71; font-weight: 700;">HPS</span>
+            <span style="font-size: 0.78rem; color: var(--text-muted); margin-left: auto;" id="heal-avg-sub">Avg: -- HP</span>
+          </div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px 10px; margin-top: 10px; font-size: 0.74rem; background: rgba(0,0,0,0.35); padding: 8px 10px; border-radius: 5px;">
+            <div>Cast Time: <strong id="heal-cast-time" style="color: #fff;">--s</strong> <span id="heal-cast-badge" style="color: #2ecc71; font-size: 0.68rem;"></span></div>
+            <div>Mana Cost: <strong id="heal-mana-cost" style="color: #fff;">-- Mana</strong> <span id="heal-mana-badge" style="color: #2ecc71; font-size: 0.68rem;"></span></div>
+            <div>Efficiency: <strong id="heal-hpm" style="color: var(--gold-bright);">-- HP/Mana</strong></div>
+            <div>Spell Crit: <strong id="heal-crit" style="color: #2ecc71;">--%</strong></div>
+            <div>Total Mana: <strong id="heal-total-mana" style="color: #58a6ff;">--</strong></div>
+            <div>Sustain: <strong id="heal-oom" style="color: #ff7675;">-- casts</strong></div>
+          </div>
+          <div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 6px; display: flex; justify-content: space-between;">
+            <span>Bonus +Heal/SP: <strong id="heal-gear-bonus" style="color: #fff;">+0</strong></span>
+            <span>Max Capacity: <strong id="heal-capacity" style="color: #2ecc71;">-- HP</strong></span>
+          </div>
         </div>
 
-        <table class="breakdown-table">
-          <thead>
-            <tr>
-              <th>Spell / Ability</th>
-              <th>DPS</th>
-              <th>%</th>
-              <th>Casts</th>
-              <th>Crit</th>
-            </tr>
-          </thead>
-          <tbody id="breakdown-body">
-            <tr>
-              <td colspan="5" style="text-align: center; color: var(--text-muted); padding: 30px;">
-                Press <strong>▶ SIMULATE</strong> to calculate DPS.
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+        <!-- DAMAGE BREAKDOWN TABLE (WITH WOWHEAD SPELL TOOLTIPS) -->
+        <div class="panel">
+          <div class="panel-header">
+            <h2><span>📊</span> Ability & Spell Breakdown</h2>
+          </div>
 
-      <!-- TERMINAL CLI COMMAND -->
-      <div class="panel">
-        <div class="panel-header">
-          <h2><span>💻</span> Terminal CLI Command</h2>
+          <table class="breakdown-table">
+            <thead>
+              <tr>
+                <th>Spell / Ability</th>
+                <th>DPS</th>
+                <th>%</th>
+                <th>Casts</th>
+                <th>Crit</th>
+              </tr>
+            </thead>
+            <tbody id="breakdown-body">
+              <tr>
+                <td colspan="5" style="text-align: center; color: var(--text-muted); padding: 30px;">
+                  Simulating build...
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
-        <div class="cli-box">
-          <span class="cli-text" id="cli-cmd">python sim_cotto.py --weapon-mode 2h_staff --imbue flametongue</span>
-          <button class="btn-copy" onclick="copyCliCommand()">Copy</button>
-        </div>
-      </div>
+
+        <!-- COLLAPSIBLE TERMINAL CLI COMMAND -->
+        <details class="cli-details-drawer">
+          <summary>💻 Terminal CLI Command (Click to expand)</summary>
+          <div class="cli-box" style="margin-top: 8px;">
+            <span class="cli-text" id="cli-cmd">python sim_cotto.py --weapon-mode 2h_staff --imbue flametongue</span>
+            <button class="btn-copy" onclick="copyCliCommand()">Copy</button>
+          </div>
+        </details>
       </div>
 
     </div>
 
   </div>
-
-
 
   <!-- INTERACTIVE ITEM PICKER MODAL -->
   <div class="modal-overlay" id="item-picker-modal" onclick="closePickerModal(event)">
@@ -4247,8 +4396,8 @@
         updateTalentHeader();
         updateAllInOneView();
         
-        // Initial simulation run
-        runSimulation();
+        // Initial simulation run (both single-target and 10-scenario suite)
+        runOneStopSimulate();
       } catch (err) {
         console.error("Initialization error:", err);
       } finally {
@@ -4281,56 +4430,87 @@
     }
 
     function toggleBuildSubPanel(sub) {
-      const tabs = ['talents', 'rotation', 'buffs'];
+      const activeSub = (!sub || sub === 'none') ? 'gear' : sub;
+      const tabs = ['gear', 'talents', 'rotation', 'buffs'];
       tabs.forEach(t => {
         const pane = document.getElementById(`view-${t}`);
         const btn = document.getElementById(`btn-build-${t}`);
-        if (pane) pane.style.display = (sub === t) ? 'block' : 'none';
+        if (pane) pane.style.display = (activeSub === t) ? 'block' : 'none';
         if (btn) {
-          if (sub === t) btn.classList.add('active');
+          if (activeSub === t) btn.classList.add('active');
           else btn.classList.remove('active');
         }
       });
-      if (sub === 'talents') {
+      if (activeSub === 'gear') {
+        renderGearSlots();
+      } else if (activeSub === 'talents') {
         renderTalentTrees();
-      } else if (sub === 'rotation') {
+      } else if (activeSub === 'rotation') {
         if (latestSimData) renderHealingStudio(latestSimData);
-      } else if (sub === 'buffs') {
+      } else if (activeSub === 'buffs') {
         renderBuffsView();
       }
       setTimeout(refreshWowhead, 50);
     }
 
-    async function runOneStopSimulate() {
-      const btn = document.getElementById('btn-master-simulate');
-      const originalText = btn ? btn.innerHTML : '';
-      if (btn) {
-        btn.disabled = true;
-        btn.innerHTML = '<span>⏳</span> SIMULATING...';
+    function updateSimCfgSummaryLabel() {
+      const dur = document.getElementById('cfg-duration') ? document.getElementById('cfg-duration').value : '30';
+      const iters = document.getElementById('cfg-iterations') ? document.getElementById('cfg-iterations').value : '200';
+      const lbl = document.getElementById('sim-cfg-summary-lbl');
+      if (lbl) lbl.innerText = `${dur}s • ${iters}`;
+    }
+
+    function runUnifiedAutoBiS() {
+      const sel = document.getElementById('cfg-bis-target');
+      const targetVal = sel ? sel.value : 'all';
+      if (!targetVal || targetVal === 'all') {
+        // Restore active spec profile weights and run full BiS (Gear + Enchants + Talents + Consumes)
+        if (typeof activeSpecRole !== 'undefined') {
+          const specProfile = activeSpecRole === 'resto' ? 'resto_pvp' : (activeSpecRole === 'elemental' ? 'elemental' : 'enhancement');
+          if (defaultStatWeightProfiles[specProfile]) {
+            activeWeightProfileKey = specProfile;
+            customWeights = { ...defaultStatWeightProfiles[specProfile].weights };
+          }
+        }
+        autoOptimizeTalentsForLevel();
+        autoOptimizeFullBiS();
+        showToastNotice('✨ Equipped All-Around Spec BiS (Gear, Enchants, Talents & Consumables)!');
+      } else {
+        optimizeForScenario(targetVal);
       }
+    }
+
+    async function runOneStopSimulate() {
+      const btn = document.getElementById('btn-simulate');
+      const btnText = document.getElementById('btn-text');
+      if (btn) btn.disabled = true;
+      if (btnText) btnText.innerText = '⏳ SIMULATING...';
       try {
-        await runSimulation();
-        await runAllScenariosSuite();
+        await Promise.all([
+          runSimulation(),
+          runAllScenariosSuite()
+        ]);
       } catch (e) {
         console.error('Error running one stop simulation:', e);
       } finally {
-        if (btn) {
-          btn.disabled = false;
-          btn.innerHTML = originalText;
-        }
+        if (btn) btn.disabled = false;
+        if (btnText) btnText.innerText = '▶ SIMULATE';
       }
     }
+
+    document.addEventListener('click', (e) => {
+      document.querySelectorAll('details.popover-details[open]').forEach(d => {
+        if (!d.contains(e.target)) d.removeAttribute('open');
+      });
+    });
 
     // Backwards compatibility router for existing links
     function switchWorkbenchTab(tab) {
       if (tab === 'gear') {
-        const g = document.getElementById('view-gear');
-        if (g) g.scrollIntoView({ behavior: 'smooth' });
+        toggleBuildSubPanel('gear');
       } else if (tab === 'talents' || tab === 'rotation' || tab === 'healing' || tab === 'buffs') {
         const map = { talents: 'talents', rotation: 'rotation', healing: 'rotation', buffs: 'buffs' };
         toggleBuildSubPanel(map[tab] || 'talents');
-        const drawer = document.querySelector('.build-drawer-section');
-        if (drawer) drawer.scrollIntoView({ behavior: 'smooth' });
       } else if (tab === 'scenarios') {
         switchCockpitRightTab('scenarios');
       } else if (tab === 'breakdown' || tab === 'single') {
@@ -7848,11 +8028,8 @@
             </div>
 
             <div class="scen-card-actions">
-              <button class="btn-card-action primary" onclick="runSingleScenario('${scen.id}')">
-                ⚡ Run
-              </button>
-              <button class="btn-card-action bis" onclick="optimizeForScenario('${scen.id}')">
-                ✨ Optimize BiS
+              <button class="scenario-link-btn" onclick="const s=document.getElementById('cfg-bis-target'); if(s) s.value='${scen.id}'; optimizeForScenario('${scen.id}');" title="Set BiS Target to this scenario and auto-equip optimal Gear, Enchants & Consumables">
+                🎯 Load Scenario BiS →
               </button>
               ${scen.is_custom ? `
                 <button class="btn-card-action" style="flex:0 0 32px; padding:0; color:#ef4444; border-color:#ef4444;" onclick="deleteCustomScenario('${scen.id}')" title="Delete custom scenario">
@@ -8019,12 +8196,10 @@
         renderWeightInputs();
       }
 
+      const bisTargetSel = document.getElementById('cfg-bis-target');
+      if (bisTargetSel) bisTargetSel.value = scenarioId;
       autoOptimizeFullBiS();
-      showToastNotice(`✨ BiS Gear & Enchants optimized for: ${scen.name}!`);
-
-      setTimeout(() => {
-        runSingleScenario(scenarioId);
-      }, 500);
+      showToastNotice(`✨ Auto-Built BiS (Gear, Enchants & Consumes) for: ${scen.name}!`);
     }
 
     function showToastNotice(msg) {
