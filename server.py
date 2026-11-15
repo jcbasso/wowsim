@@ -751,21 +751,39 @@ def simulate(req: SimRequest):
     elif req.rotation_preset == "melee_only":
         player["rotation"]["priorityList"] = []
 
-    temp_req_path = r"C:\Users\jcbas\.gemini\antigravity\scratch\temp_web_sim.json"
-    with open(temp_req_path, "w", encoding="utf-8") as f:
-        json.dump(cfg, f, indent=2)
+    with tempfile.NamedTemporaryFile("w", delete=False, suffix=".json") as in_tf:
+        json.dump(cfg, in_tf, indent=2)
+        in_tmp_name = in_tf.name
+
+    out_fd, out_tmp_name = tempfile.mkstemp(suffix=".json")
+    os.close(out_fd)
 
     try:
-        proc = subprocess.run([CLI_PATH, "sim", "--infile", temp_req_path],
-                              capture_output=True, text=True, errors="ignore", timeout=35)
+        proc = subprocess.run([CLI_PATH, "sim", "--infile", in_tmp_name, "--outfile", out_tmp_name],
+                              capture_output=True, text=True, errors="ignore", timeout=30)
+        if proc.returncode != 0:
+            raise HTTPException(status_code=500, detail=f"Engine error: {proc.stderr}")
+
+        if not os.path.exists(out_tmp_name):
+            raise HTTPException(status_code=500, detail="Engine produced no output file.")
+
+        with open(out_tmp_name, "r", encoding="utf-8") as out_f:
+            raw_text = out_f.read()
+
+        idx = raw_text.find("{")
+        if idx == -1:
+            raise HTTPException(status_code=500, detail=f"Engine error: {proc.stderr}")
+
+        raw_data = json.loads(raw_text[idx:])
     except subprocess.TimeoutExpired:
-        raise HTTPException(status_code=504, detail="Simulation timed out (35s).")
-
-    idx = proc.stdout.find("{")
-    if idx == -1:
-        raise HTTPException(status_code=500, detail=f"Engine error: {proc.stderr}")
-
-    raw_data = json.loads(proc.stdout[idx:])
+        raise HTTPException(status_code=504, detail="Simulation timed out (30s).")
+    finally:
+        try:
+            if os.path.exists(in_tmp_name): os.remove(in_tmp_name)
+        except Exception: pass
+        try:
+            if os.path.exists(out_tmp_name): os.remove(out_tmp_name)
+        except Exception: pass
     p = raw_data["raidMetrics"]["parties"][0]["players"][0]
     
     spell_names = {
@@ -1529,62 +1547,75 @@ def run_single_scenario_sim(scenario: Dict[str, Any], req: ScenarioSuiteRequest)
         json.dump(cfg, tf)
         tmp_name = tf.name
 
+    out_fd, out_tmp_name = tempfile.mkstemp(suffix=".json")
+    os.close(out_fd)
+
+    dps_val = 50.0
     try:
-        proc = subprocess.run([CLI_PATH, "sim", "--infile", tmp_name], capture_output=True, text=True, errors="ignore", timeout=15)
-        os.remove(tmp_name)
-        if proc.returncode != 0:
+        proc = subprocess.run([CLI_PATH, "sim", "--infile", tmp_name, "--outfile", out_tmp_name],
+                              capture_output=True, text=True, errors="ignore", timeout=20)
+        if proc.returncode != 0 or not os.path.exists(out_tmp_name):
             return {"id": s_id, "name": scenario["name"], "badge": scenario.get("badge", "DPS"), "category": cat, "score": 50, "grade": "C", "primary_metric": "--", "details": "Simulation failed"}
-        idx = proc.stdout.find("{")
-        out = json.loads(proc.stdout[idx:])
+        with open(out_tmp_name, "r", encoding="utf-8") as out_f:
+            raw_out = out_f.read()
+        idx = raw_out.find("{")
+        if idx == -1:
+            return {"id": s_id, "name": scenario["name"], "badge": scenario.get("badge", "DPS"), "category": cat, "score": 50, "grade": "C", "primary_metric": "--", "details": "Simulation failed"}
+        out = json.loads(raw_out[idx:])
         p_res = out["raidMetrics"]["parties"][0]["players"][0]
         dps_val = round(p_res["dps"]["avg"], 1)
-        
-        if s_id == "pvp_burst_skirmish":
-            tot_burst = int(round(dps_val * dur, 0))
-            score = min(100, int(dps_val * 1.5))
-            metric_text = f"{tot_burst} Dmg (10s)"
-            label = "Burst Damage Window"
-            tip = "Critical Strike and weapon swing damage maximize kill pressure within 10 seconds."
-        elif s_id == "aoe_dungeon_trash":
-            score = min(100, int(dps_val * 1.3))
-            metric_text = f"{dps_val} Cleave DPS"
-            label = f"Cleave Across {target_count} Targets"
-            tip = "Fire Nova Totem and Spell Power dramatically amplify AoE clear speeds."
-        elif s_id == "pve_dungeon_boss":
-            score = min(100, int(dps_val * 1.8))
-            metric_text = f"{dps_val} DPS"
-            label = "Boss DPS (+3 Lvls Glancing)"
-            tip = "Hit Rating mitigates glancing blow penalties against level +3 dungeon bosses."
-        elif s_id == "pve_raid_boss":
-            score = min(100, int(dps_val * 1.7))
-            metric_text = f"{dps_val} DPS"
-            label = "90s Raid Endurance DPS"
-            tip = "MP5 and mana efficiency sustain your Shock rotation over 90 seconds."
-        else:
-            score = min(100, int(dps_val * 1.6))
-            metric_text = f"{dps_val} DPS"
-            label = f"{dur}s Encounter Output"
-            tip = "Optimized attack power and spell rank rotation maximize damage per second."
-
-        grade = "S+" if score >= 92 else ("S" if score >= 84 else ("A" if score >= 72 else ("B" if score >= 60 else "C")))
-
-        return {
-            "id": s_id,
-            "name": scenario["name"],
-            "badge": scenario.get("badge", "Combat"),
-            "category": cat,
-            "primary_metric": metric_text,
-            "metric_value": dps_val,
-            "score": score,
-            "grade": grade,
-            "detail_label": label,
-            "details": f"Avg DPS: {dps_val} • Fight Length: {dur}s • Targets: {target_count}",
-            "tip": tip
-        }
     except Exception as e:
-        if os.path.exists(tmp_name):
-            os.remove(tmp_name)
         return {"id": s_id, "name": scenario["name"], "badge": scenario.get("badge", "Error"), "category": cat, "score": 50, "grade": "C", "primary_metric": "--", "details": str(e), "tip": "Simulation timed out."}
+    finally:
+        try:
+            if os.path.exists(tmp_name): os.remove(tmp_name)
+        except Exception: pass
+        try:
+            if os.path.exists(out_tmp_name): os.remove(out_tmp_name)
+        except Exception: pass
+
+    if s_id == "pvp_burst_skirmish":
+        tot_burst = int(round(dps_val * dur, 0))
+        score = min(100, int(dps_val * 1.5))
+        metric_text = f"{tot_burst} Dmg (10s)"
+        label = "Burst Damage Window"
+        tip = "Critical Strike and weapon swing damage maximize kill pressure within 10 seconds."
+    elif s_id == "aoe_dungeon_trash":
+        score = min(100, int(dps_val * 1.3))
+        metric_text = f"{dps_val} Cleave DPS"
+        label = f"Cleave Across {target_count} Targets"
+        tip = "Fire Nova Totem and Spell Power dramatically amplify AoE clear speeds."
+    elif s_id == "pve_dungeon_boss":
+        score = min(100, int(dps_val * 1.8))
+        metric_text = f"{dps_val} DPS"
+        label = "Boss DPS (+3 Lvls Glancing)"
+        tip = "Hit Rating mitigates glancing blow penalties against level +3 dungeon bosses."
+    elif s_id == "pve_raid_boss":
+        score = min(100, int(dps_val * 1.7))
+        metric_text = f"{dps_val} DPS"
+        label = "90s Raid Endurance DPS"
+        tip = "MP5 and mana efficiency sustain your Shock rotation over 90 seconds."
+    else:
+        score = min(100, int(dps_val * 1.6))
+        metric_text = f"{dps_val} DPS"
+        label = f"{dur}s Encounter Output"
+        tip = "Optimized attack power and spell rank rotation maximize damage per second."
+
+    grade = "S+" if score >= 92 else ("S" if score >= 84 else ("A" if score >= 72 else ("B" if score >= 60 else "C")))
+
+    return {
+        "id": s_id,
+        "name": scenario["name"],
+        "badge": scenario.get("badge", "Combat"),
+        "category": cat,
+        "primary_metric": metric_text,
+        "metric_value": dps_val,
+        "score": score,
+        "grade": grade,
+        "detail_label": label,
+        "details": f"Avg DPS: {dps_val} • Fight Length: {dur}s • Targets: {target_count}",
+        "tip": tip
+    }
 
 @app.post("/api/scenarios/simulate-suite")
 def simulate_suite(req: ScenarioSuiteRequest):
@@ -1612,7 +1643,7 @@ def simulate_suite(req: ScenarioSuiteRequest):
     if not active_scenarios:
         active_scenarios = all_scenarios[:4]
 
-    with concurrent.futures.ThreadPoolExecutor(max_workers=4) as executor:
+    with concurrent.futures.ThreadPoolExecutor(max_workers=3) as executor:
         futures = [executor.submit(run_single_scenario_sim, sc, req) for sc in active_scenarios]
         results = [f.result() for f in futures]
 
