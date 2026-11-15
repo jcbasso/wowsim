@@ -8846,6 +8846,33 @@
     // =========================================================================
     // BIS CONSUMABLES & FOOD AUTO-OPTIMIZER
     // =========================================================================
+    function calculateFoodItemScore(food, currentLvl, weights) {
+      if (!food || !food.stats) return 0;
+      const reqLvl = food.level || 1;
+      if (reqLvl > currentLvl) return -999;
+      
+      const w = weights || currentStatWeights || {};
+      let score = 0;
+      
+      // Calculate weighted value based on active profile weights
+      for (const [stat, val] of Object.entries(food.stats)) {
+        if (w[stat] !== undefined) {
+          score += val * w[stat];
+        } else if (stat === 'FireSP' && w['SP'] !== undefined) {
+          score += val * (w['SP'] * 0.85);
+        } else if (stat === 'Healing' && w['SP'] !== undefined) {
+          score += val * (w['SP'] * 0.7);
+        } else if (stat === 'MP5') {
+          // If profile does not have explicit MP5 weight, assign sensible heuristic
+          const mp5Weight = w['MP5'] || (w['Int'] ? w['Int'] * 1.5 : (w['SP'] ? w['SP'] * 1.2 : 0.8));
+          score += val * mp5Weight;
+        } else if (stat === 'HP5') {
+          score += val * (w['Sta'] ? w['Sta'] * 0.6 : 0.5);
+        }
+      }
+      return Math.round(score * 10) / 10;
+    }
+
     function autoOptimizeBiSConsumables() {
       const currentLvl = getCurrentTwinkLevel();
       const cSpec = currentCharacterSpec || 'enhancement';
@@ -8871,30 +8898,41 @@
         });
       }
 
-      // 1. Food selection based on Spec/Scenario Role and Level Tier
-      let chosenFood = null;
-      if (role === 'healer' || cSpec === 'resto') {
-        // Restoration -> MP5 is top priority for healing sustain
-        if (currentLvl >= 25 && buffsCatalog['food_sagefish_delight']) chosenFood = 'food_sagefish_delight';
-        else if (currentLvl >= 10 && buffsCatalog['food_sagefish']) chosenFood = 'food_sagefish';
-        else chosenFood = 'food_eggs';
-      } else if (role === 'caster' || cSpec === 'elemental') {
-        // Elemental Caster -> MP5 / Fire SP
-        if (currentLvl >= 25 && buffsCatalog['food_sagefish_delight']) chosenFood = 'food_sagefish_delight';
-        else if (currentLvl >= 10 && buffsCatalog['food_sagefish']) chosenFood = 'food_sagefish';
-        else chosenFood = 'food_eggs';
-      } else {
-        // Tank & Melee / Enhancement -> Top Stamina & Spirit food
-        if (currentLvl >= 25 && buffsCatalog['food_heavy_croc']) chosenFood = 'food_heavy_croc';
-        else if (currentLvl >= 15 && buffsCatalog['food_raptor']) chosenFood = 'food_raptor';
-        else if (currentLvl >= 15 && buffsCatalog['food_lion']) chosenFood = 'food_lion';
-        else if (currentLvl >= 15 && buffsCatalog['food_digrat']) chosenFood = 'food_digrat';
-        else if (currentLvl >= 10 && buffsCatalog['food_crispy_bat']) chosenFood = 'food_crispy_bat';
-        else chosenFood = 'food_eggs';
+      // 1. Food selection based on weighted BiS score & level requirement
+      let bestFood = null;
+      let bestScore = -9999;
+
+      const foodItems = Object.values(buffsCatalog || {}).filter(b => b.category === 'food');
+      foodItems.forEach(food => {
+        const sc = calculateFoodItemScore(food, currentLvl, currentStatWeights);
+        if (sc > bestScore) {
+          bestScore = sc;
+          bestFood = food.id;
+        }
+      });
+
+      // Fallback if scoring yielded no clear winner
+      if (!bestFood || bestScore <= 0) {
+        if (role === 'healer' || cSpec === 'resto') {
+          if (currentLvl >= 25 && buffsCatalog['food_sagefish_delight']) bestFood = 'food_sagefish_delight';
+          else if (currentLvl >= 10 && buffsCatalog['food_sagefish']) bestFood = 'food_sagefish';
+          else bestFood = 'food_eggs';
+        } else if (role === 'caster' || cSpec === 'elemental') {
+          if (currentLvl >= 25 && buffsCatalog['food_sagefish_delight']) bestFood = 'food_sagefish_delight';
+          else if (currentLvl >= 10 && buffsCatalog['food_sagefish']) bestFood = 'food_sagefish';
+          else bestFood = 'food_eggs';
+        } else {
+          if (currentLvl >= 25 && buffsCatalog['food_heavy_croc']) bestFood = 'food_heavy_croc';
+          else if (currentLvl >= 15 && buffsCatalog['food_raptor']) bestFood = 'food_raptor';
+          else if (currentLvl >= 15 && buffsCatalog['food_lion']) bestFood = 'food_lion';
+          else if (currentLvl >= 15 && buffsCatalog['food_digrat']) bestFood = 'food_digrat';
+          else if (currentLvl >= 10 && buffsCatalog['food_crispy_bat']) bestFood = 'food_crispy_bat';
+          else bestFood = 'food_eggs';
+        }
       }
 
-      if (chosenFood) {
-        activeBuffs[chosenFood] = true;
+      if (bestFood) {
+        activeBuffs[bestFood] = true;
       }
 
       // 2. Spec/Scenario-aligned Elixirs and Scrolls
@@ -8920,7 +8958,7 @@
 
       saveActiveBuffs();
       renderBuffsView();
-      const foodName = buffsCatalog[chosenFood] ? buffsCatalog[chosenFood].name : 'Optimal Food';
+      const foodName = buffsCatalog[bestFood] ? buffsCatalog[bestFood].name : 'Optimal Food';
       showToastNotice(`🍲 BiS Consumables Equipped: ${foodName}!`);
     }
 
@@ -9098,56 +9136,97 @@
       Object.values(categories).forEach(c => { if (c) c.innerHTML = ''; });
 
       const currentLvl = getCurrentTwinkLevel();
+      const cSpec = currentCharacterSpec || 'enhancement';
 
+      // Pre-calculate Food BiS Scores and Rankings for current spec/weights
+      const foodItems = Object.values(buffsCatalog || {}).filter(b => b.category === 'food');
+      const rankedFoods = foodItems.map(food => {
+        const sc = calculateFoodItemScore(food, currentLvl, currentStatWeights);
+        return { ...food, foodScore: sc, isEligible: (food.level || 1) <= currentLvl };
+      }).sort((a, b) => b.foodScore - a.foodScore);
+
+      const foodRankMap = {};
+      let eligibleRankCounter = 1;
+      rankedFoods.forEach(f => {
+        if (f.isEligible) {
+          foodRankMap[f.id] = { rank: eligibleRankCounter++, score: f.foodScore };
+        } else {
+          foodRankMap[f.id] = { rank: 99, score: f.foodScore, overLevel: true };
+        }
+      });
+
+      // Group buffs by category for rendering
+      const itemsByCategory = {};
       Object.values(buffsCatalog || {}).forEach(buff => {
-        let targetContainer = categories[buff.category] || categories['potion'];
+        const cat = buff.category || 'potion';
+        if (!itemsByCategory[cat]) itemsByCategory[cat] = [];
+        itemsByCategory[cat].push(buff);
+      });
+
+      // Sort food category by ranked BiS score descending
+      if (itemsByCategory['food']) {
+        itemsByCategory['food'].sort((a, b) => {
+          const scA = foodRankMap[a.id] ? foodRankMap[a.id].score : 0;
+          const scB = foodRankMap[b.id] ? foodRankMap[b.id].score : 0;
+          return scB - scA;
+        });
+      }
+
+      Object.keys(itemsByCategory).forEach(catKey => {
+        const targetContainer = categories[catKey] || categories['potion'];
         if (!targetContainer) return;
 
-        const isActive = !!activeBuffs[buff.id];
-        const statStrs = Object.entries(buff.stats || {}).map(([k, v]) => `+${v} ${k}`).join(', ');
-        const reqLvl = buff.level || 1;
-        const isOver = reqLvl > currentLvl;
-        
-        let recBadge = '';
-        const cSpec = currentCharacterSpec || 'enhancement';
-        if (buff.category === 'food') {
-          if (cSpec === 'resto' && (buff.id === 'food_sagefish_delight' || buff.id === 'food_sagefish')) {
-            recBadge = '<span style="background: rgba(46, 204, 113, 0.2); border: 1px solid #2ecc71; color: #2ecc71; font-size: 0.65rem; padding: 1px 5px; border-radius: 3px; font-weight: 700; margin-left: 6px;">⭐ Resto BiS</span>';
-          } else if (cSpec === 'tank' && (buff.id === 'food_heavy_croc' || buff.id === 'food_raptor')) {
-            recBadge = '<span style="background: rgba(56, 189, 248, 0.2); border: 1px solid #38bdf8; color: #7dd3fc; font-size: 0.65rem; padding: 1px 5px; border-radius: 3px; font-weight: 700; margin-left: 6px;">🛡️ Tank BiS</span>';
-          } else if (cSpec === 'enhancement' && (buff.id === 'food_heavy_croc' || buff.id === 'food_lion' || buff.id === 'food_raptor')) {
-            recBadge = '<span style="background: rgba(245, 158, 11, 0.2); border: 1px solid #f59e0b; color: #f59e0b; font-size: 0.65rem; padding: 1px 5px; border-radius: 3px; font-weight: 700; margin-left: 6px;">⭐ Enhance BiS</span>';
+        itemsByCategory[catKey].forEach(buff => {
+          const isActive = !!activeBuffs[buff.id];
+          const statStrs = Object.entries(buff.stats || {}).map(([k, v]) => `+${v} ${k}`).join(', ');
+          const reqLvl = buff.level || 1;
+          const isOver = reqLvl > currentLvl;
+          
+          let rankBadge = '';
+          if (buff.category === 'food') {
+            const rData = foodRankMap[buff.id];
+            if (rData && !isOver) {
+              if (rData.rank === 1) {
+                rankBadge = `<span style="background: linear-gradient(135deg, #f59e0b, #d97706); color: #000; font-size: 0.65rem; padding: 2px 7px; border-radius: 4px; font-weight: 800; margin-left: 6px; box-shadow: 0 0 6px rgba(245, 158, 11, 0.4);">⭐ #1 BiS Food (${rData.score} pts)</span>`;
+              } else if (rData.rank === 2) {
+                rankBadge = `<span style="background: rgba(148, 163, 184, 0.2); border: 1px solid #94a3b8; color: #cbd5e1; font-size: 0.65rem; padding: 1px 6px; border-radius: 3px; font-weight: 700; margin-left: 6px;">#2 (${rData.score} pts)</span>`;
+              } else if (rData.rank === 3) {
+                rankBadge = `<span style="background: rgba(180, 83, 9, 0.2); border: 1px solid #b45309; color: #f59e0b; font-size: 0.65rem; padding: 1px 6px; border-radius: 3px; font-weight: 700; margin-left: 6px;">#3 (${rData.score} pts)</span>`;
+              } else {
+                rankBadge = `<span style="background: rgba(255, 255, 255, 0.05); color: #94a3b8; font-size: 0.63rem; padding: 1px 5px; border-radius: 3px; margin-left: 6px;">#${rData.rank} (${rData.score} pts)</span>`;
+              }
+            }
           }
-        }
 
-        const card = document.createElement('div');
-        card.className = `buff-item-card ${isActive ? 'active' : ''} ${isOver ? 'disabled' : ''}`;
-        card.style.opacity = isOver ? '0.4' : '1';
-        card.onclick = () => {
-          if (isOver) {
-            alert(`Requires character level ${reqLvl}. (Current: ${currentLvl})`);
-            return;
-          }
-          toggleBuff(buff.id);
-        };
+          const card = document.createElement('div');
+          card.className = `buff-item-card ${isActive ? 'active' : ''} ${isOver ? 'disabled' : ''}`;
+          card.style.opacity = isOver ? '0.4' : '1';
+          card.onclick = () => {
+            if (isOver) {
+              alert(`Requires character level ${reqLvl}. (Current: ${currentLvl})`);
+              return;
+            }
+            toggleBuff(buff.id);
+          };
 
-        const iconUrl = `https://wow.zamimg.com/images/wow/icons/medium/${buff.icon || 'inv_misc_questionmark'}.jpg`;
+          const iconUrl = `https://wow.zamimg.com/images/wow/icons/medium/${buff.icon || 'inv_misc_questionmark'}.jpg`;
 
-        card.innerHTML = `
-          <input type="${buff.category === 'food' ? 'radio' : 'checkbox'}" ${isActive ? 'checked' : ''} style="cursor: pointer;" onclick="event.stopPropagation(); toggleBuff('${buff.id}')" />
-          <div class="buff-item-icon" style="background-image: url('${iconUrl}');"></div>
-          <div style="flex: 1;">
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-              <span style="font-weight: 700; font-size: 0.78rem; color: ${isActive ? 'var(--gold-bright)' : '#f1f5f9'};">${buff.name}${recBadge}</span>
-              <span style="font-size: 0.7rem; font-weight: 700; color: #4ade80;">${statStrs}</span>
+          card.innerHTML = `
+            <input type="${buff.category === 'food' ? 'radio' : 'checkbox'}" ${isActive ? 'checked' : ''} style="cursor: pointer;" onclick="event.stopPropagation(); toggleBuff('${buff.id}')" />
+            <div class="buff-item-icon" style="background-image: url('${iconUrl}');"></div>
+            <div style="flex: 1;">
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span style="font-weight: 700; font-size: 0.78rem; color: ${isActive ? 'var(--gold-bright)' : '#f1f5f9'};">${buff.name}${rankBadge}</span>
+                <span style="font-size: 0.7rem; font-weight: 700; color: #4ade80;">${statStrs}</span>
+              </div>
+              <div style="font-size: 0.68rem; color: #94a3b8; margin-top: 1px;">
+                ${buff.desc} ${reqLvl > 1 ? `<span style="color:#f59e0b; margin-left:4px;">(Req Lvl ${reqLvl})</span>` : ''}
+              </div>
             </div>
-            <div style="font-size: 0.68rem; color: #94a3b8; margin-top: 1px;">
-              ${buff.desc} ${reqLvl > 1 ? `<span style="color:#f59e0b; margin-left:4px;">(Req Lvl ${reqLvl})</span>` : ''}
-            </div>
-          </div>
-        `;
+          `;
 
-        targetContainer.appendChild(card);
+          targetContainer.appendChild(card);
+        });
       });
     }
 

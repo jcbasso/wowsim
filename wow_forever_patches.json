@@ -9,7 +9,7 @@
       "title": "Twink Balance, Foods & Item Stat Adjustments",
       "summary": "Custom scaling adjustments for level 19 & 29 twinking, food buffs, profession constraints, and faction filtering.",
       "changes": [
-        "Food Buffs Expansion: Added Sagefish Delight (+6 MP5, Req Lvl 25), Soothing Turtle Bisque (+8 Sta, +8 Spi), Dragonbreath Chili, and Rumsey Rum Black Label.",
+        "Food Buffs Expansion: Added Sagefish Delight (+6 Spell Damage/Healing, +6 MP5, Req Lvl 25), Smoked Sagefish (+3 Spell Damage/Healing, +3 MP5, Req Lvl 10), Soothing Turtle Bisque (+8 Sta, +8 Spi), Dragonbreath Chili, and Rumsey Rum Black Label.",
         "Auto-BiS Food Optimization: BiS engine now tests and selects the highest-value food buff per spec and level bracket.",
         "The Stockade: Confirmed Alliance capital city dungeon. Drops strictly filtered out for Horde characters.",
         "Polished Driftwood Icon: Enforced Enchanting profession requirement (BoP crafted relic).",
