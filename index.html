@@ -2541,6 +2541,189 @@
       color: #fef08a;
     }
 
+    /* NEXT-LEVEL BIS UPGRADE PLANNER & ROADMAP STYLES */
+    .slot-next-upgrade-pill {
+      margin-top: 5px;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 2px 7px;
+      border-radius: 4px;
+      font-size: 0.69rem;
+      font-weight: 600;
+      background: linear-gradient(90deg, rgba(16, 185, 129, 0.14) 0%, rgba(6, 182, 212, 0.10) 100%);
+      border: 1px solid rgba(16, 185, 129, 0.35);
+      color: #a7f3d0;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      max-width: 100%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .slot-next-upgrade-pill:hover {
+      background: linear-gradient(90deg, rgba(16, 185, 129, 0.24) 0%, rgba(6, 182, 212, 0.20) 100%);
+      border-color: #34d399;
+      transform: translateY(-1px);
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.35);
+    }
+    .slot-next-upgrade-pill .up-lvl-tag {
+      background: rgba(16, 185, 129, 0.25);
+      color: #6ee7b7;
+      padding: 0 4px;
+      border-radius: 3px;
+      font-weight: 800;
+      font-size: 0.65rem;
+      letter-spacing: 0.2px;
+      flex-shrink: 0;
+    }
+    .slot-next-upgrade-pill .up-gain-tag {
+      color: #34d399;
+      font-weight: 700;
+      font-size: 0.66rem;
+      flex-shrink: 0;
+    }
+    .gear-subview-switcher {
+      display: inline-flex;
+      background: #0b0e14;
+      border: 1px solid #283040;
+      border-radius: 6px;
+      padding: 2px;
+      gap: 2px;
+    }
+    .gear-subview-btn {
+      background: transparent;
+      border: 1px solid transparent;
+      color: var(--text-muted);
+      font-size: 0.76rem;
+      font-weight: 700;
+      padding: 5px 10px;
+      border-radius: 4px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s ease;
+    }
+    .gear-subview-btn:hover {
+      color: #fff;
+      background: rgba(255, 255, 255, 0.04);
+    }
+    .gear-subview-btn.active {
+      background: linear-gradient(180deg, rgba(16, 185, 129, 0.2) 0%, rgba(5, 150, 105, 0.12) 100%);
+      color: #6ee7b7;
+      border-color: rgba(16, 185, 129, 0.45);
+    }
+    .roadmap-controls-bar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      background: #11151f;
+      border: 1px solid #262f42;
+      border-radius: 8px;
+      padding: 10px 14px;
+      margin-bottom: 12px;
+    }
+    .roadmap-summary-banner {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+    .roadmap-kpi-box {
+      background: linear-gradient(180deg, #151a26 0%, #10141d 100%);
+      border: 1px solid #262f42;
+      border-radius: 8px;
+      padding: 10px 12px;
+    }
+    .roadmap-kpi-label {
+      font-size: 0.68rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-muted);
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+    .roadmap-kpi-val {
+      font-size: 0.95rem;
+      font-weight: 800;
+      color: #f8fafc;
+    }
+    .roadmap-level-group {
+      background: #121620;
+      border: 1px solid #262f42;
+      border-radius: 8px;
+      margin-bottom: 12px;
+      overflow: hidden;
+    }
+    .roadmap-level-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 9px 14px;
+      background: linear-gradient(90deg, rgba(255, 209, 0, 0.1) 0%, rgba(18, 22, 32, 0.95) 100%);
+      border-bottom: 1px solid #262f42;
+    }
+    .roadmap-level-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.86rem;
+      font-weight: 800;
+      color: var(--gold-bright);
+    }
+    .roadmap-upgrade-list {
+      display: flex;
+      flex-direction: column;
+      divide-y: 1px solid #1e2536;
+    }
+    .roadmap-upgrade-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 10px 14px;
+      border-bottom: 1px solid #1c2230;
+      transition: background 0.15s ease;
+    }
+    .roadmap-upgrade-row:last-child {
+      border-bottom: none;
+    }
+    .roadmap-upgrade-row:hover {
+      background: rgba(255, 255, 255, 0.025);
+    }
+    .roadmap-chain-steps {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      padding: 10px 14px;
+    }
+    .roadmap-step-card {
+      background: #161b28;
+      border: 1px solid #2a344a;
+      border-radius: 6px;
+      padding: 8px 10px;
+      min-width: 195px;
+      max-width: 260px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .roadmap-step-card:hover {
+      border-color: var(--gold-bright);
+      transform: translateY(-1px);
+    }
+    .roadmap-step-card.current-step {
+      background: #11151f;
+      border-style: dashed;
+      opacity: 0.88;
+    }
+
     /* RIGHT COLUMN: ALWAYS-VISIBLE TELEMETRY KPI STRIP */
     .sim-panel-sticky {
       scrollbar-gutter: stable;
@@ -2855,6 +3038,16 @@
             </div>
 
             <div class="gear-toolbar-controls" style="margin-left: auto;">
+              <div class="gear-subview-switcher" title="Switch between equipped gear slots and upcoming level BiS upgrade planner">
+                <button type="button" class="gear-subview-btn active" id="btn-gear-subview-slots" onclick="switchGearSubView('slots')">
+                  <span>🛡️</span> Equipped Gear
+                </button>
+                <button type="button" class="gear-subview-btn" id="btn-gear-subview-roadmap" onclick="switchGearSubView('roadmap')">
+                  <span>📈</span> Upgrade Roadmap
+                  <span class="tab-pill-badge" id="roadmap-unlock-count-badge" style="background: rgba(16, 185, 129, 0.22); color: #6ee7b7;">0</span>
+                </button>
+              </div>
+
               <!-- COLLAPSIBLE GEAR SOURCES POPOVER -->
               <details class="popover-details">
                 <summary class="btn btn-secondary btn-sm" title="Filter allowed item sources (Dungeons, Quests, Crafted, BoE, PvP)">
@@ -2910,6 +3103,68 @@
 
           <div class="gear-grid" id="gear-grid-container">
             <!-- Rendered 17 slot cards dynamically with authentic Wowhead links and icons -->
+          </div>
+
+          <!-- NEXT-LEVEL BIS UPGRADE ROADMAP CONTAINER -->
+          <div id="gear-roadmap-container" style="display: none;">
+            <div class="roadmap-controls-bar">
+              <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+                <div>
+                  <div style="font-size: 0.85rem; font-weight: 800; color: var(--gold-bright); display: flex; align-items: center; gap: 6px;">
+                    <span>📈</span> Next-Level BiS Upgrade Planner
+                  </div>
+                  <div style="font-size: 0.72rem; color: var(--text-muted);" id="roadmap-subtitle-text">
+                    Scanning upcoming levels for new Best-in-Slot gear unlocks based on your active Spec, Stat Weights &amp; Source Filters.
+                  </div>
+                </div>
+              </div>
+
+              <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+                <div class="toolbar-group">
+                  <span class="toolbar-group-label">Lookahead:</span>
+                  <select id="roadmap-horizon-select" class="toolbar-select" onchange="renderGearSlots(); renderUpgradeRoadmap();">
+                    <option value="5">+5 Levels</option>
+                    <option value="10" selected>+10 Levels (Next Bracket)</option>
+                    <option value="20">+20 Levels</option>
+                    <option value="60">All the way to Lvl 60</option>
+                  </select>
+                </div>
+
+                <div class="toolbar-group">
+                  <span class="toolbar-group-label">Slot:</span>
+                  <select id="roadmap-slot-filter" class="toolbar-select" onchange="renderUpgradeRoadmap()">
+                    <option value="all" selected>All Equipment Slots</option>
+                    <option value="mainhand">Main Hand</option>
+                    <option value="offhand">Off Hand / Shield</option>
+                    <option value="head">Head</option>
+                    <option value="neck">Neck</option>
+                    <option value="shoulders">Shoulders</option>
+                    <option value="back">Back</option>
+                    <option value="chest">Chest</option>
+                    <option value="wrist">Wrist</option>
+                    <option value="hands">Hands</option>
+                    <option value="waist">Waist</option>
+                    <option value="legs">Legs</option>
+                    <option value="feet">Feet</option>
+                    <option value="ring1">Finger 1 &amp; 2</option>
+                    <option value="trinket1">Trinket 1 &amp; 2</option>
+                    <option value="relic">Relic / Totem</option>
+                  </select>
+                </div>
+
+                <div class="gear-subview-switcher">
+                  <button type="button" class="gear-subview-btn active" id="btn-roadmap-mode-level" onclick="setRoadmapGroupMode('level')">
+                    📅 By Level
+                  </button>
+                  <button type="button" class="gear-subview-btn" id="btn-roadmap-mode-slot" onclick="setRoadmapGroupMode('slot')">
+                    🛡️ By Slot Chain
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div class="roadmap-summary-banner" id="roadmap-summary-banner"></div>
+            <div id="roadmap-list-body"></div>
           </div>
         </div>
       </div>
@@ -6171,6 +6426,43 @@
           meta.appendChild(encRow);
         }
 
+        // Next-Level BiS Upgrade Indicator Pill (shows earliest upcoming BiS unlock for this slot)
+        const baseLvlForUp = parseInt(document.getElementById('cfg-level')?.value) || 19;
+        if (baseLvlForUp < 60 && catalog) {
+          const horizonEl = document.getElementById('roadmap-horizon-select');
+          const lookaheadDelta = horizonEl ? parseInt(horizonEl.value) || 10 : 10;
+          const maxTargetLvl = lookaheadDelta >= 60 ? 60 : Math.min(60, baseLvlForUp + lookaheadDelta);
+          const upChain = computeSlotUpgradeChain(slot, baseLvlForUp, maxTargetLvl);
+          if (upChain && upChain.length > 0) {
+            const nextUp = upChain[0];
+            const upPill = document.createElement('div');
+            upPill.className = 'slot-next-upgrade-pill';
+            const gainSign = nextUp.deltaFromEquipped >= 0 ? '+' : '';
+            upPill.innerHTML = `
+              <span class="up-lvl-tag">🔼 Lvl ${nextUp.unlockLevel}</span>
+              <span class="${nextUp.item.quality}" style="overflow: hidden; text-overflow: ellipsis;">${nextUp.item.name}</span>
+              <span class="up-gain-tag">(${gainSign}${nextUp.deltaFromEquipped} pts)</span>
+            `;
+            upPill.onmouseenter = (e) => {
+              e.stopPropagation();
+              showItemTooltip(e, nextUp.item);
+            };
+            upPill.onmousemove = (e) => {
+              e.stopPropagation();
+              moveUnifiedTooltip(e);
+            };
+            upPill.onmouseleave = (e) => {
+              e.stopPropagation();
+              hideUnifiedTooltip();
+            };
+            upPill.onclick = (e) => {
+              e.stopPropagation();
+              jumpToSlotRoadmap(slot);
+            };
+            meta.appendChild(upPill);
+          }
+        }
+
         // Slot Action Buttons
         const actions = document.createElement('div');
         actions.className = 'slot-actions';
@@ -6201,7 +6493,479 @@
         container.appendChild(card);
       }
 
+      updateRoadmapBadgeAndView();
       setTimeout(refreshWowhead, 50);
+    }
+
+    // --- NEXT-LEVEL BIS UPGRADE PLANNER & ROADMAP ENGINE ---
+    let activeGearSubView = 'slots';
+    let activeRoadmapGroupMode = 'level';
+
+    function switchGearSubView(viewMode) {
+      activeGearSubView = viewMode;
+      const slotsBtn = document.getElementById('btn-gear-subview-slots');
+      const roadmapBtn = document.getElementById('btn-gear-subview-roadmap');
+      const gridContainer = document.getElementById('gear-grid-container');
+      const roadmapContainer = document.getElementById('gear-roadmap-container');
+
+      if (slotsBtn) slotsBtn.classList.toggle('active', viewMode === 'slots');
+      if (roadmapBtn) roadmapBtn.classList.toggle('active', viewMode === 'roadmap');
+
+      if (gridContainer) gridContainer.style.display = (viewMode === 'slots') ? 'grid' : 'none';
+      if (roadmapContainer) {
+        roadmapContainer.style.display = (viewMode === 'roadmap') ? 'block' : 'none';
+        if (viewMode === 'roadmap') {
+          renderUpgradeRoadmap();
+        }
+      }
+    }
+
+    function setRoadmapGroupMode(mode) {
+      activeRoadmapGroupMode = mode;
+      const btnLvl = document.getElementById('btn-roadmap-mode-level');
+      const btnSlot = document.getElementById('btn-roadmap-mode-slot');
+      if (btnLvl) btnLvl.classList.toggle('active', mode === 'level');
+      if (btnSlot) btnSlot.classList.toggle('active', mode === 'slot');
+      renderUpgradeRoadmap();
+    }
+
+    function jumpToSlotRoadmap(slot) {
+      const slotFilter = document.getElementById('roadmap-slot-filter');
+      if (slotFilter) {
+        if (slot === 'ring2') slotFilter.value = 'ring1';
+        else if (slot === 'trinket2') slotFilter.value = 'trinket1';
+        else slotFilter.value = slot;
+      }
+      setRoadmapGroupMode('slot');
+      switchGearSubView('roadmap');
+    }
+
+    function computeSlotUpgradeChain(slot, baseLvl, maxTargetLvl) {
+      if (!catalog || baseLvl >= 60 || maxTargetLvl <= baseLvl) return [];
+
+      const weaponStyleEl = document.getElementById('cfg-weapon-style');
+      const weaponStyle = weaponStyleEl ? weaponStyleEl.value : 'auto';
+
+      const mhId = currentGear['mainhand'] || 0;
+      const mhItem = mhId > 0 ? getCatalogForSlot('mainhand').find(i => i.id === mhId) : null;
+      if (slot === 'offhand' && (weaponStyle === 'twohand' || (weaponStyle === 'auto' && mhItem && mhItem.is2H))) {
+        return [];
+      }
+
+      const bopToggleEl = document.getElementById('src-filter-bop');
+      const allowBoP = bopToggleEl ? bopToggleEl.checked : true;
+
+      let pool = getCatalogForSlot(slot).filter(it => {
+        if (!it || !it.id || UNAVAILABLE_ITEM_IDS.has(it.id)) return false;
+        if (!allowBoP && it.isBoP) return false;
+        const itCat = it.sourceCategory || 'world';
+        if (!activeSourceFilters.has(itCat)) return false;
+        return true;
+      });
+
+      if (slot === 'mainhand') {
+        if (weaponStyle === 'twohand') pool = pool.filter(it => it.is2H);
+        else if (weaponStyle === 'onehand_shield' || weaponStyle === 'dual_wield') pool = pool.filter(it => !it.is2H);
+      } else if (slot === 'offhand') {
+        if (weaponStyle === 'onehand_shield') pool = pool.filter(it => it.isShield);
+        else if (weaponStyle === 'dual_wield') pool = pool.filter(it => !it.isShield && !it.is2H);
+      }
+
+      // Avoid suggesting the exact same unique item already equipped in companion slot
+      const companionSlot = (slot === 'ring2') ? 'ring1' : (slot === 'trinket2') ? 'trinket1' : null;
+      const companionId = companionSlot ? (currentGear[companionSlot] || 0) : 0;
+      const companionItem = companionId > 0 ? getCatalogForSlot(companionSlot).find(i => i.id === companionId) : null;
+      if (companionItem && isUniqueItem(companionItem)) {
+        const compNorm = (companionItem.name || '').toLowerCase().trim();
+        pool = pool.filter(it => it.id !== companionItem.id && (it.name || '').toLowerCase().trim() !== compNorm);
+      }
+
+      const equippedId = currentGear[slot] || 0;
+      const equippedItem = equippedId > 0 ? getCatalogForSlot(slot).find(i => i.id === equippedId) : null;
+      const equippedScore = equippedItem ? calculateItemScore(equippedItem, baseLvl).score : 0;
+
+      // Find best score already available at baseLvl so future steps only show genuine NEW unlocks at lvl > baseLvl
+      let bestBaseScore = equippedScore;
+      let bestBaseItem = equippedItem;
+      for (const it of pool) {
+        const sc = calculateItemScore(it, baseLvl);
+        if (!sc.isOverlevel && !sc.isProfessionIneligible && sc.score > bestBaseScore) {
+          bestBaseScore = sc.score;
+          bestBaseItem = it;
+        }
+      }
+
+      let runningBestScore = bestBaseScore;
+      let prevMilestoneItem = bestBaseItem || equippedItem;
+      let prevMilestoneScore = runningBestScore;
+      const chain = [];
+
+      for (let lvl = baseLvl + 1; lvl <= maxTargetLvl; lvl++) {
+        let bestUnlockAtLvl = null;
+        let bestUnlockScore = runningBestScore;
+
+        for (const it of pool) {
+          const scNow = calculateItemScore(it, lvl);
+          if (scNow.isOverlevel || scNow.isProfessionIneligible || scNow.score <= runningBestScore + 0.05) continue;
+
+          // Verify it actually unlocked at `lvl` (was overlevel at `lvl - 1`)
+          const scPrev = calculateItemScore(it, lvl - 1);
+          if (!scPrev.isOverlevel) continue;
+
+          if (scNow.score > bestUnlockScore) {
+            bestUnlockScore = scNow.score;
+            bestUnlockAtLvl = it;
+          }
+        }
+
+        if (bestUnlockAtLvl) {
+          const deltaFromEquipped = Math.round((bestUnlockScore - equippedScore) * 10) / 10;
+          const deltaFromPrev = Math.round((bestUnlockScore - prevMilestoneScore) * 10) / 10;
+          const pctFromEquipped = equippedScore > 0 ? Math.round((deltaFromEquipped / equippedScore) * 100) : 100;
+
+          chain.push({
+            slot: slot,
+            slotLabel: slotLabels[slot] || slot,
+            unlockLevel: lvl,
+            item: bestUnlockAtLvl,
+            score: bestUnlockScore,
+            equippedItem: equippedItem,
+            equippedScore: equippedScore,
+            prevItem: prevMilestoneItem,
+            prevScore: prevMilestoneScore,
+            deltaFromEquipped: deltaFromEquipped,
+            deltaFromPrev: deltaFromPrev,
+            pctFromEquipped: pctFromEquipped
+          });
+
+          runningBestScore = bestUnlockScore;
+          prevMilestoneItem = bestUnlockAtLvl;
+          prevMilestoneScore = bestUnlockScore;
+        }
+      }
+
+      return chain;
+    }
+
+    function computeAllUpcomingUpgrades(baseLvl, maxTargetLvl, slotFilter = 'all') {
+      const bySlot = {};
+      const byLevel = {};
+      let totalUnlocks = 0;
+
+      const allSlots = Object.keys(slotLabels);
+      for (const slot of allSlots) {
+        if (slotFilter !== 'all') {
+          if (slotFilter === 'ring1' && slot !== 'ring1' && slot !== 'ring2') continue;
+          else if (slotFilter === 'trinket1' && slot !== 'trinket1' && slot !== 'trinket2') continue;
+          else if (slotFilter !== 'ring1' && slotFilter !== 'trinket1' && slot !== slotFilter) continue;
+        }
+
+        // Deduplicate ring2/trinket2 in roadmap if identical chain to ring1/trinket1
+        if (slot === 'ring2' || slot === 'trinket2') {
+          const primarySlot = slot === 'ring2' ? 'ring1' : 'trinket1';
+          if (currentGear[slot] === currentGear[primarySlot]) continue;
+        }
+
+        const chain = computeSlotUpgradeChain(slot, baseLvl, maxTargetLvl);
+        if (chain.length > 0) {
+          bySlot[slot] = chain;
+          for (const step of chain) {
+            totalUnlocks++;
+            if (!byLevel[step.unlockLevel]) byLevel[step.unlockLevel] = [];
+            byLevel[step.unlockLevel].push(step);
+          }
+        }
+      }
+
+      // Sort items within each level by score gain descending
+      for (const lvl of Object.keys(byLevel)) {
+        byLevel[lvl].sort((a, b) => b.deltaFromPrev - a.deltaFromPrev);
+      }
+
+      return { bySlot, byLevel, totalUnlocks };
+    }
+
+    function updateRoadmapBadgeAndView() {
+      const baseLvl = parseInt(document.getElementById('cfg-level')?.value) || 19;
+      const horizonEl = document.getElementById('roadmap-horizon-select');
+      const lookaheadDelta = horizonEl ? parseInt(horizonEl.value) || 10 : 10;
+      const maxTargetLvl = lookaheadDelta >= 60 ? 60 : Math.min(60, baseLvl + lookaheadDelta);
+
+      const res = computeAllUpcomingUpgrades(baseLvl, maxTargetLvl, 'all');
+      const badgeEl = document.getElementById('roadmap-unlock-count-badge');
+      if (badgeEl) {
+        badgeEl.innerText = res.totalUnlocks;
+      }
+
+      if (activeGearSubView === 'roadmap') {
+        renderUpgradeRoadmap();
+      }
+    }
+
+    function previewUpgradeAtLevel(targetLvl, slot, itemId) {
+      const lvlInput = document.getElementById('cfg-level');
+      if (lvlInput) {
+        lvlInput.value = targetLvl;
+      }
+      if (slot && itemId) {
+        currentGear[slot] = itemId;
+        const it = getCatalogForSlot(slot).find(i => i.id === itemId);
+        if (slot === 'mainhand' && it && it.is2H) {
+          currentGear['offhand'] = 0;
+        }
+      }
+      onLevelChanged();
+      const badge = document.getElementById('res-diff-badge');
+      if (badge) {
+        badge.style.display = 'inline-block';
+        badge.className = 'dps-diff diff-up';
+        badge.innerText = `⚡ Leveled to ${targetLvl} & Equipped Upgrade`;
+      }
+    }
+
+    function equipAllBiSAtTargetLevel(targetLvl) {
+      const lvlInput = document.getElementById('cfg-level');
+      if (lvlInput) {
+        lvlInput.value = targetLvl;
+      }
+      onLevelChanged();
+      autoEquipLevelingBiS();
+    }
+
+    function renderUpgradeRoadmap() {
+      const bannerEl = document.getElementById('roadmap-summary-banner');
+      const bodyEl = document.getElementById('roadmap-list-body');
+      const subEl = document.getElementById('roadmap-subtitle-text');
+      if (!bannerEl || !bodyEl || !catalog) return;
+
+      const baseLvl = parseInt(document.getElementById('cfg-level')?.value) || 19;
+      const horizonEl = document.getElementById('roadmap-horizon-select');
+      const lookaheadDelta = horizonEl ? parseInt(horizonEl.value) || 10 : 10;
+      const maxTargetLvl = lookaheadDelta >= 60 ? 60 : Math.min(60, baseLvl + lookaheadDelta);
+      const slotFilterEl = document.getElementById('roadmap-slot-filter');
+      const slotFilter = slotFilterEl ? slotFilterEl.value : 'all';
+
+      if (subEl) {
+        subEl.innerText = `Showing new Best-in-Slot unlocks from Level ${baseLvl + 1} to Level ${maxTargetLvl} (${activeWeightProfile.toUpperCase()} weights).`;
+      }
+
+      if (baseLvl >= 60) {
+        bannerEl.innerHTML = '';
+        bodyEl.innerHTML = `<div style="padding: 28px; text-align: center; color: var(--text-muted); background: #121620; border: 1px solid #262f42; border-radius: 8px;">🎉 Your character is already at maximum Level 60! Lower your character level to plan leveling and twink bracket BiS upgrades.</div>`;
+        return;
+      }
+
+      const { bySlot, byLevel, totalUnlocks } = computeAllUpcomingUpgrades(baseLvl, maxTargetLvl, slotFilter);
+      const levelKeys = Object.keys(byLevel).map(Number).sort((a, b) => a - b);
+      const slotKeys = Object.keys(bySlot);
+
+      // Find biggest power spike level & top source category
+      let spikeLvl = null;
+      let spikeCount = 0;
+      let spikePts = 0;
+      let earliestLvl = levelKeys.length > 0 ? levelKeys[0] : null;
+      const sourceCounts = {};
+
+      for (const lvl of levelKeys) {
+        const list = byLevel[lvl];
+        const pts = list.reduce((acc, s) => acc + s.deltaFromPrev, 0);
+        if (list.length > spikeCount || (list.length === spikeCount && pts > spikePts)) {
+          spikeCount = list.length;
+          spikeLvl = lvl;
+          spikePts = Math.round(pts * 10) / 10;
+        }
+        for (const s of list) {
+          const cat = s.item.sourceCategory || 'world';
+          sourceCounts[cat] = (sourceCounts[cat] || 0) + 1;
+        }
+      }
+
+      const topSourceEntry = Object.entries(sourceCounts).sort((a, b) => b[1] - a[1])[0];
+      const sourceNames = { dungeon: '🏰 Dungeons', quest: '📜 Quests', crafted: '🔨 Crafted', world: '🌍 World BoE', pvp: '⚔️ PvP / Rep', vendor: '💰 Vendors' };
+      const topSourceText = topSourceEntry ? `${sourceNames[topSourceEntry[0]] || topSourceEntry[0]} (${topSourceEntry[1]})` : 'None';
+
+      bannerEl.innerHTML = `
+        <div class="roadmap-kpi-box">
+          <div class="roadmap-kpi-label">Lookahead Window</div>
+          <div class="roadmap-kpi-val" style="color: var(--gold-bright);">Lvl ${baseLvl} ➔ Lvl ${maxTargetLvl}</div>
+          <div style="font-size: 0.7rem; color: var(--text-muted); margin-top: 2px;">${slotKeys.length} equipment slots upgrading</div>
+        </div>
+        <div class="roadmap-kpi-box">
+          <div class="roadmap-kpi-label">Total BiS Milestones</div>
+          <div class="roadmap-kpi-val" style="color: #34d399;">${totalUnlocks} New Unlocks</div>
+          <div style="font-size: 0.7rem; color: var(--text-muted); margin-top: 2px;">${ earliestLvl ? `Next unlock at Level ${earliestLvl}` : 'No upgrades in range' }</div>
+        </div>
+        <div class="roadmap-kpi-box">
+          <div class="roadmap-kpi-label">Biggest Power Spike</div>
+          <div class="roadmap-kpi-val" style="color: #f59e0b;">${ spikeLvl ? `🔥 Level ${spikeLvl} (${spikeCount} items)` : '—' }</div>
+          <div style="font-size: 0.7rem; color: var(--text-muted); margin-top: 2px;">${ spikeLvl ? `+${spikePts} total stat score gain` : 'Increase lookahead range' }</div>
+        </div>
+        <div class="roadmap-kpi-box">
+          <div class="roadmap-kpi-label">Primary Upgrade Source</div>
+          <div class="roadmap-kpi-val" style="color: #93c5fd;">${topSourceText}</div>
+          <div style="font-size: 0.7rem; color: var(--text-muted); margin-top: 2px;">Filtered by active Gear Sources</div>
+        </div>
+      `;
+
+      bodyEl.innerHTML = '';
+
+      if (totalUnlocks === 0) {
+        bodyEl.innerHTML = `
+          <div style="padding: 28px; text-align: center; color: var(--text-muted); background: #121620; border: 1px solid #262f42; border-radius: 8px;">
+            No higher-scoring BiS items unlock between <b>Level ${baseLvl + 1}</b> and <b>Level ${maxTargetLvl}</b> with your current filters.<br>
+            <span style="font-size: 0.75rem;">Try expanding the <b>Lookahead</b> dropdown above to <b>+20 Levels</b> or <b>All the way to Lvl 60</b>.</span>
+          </div>
+        `;
+        return;
+      }
+
+      if (activeRoadmapGroupMode === 'level') {
+        for (const lvl of levelKeys) {
+          const steps = byLevel[lvl];
+          const totalLvlGain = Math.round(steps.reduce((acc, s) => acc + s.deltaFromPrev, 0) * 10) / 10;
+
+          const group = document.createElement('div');
+          group.className = 'roadmap-level-group';
+
+          const header = document.createElement('div');
+          header.className = 'roadmap-level-header';
+          header.innerHTML = `
+            <div class="roadmap-level-badge">
+              <span style="background: rgba(255, 209, 0, 0.2); border: 1px solid var(--border-gold); padding: 2px 8px; border-radius: 5px;">🔓 Level ${lvl}</span>
+              <span style="font-size: 0.76rem; color: #cbd5e1; font-weight: 600;">${steps.length} BiS ${steps.length === 1 ? 'Upgrade Unlocks' : 'Upgrades Unlock'}</span>
+              <span style="font-size: 0.74rem; color: #34d399; font-weight: 700;">(+${totalLvlGain} pts total)</span>
+            </div>
+            <button type="button" class="btn btn-secondary btn-xs" onclick="equipAllBiSAtTargetLevel(${lvl})" title="Set character level to ${lvl} and equip full Level ${lvl} BiS">
+              ⚡ Jump to Lvl ${lvl} BiS
+            </button>
+          `;
+          group.appendChild(header);
+
+          const list = document.createElement('div');
+          list.className = 'roadmap-upgrade-list';
+
+          for (const step of steps) {
+            const it = step.item;
+            const row = document.createElement('div');
+            row.className = 'roadmap-upgrade-row';
+            row.onmouseenter = (e) => showItemTooltip(e, it);
+            row.onmousemove = (e) => moveUnifiedTooltip(e);
+            row.onmouseleave = () => hideUnifiedTooltip();
+
+            const prevName = step.prevItem ? `<span class="${step.prevItem.quality}">${step.prevItem.name}</span> (${step.prevScore} pts)` : 'Empty Slot (0 pts)';
+
+            row.innerHTML = `
+              <div style="display: flex; align-items: center; gap: 10px; min-width: 0; flex: 1;">
+                <div class="picker-icon ${it.quality}" style="background-image: url('${getIconUrl(it.icon, it)}'); width: 36px; height: 36px; flex-shrink: 0;"></div>
+                <div style="min-width: 0; flex: 1;">
+                  <div style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
+                    <span style="font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.5px; background: #1e2638; color: #94a3b8; padding: 1px 6px; border-radius: 4px; font-weight: 700;">${step.slotLabel}</span>
+                    <span class="picker-name ${it.quality}" style="font-size: 0.85rem;">${it.name}</span>
+                    ${getSourceBadgeHtml(it)}
+                  </div>
+                  <div style="font-size: 0.74rem; color: #cbd5e1; margin-top: 2px;">${it.summary || `ilvl ${it.ilvl}`}</div>
+                  <div style="font-size: 0.69rem; color: var(--text-muted); margin-top: 2px;">
+                    Replaces: ${prevName}
+                  </div>
+                </div>
+              </div>
+              <div style="display: flex; align-items: center; gap: 10px; flex-shrink: 0;">
+                <div style="text-align: right;">
+                  <div style="font-size: 0.8rem; font-weight: 800; color: #34d399;">+${step.deltaFromPrev} pts <span style="font-size: 0.7rem; color: #6ee7b7; font-weight: 600;">(${step.score} pts)</span></div>
+                  <div style="font-size: 0.68rem; color: var(--text-muted);">+${step.deltaFromEquipped} pts vs Lvl ${baseLvl} Equipped</div>
+                </div>
+                <button type="button" class="btn btn-secondary btn-xs" onclick="event.stopPropagation(); previewUpgradeAtLevel(${step.unlockLevel}, '${step.slot}', ${it.id})" title="Level up to ${step.unlockLevel} and equip ${it.name}">
+                  ⚡ Equip @ Lvl ${step.unlockLevel}
+                </button>
+              </div>
+            `;
+            list.appendChild(row);
+          }
+
+          group.appendChild(list);
+          bodyEl.appendChild(group);
+        }
+      } else {
+        // Grouped by Equipment Slot (Multi-step Upgrade Chain)
+        for (const slot of slotKeys) {
+          const chain = bySlot[slot];
+          if (!chain || chain.length === 0) continue;
+
+          const firstStep = chain[0];
+          const lastStep = chain[chain.length - 1];
+          const eqItem = firstStep.equippedItem;
+
+          const group = document.createElement('div');
+          group.className = 'roadmap-level-group';
+
+          const header = document.createElement('div');
+          header.className = 'roadmap-level-header';
+          header.innerHTML = `
+            <div class="roadmap-level-badge">
+              <span style="color: #f8fafc;">🛡️ ${firstStep.slotLabel}</span>
+              <span style="font-size: 0.74rem; color: var(--text-muted); font-weight: 600;">(${chain.length} ${chain.length === 1 ? 'upgrade milestone' : 'upgrade milestones'})</span>
+            </div>
+            <div style="font-size: 0.76rem; color: #34d399; font-weight: 700;">
+              Total Gain to Lvl ${lastStep.unlockLevel}: +${lastStep.deltaFromEquipped} pts
+            </div>
+          `;
+          group.appendChild(header);
+
+          const stepsWrap = document.createElement('div');
+          stepsWrap.className = 'roadmap-chain-steps';
+
+          // Current Equipped Card
+          const curCard = document.createElement('div');
+          curCard.className = 'roadmap-step-card current-step';
+          if (eqItem) {
+            curCard.onmouseenter = (e) => showItemTooltip(e, eqItem);
+            curCard.onmousemove = (e) => moveUnifiedTooltip(e);
+            curCard.onmouseleave = () => hideUnifiedTooltip();
+          }
+          curCard.innerHTML = `
+            <div class="picker-icon ${eqItem ? eqItem.quality : 'common'}" style="background-image: url('${getIconUrl(eqItem ? eqItem.icon : slotDefaultIcons[slot], eqItem)}'); width: 32px; height: 32px; flex-shrink: 0;"></div>
+            <div style="min-width: 0;">
+              <div style="font-size: 0.65rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase;">Current (Lvl ${baseLvl})</div>
+              <div class="${eqItem ? eqItem.quality : 'common'}" style="font-size: 0.78rem; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${eqItem ? eqItem.name : 'Empty Slot'}</div>
+              <div style="font-size: 0.68rem; color: #94a3b8;">${firstStep.equippedScore} pts</div>
+            </div>
+          `;
+          stepsWrap.appendChild(curCard);
+
+          for (const step of chain) {
+            const arrow = document.createElement('div');
+            arrow.style.color = '#64748b';
+            arrow.style.fontWeight = '800';
+            arrow.style.fontSize = '0.9rem';
+            arrow.innerText = '➔';
+            stepsWrap.appendChild(arrow);
+
+            const it = step.item;
+            const stepCard = document.createElement('div');
+            stepCard.className = 'roadmap-step-card';
+            stepCard.onmouseenter = (e) => showItemTooltip(e, it);
+            stepCard.onmousemove = (e) => moveUnifiedTooltip(e);
+            stepCard.onmouseleave = () => hideUnifiedTooltip();
+            stepCard.onclick = () => previewUpgradeAtLevel(step.unlockLevel, step.slot, it.id);
+
+            stepCard.innerHTML = `
+              <div class="picker-icon ${it.quality}" style="background-image: url('${getIconUrl(it.icon, it)}'); width: 32px; height: 32px; flex-shrink: 0;"></div>
+              <div style="min-width: 0; flex: 1;">
+                <div style="display: flex; align-items: center; justify-content: space-between; gap: 4px;">
+                  <span style="font-size: 0.66rem; background: rgba(16, 185, 129, 0.2); color: #6ee7b7; padding: 0 5px; border-radius: 3px; font-weight: 800;">🔓 Lvl ${step.unlockLevel}</span>
+                  <span style="font-size: 0.68rem; color: #34d399; font-weight: 800;">+${step.deltaFromPrev} pts</span>
+                </div>
+                <div class="${it.quality}" style="font-size: 0.78rem; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 2px;">${it.name}</div>
+                <div style="font-size: 0.67rem; color: #cbd5e1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${it.summary || `ilvl ${it.ilvl}`}</div>
+              </div>
+            `;
+            stepsWrap.appendChild(stepCard);
+          }
+
+          group.appendChild(stepsWrap);
+          bodyEl.appendChild(group);
+        }
+      }
     }
 
     function getCatalogForSlot(slot) {
