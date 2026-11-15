@@ -5428,8 +5428,13 @@
       warlock: [5]              // Wand
     };
 
+    const UNAVAILABLE_ITEM_IDS = new Set([288900, 288926, 288927, 288928, 288929, 288930, 288931]);
+
     function calculateItemScore(item, currentLevel) {
       if (!item || item.id === 0) return { score: 0, isOverlevel: false, reqLvl: 0 };
+      if (UNAVAILABLE_ITEM_IDS.has(item.id)) {
+        return { score: 0, isOverlevel: true, reqLvl: 99, reason: 'Not available to players' };
+      }
       const req = item.reqLvl || 0;
       const isOverlevel = req > currentLevel;
 
@@ -5600,11 +5605,10 @@
         if (!itemId || itemId === 0) continue;
         const rawSlot = getCatalogSlotName(slot);
         const item = (catalog[rawSlot] || []).find(i => i.id === itemId);
-        if (!item) continue;
-
-        const scRes = calculateItemScore(item, currentLvl);
-        if (scRes.isOverlevel || scRes.isProfessionIneligible || scRes.score === 0) {
-          console.warn(`[TwinkSim] Purging illegal gear: '${item.name}' in slot ${slot} (${scRes.profReason || scRes.reason || 'Not allowed'}). Auto-replacing with valid BiS item.`);
+        const scRes = item ? calculateItemScore(item, currentLvl) : { score: 0, isOverlevel: true, reason: 'Item not in catalog or not available to players' };
+        if (!item || UNAVAILABLE_ITEM_IDS.has(itemId) || scRes.isOverlevel || scRes.isProfessionIneligible || scRes.score === 0) {
+          const itemName = item ? item.name : `Item #${itemId}`;
+          console.warn(`[TwinkSim] Purging illegal/unavailable gear: '${itemName}' in slot ${slot} (${scRes.profReason || scRes.reason || 'Not allowed'}). Auto-replacing with valid BiS item.`);
           
           const bopToggleEl = document.getElementById('src-filter-bop');
           const allowBoP = bopToggleEl ? bopToggleEl.checked : true;
@@ -6341,7 +6345,7 @@
 
       for (const entry of scoredItems) {
         const item = entry.item;
-        if (item.id === 0) continue;
+        if (!item || item.id === 0 || UNAVAILABLE_ITEM_IDS.has(item.id)) continue;
 
         if (hideOverlevel && entry.isOverlevel) {
           continue;
