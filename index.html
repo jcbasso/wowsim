@@ -3648,6 +3648,13 @@
 
     function getSourceBadgeHtml(item) {
       if (!item || !item.id || item.id === 0) return '';
+      const bindClass = item.isBoP ? 'bop' : 'boe';
+      const bindText = item.isBoP ? 'BoP' : 'BoE';
+
+      if (item.source === 'WoW Forever (Custom Scaled)' || (item.sourceDetail && item.sourceDetail.includes('WoW Forever'))) {
+        return `<span class="badge-source" style="background: rgba(245,158,11,0.18); border: 1px solid #f59e0b; color: #fbbf24; font-weight: 600;" title="WoW Forever Twink Scaled Item (ilvl 30)">⚡ WoW Forever Scaled</span><span class="badge-bind ${bindClass}">${bindText}</span>`;
+      }
+
       const cat = item.sourceCategory || 'world';
       const icons = {
         dungeon: '🏰',
@@ -3661,8 +3668,6 @@
       };
       const icon = icons[cat] || '📦';
       const label = item.sourceDetail || item.sourceLabel || 'World Drop';
-      const bindClass = item.isBoP ? 'bop' : 'boe';
-      const bindText = item.isBoP ? 'BoP' : 'BoE';
 
       let reqProfBadge = '';
       if (item.requiredProfessionName) {
@@ -5850,7 +5855,7 @@
           reqLvl: scRes.reqLvl
         };
       }).filter(entry => {
-        if (hideOverlevel && entry.isOverlevel && !query) return false;
+        if (hideOverlevel && entry.isOverlevel) return false;
         return true;
       });
 
@@ -6338,7 +6343,7 @@
         const item = entry.item;
         if (item.id === 0) continue;
 
-        if (hideOverlevel && entry.isOverlevel && !query) {
+        if (hideOverlevel && entry.isOverlevel) {
           continue;
         }
 
@@ -6450,7 +6455,7 @@
             <div class="picker-icon ${item.quality}" style="background-image: url('${getIconUrl(item.icon, item)}');"></div>
             <div class="picker-details">
               <div class="picker-name ${item.quality}">
-                ${item.name} ${uniqueBadgeHtml} ${isEquippedHere ? '<span style="color: #2ecc71; font-size: 0.7rem; font-weight: 700; margin-left: 6px;">✓ Equipped</span>' : ''}
+                ${item.name} ${item.source === 'WoW Forever (Custom Scaled)' ? '<span style="color:#f59e0b;font-size:0.68rem;font-weight:700;margin-left:4px;">[Twink Scaled]</span>' : ''} ${uniqueBadgeHtml} ${isEquippedHere ? '<span style="color: #2ecc71; font-size: 0.7rem; font-weight: 700; margin-left: 6px;">✓ Equipped</span>' : ''}
               </div>
               <div class="picker-sub">${subtitle}</div>
               <div class="picker-source-row">${getSourceBadgeHtml(item)}</div>
