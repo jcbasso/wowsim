@@ -3263,9 +3263,14 @@
 
         <!-- APL ROTATION PANEL -->
         <div class="panel" id="apl-rotation-panel">
-          <div class="panel-header" style="display: flex; justify-content: space-between; align-items: center;">
-            <h2><span>⚡</span> Action Priority List (APL Rotation)</h2>
-            <div style="font-size: 0.74rem; color: var(--text-muted);">Evaluated Top-to-Bottom every 1.5s GCD</div>
+          <div class="panel-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+            <div>
+              <h2><span>⚡</span> Action Priority List (APL Rotation)</h2>
+              <div style="font-size: 0.74rem; color: var(--text-muted); margin-top: 2px;">Evaluated Top-to-Bottom every 1.5s GCD • Higher priority actions trigger first</div>
+            </div>
+            <button id="btn-optimize-rot" class="btn btn-secondary btn-sm" onclick="autoOptimizeRotationForCurrentGear()" style="border-color: #ffd700; color: #ffd700; font-weight: 700; display: inline-flex; align-items: center; gap: 5px;">
+              ⚡ Auto-Optimize for Gear
+            </button>
           </div>
 
           <div style="margin-top: 10px;">
@@ -3281,6 +3286,17 @@
           </div>
 
           <div class="rot-list" id="rotation-list-container"></div>
+
+          <!-- ADD CUSTOM ACTION TOOLBAR -->
+          <div style="margin-top: 14px; padding-top: 12px; border-top: 1px solid rgba(255,255,255,0.08); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;">
+            <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+              <span style="font-size: 0.74rem; font-weight: 700; color: var(--gold-bright); text-transform: uppercase;">Add Action:</span>
+              <select id="add-spell-select" onchange="onAddSpellSelectChanged()" style="background: #141720; border: 1px solid #283040; color: #fff; border-radius: 5px; padding: 4px 8px; font-size: 0.76rem; outline: none;"></select>
+              <select id="add-condition-select" style="background: #141720; border: 1px solid #283040; color: #fff; border-radius: 5px; padding: 4px 8px; font-size: 0.76rem; outline: none;"></select>
+              <button class="btn btn-secondary btn-sm" onclick="addNewActionToRotation()" style="color: #2ecc71; border-color: #2ecc71; font-weight: 700;">➕ Add to Rotation</button>
+            </div>
+            <button class="btn btn-secondary btn-sm" onclick="resetRotationToDefault()" style="color: #ff7675; border-color: #ff7675;">↺ Reset to Default</button>
+          </div>
         </div>
 
         <!-- HEALING ANALYSIS PANEL (HEALER CLASSES ONLY) -->
@@ -4501,6 +4517,7 @@
 
       renderRotationPresetChipsForClass(classKey);
       renderRotationUI();
+      populateAddSpellDropdown(classKey);
     }
 
     function renderRotationPresetChipsForClass(classKey) {
@@ -4736,6 +4753,86 @@
       const clsRotations = ALL_CLASS_ROTATIONS[activeCharacterClass] || ALL_CLASS_ROTATIONS.shaman;
       const defaultKey = Object.keys(clsRotations)[0] || 'burst';
       loadRotationPreset(defaultKey);
+    }
+
+    function populateAddSpellDropdown(classKey) {
+      const sel = document.getElementById('add-spell-select');
+      if (!sel) return;
+      sel.innerHTML = '';
+      const clsSpells = ALL_CLASS_SPELLS[classKey] || ALL_CLASS_SPELLS.shaman;
+      for (const [sid, spell] of Object.entries(clsSpells)) {
+        const opt = document.createElement('option');
+        opt.value = sid;
+        opt.innerText = `${spell.name} (${spell.school})`;
+        sel.appendChild(opt);
+      }
+      onAddSpellSelectChanged();
+    }
+
+    async function autoOptimizeRotationForCurrentGear() {
+      const btn = document.getElementById('btn-optimize-rot');
+      if (btn) btn.innerHTML = '⏳ Simulating Rotations...';
+
+      const clsRotations = ALL_CLASS_ROTATIONS[activeCharacterClass] || ALL_CLASS_ROTATIONS.shaman;
+      const currentLvl = getCurrentPlayerLevel();
+      const currentImbueVal = (activeCharacterClass === 'shaman') ? currentImbue : 'None';
+      
+      let bestKey = activeRotationPresetKey;
+      let bestDps = -1;
+      const scores = {};
+
+      const entries = Object.entries(clsRotations);
+      for (let i = 0; i < entries.length; i++) {
+        const [key, steps] = entries[i];
+        try {
+          const simRes = await simulateCombatInBrowser({
+            characterClass: activeCharacterClass,
+            spec: currentCharacterSpec,
+            level: currentLvl,
+            imbue: currentImbueVal,
+            duration: 30,
+            iterations: 40,
+            rotation_preset: key,
+            custom_rotation: steps,
+            gear: currentGear || {},
+            enchants: currentEnchants || {},
+            buffs: currentBuffs || {}
+          }, catalog, enchantsCatalog, buffsCatalog);
+
+          const dps = (simRes && simRes.dps && typeof simRes.dps.avg === 'number') ? simRes.dps.avg : 0;
+          scores[key] = dps;
+          if (dps > bestDps) {
+            bestDps = dps;
+            bestKey = key;
+          }
+        } catch (e) {
+          scores[key] = 0;
+        }
+      }
+
+      // Update chip badges with DPS metrics
+      for (const [key, dps] of Object.entries(scores)) {
+        const chip = document.getElementById(`chip-rot-${key}`);
+        if (chip) {
+          const isWinner = (key === bestKey);
+          const label = key.replace(/_/g, ' ').toUpperCase();
+          let icon = isWinner ? '⭐' : (key.includes('tank') ? '🛡️' : (key.includes('resto') || key.includes('heal') ? '💚' : '⚡'));
+          chip.innerHTML = `${icon} ${label} <span style="font-size:0.68rem; font-weight:700; opacity:0.85; margin-left:3px;">(${dps.toFixed(1)} DPS)</span>`;
+          if (isWinner) {
+            chip.style.borderColor = '#ffd700';
+            chip.style.color = '#ffd700';
+          }
+        }
+      }
+
+      // Load winning preset and re-run main simulation
+      loadRotationPreset(bestKey);
+      if (btn) btn.innerHTML = '⭐ Best Rotation Active!';
+      setTimeout(() => {
+        if (btn) btn.innerHTML = '⚡ Auto-Optimize for Gear';
+      }, 3000);
+
+      runOneStopSimulate();
     }
 
     // Official spell IDs for breakdown tooltips
