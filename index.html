@@ -2963,9 +2963,10 @@
         </div>
       </details>
 
-      <!-- SINGLE MASTER SIMULATE BUTTON -->
-      <button id="btn-simulate" class="btn-sim" onclick="runOneStopSimulate()" title="Run Single-Target Simulation and 10-Scenario Benchmark Suite simultaneously">
+      <!-- SINGLE MASTER SIMULATE BUTTON WITH PROGRESS BAR -->
+      <button id="btn-simulate" class="btn-sim" onclick="runOneStopSimulate()" style="position: relative; overflow: hidden;" title="Run Single-Target Simulation and 12-Scenario Benchmark Suite">
         <span id="btn-text">▶ SIMULATE</span>
+        <div id="btn-sim-progress" style="position: absolute; bottom: 0; left: 0; height: 3px; background: #ffffff; width: 0%; display: none; transition: width 0.06s ease; box-shadow: 0 0 8px #ffffff;"></div>
       </button>
     </div>
   </header>
@@ -4962,16 +4963,49 @@
     async function runOneStopSimulate() {
       const btn = document.getElementById('btn-simulate');
       const btnText = document.getElementById('btn-text');
+      const progBar = document.getElementById('btn-sim-progress');
       if (btn) btn.disabled = true;
-      if (btnText) btnText.innerText = '⏳ SIMULATING...';
+      if (progBar) {
+        progBar.style.display = 'block';
+        progBar.style.width = '0%';
+      }
+
+      const updateProgress = (pct, label) => {
+        if (progBar) progBar.style.width = `${pct}%`;
+        if (btnText) btnText.innerHTML = `<span class="loading-spinner"></span> ${label || 'Simulating...'} ${pct}%`;
+      };
+
       try {
-        await Promise.all([
-          runSimulation(),
-          runAllScenariosSuite()
-        ]);
+        // Step 1: Run combat Monte Carlo simulation (0% to 50%)
+        updateProgress(0, 'Combat');
+        await runSimulation((done, total) => {
+          const p = Math.round((done / total) * 50);
+          updateProgress(p, 'Combat');
+          const metaEl = document.getElementById('sim-meta');
+          if (metaEl) metaEl.innerText = `Iterating: ${done}/${total} (${Math.round((done/total)*100)}%)`;
+        });
+
+        // Step 2: Run 12-scenario suite simulation (50% to 100%)
+        updateProgress(50, 'Scenarios');
+        await runAllScenariosSuite((done, total, scenName) => {
+          const p = Math.round(50 + (done / total) * 50);
+          updateProgress(p, 'Scenarios');
+          const metaEl = document.getElementById('sim-meta');
+          if (metaEl) metaEl.innerText = `Benchmarking: ${scenName || ''} (${done}/${total})`;
+        });
+
+        updateProgress(100, 'Done');
+        await new Promise(r => setTimeout(r, 150));
       } catch (e) {
         console.error('Error running one stop simulation:', e);
       } finally {
+        if (progBar) {
+          progBar.style.width = '100%';
+          setTimeout(() => {
+            progBar.style.display = 'none';
+            progBar.style.width = '0%';
+          }, 250);
+        }
         if (btn) btn.disabled = false;
         if (btnText) btnText.innerText = '▶ SIMULATE';
       }
@@ -8279,7 +8313,7 @@
 
 
     // --- IN-BROWSER CLIENT MONTE CARLO SIMULATION ENGINE ---
-    function simulateCombatInBrowser(reqBody, cat, encCat, buffCat) {
+    async function simulateCombatInBrowser(reqBody, cat, encCat, buffCat, onProgress) {
       const level = reqBody.level || getCurrentPlayerLevel();
       const duration = Math.max(5, Math.min(300, parseInt(reqBody.duration) || 30));
       const iterations = Math.max(10, Math.min(2000, parseInt(reqBody.iterations) || 200));
@@ -8500,7 +8534,12 @@
       let iterationDpsList = [];
 
       // Monte Carlo loop
+      const batchSize = Math.max(5, Math.ceil(iterations / 25));
       for (let it = 0; it < iterations; it++) {
+        if (it > 0 && it % batchSize === 0) {
+          if (onProgress) onProgress(it, iterations);
+          await new Promise(r => setTimeout(r, 16));
+        }
         let t = 0;
         let nextSwingTime = 0;
         let nextGcdTime = 0;
@@ -8664,6 +8703,8 @@
 
         iterationDpsList.push(iterDamage / duration);
       }
+
+      if (onProgress) onProgress(iterations, iterations);
 
       // Aggregate results
       let avgDps = iterationDpsList.reduce((a, b) => a + b, 0) / iterations;
@@ -8965,16 +9006,20 @@
       };
     }
 
-    function simulateSuiteInBrowser(payload, cat, encCat, buffCat) {
+    async function simulateSuiteInBrowser(payload, cat, encCat, buffCat, onProgress) {
       const activeScenarios = payload.scenarios || [];
       const results = [];
       let totalScore = 0;
 
-      for (const scen of activeScenarios) {
+      for (let i = 0; i < activeScenarios.length; i++) {
+        const scen = activeScenarios[i];
+        if (onProgress) onProgress(i, activeScenarios.length, scen.name);
         const res = simulateSingleScenarioInBrowser(scen, payload, cat, encCat, buffCat);
         results.push(res);
         totalScore += res.score;
+        await new Promise(r => setTimeout(r, 20));
       }
+      if (onProgress) onProgress(activeScenarios.length, activeScenarios.length, 'Complete');
 
       const avgScore = results.length > 0 ? Math.round(totalScore / results.length) : 0;
       const grade = avgScore >= 92 ? "S+" : (avgScore >= 84 ? "S" : (avgScore >= 72 ? "A" : (avgScore >= 60 ? "B" : "C")));
@@ -9017,7 +9062,7 @@
     }
 
     // --- SIMULATION WITH AUTHENTIC ABILITY ICONS & UNIFIED TOOLTIPS ---
-        async function runSimulation() {
+        async function runSimulation(onProgress) {
       const btn = document.getElementById('btn-simulate');
       const btnText = document.getElementById('btn-text');
 
@@ -9093,7 +9138,7 @@
 
       if (!simData) {
         const t0 = performance.now();
-        simData = simulateCombatInBrowser(reqBody, catalog, enchantsCatalog, buffsCatalog);
+        simData = await simulateCombatInBrowser(reqBody, catalog, enchantsCatalog, buffsCatalog, onProgress);
         simData._clientTimeMs = Math.max(1, Math.round(performance.now() - t0));
       }
 
@@ -9922,7 +9967,7 @@
       container.innerHTML = html;
     }
 
-    async function runAllScenariosSuite() {
+    async function runAllScenariosSuite(onProgress) {
       const runBtn = document.getElementById('btn-run-all-scenarios');
       if (runBtn) {
         runBtn.innerHTML = '⏳ Simulating Suite...';
@@ -9979,7 +10024,7 @@
 
         if (!data) {
           const t0 = performance.now();
-          data = simulateSuiteInBrowser(payload, catalog, enchantsCatalog, buffsCatalog);
+          data = await simulateSuiteInBrowser(payload, catalog, enchantsCatalog, buffsCatalog, onProgress);
           data.execution_time_ms = Math.max(1, Math.round(performance.now() - t0));
         }
 
