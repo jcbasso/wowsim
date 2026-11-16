@@ -1757,14 +1757,14 @@
       background: rgba(22, 28, 40, 0.55);
       border: 1px solid rgba(255, 255, 255, 0.06);
       color: #94a3b8;
-      font-size: 0.72rem;
+      font-size: 0.70rem;
       font-weight: 700;
-      padding: 4px 8px;
+      padding: 4px 7px;
       border-radius: 6px;
       cursor: pointer;
       display: inline-flex;
       align-items: center;
-      gap: 5px;
+      gap: 4px;
       transition: all 0.16s cubic-bezier(0.2, 0.8, 0.2, 1);
       white-space: nowrap;
       position: relative;
@@ -2381,12 +2381,13 @@
       z-index: 200;
       background: linear-gradient(180deg, #161922 0%, #0e1017 100%);
       border-bottom: 1px solid var(--border-gold);
-      padding: 6px 14px;
+      padding: 6px 12px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 8px 12px;
-      flex-wrap: wrap;
+      gap: 8px;
+      flex-wrap: nowrap;
+      overflow-x: auto;
       box-shadow: 0 4px 20px rgba(0, 0, 0, 0.75);
     }
     .studio-topbar > * {
@@ -3221,12 +3222,25 @@
           </div>
 
           <div style="display: flex; flex-direction: column; gap: 10px;">
+            <div class="imbue-card" id="card-imbue-WindfuryWeapon" onclick="setImbue('WindfuryWeapon')" style="display: none;">
+              <div class="imbue-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/medium/spell_nature_cyclone.jpg');"></div>
+              <div style="flex: 1;">
+                <div style="font-weight: 700; display: flex; align-items: center; gap: 8px;">
+                  <span id="imbue-title-WindfuryWeapon" style="color: var(--gold-bright);">Windfury Weapon (Rank 1)</span>
+                  <span class="badge-rec" style="background: rgba(245, 158, 11, 0.22); border-color: #f59e0b; color: #fbbf24;">LVL 30+ 2H BURST KING</span>
+                </div>
+                <div id="imbue-desc-WindfuryWeapon" style="font-size: 0.78rem; color: var(--text-muted); margin-top: 3px;">
+                  20% chance on hit to grant 2 extra attacks with bonus Attack Power!
+                </div>
+              </div>
+            </div>
+
             <div class="imbue-card active" id="card-imbue-FlametongueWeapon" onclick="setImbue('FlametongueWeapon')" onmouseenter="showImbueTooltip(event, 'FlametongueWeapon')" onmousemove="moveUnifiedTooltip(event)" onmouseleave="hideUnifiedTooltip()">
               <div class="imbue-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/medium/spell_fire_flametounge.jpg');"></div>
               <div style="flex: 1;">
                 <div style="font-weight: 700; display: flex; align-items: center; gap: 8px;">
-                  <span style="color: var(--gold-bright);">Flametongue Weapon (Rank 2)</span>
-                  <span class="badge-rec">RECOMMENDED FOR 2.20 - 2.70s WEAPONS</span>
+                  <span id="imbue-title-FlametongueWeapon" style="color: var(--gold-bright);">Flametongue Weapon (Rank 2)</span>
+                  <span class="badge-rec">CONSISTENT FIRE ON-HIT</span>
                 </div>
                 <div style="font-size: 0.78rem; color: var(--text-muted); margin-top: 3px;">
                   Adds flat magical Fire damage on every melee hit. Ignores enemy physical armor!
@@ -3238,11 +3252,11 @@
               <div class="imbue-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/medium/spell_nature_rockbiter.jpg');"></div>
               <div style="flex: 1;">
                 <div style="font-weight: 700; display: flex; align-items: center; gap: 8px;">
-                  <span style="color: var(--text-main);">Rockbiter Weapon (Rank 3)</span>
+                  <span id="imbue-title-RockbiterWeapon" style="color: var(--text-main);">Rockbiter Weapon (Rank 3)</span>
                   <span class="badge-rec" style="background: rgba(56, 189, 248, 0.2); border-color: #38bdf8; color: #38bdf8;">WARDEN TANK BIS (+THREAT & AP)</span>
                 </div>
-                <div style="font-size: 0.78rem; color: var(--text-muted); margin-top: 3px;">
-                  Increases Attack Power by 111 and generates massive bonus threat per swing for Shaman Tanking.
+                <div id="imbue-desc-RockbiterWeapon" style="font-size: 0.78rem; color: var(--text-muted); margin-top: 3px;">
+                  Increases Attack Power and generates massive bonus threat per swing for Shaman Tanking.
                 </div>
               </div>
             </div>
@@ -3251,7 +3265,7 @@
               <div class="imbue-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/medium/spell_frost_frostbrand.jpg');"></div>
               <div style="flex: 1;">
                 <div style="font-weight: 700;">
-                  <span style="color: var(--text-main);">Frostbrand Weapon (Rank 1)</span>
+                  <span id="imbue-title-FrostbrandWeapon" style="color: var(--text-main);">Frostbrand Weapon (Rank 1)</span>
                 </div>
                 <div style="font-size: 0.78rem; color: var(--text-muted); margin-top: 3px;">
                   Chance on hit to deal Frost damage and slow target movement by 50% for 8 sec.
@@ -3280,6 +3294,9 @@
             <div class="chips-row" id="rotation-presets-container" style="margin-bottom: 12px;"></div>
           </div>
 
+          <div id="dynamic-rot-telemetry-banner" style="background: linear-gradient(90deg, rgba(16, 185, 129, 0.12) 0%, rgba(15, 23, 42, 0.85) 100%); border: 1px solid rgba(16, 185, 129, 0.35); border-radius: 6px; padding: 8px 12px; margin-bottom: 10px; font-size: 0.75rem; color: #cbd5e1; display: flex; align-items: center; justify-content: space-between; gap: 8px;">
+            <span id="dynamic-rot-telemetry-text">🔬 <strong>Dynamic Level-Adaptive APL Engine:</strong> Automatically simulates candidate spell combinations, prunes deadweight fillers, and optimizes priority order for your exact level & gear.</span>
+          </div>
           <div id="rotation-flow-banner" style="background: rgba(16, 22, 34, 0.85); border: 1px solid #2b3548; border-radius: 6px; padding: 10px 14px; margin-bottom: 14px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;">
             <div style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap;" id="rotation-flow-steps"></div>
             <div style="font-size: 0.72rem; color: var(--text-muted);" id="rotation-mana-estimate">Est. Mana/30s: --</div>
@@ -3556,7 +3573,7 @@
         <div class="panel" id="card-tank-metrics" style="border: 1px solid rgba(56, 189, 248, 0.65); background: linear-gradient(180deg, rgba(56, 189, 248, 0.14) 0%, rgba(13, 17, 23, 0.96) 100%); padding: 14px 18px; border-radius: 8px;">
           <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
             <div style="font-size: 0.78rem; font-weight: 800; color: #38bdf8; text-transform: uppercase; letter-spacing: 0.6px; display: flex; align-items: center; gap: 6px;">
-              <span>🛡️</span> Warden Tank Survivability, Mitigation & Threat
+              <span>🛡️</span> <span id="tank-card-title-lbl">Tank Survivability, Mitigation & Threat</span>
             </div>
             <div style="display: flex; gap: 6px; align-items: center;">
               <span class="badge-rec" id="tank-shield-badge" style="background: rgba(56, 189, 248, 0.2); border-color: #38bdf8; color: #bae6fd;">1H + SHIELD</span>
@@ -3764,7 +3781,7 @@
           The Leveling BiS engine evaluates and ranks all 9,185 items automatically for your exact level. Choose a spec preset or customize the stat weights below:
         </div>
 
-        <div style="display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap;">
+        <div id="weights-profile-chips-container" style="display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap;">
           <button class="chip active" id="btn-wprofile-enhancement" onclick="selectWeightProfile('enhancement')">⚔️ Enhancement DPS</button>
           <button class="chip" id="btn-wprofile-resto" onclick="selectWeightProfile('resto')">💚 Restoration Healer</button>
           <button class="chip" id="btn-wprofile-elemental" onclick="selectWeightProfile('elemental')">⚡ Elemental Caster</button>
@@ -4099,7 +4116,10 @@
       bloodthirst: {
         baseName: "Bloodthirst", icon: "spell_nature_bloodlust", school: "Physical", minLvl: 40,
         ranks: [
-          { rank: 1, minLvl: 40, apRatio: 0.45, rageCost: 30 }
+          { rank: 1, minLvl: 40, apRatio: 0.45, rageCost: 30 },
+          { rank: 2, minLvl: 48, apRatio: 0.48, rageCost: 30 },
+          { rank: 3, minLvl: 54, apRatio: 0.50, rageCost: 30 },
+          { rank: 4, minLvl: 60, apRatio: 0.55, rageCost: 30 }
         ]
       },
       shield_slam: {
@@ -4109,6 +4129,25 @@
           { rank: 2, minLvl: 48, baseDmg: 265, rageCost: 20 },
           { rank: 3, minLvl: 54, baseDmg: 305, rageCost: 20 },
           { rank: 4, minLvl: 60, baseDmg: 345, rageCost: 20 }
+        ]
+      },
+      execute: {
+        baseName: "Execute", icon: "inv_sword_48", school: "Physical", minLvl: 24,
+        ranks: [
+          { rank: 1, minLvl: 24, baseDmg: 125, perRage: 3, rageCost: 15 },
+          { rank: 2, minLvl: 32, baseDmg: 200, perRage: 6, rageCost: 15 },
+          { rank: 3, minLvl: 40, baseDmg: 325, perRage: 9, rageCost: 15 },
+          { rank: 4, minLvl: 48, baseDmg: 450, perRage: 12, rageCost: 15 },
+          { rank: 5, minLvl: 56, baseDmg: 600, perRage: 15, rageCost: 15 }
+        ]
+      },
+      slam: {
+        baseName: "Slam", icon: "ability_warrior_decisivestrike", school: "Physical", minLvl: 30,
+        ranks: [
+          { rank: 1, minLvl: 30, bonusDmg: 32, rageCost: 15 },
+          { rank: 2, minLvl: 38, bonusDmg: 43, rageCost: 15 },
+          { rank: 3, minLvl: 46, bonusDmg: 68, rageCost: 15 },
+          { rank: 4, minLvl: 54, bonusDmg: 87, rageCost: 15 }
         ]
       },
       overpower: {
@@ -4167,11 +4206,11 @@
       sunder_armor: {
         baseName: "Sunder Armor", icon: "ability_warrior_sunder", school: "Physical", minLvl: 10,
         ranks: [
-          { rank: 1, minLvl: 10, rageCost: 15 },
-          { rank: 2, minLvl: 22, rageCost: 15 },
-          { rank: 3, minLvl: 34, rageCost: 15 },
-          { rank: 4, minLvl: 46, rageCost: 15 },
-          { rank: 5, minLvl: 58, rageCost: 15 }
+          { rank: 1, minLvl: 10, armorRed: 90, rageCost: 15 },
+          { rank: 2, minLvl: 22, armorRed: 180, rageCost: 15 },
+          { rank: 3, minLvl: 34, armorRed: 270, rageCost: 15 },
+          { rank: 4, minLvl: 46, armorRed: 360, rageCost: 15 },
+          { rank: 5, minLvl: 58, armorRed: 450, rageCost: 15 }
         ]
       },
 
@@ -4199,10 +4238,43 @@
           { rank: 6, minLvl: 60, directMin: 205, directMax: 225, dotTick: 48, mana: 210 }
         ]
       },
-      stormstrike: {
-        baseName: "Stormstrike", icon: "ability_shaman_stormstrike", school: "Physical", minLvl: 20,
+      frost_shock: {
+        baseName: "Frost Shock", icon: "spell_frost_frostshock", school: "Frost", minLvl: 20,
         ranks: [
-          { rank: 1, minLvl: 20, manaCost: 65 }
+          { rank: 1, minLvl: 20, minD: 95, maxD: 103, mana: 115 },
+          { rank: 2, minLvl: 34, minD: 215, maxD: 230, mana: 225 },
+          { rank: 3, minLvl: 46, minD: 345, maxD: 368, mana: 325 },
+          { rank: 4, minLvl: 58, minD: 492, maxD: 520, mana: 430 }
+        ]
+      },
+      chain_lightning: {
+        baseName: "Chain Lightning", icon: "spell_nature_chainlightning", school: "Nature", minLvl: 32,
+        ranks: [
+          { rank: 1, minLvl: 32, minD: 196, maxD: 222, mana: 280 },
+          { rank: 2, minLvl: 40, minD: 283, maxD: 320, mana: 380 },
+          { rank: 3, minLvl: 48, minD: 389, maxD: 438, mana: 490 },
+          { rank: 4, minLvl: 56, minD: 505, maxD: 569, mana: 605 }
+        ]
+      },
+      lightning_bolt: {
+        baseName: "Lightning Bolt", icon: "spell_nature_lightning", school: "Nature", minLvl: 1,
+        ranks: [
+          { rank: 1, minLvl: 1, minD: 15, maxD: 18, mana: 15 },
+          { rank: 2, minLvl: 8, minD: 28, maxD: 33, mana: 30 },
+          { rank: 3, minLvl: 14, minD: 48, maxD: 57, mana: 45 },
+          { rank: 4, minLvl: 20, minD: 88, maxD: 100, mana: 75 },
+          { rank: 5, minLvl: 26, minD: 131, maxD: 149, mana: 105 },
+          { rank: 6, minLvl: 32, minD: 179, maxD: 202, mana: 135 },
+          { rank: 7, minLvl: 38, minD: 235, maxD: 265, mana: 165 },
+          { rank: 8, minLvl: 44, minD: 292, maxD: 329, mana: 195 },
+          { rank: 9, minLvl: 50, minD: 363, maxD: 409, mana: 230 },
+          { rank: 10, minLvl: 56, minD: 429, maxD: 481, mana: 265 }
+        ]
+      },
+      stormstrike: {
+        baseName: "Stormstrike", icon: "ability_shaman_stormstrike", school: "Physical", minLvl: 25,
+        ranks: [
+          { rank: 1, minLvl: 25, manaCost: 65 }
         ]
       },
       searing_totem: {
@@ -4214,6 +4286,25 @@
           { rank: 4, minLvl: 40, minD: 29, maxD: 37, mana: 120 },
           { rank: 5, minLvl: 50, minD: 37, maxD: 49, mana: 150 },
           { rank: 6, minLvl: 60, minD: 40, maxD: 54, mana: 170 }
+        ]
+      },
+      fire_nova_totem: {
+        baseName: "Fire Nova Totem", icon: "spell_fire_sealoffire", school: "Fire", minLvl: 12,
+        ranks: [
+          { rank: 1, minLvl: 12, minD: 53, maxD: 62, mana: 75 },
+          { rank: 2, minLvl: 22, minD: 110, maxD: 126, mana: 140 },
+          { rank: 3, minLvl: 32, minD: 196, maxD: 222, mana: 230 },
+          { rank: 4, minLvl: 42, minD: 298, maxD: 336, mana: 325 },
+          { rank: 5, minLvl: 52, minD: 418, maxD: 468, mana: 430 }
+        ]
+      },
+      magma_totem: {
+        baseName: "Magma Totem", icon: "spell_fire_selfdestruct", school: "Fire", minLvl: 26,
+        ranks: [
+          { rank: 1, minLvl: 26, pulseD: 22, mana: 140 },
+          { rank: 2, minLvl: 36, pulseD: 37, mana: 210 },
+          { rank: 3, minLvl: 46, pulseD: 54, mana: 295 },
+          { rank: 4, minLvl: 56, pulseD: 75, mana: 380 }
         ]
       },
       lightning_shield: {
@@ -4248,14 +4339,14 @@
       sinister_strike: {
         baseName: "Sinister Strike", icon: "spell_shadow_ritualofsacrifice", school: "Physical", minLvl: 1,
         ranks: [
-          { rank: 1, minLvl: 1, bonusDmg: 3, energy: 45 },
-          { rank: 2, minLvl: 6, bonusDmg: 6, energy: 45 },
-          { rank: 3, minLvl: 14, bonusDmg: 10, energy: 45 },
-          { rank: 4, minLvl: 22, bonusDmg: 15, energy: 45 },
-          { rank: 5, minLvl: 30, bonusDmg: 22, energy: 45 },
-          { rank: 6, minLvl: 38, bonusDmg: 33, energy: 45 },
-          { rank: 7, minLvl: 46, bonusDmg: 52, energy: 45 },
-          { rank: 8, minLvl: 54, bonusDmg: 68, energy: 45 }
+          { rank: 1, minLvl: 1, bonusDmg: 3, energy: 40 },
+          { rank: 2, minLvl: 6, bonusDmg: 6, energy: 40 },
+          { rank: 3, minLvl: 14, bonusDmg: 10, energy: 40 },
+          { rank: 4, minLvl: 22, bonusDmg: 15, energy: 40 },
+          { rank: 5, minLvl: 30, bonusDmg: 22, energy: 40 },
+          { rank: 6, minLvl: 38, bonusDmg: 33, energy: 40 },
+          { rank: 7, minLvl: 46, bonusDmg: 52, energy: 40 },
+          { rank: 8, minLvl: 54, bonusDmg: 68, energy: 40 }
         ]
       },
       backstab: {
@@ -4269,6 +4360,31 @@
           { rank: 6, minLvl: 44, bonusDmg: 165, energy: 60 },
           { rank: 7, minLvl: 52, bonusDmg: 210, energy: 60 },
           { rank: 8, minLvl: 60, bonusDmg: 255, energy: 60 }
+        ]
+      },
+      hemorrhage: {
+        baseName: "Hemorrhage", icon: "spell_shadow_lifedrain", school: "Physical", minLvl: 30,
+        ranks: [
+          { rank: 1, minLvl: 30, bonusDmg: 15, energy: 35 },
+          { rank: 2, minLvl: 42, bonusDmg: 30, energy: 35 },
+          { rank: 3, minLvl: 54, bonusDmg: 50, energy: 35 }
+        ]
+      },
+      rupture: {
+        baseName: "Rupture", icon: "ability_rogue_rupture", school: "Physical", minLvl: 20,
+        ranks: [
+          { rank: 1, minLvl: 20, dotTick: 28, energy: 25 },
+          { rank: 2, minLvl: 28, dotTick: 45, energy: 25 },
+          { rank: 3, minLvl: 36, dotTick: 65, energy: 25 },
+          { rank: 4, minLvl: 44, dotTick: 92, energy: 25 },
+          { rank: 5, minLvl: 52, dotTick: 125, energy: 25 },
+          { rank: 6, minLvl: 60, dotTick: 162, energy: 25 }
+        ]
+      },
+      blade_flurry: {
+        baseName: "Blade Flurry", icon: "ability_warrior_punishingblow", school: "Physical", minLvl: 30,
+        ranks: [
+          { rank: 1, minLvl: 30, haste: 0.20, energy: 25 }
         ]
       },
       eviscerate: {
@@ -4288,7 +4404,7 @@
       slice_and_dice: {
         baseName: "Slice and Dice", icon: "ability_rogue_slicedice", school: "Physical", minLvl: 10,
         ranks: [
-          { rank: 1, minLvl: 10, haste: 0.23, energy: 25 },
+          { rank: 1, minLvl: 10, haste: 0.20, energy: 25 },
           { rank: 2, minLvl: 42, haste: 0.30, energy: 25 }
         ]
       },
@@ -4326,6 +4442,40 @@
           { rank: 11, minLvl: 60, minD: 596, maxD: 760, mana: 465 }
         ]
       },
+      fire_blast: {
+        baseName: "Fire Blast", icon: "spell_fire_fireball", school: "Fire", minLvl: 6,
+        ranks: [
+          { rank: 1, minLvl: 6, minD: 24, maxD: 32, mana: 40 },
+          { rank: 2, minLvl: 14, minD: 57, maxD: 71, mana: 75 },
+          { rank: 3, minLvl: 22, minD: 103, maxD: 127, mana: 115 },
+          { rank: 4, minLvl: 30, minD: 168, maxD: 202, mana: 165 },
+          { rank: 5, minLvl: 38, minD: 242, maxD: 290, mana: 220 },
+          { rank: 6, minLvl: 46, minD: 332, maxD: 394, mana: 280 },
+          { rank: 7, minLvl: 54, minD: 431, maxD: 509, mana: 340 }
+        ]
+      },
+      scorch: {
+        baseName: "Scorch", icon: "spell_fire_soulburn", school: "Fire", minLvl: 22,
+        ranks: [
+          { rank: 1, minLvl: 22, minD: 53, maxD: 65, mana: 50 },
+          { rank: 2, minLvl: 28, minD: 77, maxD: 93, mana: 65 },
+          { rank: 3, minLvl: 34, minD: 100, maxD: 120, mana: 80 },
+          { rank: 4, minLvl: 40, minD: 133, maxD: 159, mana: 100 },
+          { rank: 5, minLvl: 46, minD: 162, maxD: 192, mana: 115 },
+          { rank: 6, minLvl: 52, minD: 200, maxD: 239, mana: 135 },
+          { rank: 7, minLvl: 58, minD: 233, maxD: 275, mana: 150 }
+        ]
+      },
+      cone_of_cold: {
+        baseName: "Cone of Cold", icon: "spell_frost_glacier", school: "Frost", minLvl: 26,
+        ranks: [
+          { rank: 1, minLvl: 26, minD: 98, maxD: 108, mana: 210 },
+          { rank: 2, minLvl: 34, minD: 146, maxD: 160, mana: 290 },
+          { rank: 3, minLvl: 42, minD: 203, maxD: 223, mana: 380 },
+          { rank: 4, minLvl: 50, minD: 264, maxD: 290, mana: 465 },
+          { rank: 5, minLvl: 58, minD: 335, maxD: 365, mana: 555 }
+        ]
+      },
       pyroblast: {
         baseName: "Pyroblast", icon: "spell_fire_fireball02", school: "Fire", minLvl: 20,
         ranks: [
@@ -4352,10 +4502,25 @@
           { rank: 6, minLvl: 60, bonusDmg: 600, mana: 310 }
         ]
       },
-      arcane_shot: {
-        baseName: "Arcane Shot", icon: "ability_impalingbolt", school: "Arcane", minLvl: 8,
+      multi_shot: {
+        baseName: "Multi-Shot", icon: "ability_upgrademoonglaive", school: "Physical", minLvl: 18,
         ranks: [
-          { rank: 1, minLvl: 8, dmg: 14, mana: 25 },
+          { rank: 1, minLvl: 18, bonusDmg: 0, mana: 100 },
+          { rank: 2, minLvl: 30, bonusDmg: 40, mana: 140 },
+          { rank: 3, minLvl: 42, bonusDmg: 80, mana: 175 },
+          { rank: 4, minLvl: 54, bonusDmg: 120, mana: 210 }
+        ]
+      },
+      rapid_fire: {
+        baseName: "Rapid Fire", icon: "ability_hunter_runninghot", school: "Physical", minLvl: 26,
+        ranks: [
+          { rank: 1, minLvl: 26, haste: 0.40, mana: 100 }
+        ]
+      },
+      arcane_shot: {
+        baseName: "Arcane Shot", icon: "ability_impalingbolt", school: "Arcane", minLvl: 6,
+        ranks: [
+          { rank: 1, minLvl: 6, dmg: 14, mana: 25 },
           { rank: 2, minLvl: 16, dmg: 23, mana: 35 },
           { rank: 3, minLvl: 24, dmg: 36, mana: 50 },
           { rank: 4, minLvl: 32, dmg: 63, mana: 80 },
@@ -4408,6 +4573,59 @@
           { rank: 7, minLvl: 60, dmg: 822, mana: 340 }
         ]
       },
+      curse_of_agony: {
+        baseName: "Curse of Agony", icon: "spell_shadow_curseofsargeras", school: "Shadow", minLvl: 8,
+        ranks: [
+          { rank: 1, minLvl: 8, dmg: 84, mana: 25 },
+          { rank: 2, minLvl: 18, dmg: 180, mana: 50 },
+          { rank: 3, minLvl: 28, dmg: 324, mana: 90 },
+          { rank: 4, minLvl: 38, dmg: 504, mana: 130 },
+          { rank: 5, minLvl: 48, dmg: 780, mana: 170 },
+          { rank: 6, minLvl: 58, dmg: 1044, mana: 215 }
+        ]
+      },
+      immolate: {
+        baseName: "Immolate", icon: "spell_fire_immolation", school: "Fire", minLvl: 1,
+        ranks: [
+          { rank: 1, minLvl: 1, directD: 8, dotD: 20, mana: 25 },
+          { rank: 2, minLvl: 10, directD: 19, dotD: 40, mana: 45 },
+          { rank: 3, minLvl: 20, directD: 45, dotD: 90, mana: 90 },
+          { rank: 4, minLvl: 30, directD: 90, dotD: 165, mana: 155 },
+          { rank: 5, minLvl: 40, directD: 134, dotD: 255, mana: 220 },
+          { rank: 6, minLvl: 50, directD: 192, dotD: 365, mana: 295 },
+          { rank: 7, minLvl: 60, directD: 258, dotD: 485, mana: 370 },
+          { rank: 8, minLvl: 60, directD: 279, dotD: 510, mana: 380 }
+        ]
+      },
+      shadowburn: {
+        baseName: "Shadowburn", icon: "spell_shadow_scourgebuild", school: "Shadow", minLvl: 20,
+        ranks: [
+          { rank: 1, minLvl: 20, minD: 85, maxD: 99, mana: 105 },
+          { rank: 2, minLvl: 24, minD: 115, maxD: 131, mana: 130 },
+          { rank: 3, minLvl: 32, minD: 186, maxD: 210, mana: 190 },
+          { rank: 4, minLvl: 40, minD: 261, maxD: 293, mana: 245 },
+          { rank: 5, minLvl: 48, minD: 350, maxD: 392, mana: 305 },
+          { rank: 6, minLvl: 56, minD: 450, maxD: 502, mana: 365 }
+        ]
+      },
+      siphon_life: {
+        baseName: "Siphon Life", icon: "spell_shadow_requiem", school: "Shadow", minLvl: 30,
+        ranks: [
+          { rank: 1, minLvl: 30, dmg: 150, mana: 150 },
+          { rank: 2, minLvl: 38, dmg: 220, mana: 205 },
+          { rank: 3, minLvl: 48, dmg: 330, mana: 285 },
+          { rank: 4, minLvl: 58, dmg: 450, mana: 365 }
+        ]
+      },
+      conflagrate: {
+        baseName: "Conflagrate", icon: "spell_fire_fireball", school: "Fire", minLvl: 40,
+        ranks: [
+          { rank: 1, minLvl: 40, minD: 240, maxD: 306, mana: 165 },
+          { rank: 2, minLvl: 48, minD: 316, maxD: 396, mana: 200 },
+          { rank: 3, minLvl: 54, minD: 383, maxD: 479, mana: 230 },
+          { rank: 4, minLvl: 60, minD: 447, maxD: 557, mana: 255 }
+        ]
+      },
 
       // --- PRIEST ---
       shadow_word_pain: {
@@ -4437,8 +4655,53 @@
           { rank: 9, minLvl: 58, minD: 508, maxD: 538, mana: 350 }
         ]
       },
+      mind_flay: {
+        baseName: "Mind Flay", icon: "spell_shadow_siphonmana", school: "Shadow", minLvl: 20,
+        ranks: [
+          { rank: 1, minLvl: 20, totalD: 75, mana: 45 },
+          { rank: 2, minLvl: 28, totalD: 126, mana: 70 },
+          { rank: 3, minLvl: 36, totalD: 186, mana: 100 },
+          { rank: 4, minLvl: 44, totalD: 261, mana: 135 },
+          { rank: 5, minLvl: 52, totalD: 330, mana: 165 },
+          { rank: 6, minLvl: 60, totalD: 426, mana: 205 }
+        ]
+      },
+      devouring_plague: {
+        baseName: "Devouring Plague", icon: "spell_shadow_blackplague", school: "Shadow", minLvl: 20,
+        ranks: [
+          { rank: 1, minLvl: 20, dmg: 152, mana: 215 },
+          { rank: 2, minLvl: 28, dmg: 272, mana: 350 },
+          { rank: 3, minLvl: 36, dmg: 400, mana: 495 },
+          { rank: 4, minLvl: 44, dmg: 544, mana: 645 },
+          { rank: 5, minLvl: 52, dmg: 712, mana: 810 },
+          { rank: 6, minLvl: 60, dmg: 904, mana: 985 }
+        ]
+      },
+      smite: {
+        baseName: "Smite", icon: "spell_holy_holysmite", school: "Holy", minLvl: 1,
+        ranks: [
+          { rank: 1, minLvl: 1, minD: 15, maxD: 20, mana: 20 },
+          { rank: 2, minLvl: 6, minD: 28, maxD: 34, mana: 30 },
+          { rank: 3, minLvl: 14, minD: 58, maxD: 67, mana: 60 },
+          { rank: 4, minLvl: 22, minD: 97, maxD: 112, mana: 95 },
+          { rank: 5, minLvl: 30, minD: 158, maxD: 178, mana: 140 },
+          { rank: 6, minLvl: 38, minD: 222, maxD: 250, mana: 185 },
+          { rank: 7, minLvl: 46, minD: 298, maxD: 335, mana: 230 },
+          { rank: 8, minLvl: 54, minD: 384, maxD: 429, mana: 280 }
+        ]
+      },
 
       // --- PALADIN ---
+      seal_of_command: {
+        baseName: "Seal of Command", icon: "ability_warrior_innerrage", school: "Holy", minLvl: 20,
+        ranks: [
+          { rank: 1, minLvl: 20, mana: 65 },
+          { rank: 2, minLvl: 30, mana: 110 },
+          { rank: 3, minLvl: 40, mana: 140 },
+          { rank: 4, minLvl: 50, mana: 180 },
+          { rank: 5, minLvl: 60, mana: 210 }
+        ]
+      },
       consecration: {
         baseName: "Consecration", icon: "spell_holy_innerfire", school: "Holy", minLvl: 20,
         ranks: [
@@ -4452,8 +4715,27 @@
       judgement: {
         baseName: "Judgement", icon: "spell_holy_righteousfury", school: "Holy", minLvl: 4,
         ranks: [
-          { rank: 1, minLvl: 4, mana: 20 },
-          { rank: 2, minLvl: 60, mana: 50 }
+          { rank: 1, minLvl: 4, dmg: 25, mana: 20 },
+          { rank: 2, minLvl: 18, dmg: 65, mana: 30 },
+          { rank: 3, minLvl: 30, dmg: 115, mana: 40 },
+          { rank: 4, minLvl: 42, dmg: 175, mana: 50 },
+          { rank: 5, minLvl: 54, dmg: 245, mana: 60 }
+        ]
+      },
+      hammer_of_wrath: {
+        baseName: "Hammer of Wrath", icon: "ability_thunderclap", school: "Holy", minLvl: 44,
+        ranks: [
+          { rank: 1, minLvl: 44, minD: 304, maxD: 336, mana: 295 },
+          { rank: 2, minLvl: 52, minD: 399, maxD: 441, mana: 360 },
+          { rank: 3, minLvl: 60, minD: 504, maxD: 556, mana: 425 }
+        ]
+      },
+      holy_shield: {
+        baseName: "Holy Shield", icon: "spell_holy_blessingofprotection", school: "Holy", minLvl: 40,
+        ranks: [
+          { rank: 1, minLvl: 40, blockDmg: 65, mana: 150 },
+          { rank: 2, minLvl: 50, blockDmg: 95, mana: 195 },
+          { rank: 3, minLvl: 60, blockDmg: 130, mana: 240 }
         ]
       },
 
@@ -4461,21 +4743,41 @@
       claw: {
         baseName: "Claw", icon: "ability_druid_rake", school: "Physical", minLvl: 20,
         ranks: [
-          { rank: 1, minLvl: 20, bonusDmg: 27, energy: 45 },
-          { rank: 2, minLvl: 28, bonusDmg: 39, energy: 45 },
-          { rank: 3, minLvl: 38, bonusDmg: 57, energy: 45 },
-          { rank: 4, minLvl: 48, bonusDmg: 88, energy: 45 },
-          { rank: 5, minLvl: 58, bonusDmg: 115, energy: 45 }
+          { rank: 1, minLvl: 20, bonusDmg: 27, energy: 40 },
+          { rank: 2, minLvl: 28, bonusDmg: 39, energy: 40 },
+          { rank: 3, minLvl: 38, bonusDmg: 57, energy: 40 },
+          { rank: 4, minLvl: 48, bonusDmg: 88, energy: 40 },
+          { rank: 5, minLvl: 58, bonusDmg: 115, energy: 40 }
         ]
       },
       shred: {
         baseName: "Shred", icon: "spell_shadow_vampiricaura", school: "Physical", minLvl: 22,
         ranks: [
-          { rank: 1, minLvl: 22, bonusDmg: 54, energy: 60 },
-          { rank: 2, minLvl: 30, bonusDmg: 72, energy: 60 },
-          { rank: 3, minLvl: 38, bonusDmg: 99, energy: 60 },
-          { rank: 4, minLvl: 46, bonusDmg: 144, energy: 60 },
-          { rank: 5, minLvl: 54, bonusDmg: 180, energy: 60 }
+          { rank: 1, minLvl: 22, bonusDmg: 54, energy: 48 },
+          { rank: 2, minLvl: 30, bonusDmg: 72, energy: 48 },
+          { rank: 3, minLvl: 38, bonusDmg: 99, energy: 48 },
+          { rank: 4, minLvl: 46, bonusDmg: 144, energy: 48 },
+          { rank: 5, minLvl: 54, bonusDmg: 180, energy: 48 }
+        ]
+      },
+      rake: {
+        baseName: "Rake", icon: "ability_druid_disembowel", school: "Physical", minLvl: 24,
+        ranks: [
+          { rank: 1, minLvl: 24, directD: 19, dotTick: 13, energy: 35 },
+          { rank: 2, minLvl: 34, directD: 28, dotTick: 19, energy: 35 },
+          { rank: 3, minLvl: 44, directD: 43, dotTick: 25, energy: 35 },
+          { rank: 4, minLvl: 54, directD: 58, dotTick: 32, energy: 35 }
+        ]
+      },
+      rip: {
+        baseName: "Rip", icon: "ability_ghoulfrenzy", school: "Physical", minLvl: 20,
+        ranks: [
+          { rank: 1, minLvl: 20, dotTick: 24, energy: 30 },
+          { rank: 2, minLvl: 28, dotTick: 38, energy: 30 },
+          { rank: 3, minLvl: 36, dotTick: 54, energy: 30 },
+          { rank: 4, minLvl: 44, dotTick: 75, energy: 30 },
+          { rank: 5, minLvl: 52, dotTick: 98, energy: 30 },
+          { rank: 6, minLvl: 60, dotTick: 126, energy: 30 }
         ]
       },
       ferocious_bite: {
@@ -4502,48 +4804,111 @@
           { rank: 9, minLvl: 52, directD: 211, dotD: 384, mana: 375 },
           { rank: 10, minLvl: 58, directD: 260, dotD: 476, mana: 450 }
         ]
+      },
+      starfire: {
+        baseName: "Starfire", icon: "spell_arcane_starfire", school: "Arcane", minLvl: 20,
+        ranks: [
+          { rank: 1, minLvl: 20, minD: 95, maxD: 115, mana: 95 },
+          { rank: 2, minLvl: 26, minD: 146, maxD: 174, mana: 135 },
+          { rank: 3, minLvl: 34, minD: 212, maxD: 250, mana: 180 },
+          { rank: 4, minLvl: 42, minD: 293, maxD: 345, mana: 230 },
+          { rank: 5, minLvl: 50, minD: 378, maxD: 442, mana: 275 },
+          { rank: 6, minLvl: 58, minD: 463, maxD: 543, mana: 315 }
+        ]
+      },
+      wrath: {
+        baseName: "Wrath", icon: "spell_nature_abolishmagic", school: "Nature", minLvl: 1,
+        ranks: [
+          { rank: 1, minLvl: 1, minD: 13, maxD: 16, mana: 20 },
+          { rank: 2, minLvl: 6, minD: 28, maxD: 33, mana: 35 },
+          { rank: 3, minLvl: 14, minD: 48, maxD: 57, mana: 55 },
+          { rank: 4, minLvl: 22, minD: 69, maxD: 79, mana: 70 },
+          { rank: 5, minLvl: 30, minD: 108, maxD: 123, mana: 100 },
+          { rank: 6, minLvl: 38, minD: 148, maxD: 167, mana: 125 },
+          { rank: 7, minLvl: 46, minD: 198, maxD: 221, mana: 155 },
+          { rank: 8, minLvl: 54, minD: 248, maxD: 277, mana: 180 }
+        ]
       }
     };
 
     const SPELL_ID_TO_KEY = {
+      // Warrior
       12294: 'mortal_strike',
       23881: 'bloodthirst',
       23925: 'shield_slam',
+      5308: 'execute',
+      1464: 'slam',
       7384: 'overpower',
       25289: 'heroic_strike',
       11574: 'rend',
       1680: 'whirlwind',
       11601: 'revenge',
       11597: 'sunder_armor',
+      // Shaman
       8045: 'earth_shock',
       8052: 'flame_shock',
+      8056: 'frost_shock',
+      421: 'chain_lightning',
+      403: 'lightning_bolt',
       17364: 'stormstrike',
       3599: 'searing_totem',
+      1535: 'fire_nova_totem',
+      8190: 'magma_totem',
       324: 'lightning_shield',
       913: 'healing_wave',
       547: 'healing_wave',
       332: 'healing_wave',
       331: 'healing_wave',
+      // Rogue
       11294: 'sinister_strike',
       11286: 'backstab',
+      16511: 'hemorrhage',
+      1943: 'rupture',
+      13877: 'blade_flurry',
       11305: 'eviscerate',
       6774: 'slice_and_dice',
+      // Mage
       10181: 'frostbolt',
       10151: 'fireball',
+      2136: 'fire_blast',
+      2948: 'scorch',
+      120: 'cone_of_cold',
       10199: 'pyroblast',
+      // Hunter
       20904: 'aimed_shot',
+      2643: 'multi_shot',
+      3045: 'rapid_fire',
       20900: 'arcane_shot',
       13555: 'serpent_sting',
+      // Warlock
       11661: 'shadow_bolt',
       11675: 'corruption',
+      11713: 'curse_of_agony',
+      11668: 'immolate',
+      17877: 'shadowburn',
+      18265: 'siphon_life',
+      17962: 'conflagrate',
+      // Priest
       10894: 'shadow_word_pain',
       10947: 'mind_blast',
+      18807: 'mind_flay',
+      2944: 'devouring_plague',
+      10938: 'smite',
+      // Paladin
+      20375: 'seal_of_command',
       20924: 'consecration',
       20271: 'judgement',
+      24275: 'hammer_of_wrath',
+      20925: 'holy_shield',
+      // Druid
       9881: 'claw',
       9830: 'shred',
+      9827: 'rake',
+      1079: 'rip',
       22829: 'ferocious_bite',
-      9835: 'moonfire'
+      9835: 'moonfire',
+      2912: 'starfire',
+      9756: 'wrath'
     };
 
     function getHighestSpellRank(spellKey, playerLvl) {
@@ -4591,155 +4956,468 @@
     }
 
     function syncSpellRanksForLevel(lvl = getCurrentPlayerLevel()) {
-      if (typeof availableSpells === 'undefined') return;
-      for (const sid in availableSpells) {
-        const sInfo = getSpellDisplayInfo(parseInt(sid), lvl);
-        if (sInfo && sInfo.name) {
-          availableSpells[sid].name = sInfo.name;
+      if (typeof availableSpells !== 'undefined') {
+        for (const sid in availableSpells) {
+          const sInfo = getSpellDisplayInfo(parseInt(sid), lvl);
+          if (sInfo && sInfo.name) {
+            availableSpells[sid].name = sInfo.name;
+          }
         }
       }
+      // Also update Shaman Weapon Imbue cards for current level
+      const wfCard = document.getElementById('card-imbue-WindfuryWeapon');
+      if (wfCard) {
+        wfCard.style.display = (lvl >= 30) ? 'flex' : 'none';
+        const wfRank = lvl >= 60 ? 4 : (lvl >= 50 ? 3 : (lvl >= 40 ? 2 : 1));
+        const wfAP = lvl >= 60 ? 445 : (lvl >= 50 ? 333 : (lvl >= 40 ? 229 : 106));
+        const wfTitle = document.getElementById('imbue-title-WindfuryWeapon');
+        const wfDesc = document.getElementById('imbue-desc-WindfuryWeapon');
+        if (wfTitle) wfTitle.innerText = "Windfury Weapon (Rank " + wfRank + ")";
+        if (wfDesc) wfDesc.innerText = "20% chance on hit to grant 2 extra attacks with +" + wfAP + " bonus Attack Power!";
+      }
+      const ftRank = lvl >= 56 ? 6 : (lvl >= 46 ? 5 : (lvl >= 36 ? 4 : (lvl >= 26 ? 3 : (lvl >= 18 ? 2 : 1))));
+      const ftTitle = document.getElementById('imbue-title-FlametongueWeapon');
+      if (ftTitle) ftTitle.innerText = "Flametongue Weapon (Rank " + ftRank + ")";
+
+      const rbRank = lvl >= 54 ? 7 : (lvl >= 44 ? 6 : (lvl >= 34 ? 5 : (lvl >= 24 ? 4 : (lvl >= 16 ? 3 : (lvl >= 8 ? 2 : 1)))));
+      const rbTitle = document.getElementById('imbue-title-RockbiterWeapon');
+      if (rbTitle) rbTitle.innerText = "Rockbiter Weapon (Rank " + rbRank + ")";
+
+      const fbRank = lvl >= 58 ? 5 : (lvl >= 48 ? 4 : (lvl >= 38 ? 3 : (lvl >= 28 ? 2 : 1)));
+      const fbTitle = document.getElementById('imbue-title-FrostbrandWeapon');
+      if (fbTitle) fbTitle.innerText = "Frostbrand Weapon (Rank " + fbRank + ")";
+    }
+
+    // Generates a rich pool of distinct candidate APL rotations tailored to the character's unlocked spells at `lvl`
+    function generateCandidateRotationsForLevel(classKey, specKey, lvl = getCurrentPlayerLevel()) {
+      const pool = {};
+      if (classKey === 'shaman') {
+        if (specKey === 'resto') {
+          pool['resto_burst'] = [{ spellId: 913, condition: "continuous_heal", enabled: true }, { spellId: 3599, condition: "totem_le_1s", enabled: true }];
+          pool['resto_sustain'] = [{ spellId: 547, condition: "continuous_heal", enabled: true }, { spellId: 3599, condition: "totem_le_1s", enabled: true }];
+          return pool;
+        }
+        if (specKey === 'tank') {
+          pool['tank_threat'] = [
+            { spellId: 8045, condition: "on_cd", enabled: true },
+            { spellId: 324, condition: "buff_not_active", enabled: true },
+            { spellId: 8052, condition: "dot_not_active", enabled: true },
+            { spellId: 3599, condition: "totem_le_1s", enabled: true }
+          ];
+          if (lvl >= 26) {
+            pool['tank_magma_threat'] = [
+              { spellId: 8045, condition: "on_cd", enabled: true },
+              { spellId: 324, condition: "buff_not_active", enabled: true },
+              { spellId: 8190, condition: "totem_le_1s", enabled: true },
+              { spellId: 8052, condition: "dot_not_active", enabled: true }
+            ];
+          }
+          return pool;
+        }
+        if (specKey === 'elemental') {
+          const ele1 = [];
+          if (lvl >= 32) ele1.push({ spellId: 421, condition: "on_cd", enabled: true });
+          if (lvl >= 10) ele1.push({ spellId: 8052, condition: "dot_not_active", enabled: true });
+          if (lvl >= 4) ele1.push({ spellId: 8045, condition: "on_cd", enabled: true });
+          if (lvl >= 10) ele1.push({ spellId: 3599, condition: "totem_le_1s", enabled: true });
+          ele1.push({ spellId: 403, condition: "continuous", enabled: true });
+          pool['ele_turret_burst'] = ele1;
+
+          const ele2 = [];
+          if (lvl >= 32) ele2.push({ spellId: 421, condition: "on_cd", enabled: true });
+          if (lvl >= 26) ele2.push({ spellId: 8190, condition: "totem_le_1s", enabled: true });
+          if (lvl >= 4) ele2.push({ spellId: 8045, condition: "on_cd", enabled: true });
+          ele2.push({ spellId: 403, condition: "continuous", enabled: true });
+          pool['ele_chain_shock'] = ele2;
+          return pool;
+        }
+        // Enhancement Shaman: Evolves dramatically across Lvl 10 -> 20 -> 29 -> 32 -> 40 -> 60
+        if (lvl < 20) {
+          pool['lvl10_flame_earth'] = [
+            { spellId: 8052, condition: "dot_not_active", enabled: true },
+            { spellId: 8045, condition: "on_cd", enabled: true },
+            { spellId: 3599, condition: "totem_le_1s", enabled: true },
+            { spellId: 324, condition: "buff_not_active", enabled: true }
+          ];
+          if (lvl >= 12) {
+            pool['lvl12_nova_burst'] = [
+              { spellId: 1535, condition: "on_cd", enabled: true },
+              { spellId: 8052, condition: "dot_not_active", enabled: true },
+              { spellId: 8045, condition: "on_cd", enabled: true }
+            ];
+          }
+          pool['lvl10_sustain'] = [
+            { spellId: 8052, condition: "dot_not_active", enabled: true },
+            { spellId: 3599, condition: "totem_le_1s", enabled: true },
+            { spellId: 324, condition: "buff_not_active", enabled: true }
+          ];
+        } else if (lvl < 32) {
+          // Lvl 20 - 31: Frost Shock (20), Stormstrike (25), Magma Totem (26)
+          const hasSS = (lvl >= 25);
+          const c1 = [];
+          if (hasSS) c1.push({ spellId: 17364, condition: "on_cd", enabled: true });
+          c1.push({ spellId: 8045, condition: "on_cd", enabled: true });
+          c1.push({ spellId: 8052, condition: "dot_not_active", enabled: true });
+          c1.push({ spellId: 3599, condition: "totem_le_1s", enabled: true });
+          c1.push({ spellId: 324, condition: "buff_not_active", enabled: true });
+          pool['enh_nature_synergy'] = c1;
+
+          const c2 = [];
+          if (hasSS) c2.push({ spellId: 17364, condition: "on_cd", enabled: true });
+          c2.push({ spellId: 8052, condition: "dot_not_active", enabled: true });
+          c2.push({ spellId: 8045, condition: "on_cd", enabled: true });
+          if (lvl >= 26) c2.push({ spellId: 8190, condition: "totem_le_1s", enabled: true });
+          else c2.push({ spellId: 3599, condition: "totem_le_1s", enabled: true });
+          pool['enh_flame_magma'] = c2;
+
+          const c3 = [];
+          if (hasSS) c3.push({ spellId: 17364, condition: "on_cd", enabled: true });
+          c3.push({ spellId: 1535, condition: "on_cd", enabled: true });
+          c3.push({ spellId: 8045, condition: "on_cd", enabled: true });
+          c3.push({ spellId: 324, condition: "buff_not_active", enabled: true });
+          pool['enh_nova_shock'] = c3;
+        } else {
+          // Lvl 32 - 60: Chain Lightning (32) + Stormstrike Nature Debuff (+20% to next 2 Nature hits!) + Magma Totem + Windfury
+          pool['enh_ss_cl_earth_synergy'] = [
+            { spellId: 17364, condition: "on_cd", enabled: true },
+            { spellId: 421, condition: "on_cd", enabled: true },
+            { spellId: 8045, condition: "on_cd", enabled: true },
+            { spellId: 8190, condition: "totem_le_1s", enabled: true },
+            { spellId: 324, condition: "buff_not_active", enabled: true }
+          ];
+          pool['enh_ss_flame_earth_searing'] = [
+            { spellId: 17364, condition: "on_cd", enabled: true },
+            { spellId: 8052, condition: "dot_not_active", enabled: true },
+            { spellId: 8045, condition: "on_cd", enabled: true },
+            { spellId: 3599, condition: "totem_le_1s", enabled: true },
+            { spellId: 324, condition: "buff_not_active", enabled: true }
+          ];
+          pool['enh_full_spellweaver'] = [
+            { spellId: 17364, condition: "on_cd", enabled: true },
+            { spellId: 421, condition: "on_cd", enabled: true },
+            { spellId: 8052, condition: "dot_not_active", enabled: true },
+            { spellId: 8045, condition: "on_cd", enabled: true },
+            { spellId: 1535, condition: "on_cd", enabled: true }
+          ];
+          pool['enh_melee_mana_conserve'] = [
+            { spellId: 17364, condition: "on_cd", enabled: true },
+            { spellId: 8045, condition: "on_cd", enabled: true },
+            { spellId: 3599, condition: "totem_le_1s", enabled: true },
+            { spellId: 324, condition: "buff_not_active", enabled: true }
+          ];
+        }
+        return pool;
+      }
+
+      if (classKey === 'warrior') {
+        if (specKey === 'protection') {
+          const p1 = [];
+          if (lvl >= 40) p1.push({ spellId: 23925, condition: "on_cd", enabled: true });
+          if (lvl >= 14) p1.push({ spellId: 11601, condition: "on_proc", enabled: true });
+          if (lvl >= 10) p1.push({ spellId: 11597, condition: "stack_lt_5", enabled: true });
+          if (lvl >= 24) p1.push({ spellId: 5308, condition: "execute_phase", enabled: true });
+          p1.push({ spellId: 25289, condition: "rage_gt_40", enabled: true });
+          pool['prot_shield_threat'] = p1;
+          return pool;
+        }
+        // Arms / Fury Warrior progression across Lvl 10 -> 24 -> 36 -> 40 -> 60
+        if (lvl < 24) {
+          pool['war_early_bleed'] = [
+            { spellId: 7384, condition: "on_proc", enabled: true },
+            { spellId: 11574, condition: "dot_not_active", enabled: true },
+            { spellId: 11597, condition: "stack_lt_5", enabled: true },
+            { spellId: 25289, condition: "rage_gt_40", enabled: true }
+          ];
+          pool['war_early_strike'] = [
+            { spellId: 7384, condition: "on_proc", enabled: true },
+            { spellId: 11574, condition: "dot_not_active", enabled: true },
+            { spellId: 25289, condition: "rage_gt_30", enabled: true }
+          ];
+        } else if (lvl < 40) {
+          // Lvl 24 - 39: Execute (24), Slam (30), Whirlwind (36)
+          const w1 = [];
+          if (lvl >= 36) w1.push({ spellId: 1680, condition: "on_cd", enabled: true });
+          w1.push({ spellId: 5308, condition: "execute_phase", enabled: true });
+          w1.push({ spellId: 7384, condition: "on_proc", enabled: true });
+          w1.push({ spellId: 11574, condition: "dot_not_active", enabled: true });
+          w1.push({ spellId: 25289, condition: "rage_gt_40", enabled: true });
+          pool['war_mid_execute_bleed'] = w1;
+
+          const w2 = [];
+          if (lvl >= 36) w2.push({ spellId: 1680, condition: "on_cd", enabled: true });
+          w2.push({ spellId: 7384, condition: "on_proc", enabled: true });
+          w2.push({ spellId: 11597, condition: "stack_lt_5", enabled: true });
+          w2.push({ spellId: 5308, condition: "execute_phase", enabled: true });
+          if (lvl >= 30) w2.push({ spellId: 1464, condition: "rage_gt_30", enabled: true });
+          w2.push({ spellId: 25289, condition: "rage_gt_40", enabled: true });
+          pool['war_mid_sunder_slam'] = w2;
+        } else {
+          // Lvl 40 - 60: Mortal Strike / Bloodthirst + Whirlwind + Execute + Sunder (Rend falls off vs high weapon dmg!)
+          const primaryStrike = (specKey === 'fury') ? 23881 : 12294;
+          pool['war_endgame_no_rend'] = [
+            { spellId: primaryStrike, condition: "on_cd", enabled: true },
+            { spellId: 1680, condition: "on_cd", enabled: true },
+            { spellId: 5308, condition: "execute_phase", enabled: true },
+            { spellId: 7384, condition: "on_proc", enabled: true },
+            { spellId: 25289, condition: "rage_gt_40", enabled: true }
+          ];
+          pool['war_endgame_sunder_armor'] = [
+            { spellId: 11597, condition: "stack_lt_5", enabled: true },
+            { spellId: primaryStrike, condition: "on_cd", enabled: true },
+            { spellId: 1680, condition: "on_cd", enabled: true },
+            { spellId: 5308, condition: "execute_phase", enabled: true },
+            { spellId: 7384, condition: "on_proc", enabled: true },
+            { spellId: 25289, condition: "rage_gt_40", enabled: true }
+          ];
+          pool['war_endgame_with_rend'] = [
+            { spellId: primaryStrike, condition: "on_cd", enabled: true },
+            { spellId: 7384, condition: "on_proc", enabled: true },
+            { spellId: 1680, condition: "on_cd", enabled: true },
+            { spellId: 11574, condition: "dot_not_active", enabled: true },
+            { spellId: 5308, condition: "execute_phase", enabled: true },
+            { spellId: 25289, condition: "rage_gt_40", enabled: true }
+          ];
+        }
+        return pool;
+      }
+
+      if (classKey === 'rogue') {
+        const builder = (specKey === 'assassination') ? 11286 : ((specKey === 'subtlety' && lvl >= 30) ? 16511 : 11294);
+        const r1 = [];
+        if (lvl >= 30) r1.push({ spellId: 13877, condition: "on_cd", enabled: true }); // Blade Flurry
+        if (lvl >= 10) r1.push({ spellId: 6774, condition: "buff_not_active", enabled: true }); // Slice and Dice
+        if (lvl >= 20) r1.push({ spellId: 1943, condition: "dot_not_active", enabled: true }); // Rupture
+        r1.push({ spellId: 11305, condition: "cp_gt_4", enabled: true }); // Eviscerate
+        r1.push({ spellId: builder, condition: "on_cd", enabled: true });
+        pool['rogue_rupture_bleed'] = r1;
+
+        const r2 = [];
+        if (lvl >= 30) r2.push({ spellId: 13877, condition: "on_cd", enabled: true });
+        if (lvl >= 10) r2.push({ spellId: 6774, condition: "buff_not_active", enabled: true });
+        r2.push({ spellId: 11305, condition: "cp_gt_4", enabled: true });
+        r2.push({ spellId: builder, condition: "on_cd", enabled: true });
+        pool['rogue_pure_eviscerate'] = r2;
+        return pool;
+      }
+
+      if (classKey === 'mage') {
+        if (specKey === 'fire') {
+          const m1 = [];
+          if (lvl >= 20) m1.push({ spellId: 10199, condition: "on_cd", enabled: true }); // Pyroblast
+          if (lvl >= 22) m1.push({ spellId: 2948, condition: "stack_lt_5", enabled: true }); // Scorch Fire Vuln
+          if (lvl >= 6) m1.push({ spellId: 2136, condition: "on_cd", enabled: true }); // Fire Blast
+          m1.push({ spellId: 10151, condition: "continuous", enabled: true }); // Fireball
+          pool['fire_scorch_weave'] = m1;
+
+          const m2 = [];
+          if (lvl >= 6) m2.push({ spellId: 2136, condition: "on_cd", enabled: true });
+          m2.push({ spellId: 10151, condition: "continuous", enabled: true });
+          pool['fire_direct_nuke'] = m2;
+        } else {
+          const f1 = [];
+          if (lvl >= 26) f1.push({ spellId: 120, condition: "on_cd", enabled: true }); // Cone of Cold
+          if (lvl >= 6) f1.push({ spellId: 2136, condition: "on_cd", enabled: true }); // Fire Blast
+          f1.push({ spellId: 10181, condition: "continuous", enabled: true }); // Frostbolt
+          pool['frost_shatter_weave'] = f1;
+
+          pool['frost_pure_turret'] = [
+            { spellId: 10181, condition: "continuous", enabled: true }
+          ];
+        }
+        return pool;
+      }
+
+      if (classKey === 'hunter') {
+        const h1 = [];
+        if (lvl >= 26) h1.push({ spellId: 3045, condition: "on_cd", enabled: true }); // Rapid Fire
+        if (lvl >= 20) h1.push({ spellId: 20904, condition: "on_cd", enabled: true }); // Aimed Shot
+        if (lvl >= 18) h1.push({ spellId: 2643, condition: "on_cd", enabled: true }); // Multi-Shot
+        if (lvl >= 4) h1.push({ spellId: 13555, condition: "dot_not_active", enabled: true }); // Serpent Sting
+        if (lvl >= 6) h1.push({ spellId: 20900, condition: "on_cd", enabled: true }); // Arcane Shot
+        pool['hunter_full_rotation'] = h1;
+
+        const h2 = [];
+        if (lvl >= 26) h2.push({ spellId: 3045, condition: "on_cd", enabled: true });
+        if (lvl >= 20) h2.push({ spellId: 20904, condition: "on_cd", enabled: true });
+        if (lvl >= 18) h2.push({ spellId: 2643, condition: "on_cd", enabled: true });
+        if (lvl >= 4) h2.push({ spellId: 13555, condition: "dot_not_active", enabled: true });
+        pool['hunter_aimed_multi_conserve'] = h2;
+        return pool;
+      }
+
+      if (classKey === 'warlock') {
+        const wl1 = [];
+        if (lvl >= 40) wl1.push({ spellId: 17962, condition: "on_cd", enabled: true }); // Conflagrate
+        if (lvl >= 20) wl1.push({ spellId: 17877, condition: "on_cd", enabled: true }); // Shadowburn
+        if (lvl >= 30) wl1.push({ spellId: 18265, condition: "dot_not_active", enabled: true }); // Siphon Life
+        if (lvl >= 8) wl1.push({ spellId: 11713, condition: "dot_not_active", enabled: true }); // Curse of Agony
+        if (lvl >= 4) wl1.push({ spellId: 11675, condition: "dot_not_active", enabled: true }); // Corruption
+        wl1.push({ spellId: 11668, condition: "dot_not_active", enabled: true }); // Immolate
+        wl1.push({ spellId: 11661, condition: "continuous", enabled: true }); // Shadow Bolt
+        pool['warlock_full_dots_burst'] = wl1;
+
+        const wl2 = [];
+        if (lvl >= 20) wl2.push({ spellId: 17877, condition: "on_cd", enabled: true });
+        if (lvl >= 4) wl2.push({ spellId: 11675, condition: "dot_not_active", enabled: true });
+        wl2.push({ spellId: 11661, condition: "continuous", enabled: true });
+        pool['warlock_shadowbolt_focus'] = wl2;
+        return pool;
+      }
+
+      if (classKey === 'priest') {
+        if (specKey === 'holy' || specKey === 'discipline') {
+          pool['priest_heal'] = [{ spellId: 10917, condition: "emergency_hp50", enabled: true }];
+          return pool;
+        }
+        const pr1 = [];
+        if (lvl >= 20) pr1.push({ spellId: 2944, condition: "dot_not_active", enabled: true }); // Devouring Plague
+        if (lvl >= 4) pr1.push({ spellId: 10894, condition: "dot_not_active", enabled: true }); // SW: Pain
+        if (lvl >= 10) pr1.push({ spellId: 10947, condition: "on_cd", enabled: true }); // Mind Blast
+        if (lvl >= 20) pr1.push({ spellId: 18807, condition: "continuous", enabled: true }); // Mind Flay
+        else pr1.push({ spellId: 10938, condition: "continuous", enabled: true }); // Smite
+        pool['shadow_full_dots'] = pr1;
+        return pool;
+      }
+
+      if (classKey === 'paladin') {
+        if (specKey === 'holy') {
+          pool['paladin_heal'] = [{ spellId: 19943, condition: "continuous", enabled: true }];
+          return pool;
+        }
+        const pal1 = [];
+        if (lvl >= 40 && specKey === 'protection') pal1.push({ spellId: 20925, condition: "on_cd", enabled: true }); // Holy Shield
+        if (lvl >= 44) pal1.push({ spellId: 24275, condition: "execute_phase", enabled: true }); // Hammer of Wrath
+        if (lvl >= 20) pal1.push({ spellId: 20375, condition: "buff_not_active", enabled: true }); // Seal of Command
+        if (lvl >= 4) pal1.push({ spellId: 20271, condition: "on_cd", enabled: true }); // Judgement
+        if (lvl >= 20) pal1.push({ spellId: 20924, condition: "on_cd", enabled: true }); // Consecration
+        pool['paladin_ret_burst'] = pal1;
+        return pool;
+      }
+
+      if (classKey === 'druid') {
+        if (specKey === 'resto') {
+          pool['druid_heal'] = [{ spellId: 9889, condition: "continuous", enabled: true }];
+          return pool;
+        }
+        if (specKey === 'balance') {
+          const dr1 = [];
+          if (lvl >= 4) dr1.push({ spellId: 9835, condition: "dot_not_active", enabled: true }); // Moonfire
+          if (lvl >= 20) dr1.push({ spellId: 2912, condition: "on_cd", enabled: true }); // Starfire
+          dr1.push({ spellId: 9756, condition: "continuous", enabled: true }); // Wrath
+          pool['balance_starfire_weave'] = dr1;
+          return pool;
+        }
+        // Feral Cat
+        const fc1 = [];
+        if (lvl >= 24) fc1.push({ spellId: 9827, condition: "dot_not_active", enabled: true }); // Rake
+        if (lvl >= 20) fc1.push({ spellId: 1079, condition: "dot_not_active", enabled: true }); // Rip
+        if (lvl >= 32) fc1.push({ spellId: 22829, condition: "cp_gt_4", enabled: true }); // Ferocious Bite
+        if (lvl >= 22) fc1.push({ spellId: 9830, condition: "on_cd", enabled: true }); // Shred
+        else fc1.push({ spellId: 9881, condition: "on_cd", enabled: true }); // Claw
+        pool['feral_bleed_shred'] = fc1;
+
+        const fc2 = [];
+        if (lvl >= 32) fc2.push({ spellId: 22829, condition: "cp_gt_4", enabled: true });
+        else if (lvl >= 20) fc2.push({ spellId: 1079, condition: "dot_not_active", enabled: true });
+        fc2.push({ spellId: 9881, condition: "on_cd", enabled: true });
+        pool['feral_direct_bite'] = fc2;
+        return pool;
+      }
+
+      return pool;
     }
 
     function generateDynamicRotationForLevel(classKey, specKey, lvl = getCurrentPlayerLevel()) {
-      if (classKey === 'warrior') {
-        if (specKey === 'protection') {
-          const steps = [];
-          if (lvl >= 40) steps.push({ spellId: 23925, condition: "on_cd", enabled: true }); // Shield Slam
-          if (lvl >= 14) steps.push({ spellId: 11601, condition: "on_proc", enabled: true }); // Revenge
-          if (lvl >= 10) steps.push({ spellId: 11597, condition: "stack_lt_5", enabled: true }); // Sunder Armor
-          steps.push({ spellId: 25289, condition: "rage_gt_40", enabled: true }); // Heroic Strike
-          return steps;
-        } else if (specKey === 'fury') {
-          const steps = [];
-          if (lvl >= 40) steps.push({ spellId: 23881, condition: "on_cd", enabled: true }); // Bloodthirst
-          if (lvl >= 36) steps.push({ spellId: 1680, condition: "on_cd", enabled: true }); // Whirlwind
-          if (lvl >= 4) steps.push({ spellId: 11574, condition: "dot_not_active", enabled: true }); // Rend
-          steps.push({ spellId: 25289, condition: "rage_gt_40", enabled: true }); // Heroic Strike
-          return steps;
-        } else {
-          // Arms
-          const steps = [];
-          if (lvl >= 40) steps.push({ spellId: 12294, condition: "on_cd", enabled: true }); // Mortal Strike
-          if (lvl >= 12) steps.push({ spellId: 7384, condition: "on_proc", enabled: true }); // Overpower
-          if (lvl >= 4) steps.push({ spellId: 11574, condition: "dot_not_active", enabled: true }); // Rend
-          steps.push({ spellId: 25289, condition: "rage_gt_40", enabled: true }); // Heroic Strike
-          return steps;
-        }
-      } else if (classKey === 'shaman') {
-        if (specKey === 'tank') {
-          return [
-            { spellId: 3599, condition: "totem_le_1s", enabled: true },
-            { spellId: 8052, condition: "dot_not_active", enabled: true },
-            { spellId: 8045, condition: "on_cd", enabled: true }
-          ];
-        } else if (specKey === 'resto') {
-          return [
-            { spellId: 913, condition: "continuous_heal", enabled: true }
-          ];
-        } else {
-          const steps = [];
-          if (lvl >= 20) steps.push({ spellId: 17364, condition: "on_cd", enabled: true }); // Stormstrike
-          if (lvl >= 10) steps.push({ spellId: 8052, condition: "dot_not_active", enabled: true }); // Flame Shock
-          if (lvl >= 4) steps.push({ spellId: 8045, condition: "on_cd", enabled: true }); // Earth Shock
-          if (lvl >= 10) steps.push({ spellId: 3599, condition: "totem_le_1s", enabled: true }); // Searing Totem
-          return steps;
-        }
-      } else if (classKey === 'rogue') {
-        return [
-          { spellId: 6774, condition: "buff_not_active", enabled: true }, // Slice and Dice
-          { spellId: 11305, condition: "cp_gt_4", enabled: true }, // Eviscerate
-          { spellId: 11294, condition: "on_cd", enabled: true } // Sinister Strike
-        ];
-      } else if (classKey === 'mage') {
-        if (specKey === 'fire') {
-          return [
-            { spellId: 10199, condition: "on_cd", enabled: true }, // Pyroblast
-            { spellId: 10151, condition: "continuous", enabled: true } // Fireball
-          ];
-        } else {
-          return [
-            { spellId: 10181, condition: "continuous", enabled: true } // Frostbolt
-          ];
-        }
-      } else if (classKey === 'hunter') {
-        const steps = [];
-        if (lvl >= 20) steps.push({ spellId: 20904, condition: "on_cd", enabled: true }); // Aimed Shot
-        if (lvl >= 8) steps.push({ spellId: 20900, condition: "on_cd", enabled: true }); // Arcane Shot
-        if (lvl >= 4) steps.push({ spellId: 13555, condition: "dot_not_active", enabled: true }); // Serpent Sting
-        return steps;
-      }
-      return null;
+      const pool = generateCandidateRotationsForLevel(classKey, specKey, lvl);
+      const keys = Object.keys(pool);
+      return keys.length > 0 ? pool[keys[0]] : [];
     }
 
     // --- MULTI-CLASS SPELL & ROTATION REGISTRY ---
     const ALL_CLASS_SPELLS = {
       shaman: {
-        913: { name: "Healing Wave (Rank 4)", icon: "spell_nature_magicimmunity", school: "Nature (Heal)", defaultCondition: "continuous_heal", conditions: [{ id: "continuous_heal", label: "Continuous Throughput Spam (Max HPS)" }, { id: "self_heal_hp50", label: "Emergency Heal (HP < 50%)" }, { id: "on_cd", label: "Cast on cooldown" }] },
-        547: { name: "Healing Wave (Rank 3)", icon: "spell_nature_magicimmunity", school: "Nature (Heal)", defaultCondition: "continuous_heal", conditions: [{ id: "continuous_heal", label: "Mana-Efficient Sustain Spam" }, { id: "self_heal_hp50", label: "Emergency Heal (HP < 50%)" }] },
-        332: { name: "Healing Wave (Rank 2)", icon: "spell_nature_magicimmunity", school: "Nature (Heal)", defaultCondition: "self_heal_hp50", conditions: [{ id: "self_heal_hp50", label: "Fast Emergency Heal" }] },
-        331: { name: "Healing Wave (Rank 1)", icon: "spell_nature_magicimmunity", school: "Nature (Heal)", defaultCondition: "self_heal_hp50", conditions: [{ id: "self_heal_hp50", label: "Lowest Cost Triage" }] },
-        17364: { name: "Stormstrike", icon: "ability_shaman_stormstrike", school: "Physical", defaultCondition: "on_cd", conditions: [{ id: "on_cd", label: "Cast on cooldown (Prio #1)" }] },
-        8045: { name: "Earth Shock (Rank 3)", icon: "spell_nature_earthshock", school: "Nature", defaultCondition: "on_cd", conditions: [{ id: "on_cd", label: "Cast on cooldown" }] },
-        8052: { name: "Flame Shock (Rank 2)", icon: "spell_fire_flameshock", school: "Fire", defaultCondition: "dot_not_active", conditions: [{ id: "dot_not_active", label: "Maintain Flame Shock DoT" }, { id: "on_cd", label: "Cast on cooldown" }] },
-        3599: { name: "Searing Totem (Rank 1)", icon: "spell_fire_searingtotem", school: "Fire", defaultCondition: "totem_le_1s", conditions: [{ id: "totem_le_1s", label: "Recast if remaining <= 1s" }, { id: "on_cd", label: "Always keep active" }] },
-        324: { name: "Lightning Shield (Rank 2)", icon: "spell_nature_lightningshield", school: "Nature", defaultCondition: "buff_not_active", conditions: [{ id: "buff_not_active", label: "Maintain 3 Charges" }] }
+        17364: { name: "Stormstrike", icon: "ability_shaman_stormstrike", school: "Physical", defaultCondition: "on_cd", conditions: [{ id: "on_cd", label: "Cast on cooldown (+20% Nature Dmg Debuff)" }] },
+        421: { name: "Chain Lightning", icon: "spell_nature_chainlightning", school: "Nature", defaultCondition: "on_cd", conditions: [{ id: "on_cd", label: "Cast on cooldown (High Nature Burst)" }] },
+        8045: { name: "Earth Shock", icon: "spell_nature_earthshock", school: "Nature", defaultCondition: "on_cd", conditions: [{ id: "on_cd", label: "Cast on cooldown" }] },
+        8052: { name: "Flame Shock", icon: "spell_fire_flameshock", school: "Fire", defaultCondition: "dot_not_active", conditions: [{ id: "dot_not_active", label: "Maintain Flame Shock DoT" }, { id: "on_cd", label: "Cast on cooldown" }] },
+        8056: { name: "Frost Shock", icon: "spell_frost_frostshock", school: "Frost", defaultCondition: "on_cd", conditions: [{ id: "on_cd", label: "Cast on cooldown" }] },
+        1535: { name: "Fire Nova Totem", icon: "spell_fire_sealoffire", school: "Fire", defaultCondition: "on_cd", conditions: [{ id: "on_cd", label: "Detonate on 15s Cooldown" }] },
+        8190: { name: "Magma Totem", icon: "spell_fire_selfdestruct", school: "Fire", defaultCondition: "totem_le_1s", conditions: [{ id: "totem_le_1s", label: "Maintain pulsing Fire Totem" }] },
+        3599: { name: "Searing Totem", icon: "spell_fire_searingtotem", school: "Fire", defaultCondition: "totem_le_1s", conditions: [{ id: "totem_le_1s", label: "Recast if remaining <= 1s" }, { id: "on_cd", label: "Always keep active" }] },
+        324: { name: "Lightning Shield", icon: "spell_nature_lightningshield", school: "Nature", defaultCondition: "buff_not_active", conditions: [{ id: "buff_not_active", label: "Maintain 3 Reactive Orb Charges" }] },
+        403: { name: "Lightning Bolt", icon: "spell_nature_lightning", school: "Nature", defaultCondition: "continuous", conditions: [{ id: "continuous", label: "Continuous Nature Nuke" }, { id: "on_cd", label: "Cast on cooldown" }] },
+        913: { name: "Healing Wave", icon: "spell_nature_magicimmunity", school: "Nature (Heal)", defaultCondition: "continuous_heal", conditions: [{ id: "continuous_heal", label: "Continuous Throughput Spam (Max HPS)" }, { id: "self_heal_hp50", label: "Emergency Heal (HP < 50%)" }] }
       },
       warrior: {
         12294: { name: "Mortal Strike", icon: "ability_warrior_savageblow", school: "Physical", defaultCondition: "on_cd", conditions: [{ id: "on_cd", label: "Cast on Cooldown (Primary Strike)" }] },
-        23881: { name: "Bloodthirst", icon: "spell_nature_bloodlust", school: "Physical", defaultCondition: "on_cd", conditions: [{ id: "on_cd", label: "Cast on Cooldown (Primary Strike)" }] },
-        1680: { name: "Whirlwind", icon: "ability_whirlwind", school: "Physical", defaultCondition: "on_cd", conditions: [{ id: "on_cd", label: "Cast on Cooldown (AoE Cleave)" }] },
-        7384: { name: "Overpower", icon: "ability_meleedamage", school: "Physical", defaultCondition: "on_proc", conditions: [{ id: "on_proc", label: "Cast when target dodges" }, { id: "on_cd", label: "Cast on cooldown" }] },
-        25289: { name: "Heroic Strike", icon: "ability_rogue_ambush", school: "Physical", defaultCondition: "rage_gt_40", conditions: [{ id: "rage_gt_40", label: "Rage dump (Rage > 40)" }, { id: "on_cd", label: "Queue on every swing" }] },
-        11574: { name: "Rend", icon: "ability_gouge", school: "Physical", defaultCondition: "dot_not_active", conditions: [{ id: "dot_not_active", label: "Maintain Bleed DoT" }] },
+        23881: { name: "Bloodthirst", icon: "spell_nature_bloodlust", school: "Physical", defaultCondition: "on_cd", conditions: [{ id: "on_cd", label: "Cast on Cooldown (45% AP Strike)" }] },
         23925: { name: "Shield Slam", icon: "inv_shield_05", school: "Physical", defaultCondition: "on_cd", conditions: [{ id: "on_cd", label: "Cast on Cooldown (High Threat)" }] },
+        1680: { name: "Whirlwind", icon: "ability_whirlwind", school: "Physical", defaultCondition: "on_cd", conditions: [{ id: "on_cd", label: "Cast on 10s Cooldown" }] },
+        5308: { name: "Execute", icon: "inv_sword_48", school: "Physical", defaultCondition: "execute_phase", conditions: [{ id: "execute_phase", label: "Execute Phase (Target < 20% HP)" }, { id: "on_cd", label: "Whenever available" }] },
+        1464: { name: "Slam", icon: "ability_warrior_decisivestrike", school: "Physical", defaultCondition: "rage_gt_30", conditions: [{ id: "rage_gt_30", label: "Cast when Rage > 30" }, { id: "on_cd", label: "Cast on cooldown" }] },
+        7384: { name: "Overpower", icon: "ability_meleedamage", school: "Physical", defaultCondition: "on_proc", conditions: [{ id: "on_proc", label: "Cast when target dodges (+50% Crit)" }, { id: "on_cd", label: "Cast on cooldown" }] },
+        11574: { name: "Rend", icon: "ability_gouge", school: "Physical", defaultCondition: "dot_not_active", conditions: [{ id: "dot_not_active", label: "Maintain Bleed DoT" }] },
+        11597: { name: "Sunder Armor", icon: "ability_warrior_sunder", school: "Physical", defaultCondition: "stack_lt_5", conditions: [{ id: "stack_lt_5", label: "Stack up to 5 times (-Armor)" }] },
         11601: { name: "Revenge", icon: "ability_warrior_revenge", school: "Physical", defaultCondition: "on_proc", conditions: [{ id: "on_proc", label: "Cast after Block/Dodge/Parry" }] },
-        11597: { name: "Sunder Armor", icon: "ability_warrior_sunder", school: "Physical", defaultCondition: "stack_lt_5", conditions: [{ id: "stack_lt_5", label: "Stack up to 5 times" }] }
+        25289: { name: "Heroic Strike", icon: "ability_rogue_ambush", school: "Physical", defaultCondition: "rage_gt_40", conditions: [{ id: "rage_gt_40", label: "Rage dump (Rage > 40)" }, { id: "rage_gt_30", label: "Aggressive dump (Rage > 30)" }, { id: "on_cd", label: "Queue on every swing" }] }
       },
       rogue: {
         11294: { name: "Sinister Strike", icon: "spell_shadow_ritualofsacrifice", school: "Physical", defaultCondition: "on_cd", conditions: [{ id: "on_cd", label: "Primary Combo Builder" }] },
         11286: { name: "Backstab", icon: "ability_backstab", school: "Physical", defaultCondition: "on_cd", conditions: [{ id: "on_cd", label: "Cast from behind (Daggers)" }] },
-        11305: { name: "Eviscerate", icon: "ability_rogue_eviscerate", school: "Physical", defaultCondition: "cp_gt_4", conditions: [{ id: "cp_gt_4", label: "Finish at 4-5 Combo Points" }] },
-        6774: { name: "Slice and Dice", icon: "ability_rogue_slicedice", school: "Physical", defaultCondition: "buff_not_active", conditions: [{ id: "buff_not_active", label: "Maintain +30% Attack Speed" }] },
-        14251: { name: "Riposte", icon: "ability_warrior_challange", school: "Physical", defaultCondition: "on_proc", conditions: [{ id: "on_proc", label: "Cast after Parry (Disarm)" }] }
+        16511: { name: "Hemorrhage", icon: "spell_shadow_lifedrain", school: "Physical", defaultCondition: "on_cd", conditions: [{ id: "on_cd", label: "35 Energy Combo Builder" }] },
+        6774: { name: "Slice and Dice", icon: "ability_rogue_slicedice", school: "Physical", defaultCondition: "buff_not_active", conditions: [{ id: "buff_not_active", label: "Maintain Attack Speed Buff" }] },
+        1943: { name: "Rupture", icon: "ability_rogue_rupture", school: "Physical", defaultCondition: "dot_not_active", conditions: [{ id: "dot_not_active", label: "Maintain Armor-Ignoring Bleed" }] },
+        13877: { name: "Blade Flurry", icon: "ability_warrior_punishingblow", school: "Physical", defaultCondition: "on_cd", conditions: [{ id: "on_cd", label: "Cast on cooldown (+20% Haste)" }] },
+        11305: { name: "Eviscerate", icon: "ability_rogue_eviscerate", school: "Physical", defaultCondition: "cp_gt_4", conditions: [{ id: "cp_gt_4", label: "Finish at 4-5 Combo Points" }, { id: "cp_gt_3", label: "Finish at 3+ Combo Points" }] }
       },
       mage: {
-        10181: { name: "Frostbolt", icon: "spell_frost_frostbolt02", school: "Frost", defaultCondition: "continuous", conditions: [{ id: "continuous", label: "Continuous Primary Nuke" }] },
-        10151: { name: "Fireball", icon: "spell_fire_flamebolt", school: "Fire", defaultCondition: "continuous", conditions: [{ id: "continuous", label: "Continuous Primary Nuke" }] },
-        10199: { name: "Fire Blast", icon: "spell_fire_fireball", school: "Fire", defaultCondition: "on_cd", conditions: [{ id: "on_cd", label: "Instant Burst on Cooldown" }] },
-        10145: { name: "Arcane Missiles", icon: "spell_nature_starfall", school: "Arcane", defaultCondition: "continuous", conditions: [{ id: "continuous", label: "Channel 5 Missiles" }] },
-        10206: { name: "Scorch", icon: "spell_fire_soulburn", school: "Fire", defaultCondition: "on_cd", conditions: [{ id: "on_cd", label: "Fast 1.5s Fire Cast" }] }
+        10181: { name: "Frostbolt", icon: "spell_frost_frostbolt02", school: "Frost", defaultCondition: "continuous", conditions: [{ id: "continuous", label: "Primary Frost Nuke" }] },
+        10151: { name: "Fireball", icon: "spell_fire_flamebolt", school: "Fire", defaultCondition: "continuous", conditions: [{ id: "continuous", label: "Primary Fire Nuke" }] },
+        2136: { name: "Fire Blast", icon: "spell_fire_fireball", school: "Fire", defaultCondition: "on_cd", conditions: [{ id: "on_cd", label: "Instant 8s CD Fire Burst" }] },
+        2948: { name: "Scorch", icon: "spell_fire_soulburn", school: "Fire", defaultCondition: "stack_lt_5", conditions: [{ id: "stack_lt_5", label: "Stack 5x Fire Vulnerability (+15%)" }, { id: "continuous", label: "Fast Fire Filler" }] },
+        120: { name: "Cone of Cold", icon: "spell_frost_glacier", school: "Frost", defaultCondition: "on_cd", conditions: [{ id: "on_cd", label: "Instant 10s CD Frost Cone" }] },
+        10199: { name: "Pyroblast", icon: "spell_fire_fireball02", school: "Fire", defaultCondition: "on_cd", conditions: [{ id: "on_cd", label: "Opener / Hot Streak Burst" }] }
       },
       hunter: {
-        20904: { name: "Aimed Shot", icon: "inv_spear_07", school: "Physical", defaultCondition: "on_cd", conditions: [{ id: "on_cd", label: "Cast on Cooldown (Heavy Shot)" }] },
-        20900: { name: "Multi-Shot", icon: "ability_upgrademoonglaive", school: "Physical", defaultCondition: "on_cd", conditions: [{ id: "on_cd", label: "Cast on Cooldown (Cleave)" }] },
-        14287: { name: "Arcane Shot", icon: "ability_impalingbolt", school: "Arcane", defaultCondition: "on_cd", conditions: [{ id: "on_cd", label: "Instant Shot on Cooldown" }] },
+        3045: { name: "Rapid Fire", icon: "ability_hunter_runninghot", school: "Physical", defaultCondition: "on_cd", conditions: [{ id: "on_cd", label: "+40% Ranged Speed Burst" }] },
+        20904: { name: "Aimed Shot", icon: "inv_spear_07", school: "Physical", defaultCondition: "on_cd", conditions: [{ id: "on_cd", label: "Cast on 6s Cooldown" }] },
+        2643: { name: "Multi-Shot", icon: "ability_upgrademoonglaive", school: "Physical", defaultCondition: "on_cd", conditions: [{ id: "on_cd", label: "Instant 10s Cooldown Shot" }] },
+        20900: { name: "Arcane Shot", icon: "ability_impalingbolt", school: "Arcane", defaultCondition: "on_cd", conditions: [{ id: "on_cd", label: "Instant Arcane Shot" }] },
         13555: { name: "Serpent Sting", icon: "ability_hunter_quickshot", school: "Nature", defaultCondition: "dot_not_active", conditions: [{ id: "dot_not_active", label: "Maintain Nature Sting DoT" }] }
       },
       priest: {
+        2944: { name: "Devouring Plague", icon: "spell_shadow_blackplague", school: "Shadow", defaultCondition: "dot_not_active", conditions: [{ id: "dot_not_active", label: "Maintain Plague DoT" }] },
         10894: { name: "Shadow Word: Pain", icon: "spell_shadow_shadowwordpain", school: "Shadow", defaultCondition: "dot_not_active", conditions: [{ id: "dot_not_active", label: "Maintain Shadow DoT" }] },
-        10947: { name: "Mind Blast", icon: "spell_shadow_unholyfrenzy", school: "Shadow", defaultCondition: "on_cd", conditions: [{ id: "on_cd", label: "Cast on Cooldown (Burst)" }] },
+        10947: { name: "Mind Blast", icon: "spell_shadow_unholyfrenzy", school: "Shadow", defaultCondition: "on_cd", conditions: [{ id: "on_cd", label: "Cast on 8s Cooldown" }] },
         18807: { name: "Mind Flay", icon: "spell_shadow_siphonmana", school: "Shadow", defaultCondition: "continuous", conditions: [{ id: "continuous", label: "Channel Shadow Damage" }] },
         10938: { name: "Smite", icon: "spell_holy_holysmite", school: "Holy", defaultCondition: "continuous", conditions: [{ id: "continuous", label: "Continuous Holy Nuke" }] },
-        10917: { name: "Flash Heal", icon: "spell_holy_flashheal", school: "Holy (Heal)", defaultCondition: "emergency_hp50", conditions: [{ id: "emergency_hp50", label: "Fast Emergency Heal (HP < 50%)" }, { id: "continuous", label: "Continuous Throughput Spam" }] }
+        10917: { name: "Flash Heal", icon: "spell_holy_flashheal", school: "Holy (Heal)", defaultCondition: "emergency_hp50", conditions: [{ id: "emergency_hp50", label: "Fast Emergency Heal" }, { id: "continuous", label: "Continuous Throughput Spam" }] }
       },
       warlock: {
-        11661: { name: "Shadow Bolt", icon: "spell_shadow_shadowbolt", school: "Shadow", defaultCondition: "continuous", conditions: [{ id: "continuous", label: "Primary Shadow Nuke" }] },
-        11675: { name: "Corruption", icon: "spell_shadow_abominationexplosion", school: "Shadow", defaultCondition: "dot_not_active", conditions: [{ id: "dot_not_active", label: "Maintain Corruption DoT" }] },
+        17962: { name: "Conflagrate", icon: "spell_fire_fireball", school: "Fire", defaultCondition: "on_cd", conditions: [{ id: "on_cd", label: "Instant Fire Burst" }] },
+        17877: { name: "Shadowburn", icon: "spell_shadow_scourgebuild", school: "Shadow", defaultCondition: "on_cd", conditions: [{ id: "on_cd", label: "Instant Shadow Burst (15s CD)" }] },
+        18265: { name: "Siphon Life", icon: "spell_shadow_requiem", school: "Shadow", defaultCondition: "dot_not_active", conditions: [{ id: "dot_not_active", label: "Maintain Siphon DoT" }] },
         11713: { name: "Curse of Agony", icon: "spell_shadow_curseofsargeras", school: "Shadow", defaultCondition: "dot_not_active", conditions: [{ id: "dot_not_active", label: "Maintain Curse of Agony" }] },
-        11668: { name: "Immolate", icon: "spell_fire_immolation", school: "Fire", defaultCondition: "dot_not_active", conditions: [{ id: "dot_not_active", label: "Maintain Fire Immolate DoT" }] }
+        11675: { name: "Corruption", icon: "spell_shadow_abominationexplosion", school: "Shadow", defaultCondition: "dot_not_active", conditions: [{ id: "dot_not_active", label: "Maintain Corruption DoT" }] },
+        11668: { name: "Immolate", icon: "spell_fire_immolation", school: "Fire", defaultCondition: "dot_not_active", conditions: [{ id: "dot_not_active", label: "Maintain Fire Immolate DoT" }] },
+        11661: { name: "Shadow Bolt", icon: "spell_shadow_shadowbolt", school: "Shadow", defaultCondition: "continuous", conditions: [{ id: "continuous", label: "Primary Shadow Nuke" }] }
       },
       paladin: {
-        20375: { name: "Seal of Command", icon: "ability_warrior_innerrage", school: "Holy", defaultCondition: "buff_not_active", conditions: [{ id: "buff_not_active", label: "Maintain 70% Weapon Dmg Proc" }] },
-        20271: { name: "Judgement", icon: "spell_holy_righteousfury", school: "Holy", defaultCondition: "on_cd", conditions: [{ id: "on_cd", label: "Unleash Seal Damage on Cooldown" }] },
+        20925: { name: "Holy Shield", icon: "spell_holy_blessingofprotection", school: "Holy", defaultCondition: "on_cd", conditions: [{ id: "on_cd", label: "+30% Block & Holy Threat" }] },
+        24275: { name: "Hammer of Wrath", icon: "ability_thunderclap", school: "Holy", defaultCondition: "execute_phase", conditions: [{ id: "execute_phase", label: "Execute Phase (<20% HP)" }] },
+        20375: { name: "Seal of Command", icon: "ability_warrior_innerrage", school: "Holy", defaultCondition: "buff_not_active", conditions: [{ id: "buff_not_active", label: "Maintain 70% Weapon Dmg Seal" }] },
+        20271: { name: "Judgement", icon: "spell_holy_righteousfury", school: "Holy", defaultCondition: "on_cd", conditions: [{ id: "on_cd", label: "Unleash Seal on Cooldown" }] },
         20924: { name: "Consecration", icon: "spell_holy_innerfire", school: "Holy", defaultCondition: "on_cd", conditions: [{ id: "on_cd", label: "Sanctify ground on Cooldown" }] },
         19943: { name: "Flash of Light", icon: "spell_holy_flashheal", school: "Holy (Heal)", defaultCondition: "continuous", conditions: [{ id: "continuous", label: "Sustained Holy Heal" }] }
       },
       druid: {
         9830: { name: "Shred", icon: "spell_shadow_vampiricaura", school: "Physical", defaultCondition: "on_cd", conditions: [{ id: "on_cd", label: "Cat Backstab Strike" }] },
         9881: { name: "Claw", icon: "ability_druid_rake", school: "Physical", defaultCondition: "on_cd", conditions: [{ id: "on_cd", label: "Cat Combo Builder" }] },
-        22829: { name: "Ferocious Bite", icon: "ability_druid_ferociousbite", school: "Physical", defaultCondition: "cp_gt_4", conditions: [{ id: "cp_gt_4", label: "Finish at 4-5 Combo Points" }] },
         9827: { name: "Rake", icon: "ability_druid_disembowel", school: "Physical", defaultCondition: "dot_not_active", conditions: [{ id: "dot_not_active", label: "Maintain Cat Bleed DoT" }] },
+        1079: { name: "Rip", icon: "ability_ghoulfrenzy", school: "Physical", defaultCondition: "dot_not_active", conditions: [{ id: "dot_not_active", label: "Maintain Finishing Bleed" }] },
+        22829: { name: "Ferocious Bite", icon: "ability_druid_ferociousbite", school: "Physical", defaultCondition: "cp_gt_4", conditions: [{ id: "cp_gt_4", label: "Finish at 4-5 Combo Points" }] },
         9835: { name: "Moonfire", icon: "spell_nature_starfall", school: "Arcane", defaultCondition: "dot_not_active", conditions: [{ id: "dot_not_active", label: "Maintain Arcane Moonfire DoT" }] },
+        2912: { name: "Starfire", icon: "spell_arcane_starfire", school: "Arcane", defaultCondition: "on_cd", conditions: [{ id: "on_cd", label: "Heavy Arcane Nuke" }] },
         9756: { name: "Wrath", icon: "spell_nature_abolishmagic", school: "Nature", defaultCondition: "continuous", conditions: [{ id: "continuous", label: "Continuous Nature Nuke" }] },
         9889: { name: "Healing Touch", icon: "spell_nature_healingtouch", school: "Nature (Heal)", defaultCondition: "continuous", conditions: [{ id: "continuous", label: "Sustained Direct Heal" }] }
       }
@@ -4758,10 +5436,18 @@
           { spellId: 8045, condition: "on_cd", enabled: true },
           { spellId: 3599, condition: "totem_le_1s", enabled: true }
         ],
+        endgame_chain_synergy: [
+          { spellId: 17364, condition: "on_cd", enabled: true },
+          { spellId: 421, condition: "on_cd", enabled: true },
+          { spellId: 8045, condition: "on_cd", enabled: true },
+          { spellId: 8190, condition: "totem_le_1s", enabled: true },
+          { spellId: 324, condition: "buff_not_active", enabled: true }
+        ],
         tank_threat: [
-          { spellId: 3599, condition: "totem_le_1s", enabled: true },
+          { spellId: 8045, condition: "on_cd", enabled: true },
+          { spellId: 324, condition: "buff_not_active", enabled: true },
           { spellId: 8052, condition: "dot_not_active", enabled: true },
-          { spellId: 8045, condition: "on_cd", enabled: true }
+          { spellId: 3599, condition: "totem_le_1s", enabled: true }
         ],
         resto_burst: [
           { spellId: 913, condition: "continuous_heal", enabled: true }
@@ -4771,6 +5457,8 @@
       warrior: {
         arms_pve: [
           { spellId: 12294, condition: "on_cd", enabled: true },
+          { spellId: 1680, condition: "on_cd", enabled: true },
+          { spellId: 5308, condition: "execute_phase", enabled: true },
           { spellId: 7384, condition: "on_proc", enabled: true },
           { spellId: 11574, condition: "dot_not_active", enabled: true },
           { spellId: 25289, condition: "rage_gt_40", enabled: true }
@@ -4778,17 +5466,21 @@
         fury_pve: [
           { spellId: 23881, condition: "on_cd", enabled: true },
           { spellId: 1680, condition: "on_cd", enabled: true },
+          { spellId: 5308, condition: "execute_phase", enabled: true },
           { spellId: 25289, condition: "rage_gt_40", enabled: true }
         ],
         prot_tank: [
           { spellId: 23925, condition: "on_cd", enabled: true },
           { spellId: 11601, condition: "on_proc", enabled: true },
-          { spellId: 11597, condition: "stack_lt_5", enabled: true }
+          { spellId: 11597, condition: "stack_lt_5", enabled: true },
+          { spellId: 25289, condition: "rage_gt_40", enabled: true }
         ]
       },
       rogue: {
         combat_pve: [
+          { spellId: 13877, condition: "on_cd", enabled: true },
           { spellId: 6774, condition: "buff_not_active", enabled: true },
+          { spellId: 1943, condition: "dot_not_active", enabled: true },
           { spellId: 11305, condition: "cp_gt_4", enabled: true },
           { spellId: 11294, condition: "on_cd", enabled: true }
         ],
@@ -4800,23 +5492,29 @@
       },
       mage: {
         frost_dps: [
-          { spellId: 10199, condition: "on_cd", enabled: true },
+          { spellId: 120, condition: "on_cd", enabled: true },
+          { spellId: 2136, condition: "on_cd", enabled: true },
           { spellId: 10181, condition: "continuous", enabled: true }
         ],
         fire_dps: [
           { spellId: 10199, condition: "on_cd", enabled: true },
+          { spellId: 2948, condition: "stack_lt_5", enabled: true },
+          { spellId: 2136, condition: "on_cd", enabled: true },
           { spellId: 10151, condition: "continuous", enabled: true }
         ]
       },
       hunter: {
         marksmanship: [
+          { spellId: 3045, condition: "on_cd", enabled: true },
           { spellId: 20904, condition: "on_cd", enabled: true },
-          { spellId: 20900, condition: "on_cd", enabled: true },
-          { spellId: 13555, condition: "dot_not_active", enabled: true }
+          { spellId: 2643, condition: "on_cd", enabled: true },
+          { spellId: 13555, condition: "dot_not_active", enabled: true },
+          { spellId: 20900, condition: "on_cd", enabled: true }
         ]
       },
       priest: {
         shadow_dps: [
+          { spellId: 2944, condition: "dot_not_active", enabled: true },
           { spellId: 10894, condition: "dot_not_active", enabled: true },
           { spellId: 10947, condition: "on_cd", enabled: true },
           { spellId: 18807, condition: "continuous", enabled: true }
@@ -4827,6 +5525,9 @@
       },
       warlock: {
         affliction: [
+          { spellId: 17962, condition: "on_cd", enabled: true },
+          { spellId: 17877, condition: "on_cd", enabled: true },
+          { spellId: 18265, condition: "dot_not_active", enabled: true },
           { spellId: 11713, condition: "dot_not_active", enabled: true },
           { spellId: 11675, condition: "dot_not_active", enabled: true },
           { spellId: 11668, condition: "dot_not_active", enabled: true },
@@ -4835,6 +5536,7 @@
       },
       paladin: {
         ret_dps: [
+          { spellId: 24275, condition: "execute_phase", enabled: true },
           { spellId: 20375, condition: "buff_not_active", enabled: true },
           { spellId: 20271, condition: "on_cd", enabled: true },
           { spellId: 20924, condition: "on_cd", enabled: true }
@@ -4846,11 +5548,13 @@
       druid: {
         feral_cat: [
           { spellId: 9827, condition: "dot_not_active", enabled: true },
+          { spellId: 1079, condition: "dot_not_active", enabled: true },
           { spellId: 22829, condition: "cp_gt_4", enabled: true },
-          { spellId: 9881, condition: "on_cd", enabled: true }
+          { spellId: 9830, condition: "on_cd", enabled: true }
         ],
         balance: [
           { spellId: 9835, condition: "dot_not_active", enabled: true },
+          { spellId: 2912, condition: "on_cd", enabled: true },
           { spellId: 9756, condition: "continuous", enabled: true }
         ]
       }
@@ -5108,12 +5812,22 @@
       populateAddSpellDropdown(classKey);
     }
 
-    function renderRotationPresetChipsForClass(classKey) {
+    function renderRotationPresetChipsForClass(classKey, simScores = null, winnerKey = null) {
       const container = document.getElementById('rotation-presets-container');
       if (!container) return;
       container.innerHTML = '';
-      const clsRotations = ALL_CLASS_ROTATIONS[classKey] || ALL_CLASS_ROTATIONS.shaman;
+      const curLvl = getCurrentPlayerLevel();
+      const roleMode = (typeof getActiveCharacterRoleMode === 'function') ? getActiveCharacterRoleMode() : 'dps';
+      const levelPool = (typeof generateCandidateRotationsForLevel === 'function') ? generateCandidateRotationsForLevel(classKey, currentCharacterSpec, curLvl) : {};
+      const clsRotations = Object.assign({}, levelPool, ALL_CLASS_ROTATIONS[classKey] || ALL_CLASS_ROTATIONS.shaman);
+      if (winnerKey && rotationPresets[winnerKey]) {
+        clsRotations[winnerKey] = rotationPresets[winnerKey];
+      }
       for (const [key, steps] of Object.entries(clsRotations)) {
+        const isHealPreset = key.includes('resto') || key.includes('heal') || key.includes('holy');
+        if (roleMode !== 'healer' && isHealPreset) continue;
+        if (roleMode === 'healer' && !isHealPreset) continue;
+        rotationPresets[key] = steps;
         const chip = document.createElement('span');
         chip.id = `chip-rot-${key}`;
         chip.className = `chip ${key === activeRotationPresetKey ? 'active' : ''}`;
@@ -5131,7 +5845,8 @@
           style = 'border-color: #ffd700; color: #ffd700; font-weight: 700;';
         }
         if (style) chip.style.cssText = style;
-        chip.innerText = `${icon} ${label}`;
+        const scVal = (simScores && typeof simScores[key] === 'number' && simScores[key] > 0) ? ` (${simScores[key].toFixed(1)} DPS)` : '';
+        chip.innerText = `${icon} ${label}${scVal}`;
         chip.onclick = () => loadRotationPreset(key);
         container.appendChild(chip);
       }
@@ -5360,95 +6075,169 @@
       onAddSpellSelectChanged();
     }
 
-    async function autoOptimizeRotationForCurrentGear() {
+    async function autoOptimizeRotationForCurrentGear(silentMode = false) {
       const btn = document.getElementById('btn-optimize-rot');
-      if (btn) btn.innerHTML = '⏳ Simulating Dynamic Rotations...';
+      if (btn && !silentMode) btn.innerHTML = '⏳ Simulating APL Permutations...';
 
       const currentLvl = getCurrentPlayerLevel();
-      const currentImbueVal = (activeCharacterClass === 'shaman') ? currentImbue : 'None';
       const roleMode = getActiveCharacterRoleMode();
+      let currentImbueVal = (activeCharacterClass === 'shaman') ? currentImbue : 'None';
 
-      // Gather candidate rotations suitable for current role
+      // 1. Gather level-tailored candidate rotations + class presets
+      const levelPool = generateCandidateRotationsForLevel(activeCharacterClass, currentCharacterSpec, currentLvl);
       const clsRotations = ALL_CLASS_ROTATIONS[activeCharacterClass] || ALL_CLASS_ROTATIONS.shaman;
-      let candidateRotations = {};
+      let candidateRotations = Object.assign({}, levelPool);
 
       for (const [key, steps] of Object.entries(clsRotations)) {
         const isHealPreset = key.includes('resto') || key.includes('heal') || key.includes('holy');
-        const isTankPreset = key.includes('tank') || key.includes('prot');
-
         if (roleMode === 'healer') {
           if (isHealPreset) candidateRotations[key] = steps;
-        } else if (roleMode === 'tank') {
-          if (isTankPreset || (!isHealPreset)) candidateRotations[key] = steps;
         } else {
-          // DPS role: strictly exclude pure healing rotations so characters don't just heal and auto-attack!
-          if (!isHealPreset) candidateRotations[key] = steps;
+          if (!isHealPreset && key !== 'melee') candidateRotations[key] = steps;
         }
       }
 
-      if (Object.keys(candidateRotations).length === 0) {
-        candidateRotations = clsRotations;
+      // Filter out any locked spells at currentLvl from all candidates
+      for (const k of Object.keys(candidateRotations)) {
+        candidateRotations[k] = (candidateRotations[k] || []).filter(s => {
+          const info = getSpellDisplayInfo(s.spellId, currentLvl);
+          return info && info.isUnlocked;
+        });
       }
 
-      // Add dynamic level-tailored rotation
-      const dynVariant = generateDynamicRotationForLevel(activeCharacterClass, currentCharacterSpec, currentLvl);
-      if (dynVariant && dynVariant.length > 0) {
-        candidateRotations['dynamic_optimal'] = dynVariant;
-      }
-
-      let bestKey = activeRotationPresetKey;
+      let bestKey = Object.keys(candidateRotations)[0] || activeRotationPresetKey;
+      let bestSteps = candidateRotations[bestKey] || [];
       let bestScore = -1;
       const scores = {};
+      let totalSimsRun = 0;
 
-      const entries = Object.entries(candidateRotations);
-      for (let i = 0; i < entries.length; i++) {
-        const [key, steps] = entries[i];
+      // Helper to evaluate a rotation in the Monte Carlo engine with CRN
+      const evalSteps = async (stepsToTest, imbueOverride) => {
+        totalSimsRun += 1;
+        const simRes = await simulateCombatInBrowser({
+          characterClass: activeCharacterClass,
+          spec: currentCharacterSpec,
+          level: currentLvl,
+          imbue: imbueOverride || currentImbueVal,
+          talents: (typeof getSerializedTalents === 'function') ? getSerializedTalents() : '--',
+          duration: 30,
+          iterations: 45,
+          seed: 42,
+          fastMode: true,
+          rotation_preset: 'custom',
+          custom_rotation: stepsToTest,
+          gear: currentGear || {},
+          enchants: currentEnchants || {},
+          buffs: (typeof activeBuffs !== 'undefined' ? activeBuffs : {})
+        }, catalog, enchantsCatalog, buffsCatalog);
+        return getSimulationObjectiveScore(simRes, roleMode);
+      };
+
+      // Phase 1: Simulate all candidate architectures
+      for (const [key, steps] of Object.entries(candidateRotations)) {
+        if (!steps || steps.length === 0) continue;
         try {
-          const simRes = await simulateCombatInBrowser({
-            characterClass: activeCharacterClass,
-            spec: currentCharacterSpec,
-            level: currentLvl,
-            imbue: currentImbueVal,
-            talents: (typeof getSerializedTalents === 'function') ? getSerializedTalents() : '--',
-            duration: 30,
-            iterations: 50,
-            seed: 42,
-            fastMode: true,
-            rotation_preset: key,
-            custom_rotation: steps,
-            gear: currentGear || {},
-            enchants: currentEnchants || {},
-            buffs: (typeof activeBuffs !== 'undefined' ? activeBuffs : {})
-          }, catalog, enchantsCatalog, buffsCatalog);
-
-          const sc = getSimulationObjectiveScore(simRes, roleMode);
+          const sc = await evalSteps(steps);
           scores[key] = sc;
           if (sc > bestScore) {
             bestScore = sc;
             bestKey = key;
+            bestSteps = JSON.parse(JSON.stringify(steps));
           }
         } catch (e) {
           scores[key] = 0;
         }
       }
 
-      if (bestKey === 'dynamic_optimal' && dynVariant) {
-        rotationPresets['dynamic_optimal'] = dynVariant;
-        activeRotationPresetKey = 'dynamic_optimal';
-        currentRotation = JSON.parse(JSON.stringify(dynVariant));
-      } else if (rotationPresets[bestKey]) {
-        loadRotationPreset(bestKey);
+      // Phase 2: Greedy Leave-One-Out Step Pruning (Drops low-value fillers/bleeds if omitting them increases DPS!)
+      let prunedCount = 0;
+      if (bestSteps.length > 1 && roleMode !== 'healer') {
+        let improved = true;
+        while (improved && bestSteps.length > 1) {
+          improved = false;
+          for (let i = 0; i < bestSteps.length; i++) {
+            const prunedCandidate = bestSteps.filter((_, idx) => idx !== i);
+            const sc = await evalSteps(prunedCandidate);
+            if (sc > bestScore + 0.08) {
+              bestScore = sc;
+              bestSteps = prunedCandidate;
+              prunedCount += 1;
+              improved = true;
+              break;
+            }
+          }
+        }
       }
 
-      renderRotationPresetChipsForClass(activeCharacterClass);
+      // Phase 3: Adjacent Priority Swap Hill-Climbing (P[i] <-> P[i+1])
+      let swapsCount = 0;
+      if (bestSteps.length > 1 && roleMode !== 'healer') {
+        for (let i = 0; i < bestSteps.length - 1; i++) {
+          const swapped = JSON.parse(JSON.stringify(bestSteps));
+          const tmp = swapped[i];
+          swapped[i] = swapped[i + 1];
+          swapped[i + 1] = tmp;
+          const sc = await evalSteps(swapped);
+          if (sc > bestScore + 0.05) {
+            bestScore = sc;
+            bestSteps = swapped;
+            swapsCount += 1;
+          }
+        }
+      }
+
+      // Phase 4: Shaman Imbue Co-Optimization (Windfury at Lvl 30+ vs Flametongue vs Rockbiter)
+      if (activeCharacterClass === 'shaman' && roleMode !== 'healer') {
+        const imbueCandidates = ['RockbiterWeapon'];
+        if (currentLvl >= 10 && roleMode !== 'tank') imbueCandidates.push('FlametongueWeapon');
+        if (currentLvl >= 30 && roleMode !== 'tank') imbueCandidates.push('WindfuryWeapon');
+        let bestImb = currentImbueVal;
+        for (const imb of imbueCandidates) {
+          const sc = await evalSteps(bestSteps, imb);
+          if (sc > bestScore + 0.05) {
+            bestScore = sc;
+            bestImb = imb;
+          }
+        }
+        if (bestImb !== currentImbue) {
+          setImbue(bestImb);
+          currentImbueVal = bestImb;
+        }
+      }
+
+      // Register dynamic winner and update UI
+      const dynKey = 'dynamic_lvl_' + currentLvl;
+      rotationPresets[dynKey] = bestSteps;
+      scores[dynKey] = bestScore;
+      activeRotationPresetKey = dynKey;
+      currentRotation = JSON.parse(JSON.stringify(bestSteps));
+
+      // Populate rotationPresets with top level-appropriate candidates so user can compare them
+      for (const [k, st] of Object.entries(levelPool)) {
+        if (st && st.length > 0) rotationPresets[k] = st;
+      }
+
+      renderRotationPresetChipsForClass(activeCharacterClass, scores, dynKey);
       renderRotationUI();
 
-      if (btn) btn.innerHTML = '⭐ Best Rotation Active!';
-      setTimeout(() => {
-        if (btn) btn.innerHTML = '⚡ Auto-Optimize for Gear';
-      }, 3000);
+      // Update Dynamic Telemetry Banner
+      const telEl = document.getElementById('dynamic-rot-telemetry-text');
+      if (telEl) {
+        const seqSummary = bestSteps.map((s, idx) => {
+          const inf = getSpellDisplayInfo(s.spellId, currentLvl);
+          return (idx + 1) + '. ' + inf.baseName + (inf.rank ? ' R' + inf.rank : '');
+        }).join(' ➔ ');
+        telEl.innerHTML = '🔬 <strong>Level ' + currentLvl + ' Sim-Optimized APL (' + totalSimsRun + ' permutations tested' + (prunedCount > 0 ? ', ' + prunedCount + ' suboptimal filler pruned' : '') + (swapsCount > 0 ? ', ' + swapsCount + ' priority swap' : '') + '):</strong> <span style="color:#34d399; font-weight:700;">' + seqSummary + ' (' + bestScore.toFixed(1) + (roleMode === 'tank' ? ' Score' : ' DPS') + ')</span>';
+      }
 
-      runOneStopSimulate();
+      if (btn && !silentMode) {
+        btn.innerHTML = '⭐ Best Rotation Active (' + bestScore.toFixed(1) + ' DPS)';
+        setTimeout(() => {
+          if (btn) btn.innerHTML = '⚡ Auto-Optimize for Gear';
+        }, 3000);
+        runOneStopSimulate();
+      }
+      return { bestSteps, bestScore, totalSimsRun };
     }
 
     // Official spell IDs for breakdown tooltips
@@ -6166,43 +6955,7 @@
     }
 
     async function optimizeTalentsAndRotationInSim(roleMode) {
-      const currentLvl = getCurrentPlayerLevel();
-      const currentImbueVal = (activeCharacterClass === 'shaman') ? currentImbue : 'None';
-
-      // Benchmark rotation presets
-      const clsRotations = ALL_CLASS_ROTATIONS[activeCharacterClass] || ALL_CLASS_ROTATIONS.shaman;
-      let bestRotKey = activeRotationPresetKey;
-      let bestRotScore = -1;
-
-      for (const [key, steps] of Object.entries(clsRotations)) {
-        try {
-          const simRes = await simulateCombatInBrowser({
-            characterClass: activeCharacterClass,
-            spec: currentCharacterSpec,
-            level: currentLvl,
-            imbue: currentImbueVal,
-            talents: (typeof getSerializedTalents === 'function') ? getSerializedTalents() : '--',
-            duration: 30,
-            iterations: 40,
-            seed: 42,
-            fastMode: true,
-            rotation_preset: key,
-            custom_rotation: steps,
-            gear: currentGear || {},
-            enchants: currentEnchants || {},
-            buffs: (typeof activeBuffs !== 'undefined' ? activeBuffs : {})
-          }, catalog, enchantsCatalog, buffsCatalog);
-          const sc = getSimulationObjectiveScore(simRes, roleMode);
-          if (sc > bestRotScore) {
-            bestRotScore = sc;
-            bestRotKey = key;
-          }
-        } catch (e) {}
-      }
-
-      if (bestRotKey && rotationPresets[bestRotKey]) {
-        loadRotationPreset(bestRotKey);
-      }
+      await autoOptimizeRotationForCurrentGear(true);
     }
 
     async function runSimDrivenCoOptimizer() {
@@ -6650,11 +7403,20 @@
         if (fEl) fEl.value = 'Alliance';
       }
 
-      // 2. Class Selector dropdown styling
+      // 2. Class Selector dropdown & Brand Emblem styling
       const classSelect = document.getElementById('cfg-active-class');
       if (classSelect) {
         classSelect.style.color = cDef.color;
         classSelect.value = classKey;
+      }
+      const brandIcon = document.querySelector('.shaman-icon');
+      if (brandIcon) {
+        brandIcon.style.backgroundImage = "url('https://wow.zamimg.com/images/wow/icons/large/classicon_" + classKey + ".jpg')";
+        brandIcon.style.borderColor = cDef.color;
+      }
+      const tankTitleLbl = document.getElementById('tank-card-title-lbl');
+      if (tankTitleLbl) {
+        tankTitleLbl.innerText = cDef.name + " Tank Survivability, Mitigation & Threat";
       }
 
       // 3. Update Talents for the selected class
@@ -6911,10 +7673,22 @@
       // Update all .cur-lvl-label across UI
       document.querySelectorAll('.cur-lvl-label').forEach(el => el.innerText = lvl);
 
-      // Dynamically upgrade spell ranks in availableSpells and active rotation for the new level
+      // Dynamically upgrade spell ranks, talents, gear, and APL rotation for the new level
       syncSpellRanksForLevel(lvl);
-      renderRotationPresetChipsForClass(activeCharacterClass);
-      renderRotationUI();
+      if (!isInitializing) {
+        if (typeof autoOptimizeTalentsForLevel === 'function') autoOptimizeTalentsForLevel(true);
+        if (typeof autoEquipLevelingBiS === 'function') autoEquipLevelingBiS();
+        if (typeof autoEnchantAllSlots === 'function') autoEnchantAllSlots();
+        if (typeof autoOptimizeBiSConsumables === 'function') autoOptimizeBiSConsumables();
+        if (typeof autoOptimizeRotationForCurrentGear === 'function') {
+          autoOptimizeRotationForCurrentGear(true).then(() => {
+            if (typeof runOneStopSimulate === 'function') runOneStopSimulate();
+          });
+        }
+      } else {
+        renderRotationPresetChipsForClass(activeCharacterClass);
+        renderRotationUI();
+      }
 
       updateTalentHeader();
       renderTalentTrees();
@@ -9876,8 +10650,12 @@
       const elemWpnRank = getTal(t1, 6);
       const anticipationRank = getTal(t1, 8);
       const toughnessRank = getTal(t1, 9);
+      const flurryShamanRank = getTal(t1, 10);
       const stormstrikeRank = getTal(t1, 11);
       const spiritWpnRank = getTal(t1, 13);
+      const mentalQuickRank = getTal(t1, 14);
+      const impSsRank = getTal(t1, 15);
+      const maelstromRank = getTal(t1, 16);
       const impLsRank = getTal(t1, 5);
 
       const impHwRank = getTal(t2, 0);
@@ -10123,7 +10901,7 @@
       let meleeCritPct = 4.0 + (totalAgi / 19.5) + (charClass === 'shaman' ? thunderingStrikesRank * 1.0 : 0) + talentCritBonus + (gearStats.Crit || 0);
       let meleeHitPct = (gearStats.Hit || 0) + talentHitBonus;
       if (talentArmorBonusPct > 0) totalArmor = Math.round(totalArmor * (1 + talentArmorBonusPct));
-      let spellPower = (gearStats.SP || 0);
+      let spellPower = (gearStats.SP || 0) + (charClass === 'shaman' && mentalQuickRank > 0 ? Math.round(totalAP * (0.15 * mentalQuickRank)) : 0);
       let fireSP = spellPower + (gearStats.FireSP || 0);
       let natureSP = spellPower + (gearStats.NatureSP || 0);
       let frostSP = spellPower + (gearStats.FrostSP || 0);
@@ -10213,6 +10991,20 @@
       let blockVal = hasShield ? Math.round(8 + (level * 0.65) + (totalStr / 20) + (gearStats.Block || 0)) : 0;
       let iterationDpsList = [];
 
+      // Resolve Active APL Steps (Respects custom_rotation order, checkboxes, and conditions!)
+      let aplSteps = [];
+      if (Array.isArray(customRotation)) {
+        aplSteps = customRotation.filter(s => s && s.enabled !== false);
+      } else if (ALL_CLASS_ROTATIONS[charClass] && ALL_CLASS_ROTATIONS[charClass][rotationPreset]) {
+        aplSteps = ALL_CLASS_ROTATIONS[charClass][rotationPreset].filter(s => s && s.enabled !== false);
+      } else if (typeof generateDynamicRotationForLevel === 'function') {
+        aplSteps = (generateDynamicRotationForLevel(charClass, reqBody.spec || currentCharacterSpec || 'enhancement', level) || []).filter(s => s && s.enabled !== false);
+      }
+
+      // Check if Heroic Strike (25289) is in APL and what its rage threshold is
+      const hsStep = aplSteps.find(s => Number(s.spellId) === 25289);
+      const hsRageThreshold = hsStep ? (hsStep.condition === 'rage_gt_30' ? 30 : (hsStep.condition === 'on_cd' ? 15 : 40)) : 999;
+
       // Monte Carlo loop
       const batchSize = Math.max(4, Math.ceil(iterations / 35));
       for (let it = 0; it < iterations; it++) {
@@ -10221,39 +11013,75 @@
           await new Promise(r => setTimeout(r, 32));
         }
         let t = 0;
-        const isPureCaster = (charClass === 'mage' || charClass === 'priest' || charClass === 'warlock');
+        const isPureCaster = (charClass === 'mage' || charClass === 'priest' || charClass === 'warlock' || (charClass === 'shaman' && reqBody.spec === 'elemental') || (charClass === 'druid' && reqBody.spec === 'balance'));
         let nextSwingTime = isPureCaster ? 999999 : 0;
         let nextGcdTime = 0;
-        let nextDotTickTime = -1;
-        let dotActiveUntil = -1;
         let nextPetAttackTime = (charClass === 'hunter') ? 0 : -1;
-        let nextClassCd1 = 0;
-        let nextClassCd2 = 0;
-        let nextClassCd3 = 0;
         let totemActiveUntil = -1;
         let nextTotemBoltTime = -1;
+        let totemPulseInterval = 2.0;
+        let totemMinD = stMin, totemMaxD = stMax;
+        let totemSpellName = 'Searing Totem (Rank ' + stRank + ')';
+        let totemIcon = 'spell_fire_searingtotem';
+        let fireNovaExplodeAt = -1;
+        let fireNovaMin = 0, fireNovaMax = 0, fireNovaName = '';
+
         let crusaderActiveUntil = -1;
         let iterDamage = 0;
-        let rage = 0;
+        let curMana = maxMana;
+        let nextResourceTick = 2.0;
+        let lastManaCastTime = -10.0;
+        let rage = (charClass === 'warrior') ? 15 : 0;
         let energy = 100;
-        let nextEnergyTick = 2.0;
         let comboPoints = 0;
+
+        // Per-spell cooldowns, DoTs, and buffs
+        let cdUntil = {};
+        let shockCdUntil = 0;
+        let activeDots = {}; // key -> { until, nextTick, interval, tickDmg, name, school, icon, canCrit }
         let sliceDiceActiveUntil = -1;
+        let sliceDiceHaste = 0.20;
+        let bladeFlurryActiveUntil = -1;
+        let rapidFireActiveUntil = -1;
+        let lsCharges = 0;
+        let lsOrbDmg = 0;
+        let lsOrbName = '';
+        let nextLsProcTime = 0;
+        let stormstrikeNatureCharges = 0;
+        let scorchStacks = 0;
+        let sunderStacks = 0;
+        let sunderArmorPerStack = 0;
+        let sealCommandUntil = (charClass === 'paladin') ? 30.0 : -1;
+        let holyShieldUntil = -1;
+        let overpowerAvailableUntil = 4.0;
+        let revengeAvailableUntil = hasShield ? 5.0 : -1;
 
         while (t < duration) {
-          // Find next future event strictly > t
           let candidates = [duration];
           if (!isPureCaster && nextSwingTime > t && nextSwingTime <= duration) candidates.push(nextSwingTime);
-          if (nextDotTickTime > t && nextDotTickTime <= duration) candidates.push(nextDotTickTime);
+          if (nextResourceTick > t && nextResourceTick <= duration) candidates.push(nextResourceTick);
           if (nextPetAttackTime >= 0 && nextPetAttackTime > t && nextPetAttackTime <= duration) candidates.push(nextPetAttackTime);
           if (nextTotemBoltTime > t && nextTotemBoltTime <= duration) candidates.push(nextTotemBoltTime);
+          if (fireNovaExplodeAt > t && fireNovaExplodeAt <= duration) candidates.push(fireNovaExplodeAt);
+          for (const dKey in activeDots) {
+            const d = activeDots[dKey];
+            if (d.nextTick > t && d.nextTick <= d.until && d.nextTick <= duration) candidates.push(d.nextTick);
+          }
           if (nextGcdTime > t && nextGcdTime <= duration) candidates.push(nextGcdTime);
 
           let nextFutureEvent = Math.min(...candidates);
 
+          let hasPendingDot = false;
+          for (const dKey in activeDots) {
+            const d = activeDots[dKey];
+            if (d.nextTick > 0 && t >= d.nextTick && t <= d.until) { hasPendingDot = true; break; }
+          }
+
           let hasPendingEvent = (
             (!isPureCaster && t >= nextSwingTime) ||
-            (nextDotTickTime > 0 && t >= nextDotTickTime && t <= dotActiveUntil) ||
+            (t >= nextResourceTick) ||
+            hasPendingDot ||
+            (fireNovaExplodeAt > 0 && t >= fireNovaExplodeAt) ||
             (nextPetAttackTime >= 0 && t >= nextPetAttackTime) ||
             (charClass === 'shaman' && nextTotemBoltTime > 0 && t >= nextTotemBoltTime && t <= totemActiveUntil) ||
             (t >= nextGcdTime)
@@ -10264,63 +11092,87 @@
             if (t > duration) break;
           }
 
-          // Energy tick for Rogue and Cat Druid
-          if ((charClass === 'rogue' || charClass === 'druid') && t >= nextEnergyTick) {
-            energy = Math.min(100, energy + 20);
-            nextEnergyTick += 2.0;
-          }
-
-          // 1. Process DoT tick
-          if (nextDotTickTime > 0 && t >= nextDotTickTime && t <= dotActiveUntil) {
-            if (charClass === 'shaman') {
-              let tickDmg = fsDotTick + (fireSP * (3.0 / 12.0));
-              let isCrit = Math.random() < spellCritChance;
-              if (isCrit) tickDmg *= 1.5;
-              iterDamage += tickDmg;
-              recordAction('Flame Shock (Rank ' + fsRank + ')', 'Fire', 'spell_fire_flameshock', tickDmg, false, true, isCrit, false);
-            } else if (charClass === 'warrior') {
-              let tickDmg = 15 + level * 1.8;
-              iterDamage += tickDmg;
-              recordAction('Rend (Bleed)', 'Physical', 'ability_gouge', tickDmg, false, true, false, false);
-            } else if (charClass === 'hunter') {
-              let tickDmg = 12 + level * 2.5;
-              iterDamage += tickDmg;
-              recordAction('Serpent Sting (DoT)', 'Nature', 'ability_hunter_quickshot', tickDmg, false, true, false, false);
-            } else if (charClass === 'warlock') {
-              let tickDmg = (15 + level * 2.8) + shadowSP * 0.16;
-              let isCrit = Math.random() < spellCritChance;
-              if (isCrit) tickDmg *= 1.5;
-              iterDamage += tickDmg;
-              recordAction('Corruption (DoT)', 'Shadow', 'spell_shadow_abominationexplosion', tickDmg, false, true, isCrit, false);
-            } else if (charClass === 'priest') {
-              let tickDmg = (16 + level * 3.0) + shadowSP * 0.16;
-              let isCrit = Math.random() < spellCritChance;
-              if (isCrit) tickDmg *= 1.5;
-              iterDamage += tickDmg;
-              recordAction('Shadow Word: Pain (DoT)', 'Shadow', 'spell_shadow_shadowwordpain', tickDmg, false, true, isCrit, false);
-            } else if (charClass === 'druid') {
-              let tickDmg = (14 + level * 2.2);
-              iterDamage += tickDmg;
-              recordAction('Moonfire (DoT)', 'Arcane', 'spell_nature_starfall', tickDmg, false, true, false, false);
+          // Resource regeneration tick every 2.0s (Energy, MP5, Spirit, Periodic Tank Rage/Avoidance procs)
+          if (t >= nextResourceTick) {
+            if (charClass === 'rogue' || charClass === 'druid') {
+              energy = Math.min(100, energy + 20);
             }
-            nextDotTickTime += 3.0;
-            if (nextDotTickTime > dotActiveUntil) nextDotTickTime = -1;
+            if (maxMana > 0) {
+              let mp5Gain = (gearStats.MP5 || 0) * 0.4;
+              let spiGain = (t - lastManaCastTime >= 5.0) ? (totalSpi * 0.22 + 5) : 0;
+              curMana = Math.min(maxMana, curMana + mp5Gain + spiGain);
+            }
+            if (charClass === 'warrior') {
+              // Periodic incoming/dodge rage & procs
+              if (hasShield) {
+                rage = Math.min(100, rage + 6);
+                revengeAvailableUntil = t + 4.0;
+              }
+              if (Math.random() < 0.35) overpowerAvailableUntil = t + 5.0;
+            }
+            if (charClass === 'shaman' && lsCharges > 0 && t >= nextLsProcTime) {
+              // Reactive Lightning Shield orb discharge
+              let orbDmg = lsOrbDmg * (1.0 + 0.05 * impLsRank);
+              if (stormstrikeNatureCharges > 0) {
+                orbDmg *= 1.20;
+                stormstrikeNatureCharges -= 1;
+              }
+              iterDamage += orbDmg;
+              lsCharges -= 1;
+              nextLsProcTime = t + 3.5;
+              recordAction(lsOrbName, 'Nature', 'spell_nature_lightningshield', orbDmg, false, true, false, false);
+            }
+            nextResourceTick += 2.0;
           }
 
-          // 2. Process Searing Totem bolt (Shaman only)
+          // Dynamic Target Mitigation (Sunder Armor reduces enemy armor!)
+          let curTargetArmor = Math.max(0, targetArmor - (sunderStacks * sunderArmorPerStack));
+          let curArmorDR = Math.min(0.75, Math.max(0.0, curTargetArmor / (curTargetArmor + 400 + 85 * targetLvl)));
+
+          // 1. Process Active DoT Ticks
+          for (const dKey in activeDots) {
+            const d = activeDots[dKey];
+            if (d.nextTick > 0 && t >= d.nextTick && t <= d.until) {
+              let tickDmg = d.tickDmg;
+              let isCrit = false;
+              if (d.canCrit) {
+                isCrit = Math.random() < spellCritChance;
+                if (isCrit) tickDmg *= 1.5;
+              }
+              if (d.school === 'Fire' && scorchStacks > 0) {
+                tickDmg *= (1.0 + scorchStacks * 0.03);
+              }
+              iterDamage += tickDmg;
+              recordAction(d.name, d.school, d.icon, tickDmg, false, true, isCrit, false);
+              d.nextTick += d.interval;
+              if (d.nextTick > d.until) d.nextTick = -1;
+            }
+          }
+
+          // 1B. Process Fire Nova Totem Detonation
+          if (fireNovaExplodeAt > 0 && t >= fireNovaExplodeAt) {
+            let fnDmg = fireNovaMin + Math.random() * (fireNovaMax - fireNovaMin) + (fireSP * 0.21);
+            let isCrit = Math.random() < spellCritChance;
+            if (isCrit) fnDmg *= 1.5;
+            iterDamage += fnDmg;
+            recordAction(fireNovaName, 'Fire', 'spell_fire_sealoffire', fnDmg, false, true, isCrit, false);
+            fireNovaExplodeAt = -1;
+          }
+
+          // 2. Process Fire Totem (Searing / Magma) Bolt/Pulse
           if (charClass === 'shaman' && nextTotemBoltTime > 0 && t >= nextTotemBoltTime && t <= totemActiveUntil) {
-            let boltDmg = stMin + Math.random() * (stMax - stMin) + (fireSP * 0.08);
+            let boltDmg = totemMinD + Math.random() * (totemMaxD - totemMinD) + (fireSP * 0.10);
             let isCrit = Math.random() < spellCritChance;
             if (isCrit) boltDmg *= 1.5;
             iterDamage += boltDmg;
-            recordAction('Searing Totem (Rank ' + stRank + ')', 'Fire', 'spell_fire_searingtotem', boltDmg, false, true, isCrit, false);
-            nextTotemBoltTime += stInterval;
+            recordAction(totemSpellName, 'Fire', totemIcon, boltDmg, false, true, isCrit, false);
+            nextTotemBoltTime += totemPulseInterval;
             if (nextTotemBoltTime > totemActiveUntil) nextTotemBoltTime = -1;
           }
 
           // 3. Process Pet Attack (Hunter only)
           if (charClass === 'hunter' && nextPetAttackTime >= 0 && t >= nextPetAttackTime && t <= duration) {
-            let petDmg = (12 + level * 1.6) * (1.0 - armorDR);
+            let petDmg = (12 + level * 1.6) * (1.0 - curArmorDR);
             let isCrit = Math.random() < critChance;
             if (isCrit) petDmg *= 2.0;
             iterDamage += petDmg;
@@ -10331,11 +11183,16 @@
           // 4. Process Weapon Auto-Attack (Melee / Hunter Auto Shot)
           let curAP = (charClass === 'hunter' ? rangedAP : totalAP) + (t <= crusaderActiveUntil ? 200 : 0);
           if (!isPureCaster && t >= nextSwingTime && t <= duration) {
-            let roll = Math.random();
-            let swingSpeed = (charClass === 'hunter') ? rangedSpeed : (charClass === 'rogue' && t <= sliceDiceActiveUntil ? wpnSpeed * 0.77 : wpnSpeed);
+            let hasteMult = 1.0;
+            if (charClass === 'rogue' && t <= sliceDiceActiveUntil) hasteMult *= (1.0 + sliceDiceHaste);
+            if (charClass === 'rogue' && t <= bladeFlurryActiveUntil) hasteMult *= 1.20;
+            if (charClass === 'hunter' && t <= rapidFireActiveUntil) hasteMult *= 1.40;
+            let swingSpeed = ((charClass === 'hunter') ? rangedSpeed : wpnSpeed) / hasteMult;
+
             let minD = (charClass === 'hunter') ? rangedMin : wpnMin;
             let maxD = (charClass === 'hunter') ? rangedMax : wpnMax;
-            let baseDmg = minD + Math.random() * (maxD - minD) + (curAP / 14.0) * swingSpeed;
+            let roll = Math.random();
+            let baseDmg = minD + Math.random() * (maxD - minD) + (curAP / 14.0) * ((charClass === 'hunter') ? rangedSpeed : wpnSpeed);
             const swingIcon = (charClass === 'hunter') ? (rangedItem && rangedItem.icon ? rangedItem.icon : 'inv_weapon_bow_05') : (mhItem && mhItem.icon ? mhItem.icon : 'inv_sword_04');
             const swingName = (charClass === 'hunter') ? 'Auto Shot' : 'Melee (Auto-Attack)';
 
@@ -10343,53 +11200,68 @@
               recordAction(swingName, 'Physical', swingIcon, 0, true, false, false, true);
             } else if (roll < missChance + dodgeChance) {
               recordAction(swingName, 'Physical', swingIcon, 0, true, false, false, true);
+              if (charClass === 'warrior') overpowerAvailableUntil = t + 5.0;
             } else {
               let isCrit = Math.random() < critChance;
-              let mitigatedDmg = baseDmg * (1.0 - armorDR);
+              let mitigatedDmg = baseDmg * (1.0 - curArmorDR) * talentDmgBonus;
               if (isCrit) mitigatedDmg *= 2.0;
 
-              // Warrior Heroic Strike on swing if rage >= 40
-              if (charClass === 'warrior' && rage >= 40) {
+              // Warrior Heroic Strike on swing if enabled in APL and rage >= threshold
+              if (charClass === 'warrior' && hsStep && rage >= hsRageThreshold) {
                 const hsInfo = getSpellDisplayInfo(25289, level);
                 const hsBonus = (hsInfo.data && hsInfo.data.bonusDmg) ? hsInfo.data.bonusDmg : (15 + level * 2.5);
-                mitigatedDmg += hsBonus * (1.0 - armorDR);
+                let hsDmg = (baseDmg + hsBonus) * (1.0 - curArmorDR) * talentDmgBonus;
+                if (isCrit) hsDmg *= 2.0;
+                iterDamage += hsDmg;
                 rage -= 15;
-                recordAction(hsInfo.name, 'Physical', 'ability_rogue_ambush', hsBonus, true, true, isCrit, false);
-              }
-
-              iterDamage += mitigatedDmg;
-              recordAction(swingName, 'Physical', swingIcon, mitigatedDmg, true, true, isCrit, false);
-
-              // Warrior rage gen
-              if (charClass === 'warrior') {
-                rage = Math.min(100, rage + Math.round(Math.min(30, Math.max(6, (mitigatedDmg / Math.max(1, level)) * 7.5))));
+                recordAction(hsInfo.name, 'Physical', 'ability_rogue_ambush', hsDmg, true, true, isCrit, false);
+              } else {
+                iterDamage += mitigatedDmg;
+                recordAction(swingName, 'Physical', swingIcon, mitigatedDmg, true, true, isCrit, false);
+                if (charClass === 'warrior') {
+                  rage = Math.min(100, rage + Math.round(Math.min(30, Math.max(6, (mitigatedDmg / Math.max(1, level)) * 7.8))));
+                }
               }
 
               // Paladin Seal of Command proc
-              if (charClass === 'paladin' && Math.random() < 0.35) {
+              if (charClass === 'paladin' && t <= sealCommandUntil && Math.random() < 0.35) {
                 let socDmg = baseDmg * 0.70;
                 let socCrit = Math.random() < spellCritChance;
                 if (socCrit) socDmg *= 1.5;
                 iterDamage += socDmg;
-                recordAction('Seal of Command (Proc)', 'Holy', 'ability_warrior_innerrage', socDmg, false, true, socCrit, false);
+                const socInfo = getSpellDisplayInfo(20375, level);
+                recordAction(socInfo.name, 'Holy', 'ability_warrior_innerrage', socDmg, false, true, socCrit, false);
               }
 
-              // Shaman Imbue proc
-              if (charClass === 'shaman' && imbue === 'FlametongueWeapon' && level >= 10) {
+              // Shaman Weapon Imbue procs (Windfury, Flametongue, Frostbrand)
+              if (charClass === 'shaman' && imbue === 'WindfuryWeapon' && level >= 30) {
+                if (Math.random() < 0.20) {
+                  let wfBonusAP = level >= 60 ? 445 : (level >= 50 ? 333 : (level >= 40 ? 229 : 106));
+                  let elemWpnMult = 1.0 + (elemWpnRank === 3 ? 0.20 : (elemWpnRank === 2 ? 0.14 : (elemWpnRank === 1 ? 0.07 : 0.0)));
+                  let wfSwingDmg = (minD + Math.random() * (maxD - minD) + ((curAP + wfBonusAP * elemWpnMult) / 14.0) * wpnSpeed) * (1.0 - curArmorDR) * 2.0;
+                  let wfCrit = Math.random() < critChance;
+                  if (wfCrit) wfSwingDmg *= 1.5;
+                  iterDamage += wfSwingDmg;
+                  const wfRank = level >= 60 ? 4 : (level >= 50 ? 3 : (level >= 40 ? 2 : 1));
+                  recordAction('Windfury Weapon (Rank ' + wfRank + ')', 'Physical', 'spell_nature_cyclone', wfSwingDmg, false, true, wfCrit, false);
+                }
+              } else if (charClass === 'shaman' && imbue === 'FlametongueWeapon' && level >= 10) {
                 let elemWpnMult = 1.0 + (elemWpnRank === 3 ? 0.20 : (elemWpnRank === 2 ? 0.14 : (elemWpnRank === 1 ? 0.07 : 0.0)));
                 let ftBase = (12 + level * 1.6) * (wpnSpeed / 2.0) + (fireSP * (wpnSpeed / 3.5));
                 let ftDmg = ftBase * elemWpnMult;
                 let ftCrit = Math.random() < spellCritChance;
                 if (ftCrit) ftDmg *= 1.5;
                 iterDamage += ftDmg;
-                recordAction('Flametongue Weapon (Proc)', 'Fire', 'spell_fire_flametounge', ftDmg, false, true, ftCrit, false);
+                const ftRank = level >= 56 ? 6 : (level >= 46 ? 5 : (level >= 36 ? 4 : (level >= 26 ? 3 : (level >= 18 ? 2 : 1))));
+                recordAction('Flametongue Weapon (Rank ' + ftRank + ')', 'Fire', 'spell_fire_flametounge', ftDmg, false, true, ftCrit, false);
               } else if (charClass === 'shaman' && imbue === 'FrostbrandWeapon' && level >= 20) {
                 if (Math.random() < 0.20) {
                   let fbDmg = (45 + level * 2.2) + frostSP * 0.15;
                   let fbCrit = Math.random() < spellCritChance;
                   if (fbCrit) fbDmg *= 1.5;
                   iterDamage += fbDmg;
-                  recordAction('Frostbrand Weapon (Proc)', 'Frost', 'spell_frost_frostbrand', fbDmg, false, true, fbCrit, false);
+                  const fbRank = level >= 58 ? 5 : (level >= 48 ? 4 : (level >= 38 ? 3 : (level >= 28 ? 2 : 1)));
+                  recordAction('Frostbrand Weapon (Rank ' + fbRank + ')', 'Frost', 'spell_frost_frostbrand', fbDmg, false, true, fbCrit, false);
                 }
               }
 
@@ -10399,247 +11271,571 @@
                 recordAction('Holy Strength (Crusader)', 'Holy', 'spell_holy_blessingofstrength', 0, true, true, false, false);
               }
               if (hasFiery && Math.random() < 0.15) {
-                let fieryDmg = 40;
-                iterDamage += fieryDmg;
-                recordAction('Fiery Weapon (Proc)', 'Fire', 'spell_fire_fireweapon', fieryDmg, false, true, false, false);
+                iterDamage += 40;
+                recordAction('Fiery Weapon (Proc)', 'Fire', 'spell_fire_fireweapon', 40, false, true, false, false);
               }
               if (hasLifesteal && Math.random() < 0.15) {
-                let lsDmg = 30;
-                iterDamage += lsDmg;
-                recordAction('Lifestealing (Proc)', 'Shadow', 'spell_shadow_lifedrain02', lsDmg, false, true, false, false);
+                iterDamage += 30;
+                recordAction('Lifestealing (Proc)', 'Shadow', 'spell_shadow_lifedrain02', 30, false, true, false, false);
               }
             }
             nextSwingTime = t + swingSpeed;
           }
 
-          // 5. Process Spells & Rotation on GCD
+          // 5. TRUE STEP-BY-STEP APL INTERPRETER ON GCD (Evaluates P1 -> P2 -> P3... in exact user/optimizer order!)
           if (t >= nextGcdTime && t <= duration) {
             let actionCast = false;
 
-            if (charClass === 'warrior') {
-              if (level >= 40 && t >= nextClassCd1 && rage >= 30) {
-                if (rotationPreset.includes('fury')) {
-                  let btDmg = (curAP * 0.45) * (1.0 - armorDR);
-                  let isCrit = Math.random() < critChance;
-                  if (isCrit) btDmg *= 2.0;
-                  iterDamage += btDmg;
-                  rage -= 30; nextClassCd1 = t + 6.0; nextGcdTime = t + 1.5; actionCast = true;
-                  const sInfo = getSpellDisplayInfo(23881, level);
-                  recordAction(sInfo.name, 'Physical', 'spell_nature_bloodlust', btDmg, true, true, isCrit, false);
-                } else {
-                  const msInfo = getSpellDisplayInfo(12294, level);
-                  const msBonus = (msInfo.data && msInfo.data.bonusDmg) ? msInfo.data.bonusDmg : 85;
-                  let msDmg = (wpnMin + Math.random() * (wpnMax - wpnMin) + (curAP / 14.0) * wpnSpeed + msBonus) * (1.0 - armorDR);
-                  let isCrit = Math.random() < critChance;
-                  if (isCrit) msDmg *= 2.0;
-                  iterDamage += msDmg;
-                  rage -= 30; nextClassCd1 = t + 6.0; nextGcdTime = t + 1.5; actionCast = true;
-                  recordAction(msInfo.name, 'Physical', 'ability_warrior_savageblow', msDmg, true, true, isCrit, false);
-                }
+            for (let sIdx = 0; sIdx < aplSteps.length; sIdx++) {
+              const step = aplSteps[sIdx];
+              const sid = Number(step.spellId);
+              if (sid === 25289) continue; // Heroic Strike is queued on next melee swing
+
+              const sInfo = getSpellDisplayInfo(sid, level);
+              if (!sInfo || !sInfo.isUnlocked) continue; // Locked at current player level
+
+              // Check cooldown
+              if (t < (cdUntil[sid] || 0)) continue;
+              const isShock = (sid === 8045 || sid === 8052 || sid === 8056);
+              if (isShock && t < shockCdUntil) continue;
+
+              // Check condition
+              const cond = step.condition || 'on_cd';
+              if (cond === 'dot_not_active') {
+                if (activeDots[sid] && t < activeDots[sid].until) continue;
+              } else if (cond === 'buff_not_active') {
+                if (sid === 324 && lsCharges > 0) continue;
+                if (sid === 6774 && t < sliceDiceActiveUntil) continue;
+                if (sid === 20375 && t < sealCommandUntil) continue;
+              } else if (cond === 'totem_le_1s') {
+                if ((totemActiveUntil - t) > 1.0) continue;
+              } else if (cond === 'rage_gt_40') {
+                if (rage < 40) continue;
+              } else if (cond === 'rage_gt_30') {
+                if (rage < 30) continue;
+              } else if (cond === 'cp_gt_4') {
+                if (comboPoints < 4) continue;
+              } else if (cond === 'cp_gt_3') {
+                if (comboPoints < 3) continue;
+              } else if (cond === 'stack_lt_5') {
+                if (sid === 11597 && sunderStacks >= 5) continue;
+                if (sid === 2948 && scorchStacks >= 5) continue;
+              } else if (cond === 'execute_phase') {
+                if (t < duration * 0.80) continue;
+              } else if (cond === 'on_proc') {
+                if (sid === 7384 && t > overpowerAvailableUntil) continue;
+                if (sid === 11601 && t > revengeAvailableUntil) continue;
               }
-              if (!actionCast && level >= 40 && hasShield && t >= nextClassCd2 && rage >= 20) {
-                const ssInfo = getSpellDisplayInfo(23925, level);
-                const ssBase = (ssInfo.data && ssInfo.data.baseDmg) ? ssInfo.data.baseDmg : 225;
-                let ssDmg = (ssBase + blockVal) * (1.0 - armorDR);
+
+              const rData = sInfo.data || {};
+              const manaCost = Math.round((rData.mana || rData.manaCost || 0) * (1.0 - (charClass === 'shaman' ? tidalFocusRank * 0.01 : 0)));
+              const rageCost = rData.rageCost || 0;
+              const energyCost = rData.energy || 0;
+
+              if (manaCost > 0 && curMana < manaCost) continue;
+              if (rageCost > 0 && rage < rageCost) continue;
+              if (energyCost > 0 && energy < energyCost) continue;
+
+              // --- EXECUTE SPELL ---
+              if (manaCost > 0) {
+                curMana -= manaCost;
+                lastManaCastTime = t;
+              }
+              if (rageCost > 0) rage -= rageCost;
+              if (energyCost > 0) energy -= energyCost;
+
+              let gcdAdvance = (charClass === 'rogue' || (charClass === 'druid' && rData.energy)) ? 1.0 : 1.5;
+
+              // SHAMAN SPELLS
+              if (sid === 17364) { // Stormstrike
+                let ssDmg = (wpnMin + Math.random() * (wpnMax - wpnMin) + (curAP / 14.0) * wpnSpeed) * 1.45 * (1.0 - curArmorDR);
                 let isCrit = Math.random() < critChance;
                 if (isCrit) ssDmg *= 2.0;
                 iterDamage += ssDmg;
-                rage -= 20; nextClassCd2 = t + 6.0; nextGcdTime = t + 1.5; actionCast = true;
-                recordAction(ssInfo.name, 'Physical', 'inv_shield_05', ssDmg, true, true, isCrit, false);
-              }
-              if (!actionCast && level >= 36 && t >= nextClassCd3 && rage >= 25) {
-                let wwDmg = (wpnMin + Math.random() * (wpnMax - wpnMin) + (curAP / 14.0) * wpnSpeed) * (1.0 - armorDR);
-                let isCrit = Math.random() < critChance;
-                if (isCrit) wwDmg *= 2.0;
-                iterDamage += wwDmg;
-                rage -= 25; nextClassCd3 = t + 10.0; nextGcdTime = t + 1.5; actionCast = true;
-                recordAction('Whirlwind', 'Physical', 'ability_whirlwind', wwDmg, true, true, isCrit, false);
-              }
-              if (!actionCast && t >= dotActiveUntil && rage >= 10) {
-                dotActiveUntil = t + 15.0; nextDotTickTime = t + 3.0;
-                rage -= 10; nextGcdTime = t + 1.5; actionCast = true;
-                const rendInfo = getSpellDisplayInfo(11574, level);
-                recordAction(rendInfo.name, 'Physical', 'ability_gouge', 0, true, true, false, false);
-              }
-            } else if (charClass === 'rogue') {
-              if (t >= sliceDiceActiveUntil && comboPoints >= 1 && energy >= 25) {
-                sliceDiceActiveUntil = t + (6.0 + comboPoints * 3.0);
-                energy -= 25; comboPoints = 0; nextGcdTime = t + 1.0; actionCast = true;
-                recordAction('Slice and Dice', 'Physical', 'ability_rogue_slicedice', 0, true, true, false, false);
-              } else if (comboPoints >= 4 && energy >= 35) {
-                const eviInfo = getSpellDisplayInfo(11305, level);
-                const perCp = (eviInfo.data && eviInfo.data.perCp) ? eviInfo.data.perCp : (35 + level * 3.5);
-                let eviDmg = (comboPoints * perCp + curAP * 0.15 * comboPoints) * (1.0 - armorDR);
-                let isCrit = Math.random() < critChance;
-                if (isCrit) eviDmg *= 2.0;
-                iterDamage += eviDmg;
-                energy -= 35; comboPoints = 0; nextGcdTime = t + 1.0; actionCast = true;
-                recordAction(eviInfo.name, 'Physical', 'ability_rogue_eviscerate', eviDmg, true, true, isCrit, false);
-              } else if (energy >= 40) {
-                const ssInfo = getSpellDisplayInfo(11294, level);
-                const ssBonus = (ssInfo.data && ssInfo.data.bonusDmg) ? ssInfo.data.bonusDmg : (15 + level * 1.5);
-                let ssDmg = (wpnMin + Math.random() * (wpnMax - wpnMin) + (curAP / 14.0) * wpnSpeed + ssBonus) * (1.0 - armorDR);
-                let isCrit = Math.random() < critChance;
-                if (isCrit) ssDmg *= 2.0;
-                iterDamage += ssDmg;
-                energy -= 40; comboPoints = Math.min(5, comboPoints + 1); nextGcdTime = t + 1.0; actionCast = true;
-                recordAction(ssInfo.name, 'Physical', 'spell_shadow_ritualofsacrifice', ssDmg, true, true, isCrit, false);
-              }
-            } else if (charClass === 'mage') {
-              if (t >= nextClassCd1) {
-                let fbDmg = (40 + level * 6) + fireSP * (1.5 / 3.5);
+                stormstrikeNatureCharges = 2; // +25% Nature dmg to next 2 Nature hits!
+                if (impSsRank > 0) curMana = Math.min(maxMana, curMana + Math.round(maxMana * 0.08 * impSsRank));
+                cdUntil[sid] = t + (impSsRank > 0 ? 10.0 - impSsRank : 10.0);
+                recordAction(sInfo.name, 'Physical', sInfo.icon, ssDmg, true, true, isCrit, false);
+              } else if (sid === 421) { // Chain Lightning (Scales with Maelstrom Weapon & Stormstrike debuff!)
+                let clBase = (rData.minD || 196) + Math.random() * ((rData.maxD || 222) - (rData.minD || 196));
+                let maelstromMult = (maelstromRank > 0) ? (1.0 + 0.05 * maelstromRank) : 1.0;
+                if (maelstromRank > 0) curMana = Math.min(maxMana, curMana + Math.round(manaCost * 0.12 * maelstromRank));
+                let clDmg = (clBase + (natureSP * 0.75)) * maelstromMult;
+                if (stormstrikeNatureCharges > 0) { clDmg *= 1.25; stormstrikeNatureCharges -= 1; }
                 let isCrit = Math.random() < spellCritChance;
-                if (isCrit) fbDmg *= 1.5;
-                iterDamage += fbDmg;
-                nextClassCd1 = t + 8.0; nextGcdTime = t + 1.5; actionCast = true;
-                recordAction('Fire Blast', 'Fire', 'spell_fire_fireball', fbDmg, true, true, isCrit, false);
-              } else if (rotationPreset.includes('fire')) {
-                const fbInfo = getSpellDisplayInfo(10151, level);
-                let fBase = (fbInfo.data && fbInfo.data.minD) ? ((fbInfo.data.minD + fbInfo.data.maxD) / 2) : (45 + level * 8);
-                let fDmg = fBase + fireSP * (3.0 / 3.5);
-                let isCrit = Math.random() < spellCritChance;
-                if (isCrit) fDmg *= 1.5;
-                iterDamage += fDmg;
-                nextGcdTime = t + 3.0; actionCast = true;
-                recordAction(fbInfo.name, 'Fire', 'spell_fire_flamebolt', fDmg, true, true, isCrit, false);
-              } else {
-                const frInfo = getSpellDisplayInfo(10181, level);
-                let frBase = (frInfo.data && frInfo.data.minD) ? ((frInfo.data.minD + frInfo.data.maxD) / 2) : (35 + level * 7);
-                let fbDmg = frBase + frostSP * (2.5 / 3.5);
-                let isCrit = Math.random() < spellCritChance;
-                if (isCrit) fbDmg *= 1.5;
-                iterDamage += fbDmg;
-                nextGcdTime = t + 2.5; actionCast = true;
-                recordAction(frInfo.name, 'Frost', 'spell_frost_frostbolt02', fbDmg, true, true, isCrit, false);
-              }
-            } else if (charClass === 'hunter') {
-              if (t >= nextClassCd1) {
-                let aimDmg = (rangedMin + Math.random() * (rangedMax - rangedMin) + (rangedAP / 14.0) * rangedSpeed + 70 + level * 6) * (1.0 - armorDR);
-                let isCrit = Math.random() < critChance;
-                if (isCrit) aimDmg *= 2.0;
-                iterDamage += aimDmg;
-                nextClassCd1 = t + 6.0; nextGcdTime = t + 3.0; actionCast = true;
-                recordAction('Aimed Shot', 'Physical', 'inv_spear_07', aimDmg, true, true, isCrit, false);
-              } else if (t >= nextClassCd2) {
-                let mDmg = (rangedMin + Math.random() * (rangedMax - rangedMin) + (rangedAP / 14.0) * rangedSpeed + 40 + level * 3) * (1.0 - armorDR);
-                let isCrit = Math.random() < critChance;
-                if (isCrit) mDmg *= 2.0;
-                iterDamage += mDmg;
-                nextClassCd2 = t + 10.0; nextGcdTime = t + 1.5; actionCast = true;
-                recordAction('Multi-Shot', 'Physical', 'ability_upgrademoonglaive', mDmg, true, true, isCrit, false);
-              } else if (t >= dotActiveUntil) {
-                dotActiveUntil = t + 15.0; nextDotTickTime = t + 3.0;
-                nextGcdTime = t + 1.5; actionCast = true;
-                recordAction('Serpent Sting', 'Nature', 'ability_hunter_quickshot', 0, true, true, false, false);
-              }
-            } else if (charClass === 'warlock') {
-              if (t >= dotActiveUntil) {
-                dotActiveUntil = t + 18.0; nextDotTickTime = t + 3.0;
-                nextGcdTime = t + 1.5; actionCast = true;
-                recordAction('Corruption', 'Shadow', 'spell_shadow_abominationexplosion', 0, true, true, false, false);
-              } else {
-                let sbDmg = (40 + level * 7.5) + shadowSP * (2.5 / 3.5);
-                let isCrit = Math.random() < spellCritChance;
-                if (isCrit) sbDmg *= 1.5;
-                iterDamage += sbDmg;
-                nextGcdTime = t + 2.5; actionCast = true;
-                recordAction('Shadow Bolt', 'Shadow', 'spell_shadow_shadowbolt', sbDmg, true, true, isCrit, false);
-              }
-            } else if (charClass === 'priest') {
-              if (t >= dotActiveUntil) {
-                dotActiveUntil = t + 18.0; nextDotTickTime = t + 3.0;
-                nextGcdTime = t + 1.5; actionCast = true;
-                recordAction('Shadow Word: Pain', 'Shadow', 'spell_shadow_shadowwordpain', 0, true, true, false, false);
-              } else if (t >= nextClassCd1) {
-                let mbDmg = (45 + level * 7) + shadowSP * (1.5 / 3.5);
-                let isCrit = Math.random() < spellCritChance;
-                if (isCrit) mbDmg *= 1.5;
-                iterDamage += mbDmg;
-                nextClassCd1 = t + 8.0; nextGcdTime = t + 1.5; actionCast = true;
-                recordAction('Mind Blast', 'Shadow', 'spell_shadow_unholyfrenzy', mbDmg, true, true, isCrit, false);
-              } else {
-                let mfDmg = (15 + level * 2.2) + shadowSP * 0.15;
-                iterDamage += mfDmg * 3;
-                nextGcdTime = t + 3.0; actionCast = true;
-                recordAction('Mind Flay', 'Shadow', 'spell_shadow_siphonmana', mfDmg * 3, true, true, false, false);
-              }
-            } else if (charClass === 'paladin') {
-              if (t >= nextClassCd1) {
-                let jDmg = (40 + level * 4.5) + holySP * 0.5;
-                let isCrit = Math.random() < spellCritChance;
-                if (isCrit) jDmg *= 1.5;
-                iterDamage += jDmg;
-                nextClassCd1 = t + 10.0; nextGcdTime = t + 1.5; actionCast = true;
-                recordAction('Judgement', 'Holy', 'spell_holy_righteousfury', jDmg, true, true, isCrit, false);
-              } else if (t >= nextClassCd2) {
-                let cDmg = (25 + level * 3.5) + holySP * 0.33;
-                iterDamage += cDmg;
-                nextClassCd2 = t + 8.0; nextGcdTime = t + 1.5; actionCast = true;
-                recordAction('Consecration', 'Holy', 'spell_holy_innerfire', cDmg, true, true, false, false);
-              }
-            } else if (charClass === 'druid') {
-              if (rotationPreset.includes('feral')) {
-                if (comboPoints >= 4 && energy >= 35) {
-                  let fbDmg = (comboPoints * (32 + level * 3.2) + curAP * 0.14 * comboPoints) * (1.0 - armorDR);
-                  let isCrit = Math.random() < critChance;
-                  if (isCrit) fbDmg *= 2.0;
-                  iterDamage += fbDmg;
-                  energy -= 35; comboPoints = 0; nextGcdTime = t + 1.0; actionCast = true;
-                  recordAction('Ferocious Bite', 'Physical', 'ability_druid_ferociousbite', fbDmg, true, true, isCrit, false);
-                } else if (energy >= 40) {
-                  let clDmg = (wpnMin + Math.random() * (wpnMax - wpnMin) + (curAP / 14.0) * 2.0 + 12 + level * 1.4) * (1.0 - armorDR);
-                  let isCrit = Math.random() < critChance;
-                  if (isCrit) clDmg *= 2.0;
-                  iterDamage += clDmg;
-                  energy -= 40; comboPoints = Math.min(5, comboPoints + 1); nextGcdTime = t + 1.0; actionCast = true;
-                  recordAction('Claw', 'Physical', 'ability_druid_rake', clDmg, true, true, isCrit, false);
-                }
-              } else {
-                if (t >= dotActiveUntil) {
-                  dotActiveUntil = t + 12.0; nextDotTickTime = t + 3.0;
-                  let directMf = (15 + level * 2.0) + natureSP * 0.15;
-                  iterDamage += directMf; nextGcdTime = t + 1.5; actionCast = true;
-                  recordAction('Moonfire', 'Arcane', 'spell_nature_starfall', directMf, true, true, false, false);
-                } else {
-                  let wrDmg = (30 + level * 5) + natureSP * (1.5 / 3.5);
-                  let isCrit = Math.random() < spellCritChance;
-                  if (isCrit) wrDmg *= 1.5;
-                  iterDamage += wrDmg;
-                  nextGcdTime = t + 1.5; actionCast = true;
-                  recordAction('Wrath', 'Nature', 'spell_nature_abolishmagic', wrDmg, true, true, isCrit, false);
-                }
-              }
-            } else { // Shaman
-              if (canCastStormstrike && t >= nextClassCd1) {
-                let curAP = totalAP + (t <= crusaderActiveUntil ? 200 : 0);
-                let ssDmg = (wpnMin + Math.random() * (wpnMax - wpnMin) + (curAP / 14.0) * wpnSpeed) * (1.0 - armorDR);
-                let isCrit = Math.random() < critChance;
-                if (isCrit) ssDmg *= 2.0;
-                iterDamage += ssDmg;
-                recordAction('Stormstrike', 'Physical', 'ability_shaman_stormstrike', ssDmg, true, true, isCrit, false);
-                nextClassCd1 = t + 20.0; nextGcdTime = t + 1.5; actionCast = true;
-              }
-              if (!actionCast && canCastFlameShock && t >= nextClassCd2 && t >= dotActiveUntil && rotationPreset !== 'earth_only' && rotationPreset !== 'melee_only') {
-                let directDmg = fsDirectMin + Math.random() * (fsDirectMax - fsDirectMin) + (fireSP * (1.5 / 3.5));
-                let isCrit = Math.random() < spellCritChance;
-                if (isCrit) directDmg *= 1.5;
-                iterDamage += directDmg;
-                recordAction('Flame Shock (Rank ' + fsRank + ')', 'Fire', 'spell_fire_flameshock', directDmg, true, true, isCrit, false);
-                nextClassCd2 = t + 6.0; nextGcdTime = t + 1.5; dotActiveUntil = t + 12.0; nextDotTickTime = t + 3.0; actionCast = true;
-              }
-              if (!actionCast && canCastEarthShock && t >= nextClassCd2 && rotationPreset !== 'flame_only' && rotationPreset !== 'melee_only') {
-                let esDmg = esMin + Math.random() * (esMax - esMin) + (natureSP * (1.5 / 3.5));
+                if (isCrit) clDmg *= 1.5;
+                iterDamage += clDmg;
+                cdUntil[sid] = t + 6.0;
+                gcdAdvance = 1.5;
+                recordAction(sInfo.name, 'Nature', sInfo.icon, clDmg, true, true, isCrit, false);
+              } else if (sid === 8045) { // Earth Shock
+                let esBase = (rData.minD || 64) + Math.random() * ((rData.maxD || 69) - (rData.minD || 64));
+                let esDmg = esBase + (natureSP * 0.386);
+                if (stormstrikeNatureCharges > 0) { esDmg *= 1.20; stormstrikeNatureCharges -= 1; }
                 let isCrit = Math.random() < spellCritChance;
                 if (isCrit) esDmg *= 1.5;
                 iterDamage += esDmg;
-                recordAction('Earth Shock (Rank ' + esRank + ')', 'Nature', 'spell_nature_earthshock', esDmg, true, true, isCrit, false);
-                nextClassCd2 = t + 6.0; nextGcdTime = t + 1.5; actionCast = true;
+                shockCdUntil = t + 6.0;
+                cdUntil[sid] = t + 6.0;
+                recordAction(sInfo.name, 'Nature', sInfo.icon, esDmg, true, true, isCrit, false);
+              } else if (sid === 8056) { // Frost Shock
+                let frsBase = (rData.minD || 95) + Math.random() * ((rData.maxD || 103) - (rData.minD || 95));
+                let frsDmg = frsBase + (frostSP * 0.386);
+                let isCrit = Math.random() < spellCritChance;
+                if (isCrit) frsDmg *= 1.5;
+                iterDamage += frsDmg;
+                shockCdUntil = t + 6.0;
+                cdUntil[sid] = t + 6.0;
+                recordAction(sInfo.name, 'Frost', sInfo.icon, frsDmg, true, true, isCrit, false);
+              } else if (sid === 8052) { // Flame Shock
+                let fsBase = (rData.directMin || 25) + Math.random() * ((rData.directMax || 29) - (rData.directMin || 25));
+                let directDmg = fsBase + (fireSP * 0.214);
+                let isCrit = Math.random() < spellCritChance;
+                if (isCrit) directDmg *= 1.5;
+                iterDamage += directDmg;
+                shockCdUntil = t + 6.0;
+                cdUntil[sid] = t + 6.0;
+                activeDots[sid] = {
+                  until: t + 12.0, nextTick: t + 3.0, interval: 3.0,
+                  tickDmg: (rData.dotTick || 7) + (fireSP * 0.10),
+                  name: sInfo.name, school: 'Fire', icon: sInfo.icon, canCrit: false
+                };
+                recordAction(sInfo.name, 'Fire', sInfo.icon, directDmg, true, true, isCrit, false);
+              } else if (sid === 1535) { // Fire Nova Totem
+                fireNovaExplodeAt = t + 4.0;
+                fireNovaMin = rData.minD || 53;
+                fireNovaMax = rData.maxD || 62;
+                fireNovaName = sInfo.name;
+                cdUntil[sid] = t + 15.0;
+                recordAction(sInfo.name, 'Fire', sInfo.icon, 0, true, true, false, false);
+              } else if (sid === 8190) { // Magma Totem
+                totemActiveUntil = t + 20.0;
+                nextTotemBoltTime = t + 2.0;
+                totemPulseInterval = 2.0;
+                totemMinD = rData.pulseD || 22;
+                totemMaxD = (rData.pulseD || 22) * 1.1;
+                totemSpellName = sInfo.name;
+                totemIcon = sInfo.icon;
+                recordAction(sInfo.name, 'Fire', sInfo.icon, 0, true, true, false, false);
+              } else if (sid === 3599) { // Searing Totem
+                totemActiveUntil = t + 35.0;
+                nextTotemBoltTime = t + 2.0;
+                totemPulseInterval = 2.2;
+                totemMinD = rData.minD || 9;
+                totemMaxD = rData.maxD || 11;
+                totemSpellName = sInfo.name;
+                totemIcon = sInfo.icon;
+                recordAction(sInfo.name, 'Fire', sInfo.icon, 0, true, true, false, false);
+              } else if (sid === 324) { // Lightning Shield
+                lsCharges = 3;
+                lsOrbDmg = (rData.dmg || 29) + (natureSP * 0.26);
+                lsOrbName = sInfo.name;
+                recordAction(sInfo.name, 'Nature', sInfo.icon, 0, true, true, false, false);
+              } else if (sid === 403) { // Lightning Bolt
+                let lbBase = (rData.minD || 15) + Math.random() * ((rData.maxD || 18) - (rData.minD || 15));
+                let lbDmg = lbBase + (natureSP * 0.714);
+                if (stormstrikeNatureCharges > 0) { lbDmg *= 1.20; stormstrikeNatureCharges -= 1; }
+                let isCrit = Math.random() < spellCritChance;
+                if (isCrit) lbDmg *= 1.5;
+                iterDamage += lbDmg;
+                gcdAdvance = 2.0;
+                recordAction(sInfo.name, 'Nature', sInfo.icon, lbDmg, true, true, isCrit, false);
+              } else if (sid === 913 || sid === 547 || sid === 332 || sid === 331) { // Healing Wave
+                gcdAdvance = 2.5;
+                recordAction(sInfo.name, 'Nature', sInfo.icon, 0, true, true, false, false);
               }
-              if (!actionCast && canCastSearingTotem && (totemActiveUntil - t <= 1.0) && rotationPreset !== 'no_totem' && rotationPreset !== 'melee_only') {
-                totemActiveUntil = t + stDuration; nextTotemBoltTime = t + 1.0;
-                recordAction('Searing Totem (Rank ' + stRank + ')', 'Fire', 'spell_fire_searingtotem', 0, true, true, false, false);
-                nextGcdTime = t + 1.5; actionCast = true;
+
+              // WARRIOR SPELLS
+              else if (sid === 12294) { // Mortal Strike
+                let msBonus = rData.bonusDmg || 85;
+                let msDmg = (wpnMin + Math.random() * (wpnMax - wpnMin) + (curAP / 14.0) * 3.3 + msBonus) * (1.0 - curArmorDR) * talentDmgBonus;
+                let isCrit = Math.random() < critChance;
+                if (isCrit) msDmg *= 2.0;
+                iterDamage += msDmg;
+                cdUntil[sid] = t + 6.0;
+                recordAction(sInfo.name, 'Physical', sInfo.icon, msDmg, true, true, isCrit, false);
+              } else if (sid === 23881) { // Bloodthirst
+                let btRatio = rData.apRatio || 0.45;
+                let btDmg = (curAP * btRatio + 40) * (1.0 - curArmorDR) * talentDmgBonus;
+                let isCrit = Math.random() < critChance;
+                if (isCrit) btDmg *= 2.0;
+                iterDamage += btDmg;
+                cdUntil[sid] = t + 6.0;
+                recordAction(sInfo.name, 'Physical', sInfo.icon, btDmg, true, true, isCrit, false);
+              } else if (sid === 23925) { // Shield Slam
+                let ssBase = rData.baseDmg || 225;
+                let ssDmg = (ssBase + blockVal * 1.5) * (1.0 - curArmorDR);
+                let isCrit = Math.random() < critChance;
+                if (isCrit) ssDmg *= 2.0;
+                iterDamage += ssDmg;
+                cdUntil[sid] = t + 6.0;
+                recordAction(sInfo.name, 'Physical', sInfo.icon, ssDmg, true, true, isCrit, false);
+              } else if (sid === 1680) { // Whirlwind
+                let wwDmg = (wpnMin + Math.random() * (wpnMax - wpnMin) + (curAP / 14.0) * 2.4) * (1.0 - curArmorDR) * talentDmgBonus;
+                let isCrit = Math.random() < critChance;
+                if (isCrit) wwDmg *= 2.0;
+                iterDamage += wwDmg;
+                cdUntil[sid] = t + 10.0;
+                recordAction(sInfo.name, 'Physical', sInfo.icon, wwDmg, true, true, isCrit, false);
+              } else if (sid === 5308) { // Execute
+                let extraRage = Math.min(35, rage);
+                rage -= extraRage;
+                let exDmg = ((rData.baseDmg || 125) + extraRage * (rData.perRage || 3)) * (1.0 - curArmorDR) * talentDmgBonus;
+                let isCrit = Math.random() < critChance;
+                if (isCrit) exDmg *= 2.0;
+                iterDamage += exDmg;
+                recordAction(sInfo.name, 'Physical', sInfo.icon, exDmg, true, true, isCrit, false);
+              } else if (sid === 1464) { // Slam
+                let slBonus = rData.bonusDmg || 32;
+                let slDmg = (wpnMin + Math.random() * (wpnMax - wpnMin) + (curAP / 14.0) * wpnSpeed + slBonus) * (1.0 - curArmorDR) * talentDmgBonus;
+                let isCrit = Math.random() < critChance;
+                if (isCrit) slDmg *= 2.0;
+                iterDamage += slDmg;
+                nextSwingTime = Math.max(nextSwingTime, t + 1.5);
+                recordAction(sInfo.name, 'Physical', sInfo.icon, slDmg, true, true, isCrit, false);
+              } else if (sid === 7384) { // Overpower
+                let opBonus = rData.bonusDmg || 15;
+                let opDmg = (wpnMin + Math.random() * (wpnMax - wpnMin) + (curAP / 14.0) * wpnSpeed + opBonus) * (1.0 - curArmorDR) * talentDmgBonus;
+                let isCrit = Math.random() < Math.min(1.0, critChance + 0.50); // +50% crit from Improved Overpower
+                if (isCrit) opDmg *= 2.0;
+                iterDamage += opDmg;
+                overpowerAvailableUntil = -1;
+                cdUntil[sid] = t + 5.0;
+                recordAction(sInfo.name, 'Physical', sInfo.icon, opDmg, true, true, isCrit, false);
+              } else if (sid === 11574) { // Rend
+                let rendDur = rData.duration || 15;
+                let ticks = Math.max(3, Math.round(rendDur / 3));
+                let tickD = ((rData.dotDmg || 45) / ticks) * (1.0 + (getTal(t0, 2) * 0.12));
+                activeDots[sid] = {
+                  until: t + rendDur, nextTick: t + 3.0, interval: 3.0,
+                  tickDmg: tickD, name: sInfo.name, school: 'Physical', icon: sInfo.icon, canCrit: false
+                };
+                recordAction(sInfo.name, 'Physical', sInfo.icon, 0, true, true, false, false);
+              } else if (sid === 11597) { // Sunder Armor
+                sunderStacks = Math.min(5, sunderStacks + 1);
+                sunderArmorPerStack = rData.armorRed || 180;
+                recordAction(sInfo.name, 'Physical', sInfo.icon, 0, true, true, false, false);
+              } else if (sid === 11601) { // Revenge
+                let revDmg = ((rData.baseDmg || 22) + (curAP * 0.10)) * (1.0 - curArmorDR);
+                let isCrit = Math.random() < critChance;
+                if (isCrit) revDmg *= 2.0;
+                iterDamage += revDmg;
+                revengeAvailableUntil = -1;
+                cdUntil[sid] = t + 5.0;
+                recordAction(sInfo.name, 'Physical', sInfo.icon, revDmg, true, true, isCrit, false);
               }
+
+              // ROGUE SPELLS
+              else if (sid === 13877) { // Blade Flurry
+                bladeFlurryActiveUntil = t + 15.0;
+                cdUntil[sid] = t + 120.0;
+                recordAction(sInfo.name, 'Physical', sInfo.icon, 0, true, true, false, false);
+              } else if (sid === 6774) { // Slice and Dice
+                let cpUsed = Math.max(1, comboPoints);
+                sliceDiceActiveUntil = t + (6.0 + cpUsed * 3.0);
+                sliceDiceHaste = rData.haste || 0.20;
+                comboPoints = 0;
+                recordAction(sInfo.name, 'Physical', sInfo.icon, 0, true, true, false, false);
+              } else if (sid === 1943) { // Rupture
+                let cpUsed = Math.max(1, comboPoints);
+                let rupDur = 6.0 + cpUsed * 2.0;
+                activeDots[sid] = {
+                  until: t + rupDur, nextTick: t + 2.0, interval: 2.0,
+                  tickDmg: (rData.dotTick || 28) + (curAP * 0.04),
+                  name: sInfo.name, school: 'Physical', icon: sInfo.icon, canCrit: false
+                };
+                comboPoints = 0;
+                recordAction(sInfo.name, 'Physical', sInfo.icon, 0, true, true, false, false);
+              } else if (sid === 11305) { // Eviscerate
+                let cpUsed = Math.max(1, comboPoints);
+                let eviDmg = (cpUsed * (rData.perCp || 44) + curAP * 0.15 * cpUsed) * (1.0 - curArmorDR) * talentDmgBonus;
+                let isCrit = Math.random() < critChance;
+                if (isCrit) eviDmg *= 2.0;
+                iterDamage += eviDmg;
+                comboPoints = 0;
+                recordAction(sInfo.name, 'Physical', sInfo.icon, eviDmg, true, true, isCrit, false);
+              } else if (sid === 11294 || sid === 16511 || sid === 11286) { // Sinister Strike / Hemorrhage / Backstab
+                let bMult = (sid === 11286) ? 1.5 : 1.0;
+                let ssDmg = ((wpnMin + Math.random() * (wpnMax - wpnMin) + (curAP / 14.0) * 2.4) * bMult + (rData.bonusDmg || 15)) * (1.0 - curArmorDR) * talentDmgBonus;
+                let isCrit = Math.random() < (sid === 11286 ? Math.min(1.0, critChance + 0.20) : critChance);
+                if (isCrit) ssDmg *= 2.0;
+                iterDamage += ssDmg;
+                comboPoints = Math.min(5, comboPoints + 1);
+                recordAction(sInfo.name, 'Physical', sInfo.icon, ssDmg, true, true, isCrit, false);
+              }
+
+              // MAGE SPELLS
+              else if (sid === 10199) { // Pyroblast
+                let pBase = (rData.minD || 148) + Math.random() * ((rData.maxD || 195) - (rData.minD || 148));
+                let pDmg = (pBase + fireSP * 1.0) * (1.0 + scorchStacks * 0.03);
+                let isCrit = Math.random() < spellCritChance;
+                if (isCrit) pDmg *= 1.5;
+                iterDamage += pDmg;
+                cdUntil[sid] = t + 18.0;
+                gcdAdvance = 2.5;
+                recordAction(sInfo.name, 'Fire', sInfo.icon, pDmg, true, true, isCrit, false);
+              } else if (sid === 2948) { // Scorch
+                let scBase = (rData.minD || 53) + Math.random() * ((rData.maxD || 65) - (rData.minD || 53));
+                scorchStacks = Math.min(5, scorchStacks + 1);
+                let scDmg = (scBase + fireSP * 0.429) * (1.0 + scorchStacks * 0.03);
+                let isCrit = Math.random() < spellCritChance;
+                if (isCrit) scDmg *= 1.5;
+                iterDamage += scDmg;
+                gcdAdvance = 1.5;
+                recordAction(sInfo.name, 'Fire', sInfo.icon, scDmg, true, true, isCrit, false);
+              } else if (sid === 2136) { // Fire Blast
+                let fbBase = (rData.minD || 24) + Math.random() * ((rData.maxD || 32) - (rData.minD || 24));
+                let fbDmg = (fbBase + fireSP * 0.429) * (1.0 + scorchStacks * 0.03);
+                let isCrit = Math.random() < spellCritChance;
+                if (isCrit) fbDmg *= 1.5;
+                iterDamage += fbDmg;
+                cdUntil[sid] = t + 8.0;
+                gcdAdvance = 1.5;
+                recordAction(sInfo.name, 'Fire', sInfo.icon, fbDmg, true, true, isCrit, false);
+              } else if (sid === 120) { // Cone of Cold
+                let cocBase = (rData.minD || 98) + Math.random() * ((rData.maxD || 108) - (rData.minD || 98));
+                let cocDmg = cocBase + frostSP * 0.429;
+                let isCrit = Math.random() < spellCritChance;
+                if (isCrit) cocDmg *= 1.5;
+                iterDamage += cocDmg;
+                cdUntil[sid] = t + 10.0;
+                gcdAdvance = 1.5;
+                recordAction(sInfo.name, 'Frost', sInfo.icon, cocDmg, true, true, isCrit, false);
+              } else if (sid === 10151) { // Fireball
+                let fBase = (rData.minD || 140) + Math.random() * ((rData.maxD || 189) - (rData.minD || 140));
+                let fDmg = (fBase + fireSP * 0.857) * (1.0 + scorchStacks * 0.03);
+                let isCrit = Math.random() < spellCritChance;
+                if (isCrit) fDmg *= 1.5;
+                iterDamage += fDmg;
+                gcdAdvance = 2.5;
+                recordAction(sInfo.name, 'Fire', sInfo.icon, fDmg, true, true, isCrit, false);
+              } else if (sid === 10181) { // Frostbolt
+                let frBase = (rData.minD || 126) + Math.random() * ((rData.maxD || 138) - (rData.minD || 126));
+                let frDmg = frBase + frostSP * 0.814;
+                let isCrit = Math.random() < spellCritChance;
+                if (isCrit) frDmg *= 1.5;
+                iterDamage += frDmg;
+                gcdAdvance = 2.0;
+                recordAction(sInfo.name, 'Frost', sInfo.icon, frDmg, true, true, isCrit, false);
+              }
+
+              // HUNTER SPELLS
+              else if (sid === 3045) { // Rapid Fire
+                rapidFireActiveUntil = t + 15.0;
+                cdUntil[sid] = t + 180.0;
+                recordAction(sInfo.name, 'Physical', sInfo.icon, 0, true, true, false, false);
+              } else if (sid === 20904) { // Aimed Shot
+                let aimDmg = (rangedMin + Math.random() * (rangedMax - rangedMin) + (rangedAP / 14.0) * rangedSpeed + (rData.bonusDmg || 125)) * (1.0 - curArmorDR);
+                let isCrit = Math.random() < critChance;
+                if (isCrit) aimDmg *= 2.0;
+                iterDamage += aimDmg;
+                cdUntil[sid] = t + 6.0;
+                gcdAdvance = 2.0;
+                recordAction(sInfo.name, 'Physical', sInfo.icon, aimDmg, true, true, isCrit, false);
+              } else if (sid === 2643) { // Multi-Shot
+                let msDmg = (rangedMin + Math.random() * (rangedMax - rangedMin) + (rangedAP / 14.0) * 2.8 + (rData.bonusDmg || 40)) * (1.0 - curArmorDR);
+                let isCrit = Math.random() < critChance;
+                if (isCrit) msDmg *= 2.0;
+                iterDamage += msDmg;
+                cdUntil[sid] = t + 10.0;
+                recordAction(sInfo.name, 'Physical', sInfo.icon, msDmg, true, true, isCrit, false);
+              } else if (sid === 20900) { // Arcane Shot
+                let arcDmg = (rData.dmg || 36) + (rangedAP * 0.15);
+                let isCrit = Math.random() < critChance;
+                if (isCrit) arcDmg *= 2.0;
+                iterDamage += arcDmg;
+                cdUntil[sid] = t + 6.0;
+                recordAction(sInfo.name, 'Arcane', sInfo.icon, arcDmg, true, true, isCrit, false);
+              } else if (sid === 13555) { // Serpent Sting
+                activeDots[sid] = {
+                  until: t + 15.0, nextTick: t + 3.0, interval: 3.0,
+                  tickDmg: ((rData.dmg || 80) / 5.0) + (rangedAP * 0.04),
+                  name: sInfo.name, school: 'Nature', icon: sInfo.icon, canCrit: false
+                };
+                recordAction(sInfo.name, 'Nature', sInfo.icon, 0, true, true, false, false);
+              }
+
+              // WARLOCK SPELLS
+              else if (sid === 17962) { // Conflagrate
+                let cfBase = (rData.minD || 240) + Math.random() * ((rData.maxD || 306) - (rData.minD || 240));
+                let cfDmg = cfBase + fireSP * 0.429;
+                let isCrit = Math.random() < spellCritChance;
+                if (isCrit) cfDmg *= 1.5;
+                iterDamage += cfDmg;
+                cdUntil[sid] = t + 10.0;
+                recordAction(sInfo.name, 'Fire', sInfo.icon, cfDmg, true, true, isCrit, false);
+              } else if (sid === 17877) { // Shadowburn
+                let sbBase = (rData.minD || 85) + Math.random() * ((rData.maxD || 99) - (rData.minD || 85));
+                let sbDmg = sbBase + shadowSP * 0.429;
+                let isCrit = Math.random() < spellCritChance;
+                if (isCrit) sbDmg *= 1.5;
+                iterDamage += sbDmg;
+                cdUntil[sid] = t + 15.0;
+                recordAction(sInfo.name, 'Shadow', sInfo.icon, sbDmg, true, true, isCrit, false);
+              } else if (sid === 18265 || sid === 11713 || sid === 11675) { // Siphon Life / CoA / Corruption
+                activeDots[sid] = {
+                  until: t + 18.0, nextTick: t + 3.0, interval: 3.0,
+                  tickDmg: ((rData.dmg || 150) / 6.0) + (shadowSP * 0.16),
+                  name: sInfo.name, school: 'Shadow', icon: sInfo.icon, canCrit: false
+                };
+                recordAction(sInfo.name, 'Shadow', sInfo.icon, 0, true, true, false, false);
+              } else if (sid === 11668) { // Immolate
+                let imDirect = (rData.directD || 45) + (fireSP * 0.20);
+                let isCrit = Math.random() < spellCritChance;
+                if (isCrit) imDirect *= 1.5;
+                iterDamage += imDirect;
+                activeDots[sid] = {
+                  until: t + 15.0, nextTick: t + 3.0, interval: 3.0,
+                  tickDmg: ((rData.dotD || 90) / 5.0) + (fireSP * 0.13),
+                  name: sInfo.name, school: 'Fire', icon: sInfo.icon, canCrit: false
+                };
+                recordAction(sInfo.name, 'Fire', sInfo.icon, imDirect, true, true, isCrit, false);
+              } else if (sid === 11661) { // Shadow Bolt
+                let sbBase = (rData.minD || 86) + Math.random() * ((rData.maxD || 98) - (rData.minD || 86));
+                let sbDmg = sbBase + shadowSP * 0.857;
+                let isCrit = Math.random() < spellCritChance;
+                if (isCrit) sbDmg *= 1.5;
+                iterDamage += sbDmg;
+                gcdAdvance = 2.5;
+                recordAction(sInfo.name, 'Shadow', sInfo.icon, sbDmg, true, true, isCrit, false);
+              }
+
+              // PRIEST SPELLS
+              else if (sid === 2944 || sid === 10894) { // Devouring Plague / SW: Pain
+                activeDots[sid] = {
+                  until: t + 18.0, nextTick: t + 3.0, interval: 3.0,
+                  tickDmg: ((rData.dmg || 150) / 6.0) + (shadowSP * 0.16),
+                  name: sInfo.name, school: 'Shadow', icon: sInfo.icon, canCrit: false
+                };
+                if (sid === 2944) cdUntil[sid] = t + 180.0;
+                recordAction(sInfo.name, 'Shadow', sInfo.icon, 0, true, true, false, false);
+              } else if (sid === 10947) { // Mind Blast
+                let mbBase = (rData.minD || 115) + Math.random() * ((rData.maxD || 124) - (rData.minD || 115));
+                let mbDmg = mbBase + shadowSP * 0.429;
+                let isCrit = Math.random() < spellCritChance;
+                if (isCrit) mbDmg *= 1.5;
+                iterDamage += mbDmg;
+                cdUntil[sid] = t + 8.0;
+                recordAction(sInfo.name, 'Shadow', sInfo.icon, mbDmg, true, true, isCrit, false);
+              } else if (sid === 18807) { // Mind Flay
+                let mfDmg = (rData.totalD || 126) + shadowSP * 0.45;
+                iterDamage += mfDmg;
+                gcdAdvance = 3.0;
+                recordAction(sInfo.name, 'Shadow', sInfo.icon, mfDmg, true, true, false, false);
+              } else if (sid === 10938) { // Smite
+                let smBase = (rData.minD || 58) + Math.random() * ((rData.maxD || 67) - (rData.minD || 58));
+                let smDmg = smBase + holySP * 0.714;
+                let isCrit = Math.random() < spellCritChance;
+                if (isCrit) smDmg *= 1.5;
+                iterDamage += smDmg;
+                gcdAdvance = 2.0;
+                recordAction(sInfo.name, 'Holy', sInfo.icon, smDmg, true, true, isCrit, false);
+              }
+
+              // PALADIN SPELLS
+              else if (sid === 20925) { // Holy Shield
+                holyShieldUntil = t + 10.0;
+                let hsRefDmg = (rData.blockDmg || 65) * 2.0 + holySP * 0.20;
+                iterDamage += hsRefDmg;
+                cdUntil[sid] = t + 10.0;
+                recordAction(sInfo.name, 'Holy', sInfo.icon, hsRefDmg, true, true, false, false);
+              } else if (sid === 24275) { // Hammer of Wrath
+                let hwBase = (rData.minD || 304) + Math.random() * ((rData.maxD || 336) - (rData.minD || 304));
+                let hwDmg = hwBase + holySP * 0.429;
+                let isCrit = Math.random() < spellCritChance;
+                if (isCrit) hwDmg *= 1.5;
+                iterDamage += hwDmg;
+                cdUntil[sid] = t + 6.0;
+                recordAction(sInfo.name, 'Holy', sInfo.icon, hwDmg, true, true, isCrit, false);
+              } else if (sid === 20375) { // Seal of Command
+                sealCommandUntil = t + 30.0;
+                recordAction(sInfo.name, 'Holy', sInfo.icon, 0, true, true, false, false);
+              } else if (sid === 20271) { // Judgement
+                let jDmg = (rData.dmg || 65) + holySP * 0.43 + (curAP * 0.20);
+                let isCrit = Math.random() < critChance;
+                if (isCrit) jDmg *= 2.0;
+                iterDamage += jDmg;
+                cdUntil[sid] = t + 10.0;
+                recordAction(sInfo.name, 'Holy', sInfo.icon, jDmg, true, true, isCrit, false);
+              } else if (sid === 20924) { // Consecration
+                let cDmg = (rData.dmg || 64) + holySP * 0.33;
+                iterDamage += cDmg;
+                cdUntil[sid] = t + 8.0;
+                recordAction(sInfo.name, 'Holy', sInfo.icon, cDmg, true, true, false, false);
+              }
+
+              // DRUID SPELLS
+              else if (sid === 9827) { // Rake
+                let rkDirect = (rData.directD || 19) + (curAP * 0.06);
+                iterDamage += rkDirect;
+                activeDots[sid] = {
+                  until: t + 9.0, nextTick: t + 3.0, interval: 3.0,
+                  tickDmg: (rData.dotTick || 13) + (curAP * 0.06),
+                  name: sInfo.name, school: 'Physical', icon: sInfo.icon, canCrit: false
+                };
+                comboPoints = Math.min(5, comboPoints + 1);
+                recordAction(sInfo.name, 'Physical', sInfo.icon, rkDirect, true, true, false, false);
+              } else if (sid === 1079) { // Rip
+                let cpUsed = Math.max(1, comboPoints);
+                activeDots[sid] = {
+                  until: t + 12.0, nextTick: t + 2.0, interval: 2.0,
+                  tickDmg: ((rData.dotTick || 24) * (0.5 + cpUsed * 0.25)) + (curAP * 0.05),
+                  name: sInfo.name, school: 'Physical', icon: sInfo.icon, canCrit: false
+                };
+                comboPoints = 0;
+                recordAction(sInfo.name, 'Physical', sInfo.icon, 0, true, true, false, false);
+              } else if (sid === 22829) { // Ferocious Bite
+                let cpUsed = Math.max(1, comboPoints);
+                let fbDmg = (cpUsed * (rData.perCp || 44) + curAP * 0.15 * cpUsed) * (1.0 - curArmorDR);
+                let isCrit = Math.random() < critChance;
+                if (isCrit) fbDmg *= 2.0;
+                iterDamage += fbDmg;
+                comboPoints = 0;
+                recordAction(sInfo.name, 'Physical', sInfo.icon, fbDmg, true, true, isCrit, false);
+              } else if (sid === 9830 || sid === 9881) { // Shred / Claw
+                let mult = (sid === 9830) ? 2.25 : 1.15;
+                let cDmg = ((wpnMin + Math.random() * (wpnMax - wpnMin) + (curAP / 14.0) * 1.0) * mult + (rData.bonusDmg || 27)) * (1.0 - curArmorDR);
+                let isCrit = Math.random() < critChance;
+                if (isCrit) cDmg *= 2.0;
+                iterDamage += cDmg;
+                comboPoints = Math.min(5, comboPoints + 1);
+                recordAction(sInfo.name, 'Physical', sInfo.icon, cDmg, true, true, isCrit, false);
+              } else if (sid === 9835) { // Moonfire
+                let mfDirect = (rData.directD || 30) + natureSP * 0.15;
+                let isCrit = Math.random() < spellCritChance;
+                if (isCrit) mfDirect *= 1.5;
+                iterDamage += mfDirect;
+                activeDots[sid] = {
+                  until: t + 12.0, nextTick: t + 3.0, interval: 3.0,
+                  tickDmg: ((rData.dotD || 60) / 4.0) + natureSP * 0.13,
+                  name: sInfo.name, school: 'Arcane', icon: sInfo.icon, canCrit: false
+                };
+                recordAction(sInfo.name, 'Arcane', sInfo.icon, mfDirect, true, true, isCrit, false);
+              } else if (sid === 2912) { // Starfire
+                let sfBase = (rData.minD || 95) + Math.random() * ((rData.maxD || 115) - (rData.minD || 95));
+                let sfDmg = sfBase + natureSP * 1.0;
+                let isCrit = Math.random() < spellCritChance;
+                if (isCrit) sfDmg *= 1.5;
+                iterDamage += sfDmg;
+                cdUntil[sid] = t + 6.0;
+                gcdAdvance = 3.0;
+                recordAction(sInfo.name, 'Arcane', sInfo.icon, sfDmg, true, true, isCrit, false);
+              } else if (sid === 9756) { // Wrath
+                let wrBase = (rData.minD || 48) + Math.random() * ((rData.maxD || 57) - (rData.minD || 48));
+                let wrDmg = wrBase + natureSP * 0.571;
+                let isCrit = Math.random() < spellCritChance;
+                if (isCrit) wrDmg *= 1.5;
+                iterDamage += wrDmg;
+                gcdAdvance = 1.5;
+                recordAction(sInfo.name, 'Nature', sInfo.icon, wrDmg, true, true, isCrit, false);
+              } else {
+                // Generic fallback spell
+                recordAction(sInfo.name, sInfo.school || 'Magic', sInfo.icon, 25 + level * 2, true, true, false, false);
+              }
+
+              nextGcdTime = t + gcdAdvance;
+              actionCast = true;
+              break; // Only 1 GCD action can fire per GCD tick!
             }
 
             if (!actionCast) {
