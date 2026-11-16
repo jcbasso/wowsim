@@ -4796,7 +4796,7 @@
             custom_rotation: steps,
             gear: currentGear || {},
             enchants: currentEnchants || {},
-            buffs: currentBuffs || {}
+            buffs: (typeof activeBuffs !== 'undefined' ? activeBuffs : {})
           }, catalog, enchantsCatalog, buffsCatalog);
 
           const dps = (simRes && simRes.dps && typeof simRes.dps.avg === 'number') ? simRes.dps.avg : 0;
@@ -5310,18 +5310,362 @@
       if (lbl) lbl.innerText = `${dur}s • ${iters}`;
     }
 
-    function runUnifiedAutoBiS() {
+        function getActiveCharacterRoleMode() {
+      const cSpec = (currentCharacterSpec || '').toLowerCase();
+      if (cSpec === 'tank' || cSpec === 'protection' || cSpec === 'warden') return 'tank';
+      if (cSpec === 'resto' || cSpec === 'restoration' || cSpec === 'holy') return 'healer';
+      return 'dps';
+    }
+
+    function getSimulationObjectiveScore(simRes, roleMode) {
+      if (!simRes) return 0;
+      if (roleMode === 'tank') {
+        const t = simRes.tank;
+        if (t && typeof t.tank_score === 'number') {
+          return (t.tank_score * 10) + (t.tps || 0);
+        }
+        return (simRes.dps && typeof simRes.dps.avg === 'number') ? simRes.dps.avg : 0;
+      }
+      if (roleMode === 'healer') {
+        const healCap = (simRes.healing && simRes.healing.healing_capacity) ? simRes.healing.healing_capacity : 0;
+        const hps = (simRes.healing && simRes.healing.hps) ? simRes.healing.hps : 0;
+        return healCap > 0 ? (healCap / 25.0) + (hps * 1.5) : (simRes.dps ? simRes.dps.avg : 0);
+      }
+      return (simRes.dps && typeof simRes.dps.avg === 'number') ? simRes.dps.avg : 0;
+    }
+
+    async function computeDynamicStatWeights(roleMode) {
+      const currentLvl = getCurrentPlayerLevel();
+      const currentImbueVal = (activeCharacterClass === 'shaman') ? currentImbue : 'None';
+      const talStr = (typeof getSerializedTalents === 'function') ? getSerializedTalents() : '--';
+
+      const baseRes = await simulateCombatInBrowser({
+        characterClass: activeCharacterClass,
+        spec: currentCharacterSpec,
+        level: currentLvl,
+        imbue: currentImbueVal,
+        talents: talStr,
+        duration: 30,
+        iterations: 40,
+        seed: 42,
+        fastMode: true,
+        rotation_preset: activeRotationPresetKey,
+        custom_rotation: currentRotation,
+        gear: currentGear || {},
+        enchants: currentEnchants || {},
+        buffs: (typeof activeBuffs !== 'undefined' ? activeBuffs : {})
+      }, catalog, enchantsCatalog, buffsCatalog);
+
+      const baseScore = Math.max(1, getSimulationObjectiveScore(baseRes, roleMode));
+
+      let testStats = {};
+      if (roleMode === 'tank') {
+        testStats = {
+          Str: 15, Sta: 15, Agi: 15, Armor: 100, Def: 10, Block: 15, Hit: 2, Crit: 2, AP: 30
+        };
+      } else if (roleMode === 'healer') {
+        testStats = {
+          Healing: 20, SP: 15, Int: 15, Spi: 15, MP5: 5, Sta: 15, Crit: 2
+        };
+      } else {
+        const isCaster = (activeCharacterClass === 'mage' || activeCharacterClass === 'priest' || activeCharacterClass === 'warlock' || (activeCharacterClass === 'shaman' && currentCharacterSpec === 'elemental'));
+        if (isCaster) {
+          testStats = { SP: 15, Int: 15, Crit: 2, Hit: 2, Sta: 15, Spi: 15 };
+          if (activeCharacterClass === 'mage' && currentCharacterSpec === 'fire') testStats.FireSP = 15;
+          if (activeCharacterClass === 'mage' && currentCharacterSpec === 'frost') testStats.FrostSP = 15;
+          if (activeCharacterClass === 'warlock' || activeCharacterClass === 'priest') testStats.ShadowSP = 15;
+          if (activeCharacterClass === 'shaman') testStats.NatureSP = 15;
+        } else {
+          testStats = { Str: 15, Agi: 15, AP: 30, Crit: 2, Hit: 2, Sta: 15, Armor: 50 };
+          if (['shaman', 'paladin', 'druid'].includes(activeCharacterClass)) {
+            testStats.Int = 15;
+          }
+        }
+      }
+
+      const marginalRates = {};
+      for (const [stat, delta] of Object.entries(testStats)) {
+        try {
+          const pertRes = await simulateCombatInBrowser({
+            characterClass: activeCharacterClass,
+            spec: currentCharacterSpec,
+            level: currentLvl,
+            imbue: currentImbueVal,
+            talents: talStr,
+            duration: 30,
+            iterations: 40,
+            seed: 42,
+            fastMode: true,
+            bonusStats: { [stat]: delta },
+            rotation_preset: activeRotationPresetKey,
+            custom_rotation: currentRotation,
+            gear: currentGear || {},
+            enchants: currentEnchants || {},
+            buffs: (typeof activeBuffs !== 'undefined' ? activeBuffs : {})
+          }, catalog, enchantsCatalog, buffsCatalog);
+
+          const pertScore = getSimulationObjectiveScore(pertRes, roleMode);
+          const diff = Math.max(0.001, pertScore - baseScore);
+          marginalRates[stat] = diff / delta;
+        } catch (e) {
+          marginalRates[stat] = 0.05;
+        }
+      }
+
+      const anchorStat = (roleMode === 'healer') ? 'Healing' : ((roleMode === 'dps' && ['mage', 'warlock', 'priest'].includes(activeCharacterClass)) ? 'SP' : 'Str');
+      const anchorBaseWeight = (anchorStat === 'Str') ? 2.0 : 1.0;
+      const anchorRate = marginalRates[anchorStat] || 0.1;
+
+      for (const [stat, rate] of Object.entries(marginalRates)) {
+        const rawW = (rate / anchorRate) * anchorBaseWeight;
+        currentStatWeights[stat] = Math.max(0.05, Math.min(25.0, parseFloat(rawW.toFixed(2))));
+      }
+
+      if (!currentStatWeights.dps) currentStatWeights.dps = (roleMode === 'tank') ? 3.5 : 5.5;
+      if (!currentStatWeights.speed) currentStatWeights.speed = 1.8;
+
+      renderWeightsModalInputs();
+      return currentStatWeights;
+    }
+
+    async function runDirectWeaponShootout(roleMode) {
+      if (!catalog) return;
+      const currentLvl = getCurrentPlayerLevel();
+      const currentImbueVal = (activeCharacterClass === 'shaman') ? currentImbue : 'None';
+      const talStr = (typeof getSerializedTalents === 'function') ? getSerializedTalents() : '--';
+
+      const weaponStyleEl = document.getElementById('cfg-weapon-style');
+      const weaponStyle = weaponStyleEl ? weaponStyleEl.value : 'auto';
+      const bopToggleEl = document.getElementById('src-filter-bop');
+      const allowBoP = bopToggleEl ? bopToggleEl.checked : true;
+
+      const rawSlot = getCatalogSlotName('mainhand');
+      let candidates = (catalog[rawSlot] || []).filter(it => {
+        if (!allowBoP && it.isBoP) return false;
+        const scRes = calculateItemScore(it, currentLvl);
+        if (scRes.isOverlevel || scRes.isProfessionIneligible || scRes.score === 0) return false;
+        const itCat = it.sourceCategory || 'world';
+        if (!activeSourceFilters.has(itCat)) return false;
+        if (weaponStyle === 'twohand' && !it.is2H) return false;
+        if ((weaponStyle === 'onehand_shield' || weaponStyle === 'dual_wield') && it.is2H) return false;
+        return true;
+      });
+
+      if (candidates.length === 0) return;
+
+      candidates.sort((a, b) => calculateItemScore(b, currentLvl).score - calculateItemScore(a, currentLvl).score);
+      const topCandidates = candidates.slice(0, 6);
+
+      let bestWeapon = topCandidates[0];
+      let bestScore = -1;
+
+      for (const weapon of topCandidates) {
+        const testGear = Object.assign({}, currentGear, { mainhand: weapon.id });
+        if (weapon.is2H) testGear.offhand = 0;
+        try {
+          const simRes = await simulateCombatInBrowser({
+            characterClass: activeCharacterClass,
+            spec: currentCharacterSpec,
+            level: currentLvl,
+            imbue: currentImbueVal,
+            talents: talStr,
+            duration: 30,
+            iterations: 50,
+            seed: 42,
+            fastMode: true,
+            rotation_preset: activeRotationPresetKey,
+            custom_rotation: currentRotation,
+            gear: testGear,
+            enchants: currentEnchants || {},
+            buffs: (typeof activeBuffs !== 'undefined' ? activeBuffs : {})
+          }, catalog, enchantsCatalog, buffsCatalog);
+
+          const sc = getSimulationObjectiveScore(simRes, roleMode);
+          if (sc > bestScore) {
+            bestScore = sc;
+            bestWeapon = weapon;
+          }
+        } catch (e) {}
+      }
+
+      if (bestWeapon) {
+        currentGear.mainhand = bestWeapon.id;
+        if (bestWeapon.is2H) {
+          currentGear.offhand = 0;
+        } else if (weaponStyle === 'onehand_shield' || roleMode === 'tank') {
+          const rawOhSlot = getCatalogSlotName('offhand');
+          let shieldCandidates = (catalog[rawOhSlot] || []).filter(it => {
+            if (!it.isShield && (!it.armor || it.armor < 80)) return false;
+            if (!allowBoP && it.isBoP) return false;
+            const scRes = calculateItemScore(it, currentLvl);
+            if (scRes.isOverlevel || scRes.isProfessionIneligible || scRes.score === 0) return false;
+            return true;
+          });
+          shieldCandidates.sort((a, b) => calculateItemScore(b, currentLvl).score - calculateItemScore(a, currentLvl).score);
+          const topShields = shieldCandidates.slice(0, 4);
+
+          let bestShield = topShields[0];
+          let bestShieldScore = -1;
+          for (const shield of topShields) {
+            const testGear = Object.assign({}, currentGear, { mainhand: bestWeapon.id, offhand: shield.id });
+            try {
+              const simRes = await simulateCombatInBrowser({
+                characterClass: activeCharacterClass,
+                spec: currentCharacterSpec,
+                level: currentLvl,
+                imbue: currentImbueVal,
+                talents: talStr,
+                duration: 30,
+                iterations: 50,
+                seed: 42,
+                fastMode: true,
+                rotation_preset: activeRotationPresetKey,
+                custom_rotation: currentRotation,
+                gear: testGear,
+                enchants: currentEnchants || {},
+                buffs: (typeof activeBuffs !== 'undefined' ? activeBuffs : {})
+              }, catalog, enchantsCatalog, buffsCatalog);
+              const sc = getSimulationObjectiveScore(simRes, roleMode);
+              if (sc > bestShieldScore) {
+                bestShieldScore = sc;
+                bestShield = shield;
+              }
+            } catch (e) {}
+          }
+          if (bestShield) currentGear.offhand = bestShield.id;
+        }
+      }
+    }
+
+    async function optimizeTalentsAndRotationInSim(roleMode) {
+      const currentLvl = getCurrentPlayerLevel();
+      const currentImbueVal = (activeCharacterClass === 'shaman') ? currentImbue : 'None';
+
+      // Benchmark rotation presets
+      const clsRotations = ALL_CLASS_ROTATIONS[activeCharacterClass] || ALL_CLASS_ROTATIONS.shaman;
+      let bestRotKey = activeRotationPresetKey;
+      let bestRotScore = -1;
+
+      for (const [key, steps] of Object.entries(clsRotations)) {
+        try {
+          const simRes = await simulateCombatInBrowser({
+            characterClass: activeCharacterClass,
+            spec: currentCharacterSpec,
+            level: currentLvl,
+            imbue: currentImbueVal,
+            talents: (typeof getSerializedTalents === 'function') ? getSerializedTalents() : '--',
+            duration: 30,
+            iterations: 40,
+            seed: 42,
+            fastMode: true,
+            rotation_preset: key,
+            custom_rotation: steps,
+            gear: currentGear || {},
+            enchants: currentEnchants || {},
+            buffs: (typeof activeBuffs !== 'undefined' ? activeBuffs : {})
+          }, catalog, enchantsCatalog, buffsCatalog);
+          const sc = getSimulationObjectiveScore(simRes, roleMode);
+          if (sc > bestRotScore) {
+            bestRotScore = sc;
+            bestRotKey = key;
+          }
+        } catch (e) {}
+      }
+
+      if (bestRotKey && rotationPresets[bestRotKey]) {
+        loadRotationPreset(bestRotKey);
+      }
+    }
+
+    async function runSimDrivenCoOptimizer() {
+      const progBar = document.getElementById('btn-sim-progress');
+      const btn = document.getElementById('btn-simulate');
+      const badge = document.getElementById('res-diff-badge');
+      if (btn) btn.disabled = true;
+      if (progBar) {
+        progBar.style.display = 'block';
+        progBar.style.width = '10%';
+      }
+      if (badge) {
+        badge.style.display = 'inline-block';
+        badge.className = 'dps-diff diff-up';
+        badge.innerText = '⚙️ Co-Optimizer: Baseline Setup...';
+      }
+
+      const roleMode = getActiveCharacterRoleMode();
+      const cSpec = currentCharacterSpec || 'enhancement';
+      const profKey = activeCharacterClass + "_" + cSpec;
+
+      // Step 1: Baseline setup
+      if (defaultStatWeightProfiles[profKey]) {
+        selectWeightProfile(profKey);
+      } else if (defaultStatWeightProfiles[cSpec]) {
+        selectWeightProfile(cSpec);
+      }
+      autoOptimizeTalentsForLevel(true);
+      autoEquipLevelingBiS();
+      autoEnchantAllSlots();
+      autoOptimizeBiSConsumables();
+
+      if (progBar) progBar.style.width = '25%';
+      if (badge) badge.innerText = '🔬 Simulating Dynamic Stat Weights (Pass 1)...';
+
+      // Step 2: Coordinate Ascent Pass 1 - Compute Dynamic Stat Weights
+      await computeDynamicStatWeights(roleMode);
+
+      if (progBar) progBar.style.width = '45%';
+      if (badge) badge.innerText = '🛡️ Re-evaluating Armor with Sim Weights...';
+
+      // Step 3: Re-equip Armor with Dynamic Weights
+      autoEquipLevelingBiS();
+
+      if (badge) badge.innerText = '⚔️ Direct Weapon Shootout in Monte Carlo Sim...';
+
+      // Step 4: Direct Weapon Shootout in Sim
+      await runDirectWeaponShootout(roleMode);
+
+      if (progBar) progBar.style.width = '70%';
+      if (badge) badge.innerText = '📜 Benchmarking Rotation Presets in Sim...';
+
+      // Step 5: Optimize Rotation & Talents in Sim
+      await optimizeTalentsAndRotationInSim(roleMode);
+
+      if (badge) badge.innerText = '⚡ Coordinate Ascent Pass 2: Refinement...';
+
+      // Step 6: Coordinate Ascent Pass 2 - Refine Weights and Final Armor Verification
+      await computeDynamicStatWeights(roleMode);
+      autoEquipLevelingBiS();
+      autoEnchantAllSlots();
+      autoOptimizeBiSConsumables();
+
+      if (progBar) progBar.style.width = '90%';
+
+      renderGearSlots();
+      renderTalentTrees();
+      updateTalentHeader();
+      onSettingChanged();
+
+      // Step 7: Final full Monte Carlo simulation to populate dashboards and breakdown
+      await runOneStopSimulate();
+
+      if (progBar) {
+        progBar.style.width = '100%';
+        setTimeout(() => { progBar.style.display = 'none'; }, 400);
+      }
+      if (btn) btn.disabled = false;
+      const lvl = getCurrentPlayerLevel();
+      if (badge) {
+        badge.innerText = "⚡ Level " + lvl + " Full BiS (Sim Co-Optimized)";
+      }
+
+      showToastNotice("✨ Sim-Driven Co-Optimizer Converged! Equipped BiS Gear, Weapons, Enchants & Rotation for " + activeCharacterClass.toUpperCase() + " (" + cSpec.toUpperCase() + ")");
+    }
+
+    async function runUnifiedAutoBiS() {
       const sel = document.getElementById('cfg-bis-target');
       const targetVal = sel ? sel.value : 'all';
       if (!targetVal || targetVal === 'all') {
-        // Restore active spec profile weights and run full BiS (Gear + Enchants + Talents + Consumes)
         const cSpec = currentCharacterSpec || 'enhancement';
-        const profKey = `${activeCharacterClass}_${cSpec}`;
-        if (defaultStatWeightProfiles[profKey]) {
-          selectWeightProfile(profKey);
-        } else if (defaultStatWeightProfiles[cSpec]) {
-          selectWeightProfile(cSpec);
-        }
         const styleSelect = document.getElementById('cfg-weapon-style');
         if (styleSelect && activeCharacterClass === 'shaman') {
           styleSelect.value = (cSpec === 'tank' || cSpec === 'resto') ? 'onehand_shield' : 'auto';
@@ -5329,9 +5673,7 @@
         if (activeCharacterClass === 'shaman') {
           setImbue(cSpec === 'tank' ? 'RockbiterWeapon' : 'FlametongueWeapon');
         }
-        autoOptimizeTalentsForLevel();
-        autoOptimizeFullBiS();
-        showToastNotice(`✨ Equipped All-Around ${cSpec.toUpperCase()} BiS (Gear, Enchants, Talents & Consumables)!`);
+        await runSimDrivenCoOptimizer();
       } else {
         optimizeForScenario(targetVal);
       }
@@ -8860,6 +9202,18 @@
 
     // --- IN-BROWSER CLIENT MONTE CARLO SIMULATION ENGINE ---
     async function simulateCombatInBrowser(reqBody, cat, encCat, buffCat, onProgress) {
+      // Seeded PRNG for Common Random Numbers (CRN)
+      let s = (reqBody.seed !== undefined && reqBody.seed !== null) ? ((reqBody.seed >>> 0) || 12345) : null;
+      const Math = Object.create(globalThis.Math);
+      if (s !== null) {
+        Math.random = function() {
+          let t = s += 0x6D2B79F5;
+          t = globalThis.Math.imul(t ^ (t >>> 15), t | 1);
+          t ^= t + globalThis.Math.imul(t ^ (t >>> 7), t | 61);
+          return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+        };
+      }
+
       const level = reqBody.level || getCurrentPlayerLevel();
       const duration = Math.max(5, Math.min(300, parseInt(reqBody.duration) || 30));
       const iterations = Math.max(10, Math.min(2000, parseInt(reqBody.iterations) || 200));
@@ -8964,6 +9318,17 @@
         }
       }
 
+      // Virtual bonus stats (e.g. for finite-difference perturbation)
+      if (reqBody.bonusStats && typeof reqBody.bonusStats === 'object') {
+        for (const k in reqBody.bonusStats) {
+          if (gearStats[k] !== undefined) {
+            gearStats[k] += (reqBody.bonusStats[k] || 0);
+          } else {
+            gearStats[k] = (reqBody.bonusStats[k] || 0);
+          }
+        }
+      }
+
       const mhItem = gear.mainhand ? itemLookup[gear.mainhand] : null;
       const ohItem = gear.offhand ? itemLookup[gear.offhand] : null;
       const rangedItem = gear.relic ? itemLookup[gear.relic] : null;
@@ -9057,8 +9422,73 @@
         if (mentalDexRank > 0) totalAP += Math.round(totalInt * (mentalDexRank * 0.33));
       }
 
-      let meleeCritPct = 4.0 + (totalAgi / 19.5) + (charClass === 'shaman' ? thunderingStrikesRank * 1.0 : 0) + (gearStats.Crit || 0);
-      let meleeHitPct = (gearStats.Hit || 0);
+      // Multi-class Talent Modifiers
+      let talentCritBonus = 0;
+      let talentHitBonus = 0;
+      let talentDmgBonus = 1.0;
+      let talentArmorBonusPct = 0;
+      let talentDefBonus = 0;
+      let talentDodgeBonus = 0;
+      let talentParryBonus = 0;
+      let talentBlockBonus = 0;
+
+      if (charClass === 'warrior') {
+        const cruelty = getTal(t1, 1);
+        const deflection = getTal(t0, 1);
+        const shieldSpec = getTal(t2, 1);
+        const anticipation = getTal(t2, 3);
+        const masterOfDefense = getTal(t2, 7);
+        talentCritBonus += cruelty * 1.0;
+        talentParryBonus += deflection * 1.0;
+        talentBlockBonus += shieldSpec * 1.0;
+        talentDefBonus += (anticipation * 2.0) + (masterOfDefense * 5.0);
+      } else if (charClass === 'rogue') {
+        const malice = getTal(t0, 2);
+        const lightningReflexes = getTal(t1, 2);
+        const precision = getTal(t1, 5);
+        const opportunity = getTal(t2, 2);
+        talentCritBonus += malice * 1.0;
+        talentDodgeBonus += lightningReflexes * 1.0;
+        talentHitBonus += precision * 1.0;
+        if (opportunity > 0) talentDmgBonus += opportunity * 0.04;
+      } else if (charClass === 'hunter') {
+        const lethalAttacks = getTal(t1, 2);
+        talentCritBonus += lethalAttacks * 1.0;
+      } else if (charClass === 'mage') {
+        const precision = getTal(t2, 2);
+        talentHitBonus += precision * 1.0;
+      } else if (charClass === 'paladin') {
+        const conviction = getTal(t2, 3);
+        const redoubt = getTal(t1, 1);
+        const precision = getTal(t1, 2);
+        talentCritBonus += conviction * 1.0;
+        talentBlockBonus += redoubt * 1.0;
+        talentHitBonus += precision * 1.0;
+      } else if (charClass === 'warlock') {
+        const suppression = getTal(t0, 1);
+        const bane = getTal(t2, 2);
+        talentHitBonus += suppression * 1.0;
+        if (bane > 0) talentDmgBonus += 0.05;
+      } else if (charClass === 'priest') {
+        const holySpec = getTal(t1, 2);
+        const shadowFocus = getTal(t2, 0);
+        talentCritBonus += holySpec * 1.0;
+        talentHitBonus += shadowFocus * 1.0;
+      } else if (charClass === 'druid') {
+        const ferocity = getTal(t1, 0);
+        const thickHide = getTal(t1, 5);
+        talentArmorBonusPct += thickHide * 0.03;
+        if (ferocity > 0) talentDmgBonus += 0.05;
+      }
+
+      gearStats.Def = (gearStats.Def || 0) + talentDefBonus;
+      gearStats.Dodge = (gearStats.Dodge || 0) + talentDodgeBonus;
+      gearStats.Parry = (gearStats.Parry || 0) + talentParryBonus;
+      gearStats.Block = (gearStats.Block || 0) + talentBlockBonus;
+
+      let meleeCritPct = 4.0 + (totalAgi / 19.5) + (charClass === 'shaman' ? thunderingStrikesRank * 1.0 : 0) + talentCritBonus + (gearStats.Crit || 0);
+      let meleeHitPct = (gearStats.Hit || 0) + talentHitBonus;
+      if (talentArmorBonusPct > 0) totalArmor = Math.round(totalArmor * (1 + talentArmorBonusPct));
       let spellPower = (gearStats.SP || 0);
       let fireSP = spellPower + (gearStats.FireSP || 0);
       let natureSP = spellPower + (gearStats.NatureSP || 0);
@@ -9152,7 +9582,7 @@
       // Monte Carlo loop
       const batchSize = Math.max(4, Math.ceil(iterations / 35));
       for (let it = 0; it < iterations; it++) {
-        if (it > 0 && it % batchSize === 0) {
+        if (!reqBody.fastMode && it > 0 && it % batchSize === 0) {
           if (onProgress) onProgress(it, iterations);
           await new Promise(r => setTimeout(r, 32));
         }
@@ -9572,7 +10002,7 @@
         iterationDpsList.push(iterDamage / duration);
       }
 
-      if (onProgress) onProgress(iterations, iterations);
+      if (!reqBody.fastMode && onProgress) onProgress(iterations, iterations);
 
       // Aggregate results
       let avgDps = iterationDpsList.reduce((a, b) => a + b, 0) / iterations;
