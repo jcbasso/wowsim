@@ -1757,14 +1757,14 @@
       background: rgba(22, 28, 40, 0.55);
       border: 1px solid rgba(255, 255, 255, 0.06);
       color: #94a3b8;
-      font-size: 0.75rem;
+      font-size: 0.72rem;
       font-weight: 700;
-      padding: 5px 11px;
+      padding: 4px 8px;
       border-radius: 6px;
       cursor: pointer;
       display: inline-flex;
       align-items: center;
-      gap: 7px;
+      gap: 5px;
       transition: all 0.16s cubic-bezier(0.2, 0.8, 0.2, 1);
       white-space: nowrap;
       position: relative;
@@ -1772,8 +1772,8 @@
     }
     .spec-toggle-btn .spec-wow-icon,
     .spec-tab-pill .spec-wow-icon {
-      width: 18px;
-      height: 18px;
+      width: 16px;
+      height: 16px;
       border-radius: 4px;
       background-size: cover;
       background-position: center;
@@ -2381,11 +2381,11 @@
       z-index: 200;
       background: linear-gradient(180deg, #161922 0%, #0e1017 100%);
       border-bottom: 1px solid var(--border-gold);
-      padding: 8px 20px;
+      padding: 6px 14px;
       display: flex;
-      align-items: safe center;
+      align-items: center;
       justify-content: space-between;
-      gap: 12px;
+      gap: 8px 12px;
       flex-wrap: wrap;
       box-shadow: 0 4px 20px rgba(0, 0, 0, 0.75);
     }
@@ -2394,19 +2394,19 @@
     }
     .character-identity-bar {
       display: flex;
-      align-items: safe center;
-      gap: 8px;
-      flex-wrap: wrap;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: nowrap;
       background: rgba(10, 12, 18, 0.65);
       border: 1px solid #283040;
-      padding: 4px 10px;
+      padding: 3px 8px;
       border-radius: 8px;
     }
     .master-actions-bar {
       display: flex;
-      align-items: safe center;
-      gap: 10px;
-      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: nowrap;
     }
     .unified-bis-group {
       display: inline-flex;
@@ -2426,7 +2426,7 @@
       font-weight: 700;
       cursor: pointer;
       outline: none;
-      max-width: 195px;
+      max-width: 165px;
     }
     .unified-bis-select option {
       background: #141720;
@@ -2886,7 +2886,7 @@
         </button>
         <button id="spec-btn-tank" class="spec-tab-pill spec-prot" onclick="switchSpecRole('tank')" title="Warden Shaman Tank — Armor Mitigation, EHP & Rockbiter/Earth Shock Threat">
           <span class="spec-wow-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/medium/spell_nature_stoneclawtotem.jpg');"></span>
-          <span>Warden Tank</span>
+          <span>Warden</span>
           <span class="spec-role-tag">TANK</span>
         </button>
         <button id="spec-btn-resto" class="spec-tab-pill spec-res" onclick="switchSpecRole('resto')" title="Restoration Shaman — Healing Throughput & Mana Efficiency">
@@ -3436,6 +3436,7 @@
           <div class="telemetry-label" id="telemetry-primary-label">Single-Target DPS</div>
           <div class="telemetry-main-row">
             <span class="telemetry-big-val" id="res-dps">--.-</span>
+            <span style="font-size: 0.92rem; font-weight: 800; color: #f59e0b; margin-left: 2px;">DPS</span>
             <span id="res-diff-badge" style="display: none; font-size: 0.68rem; padding: 2px 6px;" class="dps-diff"></span>
           </div>
           <div class="telemetry-sub-row" id="telemetry-primary-subrow">
@@ -3931,10 +3932,11 @@
         const hasProf = isCharacterProfession(item.requiredProfessionName);
         const badgeClass = hasProf ? 'badge-has-prof' : 'badge-req-prof';
         reqProfBadge = `<span class="${badgeClass}">Req ${item.requiredProfessionName}</span>`;
-      } else if (item.isBoP && item.craftedProfession) {
+      } else if (item.craftedProfession) {
         const hasProf = isCharacterProfession(item.craftedProfession);
         const badgeClass = hasProf ? 'badge-has-prof' : 'badge-req-prof';
-        reqProfBadge = `<span class="${badgeClass}">Req ${item.craftedProfession} (BoP)</span>`;
+        const profDisplay = item.craftedProfession.charAt(0).toUpperCase() + item.craftedProfession.slice(1);
+        reqProfBadge = `<span class="${badgeClass}">${hasProf ? 'Crafted' : 'Req'} (${profDisplay}${item.isBoP ? ' BoP' : ''})</span>`;
       }
 
       return `<span class="badge-source ${cat}" title="${label}">${icon} ${label}</span><span class="badge-bind ${bindClass}">${bindText}</span>${reqProfBadge}`;
@@ -5286,7 +5288,7 @@
         defaultSpec: 'enhancement',
         specs: [
           { id: 'enhancement', name: 'Enhancement', icon: '⚔️', wowIcon: 'spell_nature_lightningshield', roleTag: 'DPS', role: 'melee', classSuffix: 'enh' },
-          { id: 'tank', name: 'Warden Tank', icon: '🛡️', wowIcon: 'spell_nature_stoneclawtotem', roleTag: 'TANK', role: 'tank', classSuffix: 'prot' },
+          { id: 'tank', name: 'Warden', icon: '🛡️', wowIcon: 'spell_nature_stoneclawtotem', roleTag: 'TANK', role: 'tank', classSuffix: 'prot' },
           { id: 'resto', name: 'Restoration', icon: '💚', wowIcon: 'spell_nature_magicimmunity', roleTag: 'HEAL', role: 'healer', classSuffix: 'res' },
           { id: 'elemental', name: 'Elemental', icon: '⚡', wowIcon: 'spell_nature_lightning', roleTag: 'CAST', role: 'caster', classSuffix: 'ele' }
         ],
@@ -6156,20 +6158,20 @@
         }
       }
 
-      // Check crafted BoP items: If an item is BoP AND requires a craft / profession (e.g. Enchanting BoP relics, Engineering BoP goggles/trinkets)
-      // A player CANNOT obtain or equip it if they do not have that profession!
-      if (item.isBoP && (item.craftedProfession || (item.sourceCategory === 'crafted' && item.sourceLabel && item.sourceLabel.includes('Crafted')))) {
-        const craftProf = item.craftedProfession || item.requiredProfessionName;
-        if (craftProf && !isCharacterProfession(craftProf)) {
-          return {
-            score: 0,
-            isOverlevel: false,
-            isProfessionIneligible: true,
-            reqLvl: req,
-            reason: 'Requires ' + craftProf + ' to craft (BoP)',
-            profReason: 'Requires ' + craftProf + ' to craft (BoP)'
-          };
-        }
+      // Crafted Profession check: If an item is crafted by a specific profession (e.g. Blacksmithing, Leatherworking, Engineering, Tailoring)
+      // and the player did not select that profession in cfg-prof1 / cfg-prof2:
+      // Exclude items from unselected professions from auto-equip and BiS recommendations!
+      const craftProf = item.craftedProfession || (item.sourceLabel && item.sourceLabel.match(/Crafted\s*\(([^)]+)\)/i)?.[1]?.toLowerCase());
+      if (craftProf && !isCharacterProfession(craftProf)) {
+        const profDisplay = craftProf.charAt(0).toUpperCase() + craftProf.slice(1);
+        return {
+          score: 0,
+          isOverlevel: false,
+          isProfessionIneligible: true,
+          reqLvl: req,
+          reason: 'Requires ' + profDisplay + ' profession',
+          profReason: 'Requires ' + profDisplay + ' profession'
+        };
       }
 
       // Class Ranged & Relic Weapon Type Filtering
@@ -6228,9 +6230,9 @@
 
       return {
         score: Math.max(0, Math.round(score * 10) / 10),
-        isOverlevel: isOverlevel || isArmorIneligible,
+        isOverlevel: isOverlevel,
         isProfessionIneligible: false,
-        reqLvl: isArmorIneligible ? 99 : req
+        reqLvl: req
       };
     }
 
@@ -7565,8 +7567,8 @@
         if (profFilterVal === 'my_profs') {
           if (entry.isProfessionIneligible) continue;
           if (item.requiredProfessionName && !isCharacterProfession(item.requiredProfessionName)) continue;
-          const cp = item.craftedProfession || (item.sourceCategory === 'crafted' ? item.requiredProfessionName : null);
-          if (item.isBoP && cp && !isCharacterProfession(cp)) continue;
+          const cp = item.craftedProfession || (item.sourceCategory === 'crafted' ? (item.sourceLabel && item.sourceLabel.match(/Crafted\s*\(([^)]+)\)/i)?.[1]?.toLowerCase()) : null);
+          if (cp && !isCharacterProfession(cp)) continue;
         } else if (profFilterVal !== 'all') {
           const itCrafted = (item.craftedProfession || '').toLowerCase();
           const itReq = (item.requiredProfessionName || '').toLowerCase();
