@@ -2865,6 +2865,29 @@
   .rot-details summary{cursor:pointer;font-size:.72rem;color:#94a3b8;font-weight:700;padding:4px 0}
   .rot-details summary:hover{color:#e2e8f0}
 </style>
+<style id="scenario-grade-ux-styles">
+  .grade-pill{display:inline-flex;align-items:center;justify-content:center;gap:5px;min-width:30px;padding:2px 11px;border-radius:999px;font-weight:900;font-size:.78rem;letter-spacing:.3px;border:1.5px solid var(--gp,#94a3b8);color:var(--gp,#94a3b8);background:linear-gradient(180deg,color-mix(in srgb,var(--gp,#94a3b8) 22%,transparent),color-mix(in srgb,var(--gp,#94a3b8) 8%,transparent));box-shadow:0 0 10px color-mix(in srgb,var(--gp,#94a3b8) 28%,transparent);white-space:nowrap;line-height:1.3;user-select:none}
+  .grade-pill.lg{font-size:1.25rem;padding:3px 18px;min-width:52px}
+  .grade-pill .gp-sub{font-weight:600;font-size:.68em;opacity:.8}
+  .gp-s-plus{--gp:#c084fc}.gp-s{--gp:#34d399}.gp-a{--gp:#38bdf8}.gp-b{--gp:#fbbf24}.gp-c{--gp:#fb923c}.gp-d,.gp-f{--gp:#f87171}.gp-none{--gp:#64748b}
+  .scenario-cards-grid{display:flex !important;flex-direction:column;gap:6px !important}
+  .sc-row{border:1px solid #2b3240;background:#12151c;border-radius:8px;transition:border-color .15s}
+  .sc-row:hover{border-color:#475569}
+  .sc-row[open]{border-color:rgba(255,209,0,.45);background:#141824}
+  .sc-row.off{opacity:.5}
+  .sc-row>summary{list-style:none;cursor:pointer;display:grid;grid-template-columns:auto 1fr auto auto 14px;align-items:center;gap:10px;padding:8px 12px}
+  .sc-row>summary::-webkit-details-marker{display:none}
+  .sc-row .sc-chev{color:#64748b;font-size:.7rem;transition:transform .15s}
+  .sc-row[open] .sc-chev{transform:rotate(90deg)}
+  .sc-row .sc-name{font-size:.84rem;font-weight:700;color:#f1f5f9;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .sc-row .sc-sub{font-size:.68rem;color:#8b97ab;margin-top:1px}
+  .sc-row .sc-metric{font-size:.9rem;font-weight:800;color:#ffd700;text-align:right;white-space:nowrap}
+  .sc-row .sc-body{padding:2px 14px 12px 42px;display:flex;flex-direction:column;gap:8px;font-size:.76rem;color:#b6c0d0;line-height:1.45}
+  .sc-row .sc-stats{font-size:.72rem;color:#93c5fd;font-weight:600}
+  .sc-row .sc-tip{border-left:3px solid #ffd100;background:rgba(0,0,0,.28);padding:5px 9px;border-radius:0 5px 5px 0;color:#d1d8e0}
+  .sc-row .sc-actions{display:flex;gap:6px}
+  .sc-list-head{display:flex;justify-content:space-between;font-size:.66rem;text-transform:uppercase;letter-spacing:.5px;color:#64748b;padding:0 12px 2px 46px;font-weight:700}
+</style>
 </head>
 <body>
 
@@ -3507,12 +3530,12 @@
           </div>
         </div>
 
-        <!-- Card 2: Overall Composite Twink Score -->
+        <!-- Card 2: Overall Score & Grade -->
         <div class="telemetry-card">
-          <div class="telemetry-label">Composite Twink Score</div>
+          <div class="telemetry-label">Overall Grade</div>
           <div class="telemetry-main-row">
             <span class="telemetry-big-val" id="suite-composite-score" style="color: #fff;">--</span>
-            <span class="score-grade-pill" id="suite-composite-grade">Evaluating...</span>
+            <span class="grade-pill lg gp-none" id="suite-composite-grade">--</span><span style="font-size:.7rem;color:#64748b;font-weight:600;">/ 100</span>
           </div>
           <div class="telemetry-sub-row">
             <span id="sim-meta">12-Scenario Benchmark Ready</span>
@@ -3626,7 +3649,7 @@
             </div>
             <div style="display: flex; gap: 6px; align-items: center;">
               <span class="badge-rec" id="tank-shield-badge" style="background: rgba(56, 189, 248, 0.2); border-color: #38bdf8; color: #bae6fd;">1H + SHIELD</span>
-              <span class="score-grade-pill" id="tank-grade-badge" style="border-color: #38bdf8; color: #38bdf8; background: rgba(56, 189, 248, 0.16);">GRADE A</span>
+              <span class="grade-pill gp-a" id="tank-grade-badge">A</span>
             </div>
           </div>
           <div style="display: flex; align-items: baseline; gap: 16px; flex-wrap: wrap;">
@@ -12652,7 +12675,10 @@
           const shBadge = document.getElementById('tank-shield-badge');
           if (shBadge) shBadge.innerText = t.has_shield ? '🛡️ 1H + SHIELD ACTIVE' : '⚔️ 2H WEAPON EQUIPPED';
           const grBadge = document.getElementById('tank-grade-badge');
-          if (grBadge) grBadge.innerText = `TANK ${t.tank_grade || 'A'} (${Math.round(t.tank_score || 0)})`;
+          if (grBadge) {
+            grBadge.className = 'grade-pill ' + gradePillClass(t.tank_grade || 'A');
+            grBadge.innerHTML = (t.tank_grade || 'A') + ' <span class="gp-sub">' + Math.round(t.tank_score || 0) + '</span>';
+          }
         }
         if (tankMiniBar) {
           tankMiniBar.style.display = 'flex';
@@ -13020,6 +13046,10 @@
       }
     }
 
+    function gradePillClass(g) {
+      return 'gp-' + String(g || '').toLowerCase().replace('+', '-plus');
+    }
+
     function renderScenariosView() {
       updateScenariosCountBadge();
       renderScenariosScorecard();
@@ -13037,8 +13067,8 @@
       if (!suiteResultsData) {
         if (scoreVal) scoreVal.innerText = '--';
         if (gradeVal) {
-          gradeVal.innerText = 'Unranked';
-          gradeVal.className = 'twink-score-grade';
+          gradeVal.innerText = '--';
+          gradeVal.className = 'grade-pill lg gp-none';
         }
         if (bestText) bestText.innerText = 'Simulate suite to evaluate';
         if (weakText) weakText.innerText = 'Simulate suite to evaluate';
@@ -13059,8 +13089,8 @@
 
       if (scoreVal) scoreVal.innerText = score;
       if (gradeVal) {
-        gradeVal.innerText = 'Grade ' + grade;
-        gradeVal.className = 'twink-score-grade grade-' + grade.toLowerCase().replace('+', '-plus');
+        gradeVal.innerText = grade;
+        gradeVal.className = 'grade-pill lg ' + gradePillClass(grade);
       }
 
       if (bestText && suiteResultsData.best_scenario) {
@@ -13071,7 +13101,7 @@
       }
 
       let summaryText = `Evaluated across ${suiteResultsData.scenarios_run || getAllScenariosMerged().length} scenarios with an execution time of ${Math.round(suiteResultsData.execution_time_ms || 0)}ms.`;
-      if (score >= 90) summaryText += ' 🏆 Outstanding Twink Build! Dominates across PvE, Dungeon Tanking, Cleave, and PvP arenas.';
+      if (score >= 90) summaryText += ' 🏆 Outstanding build! Dominates across PvE, Dungeon Tanking, Cleave, and PvP arenas.';
       else if (score >= 80) summaryText += ' ⭐ Strong competitive build with solid balance between DPS burst and survivability.';
       else if (score >= 70) summaryText += ' 👍 Solid mid-tier setup. Consider specializing gear for specific encounters below.';
       else summaryText += ' ⚠️ Noticeable weaknesses in specific environments. Check individual cards below for optimization tips.';
@@ -13295,95 +13325,54 @@
       }
 
       let html = '';
+      const catIcon = { pve_tank: '🛡️', pve_dps: '⚔️', pvp_dps: '🚩', pvp_healing: '💚', pve_healing: '💚', healing: '💚' };
       filtered.forEach(scen => {
         const res = resultsMap[scen.id] || scen.last_result || null;
         const isEnabled = scen.enabled !== false;
 
-        let gradeBadge = '';
-        let metricsHtml = '';
-
+        let pill = '<span class="grade-pill gp-none">--</span>';
+        let metric = '<span style="color:#64748b;font-weight:600;font-size:.74rem;">not run</span>';
+        let stats = '';
         if (res) {
           const grade = res.grade || 'B';
-          gradeBadge = `<span class="grade-badge grade-${grade.toLowerCase().replace('+', '-plus')}">${grade}</span>`;
-
-          const primaryVal = res.primary_metric || (res.metric_value ? res.metric_value : (res.dps ? res.dps.toFixed(1) + ' DPS' : '0.0'));
-
-          let secMetrics = '';
-          if (res.secondary_metric) {
-            secMetrics = `<span style="color:#93c5fd; font-size:11px; font-weight:600;">${res.secondary_metric}</span>`;
-          } else if (res.details) {
-            secMetrics = `<span style="color:#cbd5e1; font-size:11px;">${res.details}</span>`;
-          } else {
-            if (res.survival_rate !== undefined) {
-              secMetrics += `<span style="color:#38bdf8;">🛡️ ${Math.round(res.survival_rate)}% Surv</span> `;
-            }
-            if (res.score !== undefined) {
-              secMetrics += `<span style="color:#e2e8f0; font-weight:bold;">★ ${Math.round(res.score)} pts</span>`;
-            }
+          pill = '<span class="grade-pill ' + gradePillClass(grade) + '">' + grade + '</span>';
+          metric = res.primary_metric || res.metric_value || (res.dps ? res.dps.toFixed(1) + ' DPS' : '0.0');
+          stats = res.secondary_metric || res.details || '';
+          if (!stats) {
+            if (res.survival_rate !== undefined) stats += '🛡️ ' + Math.round(res.survival_rate) + '% survival  ';
+            if (res.score !== undefined) stats += '★ ' + Math.round(res.score) + ' pts';
           }
-
-          metricsHtml = `
-            <div class="scen-metric-row">
-              <div>
-                <span class="scen-metric-val" style="font-size:16px; font-weight:bold; color:var(--gold-bright);">${primaryVal}</span>
-              </div>
-              <div style="font-size:11px; text-align:right;">
-                ${secMetrics}
-              </div>
-            </div>
-          `;
-        } else {
-          metricsHtml = `
-            <div class="scen-metric-row" style="justify-content:center; color:#64748b; font-size:12px; padding:10px 0;">
-              Not simulated yet
-            </div>
-          `;
         }
 
-        const tip = (res && res.tactical_note) || (res && res.tip) || scen.notes || 'Equip optimized gear for this encounter to maximize performance.';
+        const tip = (res && (res.tactical_note || res.tip)) || scen.notes || '';
         const dur = scen.duration || scen.duration_s || 30;
         const targets = scen.targetCount || scen.targets || 1;
         const mobLvl = scen.targetLevelOffset !== undefined ? (currentLvl + scen.targetLevelOffset) : (scen.mob_level || currentLvl);
+        const icon = catIcon[scen.category] || '⚔️';
+        const subtitle = scen.badge ? scen.badge + ' · ' : '';
 
         html += `
-          <div class="scenario-card ${isEnabled ? '' : 'disabled'}" id="scen-card-${scen.id}">
-            <div class="scen-card-header">
-              <div class="scen-title-wrap">
-                <input type="checkbox" class="scen-checkbox" ${isEnabled ? 'checked' : ''} onchange="toggleScenarioEnabled('${scen.id}', this.checked)" title="Toggle inclusion in suite benchmark" />
-                <div>
-                  <div class="scen-name">${scen.name}</div>
-                  <div class="scen-badge-row">
-                    <span class="scen-type-badge cat-${scen.category || 'pve_dps'}">${scen.badge || (scen.category ? scen.category.replace('_', ' ').toUpperCase() : 'PVE')}</span>
-                    <span class="scen-chip">⏱️ ${dur}s</span>
-                    <span class="scen-chip">🎯 ${targets} target${targets > 1 ? 's' : ''}</span>
-                    <span class="scen-chip">Lvl ${mobLvl}</span>
-                  </div>
-                </div>
+          <details class="sc-row ${isEnabled ? '' : 'off'}" id="scen-card-${scen.id}">
+            <summary>
+              <input type="checkbox" class="scen-checkbox" ${isEnabled ? 'checked' : ''} onclick="event.stopPropagation()" onchange="toggleScenarioEnabled('${scen.id}', this.checked)" title="Include in the overall grade" />
+              <div style="min-width:0;">
+                <div class="sc-name">${icon} ${scen.name}</div>
+                <div class="sc-sub">${subtitle}⏱ ${dur}s · 🎯 ${targets} · Lvl ${mobLvl}</div>
               </div>
-              <div>
-                ${gradeBadge}
+              <div class="sc-metric">${metric}</div>
+              ${pill}
+              <span class="sc-chev">▶</span>
+            </summary>
+            <div class="sc-body">
+              ${scen.description ? '<div>' + scen.description + '</div>' : ''}
+              ${stats ? '<div class="sc-stats">' + stats + '</div>' : ''}
+              ${tip ? '<div class="sc-tip">💡 ' + tip + '</div>' : ''}
+              <div class="sc-actions">
+                <button class="scenario-link-btn" onclick="const s=document.getElementById('cfg-bis-target'); if(s) s.value='${scen.id}'; optimizeForScenario('${scen.id}');" title="Auto-equip the best gear, enchants and consumables for this scenario">🎯 Optimize gear for this</button>
+                ${scen.is_custom ? '<button class="btn-card-action" style="flex:0 0 32px; padding:0; color:#ef4444; border-color:#ef4444;" onclick="deleteCustomScenario(\'' + scen.id + '\')" title="Delete custom scenario">🗑️</button>' : ''}
               </div>
             </div>
-
-            <div class="scen-desc">${scen.description || ''}</div>
-
-            ${metricsHtml}
-
-            <div class="scen-tip-box">
-              <strong>💡 Tactical Intel:</strong> ${tip}
-            </div>
-
-            <div class="scen-card-actions">
-              <button class="scenario-link-btn" onclick="const s=document.getElementById('cfg-bis-target'); if(s) s.value='${scen.id}'; optimizeForScenario('${scen.id}');" title="Set BiS Target to this scenario and auto-equip optimal Gear, Enchants & Consumables">
-                🎯 Load Scenario BiS →
-              </button>
-              ${scen.is_custom ? `
-                <button class="btn-card-action" style="flex:0 0 32px; padding:0; color:#ef4444; border-color:#ef4444;" onclick="deleteCustomScenario('${scen.id}')" title="Delete custom scenario">
-                  🗑️
-                </button>
-              ` : ''}
-            </div>
-          </div>
+          </details>
         `;
       });
 
