@@ -3214,7 +3214,8 @@
 
       <!-- CHARACTER TAB 3: ROTATION, IMBUES & HEALING -->
       <div id="view-rotation" class="build-subpanel" style="display: none;">
-        <div class="panel">
+        <!-- WEAPON IMBUES PANEL (SHAMAN ONLY) -->
+        <div class="panel" id="weapon-imbues-panel" style="margin-bottom: 16px;">
           <div class="panel-header">
             <h2><span>🔥</span> Weapon Imbues</h2>
           </div>
@@ -3258,8 +3259,11 @@
               </div>
             </div>
           </div>
+        </div>
 
-          <div class="panel-header" style="margin-top: 20px; display: flex; justify-content: space-between; align-items: center;">
+        <!-- APL ROTATION PANEL -->
+        <div class="panel" id="apl-rotation-panel">
+          <div class="panel-header" style="display: flex; justify-content: space-between; align-items: center;">
             <h2><span>⚡</span> Action Priority List (APL Rotation)</h2>
             <div style="font-size: 0.74rem; color: var(--text-muted);">Evaluated Top-to-Bottom every 1.5s GCD</div>
           </div>
@@ -3268,19 +3272,7 @@
             <div style="font-size: 0.74rem; font-weight: 700; color: var(--gold-bright); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px;">
               Rotation Presets:
             </div>
-            <div class="chips-row" id="rotation-presets-container" style="margin-bottom: 8px;">
-              <span class="chip active" id="chip-rot-burst" onclick="loadRotationPreset('burst')">⚡ BiS Burst L19 (Flame DoT ➔ Earth ➔ Totem)</span>
-              <span class="chip" id="chip-rot-tank_threat" onclick="loadRotationPreset('tank_threat')" style="border-color: rgba(56, 189, 248, 0.55); color: #38bdf8; font-weight: 700;">🛡️ Warden Tank Threat (Earth Shock ➔ Lightning Shield)</span>
-              <span class="chip" id="chip-rot-twink29_burst" onclick="loadRotationPreset('twink29_burst')" style="border-color: #ffd700; color: #ffd700; font-weight: 700;">⚡ Twink 29 Burst (Stormstrike #1)</span>
-              <span class="chip" id="chip-rot-sustain" onclick="loadRotationPreset('sustain')">💧 Mana Conservation</span>
-              <span class="chip" id="chip-rot-kiting" onclick="loadRotationPreset('kiting')">❄️ PvP Frost Kiting</span>
-              <span class="chip" id="chip-rot-melee" onclick="loadRotationPreset('melee')">🗡️ Melee Only (0 Mana)</span>
-            </div>
-            <div class="chips-row" style="margin-bottom: 12px;">
-              <span class="chip" id="chip-rot-heal_burst" onclick="loadRotationPreset('heal_burst')" style="border-color: rgba(46, 204, 113, 0.5); color: #2ecc71;">💚 Max HPS (Healing Wave Rank 4)</span>
-              <span class="chip" id="chip-rot-heal_sustain" onclick="loadRotationPreset('heal_sustain')" style="border-color: rgba(46, 204, 113, 0.5); color: #2ecc71;">💚 Mana Efficient Healer (Rank 3)</span>
-              <span class="chip" id="chip-rot-heal_hybrid" onclick="loadRotationPreset('heal_hybrid')" style="border-color: rgba(46, 204, 113, 0.5); color: #2ecc71;">💚 Hybrid Healer + Flame Shock</span>
-            </div>
+            <div class="chips-row" id="rotation-presets-container" style="margin-bottom: 12px;"></div>
           </div>
 
           <div id="rotation-flow-banner" style="background: rgba(16, 22, 34, 0.85); border: 1px solid #2b3548; border-radius: 6px; padding: 10px 14px; margin-bottom: 14px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;">
@@ -3289,42 +3281,43 @@
           </div>
 
           <div class="rot-list" id="rotation-list-container"></div>
+        </div>
 
-          <div class="panel" style="margin-top: 16px;">
-            <div class="panel-header" style="flex-wrap: wrap; gap: 10px;">
-              <div>
-                <h2><span>💚</span> Restoration & Healing Throughput Analysis</h2>
-                <div style="font-size: 0.76rem; color: var(--text-muted); margin-top: 2px;">
-                  Healing Wave throughput (HPS), mana efficiency (HPM) & rank scaling
-                </div>
+        <!-- HEALING ANALYSIS PANEL (HEALER CLASSES ONLY) -->
+        <div class="panel" id="healing-analysis-panel" style="margin-top: 16px;">
+          <div class="panel-header" style="flex-wrap: wrap; gap: 10px;">
+            <div>
+              <h2><span>💚</span> Restoration & Healing Throughput Analysis</h2>
+              <div style="font-size: 0.76rem; color: var(--text-muted); margin-top: 2px;">
+                Healing Wave throughput (HPS), mana efficiency (HPM) & rank scaling
               </div>
             </div>
-
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; margin-top: 12px;">
-              <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 6px; padding: 10px 14px;">
-                <div style="font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase;">Bonus +Healing</div>
-                <div style="font-size: 1.4rem; font-weight: 800; color: #2ecc71;" id="resto-stat-heal">+0 HP</div>
-                <div style="font-size: 0.68rem; color: var(--text-muted);" id="resto-stat-sp">+0 Spell Power</div>
-              </div>
-              <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 6px; padding: 10px 14px;">
-                <div style="font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase;">Total Mana Pool</div>
-                <div style="font-size: 1.4rem; font-weight: 800; color: #58a6ff;" id="resto-stat-mana">-- Mana</div>
-                <div style="font-size: 0.68rem; color: var(--text-muted);" id="resto-stat-int">-- Intellect</div>
-              </div>
-              <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 6px; padding: 10px 14px;">
-                <div style="font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase;">Spell Crit Chance</div>
-                <div style="font-size: 1.4rem; font-weight: 800; color: var(--gold-bright);" id="resto-stat-crit">--%</div>
-                <div style="font-size: 0.68rem; color: var(--text-muted);">150% Crit Heals</div>
-              </div>
-              <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 6px; padding: 10px 14px;">
-                <div style="font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase;">Talent Reductions</div>
-                <div style="font-size: 0.88rem; font-weight: 700; color: #55efc4;" id="resto-stat-tal-cast">-0.0s Cast Speed</div>
-                <div style="font-size: 0.75rem; color: #2ecc71;" id="resto-stat-tal-mana">-0% Mana Cost</div>
-              </div>
-            </div>
-
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; margin-top: 14px;" id="healing-ranks-grid"></div>
           </div>
+
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; margin-top: 12px;">
+            <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 6px; padding: 10px 14px;">
+              <div style="font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase;">Bonus +Healing</div>
+              <div style="font-size: 1.4rem; font-weight: 800; color: #2ecc71;" id="resto-stat-heal">+0 HP</div>
+              <div style="font-size: 0.68rem; color: var(--text-muted);" id="resto-stat-sp">+0 Spell Power</div>
+            </div>
+            <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 6px; padding: 10px 14px;">
+              <div style="font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase;">Total Mana Pool</div>
+              <div style="font-size: 1.4rem; font-weight: 800; color: #58a6ff;" id="resto-stat-mana">-- Mana</div>
+              <div style="font-size: 0.68rem; color: var(--text-muted);" id="resto-stat-int">-- Intellect</div>
+            </div>
+            <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 6px; padding: 10px 14px;">
+              <div style="font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase;">Spell Crit Chance</div>
+              <div style="font-size: 1.4rem; font-weight: 800; color: var(--gold-bright);" id="resto-stat-crit">--%</div>
+              <div style="font-size: 0.68rem; color: var(--text-muted);">150% Crit Heals</div>
+            </div>
+            <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 6px; padding: 10px 14px;">
+              <div style="font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase;">Talent Reductions</div>
+              <div style="font-size: 0.88rem; font-weight: 700; color: #55efc4;" id="resto-stat-tal-cast">-0.0s Cast Speed</div>
+              <div style="font-size: 0.75rem; color: #2ecc71;" id="resto-stat-tal-mana">-0% Mana Cost</div>
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; margin-top: 14px;" id="healing-ranks-grid"></div>
         </div>
       </div>
 
@@ -3572,7 +3565,7 @@
             <div>Shield Block: <strong id="tank-block-info" style="color: #bae6fd;">--% (-- BV)</strong></div>
             <div>Mitigated DTPS: <strong id="tank-dtps" style="color: #ff7675;">--/s</strong> <span id="tank-ttd" style="color: #94a3b8; font-size: 0.68rem;">(TTD: --s)</span></div>
           </div>
-          <div style="font-size: 0.71rem; color: #94a3b8; margin-top: 7px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px;">
+          <div id="tank-shaman-threat-row" style="font-size: 0.71rem; color: #94a3b8; margin-top: 7px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px;">
             <span>Rockbiter Bonus Threat: <strong id="tank-rb-tps" style="color: #fbbf24;">+0.0 TPS</strong></span>
             <span>Earth Shock 2x Threat: <strong id="tank-es-tps" style="color: #fbbf24;">+0.0 TPS</strong></span>
             <span>Lightning Shield Thorns: <strong id="tank-ls-tps" style="color: #38bdf8;">+0.0 TPS</strong></span>
@@ -4482,6 +4475,30 @@
       activeRotationPresetKey = defaultPresetKey;
       currentRotation = JSON.parse(JSON.stringify(clsRotations[defaultPresetKey] || []));
 
+      // 1. Show/Hide Weapon Imbues panel (ONLY Shaman has Weapon Imbues)
+      const imbuesPanel = document.getElementById('weapon-imbues-panel');
+      if (imbuesPanel) {
+        imbuesPanel.style.display = (classKey === 'shaman') ? 'block' : 'none';
+      }
+
+      // 2. Show/Hide Healing Analysis panel (ONLY for classes with healing spells: Shaman, Priest, Paladin, Druid)
+      const healPanel = document.getElementById('healing-analysis-panel');
+      if (healPanel) {
+        healPanel.style.display = (classKey === 'shaman' || classKey === 'priest' || classKey === 'paladin' || classKey === 'druid') ? 'block' : 'none';
+      }
+
+      // 3. Update Rotation Tab Header label
+      const rotTabBtn = document.getElementById('btn-build-rotation');
+      if (rotTabBtn) {
+        if (classKey === 'shaman') {
+          rotTabBtn.innerHTML = '<span>⚡</span> Rotation & Imbues';
+        } else if (classKey === 'priest' || classKey === 'paladin' || classKey === 'druid') {
+          rotTabBtn.innerHTML = '<span>⚡</span> Rotation & Healing';
+        } else {
+          rotTabBtn.innerHTML = '<span>⚡</span> Rotation & Spells';
+        }
+      }
+
       renderRotationPresetChipsForClass(classKey);
       renderRotationUI();
     }
@@ -4496,7 +4513,20 @@
         chip.id = `chip-rot-${key}`;
         chip.className = `chip ${key === activeRotationPresetKey ? 'active' : ''}`;
         const label = key.replace(/_/g, ' ').toUpperCase();
-        chip.innerText = `⚡ ${label}`;
+        let icon = '⚡';
+        let style = '';
+        if (key.includes('tank') || key.includes('prot')) {
+          icon = '🛡️';
+          style = 'border-color: rgba(56, 189, 248, 0.55); color: #38bdf8; font-weight: 700;';
+        } else if (key.includes('resto') || key.includes('heal') || key.includes('holy')) {
+          icon = '💚';
+          style = 'border-color: rgba(46, 204, 113, 0.5); color: #2ecc71;';
+        } else if (key.includes('twink') || key.includes('burst')) {
+          icon = '⭐';
+          style = 'border-color: #ffd700; color: #ffd700; font-weight: 700;';
+        }
+        if (style) chip.style.cssText = style;
+        chip.innerText = `${icon} ${label}`;
         chip.onclick = () => loadRotationPreset(key);
         container.appendChild(chip);
       }
@@ -4519,9 +4549,12 @@
       container.innerHTML = '';
 
       if (currentRotation.length === 0) {
+        const autoAtkText = (activeCharacterClass === 'shaman')
+          ? 'No active spells will be cast. The character will rely 100% on weapon auto-attacks and Flametongue / Rockbiter on-hit procs.'
+          : 'No active spells will be cast. The character will rely 100% on weapon auto-attacks.';
         container.innerHTML = `
           <div style="background: rgba(0,0,0,0.3); border: 1px dashed #374151; border-radius: 6px; padding: 20px; text-align: center; color: var(--text-muted); font-size: 0.85rem;">
-            🥋 <strong>Pure Melee Auto-Attack Mode:</strong> No active spells will be cast. The character will rely 100% on weapon auto-attacks and Flametongue / Rockbiter on-hit procs.
+            🥋 <strong>Pure Melee Auto-Attack Mode:</strong> ${autoAtkText}
           </div>
         `;
         renderRotationFlowSummary();
@@ -5111,6 +5144,7 @@
         renderWeaponStyles(wpnStyle);
         renderGearSlots();
         renderTalentTrees();
+        updateRotationForClass(activeCharacterClass);
         renderRotationUI();
         updateTalentHeader();
         updateAllInOneView();
@@ -9617,7 +9651,9 @@
           score = Math.min(100, Math.round(cleaveDps * 1.3));
           metricText = cleaveDps + " Cleave DPS";
           label = "Cleave Across " + targetCount + " Targets";
-          tip = "Fire Nova Totem and Spell Power dramatically amplify AoE clear speeds.";
+          tip = (activeCharacterClass === 'shaman') 
+            ? "Fire Nova Totem and Spell Power dramatically amplify AoE clear speeds."
+            : "Multi-target abilities, cleave damage, and attack power amplify AoE clear speeds.";
         } else if (s_id === "pve_dungeon_boss") {
           score = Math.min(100, Math.round(dpsVal * 1.8));
           metricText = dpsVal + " DPS";
@@ -9702,7 +9738,9 @@
           grade: grade,
           detail_label: "Main Tank EHP & Threat",
           details: maxHp + " HP • " + totalArmor + " Armor (" + armorDrPct + "% DR) • " + dtps + " DTPS • " + ttd + "s Unhealed TTD",
-          tip: "Equipping a high-Armor Shield + Stamina gear and Rockbiter Weapon maximizes EHP and Boss Threat."
+          tip: (activeCharacterClass === 'shaman')
+            ? "Equipping a high-Armor Shield + Stamina gear and Rockbiter Weapon maximizes EHP and Boss Threat."
+            : "Equipping a high-Armor Shield + Stamina gear and high-threat abilities maximizes EHP and Boss Threat."
         };
       }
 
@@ -9940,6 +9978,8 @@
           if (dtpsEl) dtpsEl.innerText = `${(t.dtps || 0).toFixed(1)}/s`;
           const ttdEl = document.getElementById('tank-ttd');
           if (ttdEl) ttdEl.innerText = `(TTD: ${(t.ttd || 0).toFixed(1)}s)`;
+          const threatRow = document.getElementById('tank-shaman-threat-row');
+          if (threatRow) threatRow.style.display = (activeCharacterClass === 'shaman') ? 'flex' : 'none';
           const rbEl = document.getElementById('tank-rb-tps');
           if (rbEl) rbEl.innerText = `+${(t.rockbiter_tps || 0).toFixed(1)} TPS`;
           const esEl = document.getElementById('tank-es-tps');
