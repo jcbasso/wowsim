@@ -9061,18 +9061,8 @@
         buffs: activeBuffs || {}
       };
 
-      // Instant cached results if available
-      const simKey = `wowsim_last_result_${reqBody.level}_${reqBody.imbue}_${reqBody.talents}_${reqBody.rotation_preset}_${reqBody.duration}_${reqBody.iterations}_${JSON.stringify(reqBody.gear)}_${JSON.stringify(reqBody.enchants)}`;
-      try {
-        const cachedSim = sessionStorage.getItem(simKey);
-        if (cachedSim) {
-          const parsed = JSON.parse(cachedSim);
-          updateResults(parsed);
-          btn.disabled = false;
-          btnText.innerText = "▶ SIMULATE";
-          return;
-        }
-      } catch (e) {}
+      // Monte Carlo simulation runs fresh iterations on every click
+      const simKey = `wowsim_last_result_${reqBody.level}_${reqBody.imbue}_${reqBody.talents}_${reqBody.rotation_preset}_${reqBody.duration}_${reqBody.iterations}`;
 
       btn.disabled = true;
       btnText.innerHTML = '<span class="loading-spinner"></span> Simulating...';
@@ -9113,11 +9103,11 @@
 
       updateResults(simData);
 
-      if (simData._clientTimeMs !== undefined) {
-        document.getElementById('sim-meta').innerText = `${simData.iterations} iters • ${simData.fight_duration}s • Done (Browser Engine: ${simData._clientTimeMs}ms)`;
-      } else {
-        document.getElementById('sim-meta').innerText = `${simData.iterations} iters • ${simData.fight_duration}s • Done`;
-      }
+      const metaText = simData._clientTimeMs !== undefined
+        ? `⚡ In-Browser Engine: ${simData.iterations} iters in ${simData._clientTimeMs}ms • ${simData.fight_duration}s fight`
+        : `Backend Engine: ${simData.iterations} iters • ${simData.fight_duration}s • Done`;
+      document.getElementById('sim-meta').innerText = metaText;
+      console.log(`[WoW Sim] Executed ${simData.iterations} Monte Carlo iterations in ${simData._clientTimeMs || 0}ms. Avg DPS: ${simData.dps.avg} (min: ${simData.dps.min}, max: ${simData.dps.max}, stdev: ±${simData.dps.stdev})`);
 
       btn.disabled = false;
       btnText.innerText = "▶ SIMULATE";
@@ -9132,7 +9122,9 @@
       document.getElementById('res-min').innerText = dps.min.toFixed(1);
       document.getElementById('res-max').innerText = dps.max.toFixed(1);
       document.getElementById('res-stdev').innerText = `±${dps.stdev.toFixed(1)}`;
-      document.getElementById('sim-meta').innerText = `${data.iterations} iters • ${data.fight_duration}s • Done`;
+      if (!data._clientTimeMs) {
+        document.getElementById('sim-meta').innerText = `${data.iterations} iters • ${data.fight_duration}s • Done`;
+      }
 
       // Delta comparison badge
       const diffBadge = document.getElementById('res-diff-badge');
