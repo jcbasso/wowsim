@@ -2834,6 +2834,37 @@
     }
 
   </style>
+<style id="rotation-ux-styles">
+  .rot-section-title{font-size:.72rem;font-weight:800;letter-spacing:.6px;text-transform:uppercase;color:#94a3b8;margin:18px 0 8px;display:flex;align-items:center;gap:8px}
+  .rot-section-title .num{background:rgba(255,215,0,.15);color:#ffd700;border-radius:50%;width:18px;height:18px;display:inline-flex;align-items:center;justify-content:center;font-size:.68rem}
+  .rot-section-title .hint{margin-left:auto;text-transform:none;letter-spacing:0;font-weight:500;font-size:.7rem;color:#64748b}
+  .rot-featured{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:10px;border:1px solid rgba(255,215,0,.35);background:linear-gradient(90deg,rgba(255,215,0,.10),rgba(15,23,42,.85));cursor:pointer;transition:all .15s}
+  .rot-featured:hover{border-color:#ffd700}
+  .rot-featured.active{border-color:#ffd700;box-shadow:0 0 0 1px rgba(255,215,0,.45)}
+  .rot-featured .rf-body{flex:1;min-width:0}
+  .rot-featured .rf-title{font-size:.88rem;font-weight:800;color:#ffd700;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .rot-featured .rf-steps{font-size:.74rem;color:#cbd5e1;margin-top:3px}
+  .rot-featured .rf-score{text-align:right;font-weight:800;color:#fbbf24;font-size:1.15rem;line-height:1}
+  .rot-featured .rf-score small{display:block;font-size:.62rem;color:#94a3b8;font-weight:600;margin-top:2px}
+  .rot-pill{font-size:.62rem;font-weight:800;padding:1px 6px;border-radius:99px;letter-spacing:.3px;border:1px solid}
+  .rot-pill.on{color:#34d399;border-color:rgba(52,211,153,.5);background:rgba(52,211,153,.12)}
+  .rot-pill.rec{color:#ffd700;border-color:rgba(255,215,0,.5);background:rgba(255,215,0,.1)}
+  .rot-pill.lock{color:#f87171;border-color:rgba(239,68,68,.45);background:rgba(239,68,68,.12)}
+  .rot-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(185px,1fr));gap:8px}
+  .rot-card{cursor:pointer;border:1px solid #2b3548;background:rgba(16,22,34,.8);border-radius:8px;padding:8px 10px;display:flex;flex-direction:column;gap:3px;transition:all .15s;min-width:0}
+  .rot-card:hover{border-color:#64748b;transform:translateY(-1px)}
+  .rot-card.active{border-color:#ffd700;background:rgba(255,215,0,.08);box-shadow:0 0 0 1px rgba(255,215,0,.35)}
+  .rot-card .rc-top{display:flex;justify-content:space-between;align-items:center;gap:6px}
+  .rot-card .rc-name{font-size:.78rem;font-weight:700;color:#e2e8f0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .rot-card .rc-score{font-size:.74rem;font-weight:800;color:#fbbf24;white-space:nowrap}
+  .rot-card .rc-steps{font-size:.67rem;color:#94a3b8;line-height:1.35}
+  .rot-card .rc-meta{display:flex;gap:4px;flex-wrap:wrap;min-height:14px}
+  .rot-card.tank .rc-name{color:#38bdf8}
+  .rot-card.heal .rc-name{color:#2ecc71}
+  .rot-details{margin-top:8px}
+  .rot-details summary{cursor:pointer;font-size:.72rem;color:#94a3b8;font-weight:700;padding:4px 0}
+  .rot-details summary:hover{color:#e2e8f0}
+</style>
 </head>
 <body>
 
@@ -3279,41 +3310,40 @@
         <div class="panel" id="apl-rotation-panel">
           <div class="panel-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
             <div>
-              <h2><span>⚡</span> Action Priority List (APL Rotation)</h2>
-              <div style="font-size: 0.74rem; color: var(--text-muted); margin-top: 2px;">Evaluated Top-to-Bottom every 1.5s GCD • Higher priority actions trigger first</div>
+              <h2><span>⚡</span> Rotation</h2>
+              <div style="font-size: 0.74rem; color: var(--text-muted); margin-top: 2px;">Every global cooldown, the sim casts the <strong>first available</strong> action from top to bottom. Auto-attacks run in the background.</div>
             </div>
-            <button id="btn-optimize-rot" class="btn btn-secondary btn-sm" onclick="autoOptimizeRotationForCurrentGear()" style="border-color: #ffd700; color: #ffd700; font-weight: 700; display: inline-flex; align-items: center; gap: 5px;">
-              ⚡ Auto-Optimize for Gear
+            <button id="btn-optimize-rot" class="btn btn-secondary btn-sm" onclick="autoOptimizeRotationForCurrentGear()" style="border-color: #ffd700; color: #ffd700; font-weight: 700; display: inline-flex; align-items: center; gap: 5px;" title="Simulate many rotation variants with your current gear, talents and level, then pick the best">
+              ✨ Find best rotation
             </button>
           </div>
 
-          <div style="margin-top: 10px;">
-            <div style="font-size: 0.74rem; font-weight: 700; color: var(--gold-bright); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px;">
-              Rotation Presets:
-            </div>
-            <div class="chips-row" id="rotation-presets-container" style="margin-bottom: 12px;"></div>
+          <div class="rot-section-title"><span class="num">1</span> Choose a rotation <span class="hint">Click any card to load it &amp; re-simulate</span></div>
+          <div id="rotation-presets-container"></div>
+          <div id="dynamic-rot-telemetry-banner" style="margin-top: 8px; font-size: 0.72rem; color: #94a3b8; line-height: 1.4;">
+            <span id="dynamic-rot-telemetry-text">🔬 <strong>Auto-optimizer:</strong> tests spell combinations for your exact level, gear and talents, drops actions that lower damage, and orders the rest by priority.</span>
           </div>
 
-          <div id="dynamic-rot-telemetry-banner" style="background: linear-gradient(90deg, rgba(16, 185, 129, 0.12) 0%, rgba(15, 23, 42, 0.85) 100%); border: 1px solid rgba(16, 185, 129, 0.35); border-radius: 6px; padding: 8px 12px; margin-bottom: 10px; font-size: 0.75rem; color: #cbd5e1; display: flex; align-items: center; justify-content: space-between; gap: 8px;">
-            <span id="dynamic-rot-telemetry-text">🔬 <strong>Dynamic Level-Adaptive APL Engine:</strong> Automatically simulates candidate spell combinations, prunes deadweight fillers, and optimizes priority order for your exact level & gear.</span>
-          </div>
-          <div id="rotation-flow-banner" style="background: rgba(16, 22, 34, 0.85); border: 1px solid #2b3548; border-radius: 6px; padding: 10px 14px; margin-bottom: 14px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;">
+          <div class="rot-section-title"><span class="num">2</span> Active rotation <span id="rot-active-name" style="color:#ffd700; text-transform:none; letter-spacing:0;"></span><span class="hint">Top = highest priority • tweak freely, DPS updates live</span></div>
+          <div id="rotation-flow-banner" style="background: rgba(16, 22, 34, 0.85); border: 1px solid #2b3548; border-radius: 6px; padding: 10px 14px; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;">
             <div style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap;" id="rotation-flow-steps"></div>
-            <div style="font-size: 0.72rem; color: var(--text-muted);" id="rotation-mana-estimate">Est. Mana/30s: --</div>
+            <div style="font-size: 0.72rem; color: var(--text-muted);" id="rotation-mana-estimate"></div>
           </div>
 
           <div class="rot-list" id="rotation-list-container"></div>
 
-          <!-- ADD CUSTOM ACTION TOOLBAR -->
-          <div style="margin-top: 14px; padding-top: 12px; border-top: 1px solid rgba(255,255,255,0.08); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;">
-            <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
-              <span style="font-size: 0.74rem; font-weight: 700; color: var(--gold-bright); text-transform: uppercase;">Add Action:</span>
-              <select id="add-spell-select" onchange="onAddSpellSelectChanged()" style="background: #141720; border: 1px solid #283040; color: #fff; border-radius: 5px; padding: 4px 8px; font-size: 0.76rem; outline: none;"></select>
-              <select id="add-condition-select" style="background: #141720; border: 1px solid #283040; color: #fff; border-radius: 5px; padding: 4px 8px; font-size: 0.76rem; outline: none;"></select>
-              <button class="btn btn-secondary btn-sm" onclick="addNewActionToRotation()" style="color: #2ecc71; border-color: #2ecc71; font-weight: 700;">➕ Add to Rotation</button>
+          <details class="rot-details">
+            <summary>➕ Customize: add a step or reset</summary>
+            <div style="margin-top: 8px; padding-top: 10px; border-top: 1px solid rgba(255,255,255,0.08); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;">
+              <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+                <span style="font-size: 0.74rem; font-weight: 700; color: var(--gold-bright); text-transform: uppercase;">Add spell:</span>
+                <select id="add-spell-select" onchange="onAddSpellSelectChanged()" style="background: #141720; border: 1px solid #283040; color: #fff; border-radius: 5px; padding: 4px 8px; font-size: 0.76rem; outline: none;"></select>
+                <select id="add-condition-select" style="background: #141720; border: 1px solid #283040; color: #fff; border-radius: 5px; padding: 4px 8px; font-size: 0.76rem; outline: none;"></select>
+                <button class="btn btn-secondary btn-sm" onclick="addNewActionToRotation()" style="color: #2ecc71; border-color: #2ecc71; font-weight: 700;">➕ Add to rotation</button>
+              </div>
+              <button class="btn btn-secondary btn-sm" onclick="resetRotationToDefault()" style="color: #ff7675; border-color: #ff7675;">↺ Reset to first preset</button>
             </div>
-            <button class="btn btn-secondary btn-sm" onclick="resetRotationToDefault()" style="color: #ff7675; border-color: #ff7675;">↺ Reset to Default</button>
-          </div>
+          </details>
         </div>
 
         <!-- HEALING ANALYSIS PANEL (HEALER CLASSES ONLY) -->
@@ -5841,147 +5871,156 @@
       populateAddSpellDropdown(classKey);
     }
 
+    let lastRotationScores = null; // { cls, spec, lvl, scores }
+
+    function prettyRotationName(key) {
+      if (!key) return '';
+      if (key === 'custom') return 'Custom (edited)';
+      const dm = /^dynamic_lvl_(\d+)$/.exec(key);
+      if (dm) return 'Auto-Optimized (Lvl ' + dm[1] + ')';
+      const special = { pve: 'PvE', pvp: 'PvP', aoe: 'AoE', dps: 'DPS', hw: 'HW', enh: 'Enh.', prot: 'Prot.', resto: 'Resto', ele: 'Ele.' };
+      return key.split('_').map(w => {
+        const lw = w.toLowerCase();
+        if (special[lw]) return special[lw];
+        const tm = /^([a-z]+)(\d+)$/.exec(lw);
+        if (tm) return tm[1].charAt(0).toUpperCase() + tm[1].slice(1) + ' ' + tm[2];
+        return lw.charAt(0).toUpperCase() + lw.slice(1);
+      }).join(' ');
+    }
+
+    function summarizeRotationSteps(steps, lvl, max = 4) {
+      const names = [];
+      (steps || []).forEach(s => {
+        if (s.enabled === false) return;
+        const inf = getSpellDisplayInfo(s.spellId, lvl);
+        if (inf && inf.isUnlocked) names.push(inf.baseName);
+      });
+      if (names.length === 0) return 'Auto-attacks only';
+      const shown = names.slice(0, max).join(' → ');
+      return names.length > max ? shown + ' +' + (names.length - max) : shown;
+    }
+
     function renderRotationPresetChipsForClass(classKey, simScores = null, winnerKey = null) {
       const container = document.getElementById('rotation-presets-container');
       if (!container) return;
       container.innerHTML = '';
       const curLvl = getCurrentPlayerLevel();
       const roleMode = (typeof getActiveCharacterRoleMode === 'function') ? getActiveCharacterRoleMode() : 'dps';
+
+      // Remember last simulated scores (only valid for same class / spec / level)
+      if (simScores) {
+        lastRotationScores = { cls: classKey, spec: currentCharacterSpec, lvl: curLvl, scores: simScores };
+      }
+      const scoreMap = (lastRotationScores && lastRotationScores.cls === classKey && lastRotationScores.spec === currentCharacterSpec && lastRotationScores.lvl === curLvl)
+        ? lastRotationScores.scores : {};
+
       const levelPool = (typeof generateCandidateRotationsForLevel === 'function') ? generateCandidateRotationsForLevel(classKey, currentCharacterSpec, curLvl) : {};
-      const clsRotations = Object.assign({}, levelPool, ALL_CLASS_ROTATIONS[classKey] || ALL_CLASS_ROTATIONS.shaman);
-      if (winnerKey && rotationPresets[winnerKey]) {
-        clsRotations[winnerKey] = rotationPresets[winnerKey];
-      }
+      const fixedPool = ALL_CLASS_ROTATIONS[classKey] || ALL_CLASS_ROTATIONS.shaman;
+      const dynKey = winnerKey || ('dynamic_lvl_' + curLvl);
 
-      const autoKeys = [];
-      const fixedKeys = [];
-
-      for (const [key, steps] of Object.entries(clsRotations)) {
-        const isHealPreset = key.includes('resto') || key.includes('heal') || key.includes('holy');
-        if (roleMode !== 'healer' && isHealPreset) continue;
-        if (roleMode === 'healer' && !isHealPreset) continue;
-        rotationPresets[key] = steps;
-
-        if (key.startsWith('dynamic_') || levelPool[key]) {
-          autoKeys.push(key);
-        } else {
-          fixedKeys.push(key);
-        }
-      }
-
-      if (winnerKey && autoKeys.includes(winnerKey)) {
-        const idx = autoKeys.indexOf(winnerKey);
-        autoKeys.splice(idx, 1);
-        autoKeys.unshift(winnerKey);
-      } else if (winnerKey && !autoKeys.includes(winnerKey)) {
-        autoKeys.unshift(winnerKey);
-      }
-
-      const helperCreateChip = (key, steps, isAutoGroup) => {
-        const chip = document.createElement('span');
-        chip.id = `chip-rot-${key}`;
-        chip.className = `chip ${key === activeRotationPresetKey ? 'active' : ''}`;
-        let label = key.replace(/_/g, ' ').toUpperCase();
-        if (key.startsWith('dynamic_lvl_')) {
-          label = `DYNAMIC LVL ${curLvl}`;
-        }
-        let icon = isAutoGroup ? '⭐' : '⚡';
-        let style = '';
-        if (isAutoGroup) {
-          style = 'border-color: #ffd700; color: #ffd700; font-weight: 800; background: rgba(255, 215, 0, 0.08);';
-        } else if (key.includes('tank') || key.includes('prot')) {
-          icon = '🛡️';
-          style = 'border-color: rgba(56, 189, 248, 0.55); color: #38bdf8; font-weight: 700;';
-        } else if (key.includes('resto') || key.includes('heal') || key.includes('holy')) {
-          icon = '💚';
-          style = 'border-color: rgba(46, 204, 113, 0.5); color: #2ecc71;';
-        } else if (key.includes('twink') || key.includes('burst')) {
-          icon = '⭐';
-          style = 'border-color: #ffd700; color: #ffd700; font-weight: 700;';
-        }
-        if (style) chip.style.cssText = style;
-
-        // Check if steps contain locked abilities above curLvl
-        let lockTag = '';
-        if (!isAutoGroup && Array.isArray(steps)) {
-          let maxReq = 0;
-          let hasLocked = false;
-          steps.forEach(s => {
-            const inf = getSpellDisplayInfo(s.spellId, curLvl);
-            if (inf && !inf.isUnlocked) {
-              hasLocked = true;
-              const req = inf.reqLvl || (inf.data && inf.data.minLvl) || 1;
-              if (req > maxReq) maxReq = req;
-            }
-          });
-          if (hasLocked) {
-            lockTag = ` <span style="font-size: 0.65rem; color: #f87171; background: rgba(239,68,68,0.2); padding: 1px 4px; border-radius: 3px; border: 1px solid rgba(239,68,68,0.35);">🔒 Lvl ${maxReq}+</span>`;
-          }
-        }
-
-        // Format DPS score cleanly (never display objective score like 999.3 as DPS!)
-        let scVal = '';
-        if (simScores && simScores[key] !== undefined) {
-          const sObj = simScores[key];
-          if (typeof sObj === 'object' && sObj !== null) {
-            if (roleMode === 'tank' && typeof sObj.tps === 'number' && sObj.tps > 0) {
-              scVal = ` (${(sObj.dps || 0).toFixed(1)} DPS • ${Math.round(sObj.tps)} TPS)`;
-            } else if (typeof sObj.dps === 'number') {
-              scVal = ` (${sObj.dps.toFixed(1)} DPS)`;
-            }
-          } else if (typeof sObj === 'number' && sObj > 0) {
-            if (roleMode === 'tank' && sObj > 300) {
-              const safeDps = (latestSimData && latestSimData.dps && typeof latestSimData.dps.avg === 'number') ? latestSimData.dps.avg : 52.8;
-              scVal = ` (${safeDps.toFixed(1)} DPS)`;
-            } else {
-              scVal = ` (${sObj.toFixed(1)} DPS)`;
-            }
-          }
-        }
-
-        chip.innerHTML = `${icon} ${label}${lockTag}${scVal}`;
-        chip.onclick = () => loadRotationPreset(key);
-        return chip;
+      const allowKey = (key) => {
+        const isHeal = key.includes('resto') || key.includes('heal') || key.includes('holy');
+        return roleMode === 'healer' ? isHeal : !isHeal;
       };
 
-      // Section 1: Automatic / Sim-Optimized
-      if (autoKeys.length > 0) {
-        const autoSection = document.createElement('div');
-        autoSection.style.cssText = 'width: 100%; margin-bottom: 8px; display: flex; flex-direction: column; gap: 4px;';
-        autoSection.innerHTML = `
-          <div style="font-size: 0.69rem; font-weight: 800; color: #ffd700; text-transform: uppercase; letter-spacing: 0.5px; display: flex; align-items: center; gap: 6px;">
-            <span>⭐</span> Sim-Optimized Level APL (Automatic BiS)
-          </div>
-        `;
-        const autoChipsRow = document.createElement('div');
-        autoChipsRow.className = 'chips-row';
-        autoChipsRow.style.margin = '0';
-        autoKeys.forEach(k => {
-          autoChipsRow.appendChild(helperCreateChip(k, clsRotations[k], true));
+      Object.entries(levelPool).forEach(([k, st]) => { rotationPresets[k] = st; });
+      Object.entries(fixedPool).forEach(([k, st]) => { rotationPresets[k] = st; });
+
+      const fmtScore = (key) => {
+        const s = scoreMap[key];
+        if (s === undefined || s === null) return '';
+        if (typeof s === 'object') {
+          if (roleMode === 'tank' && s.tps > 0) return (s.dps || 0).toFixed(1) + ' DPS · ' + Math.round(s.tps) + ' TPS';
+          return typeof s.dps === 'number' ? s.dps.toFixed(1) + ' DPS' : '';
+        }
+        return '';
+      };
+
+      const lockInfo = (steps) => {
+        let maxReq = 0;
+        (steps || []).forEach(s => {
+          const inf = getSpellDisplayInfo(s.spellId, curLvl);
+          if (inf && !inf.isUnlocked) maxReq = Math.max(maxReq, inf.reqLvl || 1);
         });
-        autoSection.appendChild(autoChipsRow);
-        container.appendChild(autoSection);
+        return maxReq;
+      };
+
+      // ---- Featured: auto-optimized rotation ----
+      const dynSteps = rotationPresets[dynKey];
+      const featured = document.createElement('div');
+      featured.id = 'chip-rot-' + dynKey;
+      if (dynSteps && dynSteps.length) {
+        featured.className = 'rot-featured' + (activeRotationPresetKey === dynKey ? ' active' : '');
+        const sc = fmtScore(dynKey);
+        const scParts = sc ? sc.split(' · ') : [];
+        featured.innerHTML =
+          '<div style="font-size:1.5rem;">⭐</div>' +
+          '<div class="rf-body">' +
+            '<div class="rf-title">Auto-Optimized for Lvl ' + curLvl + ' <span class="rot-pill rec">RECOMMENDED</span>' +
+            (activeRotationPresetKey === dynKey ? '<span class="rot-pill on">ACTIVE</span>' : '') + '</div>' +
+            '<div class="rf-steps">' + summarizeRotationSteps(dynSteps, curLvl, 6) + '</div>' +
+          '</div>' +
+          (sc ? '<div class="rf-score">' + scParts[0] + '<small>' + (scParts[1] ? scParts[1] : 'simulated, single target') + '</small></div>' : '');
+        featured.onclick = () => loadRotationPreset(dynKey);
+      } else {
+        featured.className = 'rot-featured';
+        featured.innerHTML =
+          '<div style="font-size:1.5rem;">⭐</div>' +
+          '<div class="rf-body"><div class="rf-title">Auto-Optimized Rotation</div>' +
+          '<div class="rf-steps">Not computed yet for Lvl ' + curLvl + ' — click <strong>Find best rotation</strong> (or Auto-Build BiS) and the sim will pick the strongest one for your gear.</div></div>';
+        featured.onclick = () => autoOptimizeRotationForCurrentGear();
+      }
+      container.appendChild(featured);
+
+      const makeCard = (key, steps) => {
+        const card = document.createElement('div');
+        card.id = 'chip-rot-' + key;
+        const isTank = key.includes('tank') || key.includes('prot');
+        const isHeal = key.includes('resto') || key.includes('heal') || key.includes('holy');
+        card.className = 'rot-card' + (isTank ? ' tank' : '') + (isHeal ? ' heal' : '') + (key === activeRotationPresetKey ? ' active' : '');
+        const lock = lockInfo(steps);
+        const sc = fmtScore(key);
+        card.innerHTML =
+          '<div class="rc-top"><span class="rc-name" title="' + prettyRotationName(key) + '">' + (isTank ? '🛡️ ' : (isHeal ? '💚 ' : '')) + prettyRotationName(key) + '</span>' +
+          (sc ? '<span class="rc-score">' + sc.split(' · ')[0] + '</span>' : '') + '</div>' +
+          '<div class="rc-steps">' + summarizeRotationSteps(steps, curLvl) + '</div>' +
+          '<div class="rc-meta">' + (lock ? '<span class="rot-pill lock">🔒 needs Lvl ' + lock + '</span>' : '') +
+          (key === activeRotationPresetKey ? '<span class="rot-pill on">ACTIVE</span>' : '') + '</div>';
+        card.onclick = () => loadRotationPreset(key);
+        return card;
+      };
+
+      // ---- Ready-made presets ----
+      const fixedKeys = Object.keys(fixedPool).filter(k => allowKey(k) && !levelPool[k]);
+      if (fixedKeys.length) {
+        const t = document.createElement('div');
+        t.className = 'rot-section-title';
+        t.style.marginTop = '14px';
+        t.innerHTML = 'Ready-made presets <span class="hint">Fixed priorities • spells above your level are skipped</span>';
+        container.appendChild(t);
+        const grid = document.createElement('div');
+        grid.className = 'rot-grid';
+        fixedKeys.forEach(k => grid.appendChild(makeCard(k, fixedPool[k])));
+        container.appendChild(grid);
       }
 
-      // Section 2: Fixed Archetype Rotations
-      if (fixedKeys.length > 0) {
-        const fixedSection = document.createElement('div');
-        fixedSection.style.cssText = 'width: 100%; margin-top: 4px; display: flex; flex-direction: column; gap: 4px;';
-        fixedSection.innerHTML = `
-          <div style="font-size: 0.69rem; font-weight: 800; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px; display: flex; align-items: center; gap: 6px;">
-            <span>📋</span> Fixed Archetype Rotations
-            <span style="font-size: 0.65rem; color: var(--text-muted); font-weight: normal;">(Higher-level abilities are locked & skipped in sim)</span>
-          </div>
-        `;
-        const fixedChipsRow = document.createElement('div');
-        fixedChipsRow.className = 'chips-row';
-        fixedChipsRow.style.margin = '0';
-        fixedKeys.forEach(k => {
-          fixedChipsRow.appendChild(helperCreateChip(k, clsRotations[k], false));
-        });
-        fixedSection.appendChild(fixedChipsRow);
-        container.appendChild(fixedSection);
+      // ---- Other candidates the optimizer tested ----
+      const candKeys = Object.keys(levelPool).filter(k => allowKey(k) && k !== dynKey);
+      if (candKeys.length) {
+        const det = document.createElement('details');
+        det.className = 'rot-details';
+        det.innerHTML = '<summary>🔬 Other variants tested by the optimizer for Lvl ' + curLvl + ' (' + candKeys.length + ')</summary>';
+        const grid = document.createElement('div');
+        grid.className = 'rot-grid';
+        grid.style.marginTop = '6px';
+        candKeys.forEach(k => grid.appendChild(makeCard(k, levelPool[k])));
+        det.appendChild(grid);
+        if (candKeys.includes(activeRotationPresetKey)) det.open = true;
+        container.appendChild(det);
       }
+
+      const nameEl = document.getElementById('rot-active-name');
+      if (nameEl) nameEl.innerText = '— ' + prettyRotationName(activeRotationPresetKey);
     }
 
     function resetTalentPointsForClass() {
@@ -6092,7 +6131,9 @@
     function renderRotationFlowSummary() {
       const banner = document.getElementById('rotation-flow-summary') || document.getElementById('rotation-flow-steps');
       if (!banner) return;
-      banner.innerHTML = '<span style="font-weight: 700; color: var(--gold-bright); margin-right: 4px;">Sequence Flow:</span>';
+      banner.innerHTML = '<span style="font-weight: 700; color: var(--gold-bright); margin-right: 4px;">Cast order:</span>';
+      const activeNameEl = document.getElementById('rot-active-name');
+      if (activeNameEl && typeof prettyRotationName === 'function') activeNameEl.innerText = '— ' + prettyRotationName(activeRotationPresetKey);
 
       const activeSteps = currentRotation.filter(s => s.enabled);
       if (activeSteps.length === 0) {
@@ -6202,11 +6243,8 @@
     function markRotationCustom() {
       activeRotationPresetKey = 'custom';
       document.querySelectorAll('[id^="chip-rot-"]').forEach(c => c.classList.remove('active'));
-      const chipCustom = document.getElementById('chip-rot-custom');
-      if (chipCustom) {
-        chipCustom.style.display = 'inline-block';
-        chipCustom.classList.add('active');
-      }
+      const nameEl = document.getElementById('rot-active-name');
+      if (nameEl) nameEl.innerText = '— Custom (edited)';
     }
 
     function loadRotationPreset(presetKey) {
@@ -6219,9 +6257,7 @@
       if (chipCustom && presetKey !== 'custom') {
         chipCustom.style.display = 'none';
       }
-      const chip = document.getElementById(`chip-rot-${presetKey}`);
-      if (chip) chip.classList.add('active');
-
+      renderRotationPresetChipsForClass(activeCharacterClass);
       renderRotationUI();
       onSettingChanged();
       if (typeof runSimulation === 'function') runSimulation();
@@ -6249,7 +6285,7 @@
 
     async function autoOptimizeRotationForCurrentGear(silentMode = false) {
       const btn = document.getElementById('btn-optimize-rot');
-      if (btn && !silentMode) btn.innerHTML = '⏳ Simulating APL Permutations...';
+      if (btn && !silentMode) btn.innerHTML = '⏳ Testing rotations...';
 
       const currentLvl = getCurrentPlayerLevel();
       const roleMode = getActiveCharacterRoleMode();
@@ -6415,14 +6451,14 @@
         const scoreBadge = (roleMode === 'tank')
           ? `${bestDps.toFixed(1)} DPS • ${Math.round(bestTps)} TPS (${bestScore.toFixed(0)} Threat)`
           : `${bestDps.toFixed(1)} DPS`;
-        telEl.innerHTML = '🔬 <strong>Level ' + currentLvl + ' Sim-Optimized APL (' + totalSimsRun + ' permutations tested' + (prunedCount > 0 ? ', ' + prunedCount + ' suboptimal filler pruned' : '') + (swapsCount > 0 ? ', ' + swapsCount + ' priority swap' : '') + '):</strong> <span style="color:#34d399; font-weight:700;">' + seqSummary + ' (' + scoreBadge + ')</span>';
+        telEl.innerHTML = '🔬 <strong>Auto-optimizer (Lvl ' + currentLvl + '):</strong> tested ' + totalSimsRun + ' variants' + (prunedCount > 0 ? ', removed ' + prunedCount + ' action' + (prunedCount > 1 ? 's' : '') + ' that lowered damage' : '') + (swapsCount > 0 ? ', reordered ' + swapsCount + ' priorit' + (swapsCount > 1 ? 'ies' : 'y') : '') + '. Result: <span style="color:#34d399; font-weight:700;">' + seqSummary + ' (' + scoreBadge + ')</span>';
       }
 
       if (btn && !silentMode) {
         const btnDpsLabel = (roleMode === 'tank') ? `${bestDps.toFixed(1)} DPS • ${Math.round(bestTps)} TPS` : `${bestDps.toFixed(1)} DPS`;
-        btn.innerHTML = '⭐ Best ' + (roleMode === 'tank' ? 'Tank ' : '') + 'APL Active (' + btnDpsLabel + ')';
+        btn.innerHTML = '⭐ Best found: ' + btnDpsLabel;
         setTimeout(() => {
-          if (btn) btn.innerHTML = '⚡ Auto-Optimize for Gear';
+          if (btn) btn.innerHTML = '✨ Find best rotation';
         }, 3000);
         runOneStopSimulate();
       }
@@ -6693,6 +6729,12 @@
         }
         if (cfg.characterClass && WOW_CLASSES[cfg.characterClass]) {
           activeCharacterClass = cfg.characterClass;
+          // Re-resolve talent trees for the restored class BEFORE talent points are applied
+          if (allTalentsByClass && allTalentsByClass[cfg.characterClass]) {
+            talentTrees = allTalentsByClass[cfg.characterClass];
+            talentPoints = talentTrees.map(tree => new Array((tree.talents || []).length).fill(0));
+          }
+          try { updateTalentStrategyOptionsForClass(cfg.characterClass); } catch (e) {}
           const classSelect = document.getElementById('cfg-active-class');
           if (classSelect) {
             classSelect.value = cfg.characterClass;
@@ -6833,6 +6875,21 @@
         if (maxPtsEl) maxPtsEl.innerText = maxTalentPoints;
         document.querySelectorAll('.cur-lvl-label').forEach(el => el.innerText = lvl);
 
+        try {
+          const cDefInit = WOW_CLASSES[activeCharacterClass];
+          if (cDefInit) {
+            const brandIcon = document.querySelector('.shaman-icon');
+            if (brandIcon) {
+              brandIcon.style.backgroundImage = "url('https://wow.zamimg.com/images/wow/icons/large/classicon_" + activeCharacterClass + ".jpg')";
+              brandIcon.style.borderColor = cDefInit.color;
+            }
+            const clsSel = document.getElementById('cfg-active-class');
+            if (clsSel) { clsSel.value = activeCharacterClass; clsSel.style.color = cDefInit.color; }
+            const tankLbl = document.getElementById('tank-card-title-lbl');
+            if (tankLbl) tankLbl.innerText = cDefInit.name + " Tank Survivability, Mitigation & Threat";
+          }
+          updateTalentStrategyOptionsForClass(activeCharacterClass);
+        } catch (e) { console.warn('Class UI sync failed', e); }
         renderSpecButtons();
         const wpnStyle = document.getElementById('cfg-weapon-style') ? document.getElementById('cfg-weapon-style').value : 'auto';
         renderWeaponStyles(wpnStyle);
