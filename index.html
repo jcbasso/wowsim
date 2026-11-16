@@ -9950,7 +9950,7 @@
           return;
         }
 
-        const currentLvl = getCurrentTwinkLevel();
+        const currentLvl = getCurrentPlayerLevel();
         const payload = {
           gear: currentGear || {},
           enchants: currentEnchants || {},
@@ -9963,19 +9963,35 @@
           scenarios: activeScenarios
         };
 
-        const resp = await fetch('/api/scenarios/simulate-suite', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
-        });
+        let data = null;
+        const isStaticHost = window.location.hostname.includes('github.io') || window.location.protocol === 'file:';
 
-        if (!resp.ok) {
-          throw new Error('Simulation suite failed with status ' + resp.status);
+        if (!isStaticHost) {
+          try {
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 2000);
+            const resp = await fetch('/api/scenarios/simulate-suite', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(payload),
+              signal: controller.signal
+            });
+            clearTimeout(timeoutId);
+            if (resp.ok) {
+              data = await resp.json();
+            }
+          } catch (e) {
+            // Fall back to client simulation
+          }
         }
 
-        const data = await resp.json();
-        suiteResultsData = data;
+        if (!data) {
+          const t0 = performance.now();
+          data = simulateSuiteInBrowser(payload, catalog, enchantsCatalog, buffsCatalog);
+          data.execution_time_ms = Math.max(1, Math.round(performance.now() - t0));
+        }
 
+        suiteResultsData = data;
         try {
           sessionStorage.setItem('twinksim_suite_results', JSON.stringify(data));
         } catch (e) {}
@@ -9985,12 +10001,6 @@
 
       } catch (err) {
         console.error('Error running scenarios suite:', err);
-        const isStaticHost = window.location.hostname.includes('github.io') || window.location.protocol === 'file:';
-        if (isStaticHost) {
-          alert('⚡ GitHub Pages Static Mode Notice:\n\nScenario Monte-Carlo execution requires the local backend server (python server.py).');
-        } else {
-          alert('Simulation suite error: ' + err.message);
-        }
       } finally {
         if (runBtn) {
           runBtn.innerHTML = '⚡ Run All Scenarios (Suite)';
@@ -10009,62 +10019,65 @@
         card.style.opacity = '0.6';
       }
 
-      try {
-        const currentLvl = getCurrentTwinkLevel();
-        const payload = {
-          gear: currentGear || {},
-          enchants: currentEnchants || {},
-          level: currentLvl,
-          buffs: activeBuffs || {},
-          talents: (typeof getSerializedTalents === 'function') ? getSerializedTalents() : "-05203-",
-          rotation: (typeof currentRotation !== 'undefined') ? currentRotation : [],
-          rotation_preset: (typeof activeRotationPresetKey !== 'undefined') ? activeRotationPresetKey : 'burst',
-          imbue: (typeof currentImbue !== 'undefined') ? currentImbue : 'FlametongueWeapon',
-          scenarios: [target]
-        };
+      const currentLvl = getCurrentPlayerLevel();
+      const payload = {
+        gear: currentGear || {},
+        enchants: currentEnchants || {},
+        level: currentLvl,
+        buffs: activeBuffs || {},
+        talents: (typeof getSerializedTalents === 'function') ? getSerializedTalents() : "-05203-",
+        rotation: (typeof currentRotation !== 'undefined') ? currentRotation : [],
+        rotation_preset: (typeof activeRotationPresetKey !== 'undefined') ? activeRotationPresetKey : 'burst',
+        imbue: (typeof currentImbue !== 'undefined') ? currentImbue : 'FlametongueWeapon',
+        scenarios: [target]
+      };
 
-        const resp = await fetch('/api/scenarios/simulate-suite', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
-        });
+      let res = null;
+      const isStaticHost = window.location.hostname.includes('github.io') || window.location.protocol === 'file:';
 
-        if (!resp.ok) throw new Error('Failed to simulate scenario: ' + resp.status);
-
-        const data = await resp.json();
-        let singleResult = null;
-        if (data.results) {
-          if (Array.isArray(data.results)) {
-            singleResult = data.results.find(r => r.id === scenarioId) || data.results[0];
-          } else {
-            singleResult = data.results[scenarioId];
+      if (!isStaticHost) {
+        try {
+          const controller = new AbortController();
+          const timeoutId = setTimeout(() => controller.abort(), 1500);
+          const resp = await fetch('/api/scenarios/simulate-suite', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload),
+            signal: controller.signal
+          });
+          clearTimeout(timeoutId);
+          if (resp.ok) {
+            const suite = await resp.json();
+            if (suite && suite.results && suite.results.length > 0) {
+              res = suite.results[0];
+            }
           }
+        } catch (e) {}
+      }
+
+      if (!res) {
+        res = simulateSingleScenarioInBrowser(target, payload, catalog, enchantsCatalog, buffsCatalog);
+      }
+
+      if (res) {
+        if (!suiteResultsData) {
+          suiteResultsData = { results: [] };
         }
-
-        if (singleResult) {
-          if (!suiteResultsData) {
-            suiteResultsData = { results: [], composite_score: singleResult.score || 75, composite_grade: singleResult.grade || 'B' };
-          }
-          if (Array.isArray(suiteResultsData.results)) {
-            const idx = suiteResultsData.results.findIndex(r => r.id === scenarioId);
-            if (idx >= 0) suiteResultsData.results[idx] = singleResult;
-            else suiteResultsData.results.push(singleResult);
-          } else {
-            suiteResultsData.results[scenarioId] = singleResult;
-          }
-
-          if (data.radar) {
-            suiteResultsData.radar = { ...(suiteResultsData.radar || {}), ...data.radar };
-          }
-
-          renderScenariosScorecard();
-          renderScenariosCards();
+        if (!Array.isArray(suiteResultsData.results)) {
+          suiteResultsData.results = [];
         }
-      } catch (err) {
-        console.error('Single scenario run failed:', err);
-        alert('Failed to simulate: ' + err.message);
-      } finally {
-        if (card) card.style.opacity = '1';
+        const existingIdx = suiteResultsData.results.findIndex(r => r.id === scenarioId);
+        if (existingIdx >= 0) {
+          suiteResultsData.results[existingIdx] = res;
+        } else {
+          suiteResultsData.results.push(res);
+        }
+        renderScenariosScorecard();
+        renderScenariosCards();
+      }
+
+      if (card) {
+        card.style.opacity = '1';
       }
     }
 
