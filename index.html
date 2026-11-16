@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="color-scheme" content="dark">
-  <title>WoW Forever - Twink Level 19 Simulator</title>
+  <title>WoW Forever - WoW Sim</title>
   
 
   <style>
@@ -2843,13 +2843,13 @@
       <div class="shaman-icon"></div>
       <div class="brand-title">
         <div style="display: flex; align-items: center; gap: 8px;">
-          <h1 style="font-size: 1.02rem;">WoW Forever • Twink Studio</h1>
+          <h1 style="font-size: 1.02rem;">WoW Forever • WoW Sim</h1>
           <div class="patch-version-pill" onclick="openPatchNotesModal()" title="Click to view WoW Forever Patch Notes & Server Version">
             <span style="color: #4ade80; font-size: 0.65rem;">●</span>
             <span id="patch-pill-text">v1.4.2-Live</span>
           </div>
         </div>
-        <p style="font-size: 0.7rem;">Cotto • Level <span class="cur-lvl-label">19</span> Theorycrafting & Simulation Engine</p>
+        <p style="font-size: 0.7rem;">Level <span class="cur-lvl-label">1</span> Theorycrafting &amp; Simulation Engine</p>
       </div>
     </div>
 
@@ -2903,7 +2903,7 @@
 
       <div class="config-pill" style="padding: 2px 8px;">
         <label for="cfg-level">Lvl</label>
-        <input type="number" id="cfg-level" value="19" min="10" max="60" onchange="onLevelChanged()" oninput="onLevelChanged()" style="width: 42px;">
+        <input type="number" id="cfg-level" value="1" min="1" max="60" onchange="onLevelChanged()" oninput="onLevelChanged()" style="width: 42px;">
       </div>
     </div>
 
@@ -3634,7 +3634,7 @@
         <details class="cli-details-drawer">
           <summary>💻 Terminal CLI Command (Click to expand)</summary>
           <div class="cli-box" style="margin-top: 8px;">
-            <span class="cli-text" id="cli-cmd">python sim_cotto.py --weapon-mode 2h_staff --imbue flametongue</span>
+            <span class="cli-text" id="cli-cmd">python server.py</span>
             <button class="btn-copy" onclick="copyCliCommand()">Copy</button>
           </div>
         </details>
@@ -4034,38 +4034,38 @@
       offhand: "Off Hand", relic: "Relic / Totem"
     };
 
-    // Default Cotto Gear (Staff BiS Setup)
+    // Default Starting Gear (Level 1 Starter Setup)
     let currentGear = {
       head: 0,
-      neck: 281265,
+      neck: 0,
       shoulders: 0,
-      back: 2316,
-      chest: 4243,
-      wrist: 7281,
-      hands: 10637,
-      waist: 4246,
-      legs: 7282,
-      feet: 273007,
+      back: 0,
+      chest: 0,
+      wrist: 0,
+      hands: 0,
+      waist: 0,
+      legs: 0,
+      feet: 0,
       ring1: 0,
       ring2: 0,
       trinket1: 0,
       trinket2: 0,
-      mainhand: 15444,
+      mainhand: 0,
       offhand: 0,
-      relic: 263412
+      relic: 0
     };
 
-    // Default Enchants (Lvl 19 Twink BiS Enchants)
+    // Default Enchants (None at Level 1)
     let currentEnchants = {
-      head: 1508,     // Lesser Arcanum of Voracity (+8 Agility)
-      shoulders: 0,   // None at 19
-      back: 849,      // Greater Agility (+3)
-      chest: 1891,    // Greater Stats (+4 All Stats)
-      wrist: 1893,    // Superior Strength (+9)
-      hands: 2566,    // Greater Agility (+15)
-      legs: 1508,     // Lesser Arcanum of Voracity (+8 Agility)
-      feet: 911,      // Minor Speed (+8% Movement Speed)
-      mainhand: 1898, // 2H Agility (+25) for Staff / Crusader (1900) for 1H
+      head: 0,
+      shoulders: 0,
+      back: 0,
+      chest: 0,
+      wrist: 0,
+      hands: 0,
+      legs: 0,
+      feet: 0,
+      mainhand: 0,
       offhand: 0
     };
 
@@ -4607,7 +4607,7 @@
     }
 
     // --- CONFIG PERSISTENCE (LOCALSTORAGE) ---
-    const STORAGE_KEY = 'wow_forever_twinksim_config_v2';
+    const STORAGE_KEY = 'wow_forever_wowsim_config_v1';
     let isInitializing = false;
 
     // --- FACTION STATE ---
@@ -4653,7 +4653,7 @@
         const p2El = document.getElementById('cfg-prof2');
 
         const config = {
-          level: lvlEl ? (parseInt(lvlEl.value) || 19) : 19,
+          level: lvlEl ? (parseInt(lvlEl.value) || 1) : 1,
           duration: durEl ? durEl.value : '30',
           iterations: itersEl ? itersEl.value : '200',
           characterClass: activeCharacterClass,
@@ -4686,7 +4686,7 @@
         if (!cfg) return false;
 
         if (cfg.level) {
-          const lvl = parseInt(cfg.level) || 19;
+          const lvl = parseInt(cfg.level) || 1;
           const lvlEl = document.getElementById('cfg-level');
           if (lvlEl) lvlEl.value = lvl;
           maxTalentPoints = Math.max(0, lvl - 9);
@@ -4846,16 +4846,16 @@
         // Try restoring user preferences from previous session
         const restored = loadUserSettings();
         if (!restored) {
-          // Default Cotto talents: -05203-
-          talentPoints[1][1] = 5; // Thundering Strikes 5/5
-          talentPoints[1][2] = 2; // Ancestral Knowledge 2/5
-          talentPoints[1][4] = 3; // Mental Dexterity 3/3
+          // Level 1 starts with 0 talent points allocated
+          talentTrees.forEach((tree, treeIdx) => {
+            talentPoints[treeIdx] = new Array(tree.talents.length).fill(0);
+          });
         }
 
         // Sanitize equipped gear to ensure no illegal BoP crafted items or missing profession items remain equipped
         validateAndSanitizeEquippedGear();
 
-        const lvl = parseInt(document.getElementById('cfg-level').value) || 19;
+        const lvl = parseInt(document.getElementById('cfg-level').value) || 1;
         maxTalentPoints = Math.max(0, lvl - 9);
         const maxPtsEl = document.getElementById('calc-max-points');
         if (maxPtsEl) maxPtsEl.innerText = maxTalentPoints;
@@ -5398,7 +5398,7 @@
       renderGearSlots();
       onSettingChanged();
       
-      const currentLvl = parseInt(document.getElementById('cfg-level').value) || 19;
+      const currentLvl = getCurrentPlayerLevel();
       const badge = document.getElementById('res-diff-badge');
       if (badge) {
         badge.style.display = 'inline-block';
@@ -5417,7 +5417,7 @@
     }
 
     function onLevelChanged() {
-      const lvl = parseInt(document.getElementById('cfg-level').value) || 19;
+      const lvl = getCurrentPlayerLevel();
       maxTalentPoints = Math.max(0, lvl - 9);
       document.getElementById('calc-max-points').innerText = maxTalentPoints;
       
@@ -5859,7 +5859,7 @@
     // Detects and purges any currently equipped items that violate level restrictions,
     // required professions (e.g. Engineering Goggles), or BoP crafted profession restrictions (e.g. Enchanting relics).
     function validateAndSanitizeEquippedGear() {
-      const currentLvl = parseInt(document.getElementById('cfg-level').value) || 19;
+      const currentLvl = getCurrentPlayerLevel();
       if (!catalog) return;
       let changed = false;
       const slotsToEquip = [
@@ -5904,7 +5904,7 @@
     }
 
     function autoEquipLevelingBiS() {
-      const currentLvl = parseInt(document.getElementById('cfg-level').value) || 19;
+      const currentLvl = getCurrentPlayerLevel();
       if (!catalog) return;
 
       const weaponStyleEl = document.getElementById('cfg-weapon-style');
@@ -6083,7 +6083,7 @@
       container.innerHTML = '';
 
       const slot = activeSlotEnchantPicking;
-      const currentLvl = parseInt(document.getElementById('cfg-level').value) || 19;
+      const currentLvl = getCurrentPlayerLevel();
       const hideOverlevel = document.getElementById('modal-enchant-hide-overlevel').checked;
       const query = (document.getElementById('modal-enchant-search-input').value || '').trim().toLowerCase();
 
@@ -6212,7 +6212,7 @@
     }
 
     function autoEnchantAllSlots() {
-      const currentLvl = parseInt(document.getElementById('cfg-level').value) || 19;
+      const currentLvl = getCurrentPlayerLevel();
       if (!enchantsCatalog || enchantsCatalog.length === 0) return;
 
       const enchantableSlots = ['head', 'shoulders', 'back', 'chest', 'wrist', 'hands', 'legs', 'feet', 'mainhand', 'offhand'];
@@ -6440,7 +6440,7 @@
         }
 
         // Next-Level BiS Upgrade Indicator Pill (shows earliest upcoming BiS unlock for this slot)
-        const baseLvlForUp = parseInt(document.getElementById('cfg-level')?.value) || 19;
+        const baseLvlForUp = getCurrentPlayerLevel();
         if (baseLvlForUp < 60 && catalog) {
           const horizonEl = document.getElementById('roadmap-horizon-select');
           const lookaheadDelta = horizonEl ? parseInt(horizonEl.value) || 10 : 10;
@@ -6699,7 +6699,7 @@
     }
 
     function updateRoadmapBadgeAndView() {
-      const baseLvl = parseInt(document.getElementById('cfg-level')?.value) || 19;
+      const baseLvl = getCurrentPlayerLevel();
       const horizonEl = document.getElementById('roadmap-horizon-select');
       const lookaheadDelta = horizonEl ? parseInt(horizonEl.value) || 10 : 10;
       const maxTargetLvl = lookaheadDelta >= 60 ? 60 : Math.min(60, baseLvl + lookaheadDelta);
@@ -6751,7 +6751,7 @@
       const subEl = document.getElementById('roadmap-subtitle-text');
       if (!bannerEl || !bodyEl || !catalog) return;
 
-      const baseLvl = parseInt(document.getElementById('cfg-level')?.value) || 19;
+      const baseLvl = getCurrentPlayerLevel();
       const horizonEl = document.getElementById('roadmap-horizon-select');
       const lookaheadDelta = horizonEl ? parseInt(horizonEl.value) || 10 : 10;
       const maxTargetLvl = lookaheadDelta >= 60 ? 60 : Math.min(60, baseLvl + lookaheadDelta);
@@ -7043,7 +7043,7 @@
 
       const query = (document.getElementById('modal-search-input').value || '').toLowerCase().trim();
       const hideOverlevel = document.getElementById('modal-hide-overlevel') ? document.getElementById('modal-hide-overlevel').checked : true;
-      const currentLvl = parseInt(document.getElementById('cfg-level').value) || 19;
+      const currentLvl = getCurrentPlayerLevel();
       const rawItems = getCatalogForSlot(activeSlotPicking);
 
       // Score all items for the current level
@@ -7532,7 +7532,7 @@
         // [treeIdx, talentIdx, targetPoints, label]
         [1, 1, 5, "Thundering Strikes 5/5"],
         [1, 2, 2, "Ancestral Knowledge 2/5"],
-        [1, 4, 3, "Mental Dexterity 3/3"],        // Cap 10 pts (Lvl 19 Cotto BiS!)
+        [1, 4, 3, "Mental Dexterity 3/3"],        // Cap 10 pts (Lvl 19 Enhancement BiS)
         [1, 6, 3, "Elemental Weapons 3/3"],       // Lvl 21 reaches 2/3, Lvl 22 reaches 3/3
         [1, 2, 4, "Ancestral Knowledge 4/5"],     // Cap 15 pts (unlocks Tier 4!)
         [1, 11, 1, "Stormstrike 1/1"],            // Cap 16 pts (Lvl 25 Stormstrike!)
@@ -7599,7 +7599,7 @@
     };
 
     function autoOptimizeTalentsForLevel(preserveCurrentWeights = false) {
-      const lvl = parseInt(document.getElementById('cfg-level').value) || 19;
+      const lvl = getCurrentPlayerLevel();
       maxTalentPoints = Math.max(0, lvl - 9);
       const stratSelect = document.getElementById('tal-strategy-select');
       const stratKey = stratSelect ? stratSelect.value : 'enhancement_pve';
@@ -7659,7 +7659,7 @@
       if (preset.startsWith('twink29')) {
         document.getElementById('cfg-level').value = 29;
         onLevelChanged();
-      } else if (['cotto', 'elem_weapons', 'crit_mana', 'resto', 'shield'].includes(preset)) {
+      } else if (['enh_dps', 'elem_weapons', 'crit_mana', 'resto', 'shield'].includes(preset)) {
         if (parseInt(document.getElementById('cfg-level').value) !== 19) {
           document.getElementById('cfg-level').value = 19;
           onLevelChanged();
@@ -7702,11 +7702,11 @@
         talentPoints[2][11] = 1; // Mana Tide Totem 1/1 (Restores mana)
         const ch = document.getElementById('chip-tal-twink29-resto'); if (ch) ch.classList.add('active');
         loadRotationPreset('resto_burst');
-      } else if (preset === 'cotto') {
+      } else if (preset === 'enh_dps') {
         talentPoints[1][1] = 5; // Thundering Strikes 5/5
         talentPoints[1][2] = 2; // Ancestral Knowledge 2/5
         talentPoints[1][4] = 3; // Mental Dexterity 3/3
-        const ch = document.getElementById('chip-tal-cotto'); if (ch) ch.classList.add('active');
+        const ch = document.getElementById('chip-tal-enh-dps'); if (ch) ch.classList.add('active');
         loadRotationPreset('burst');
       } else if (preset === 'elem_weapons') {
         talentPoints[1][1] = 5; // Thundering Strikes 5/5
@@ -8160,7 +8160,7 @@
 
       const cliCmd = document.getElementById('cli-cmd');
       if (cliCmd) {
-        cliCmd.innerText = `python sim_cotto.py --weapon-mode ${mode} --imbue ${imb} --talents "${tal}" --rotation ${rot} --iterations ${iters}`;
+        cliCmd.innerText = `python server.py --level ${document.getElementById('cfg-level')?.value || 1} --mode ${mode} --imbue ${imb} --rot ${rot}`;
       }
       
       updateTalentHeader();
@@ -8277,8 +8277,747 @@
       }
     }
 
+
+    // --- IN-BROWSER CLIENT MONTE CARLO SIMULATION ENGINE ---
+    function simulateCombatInBrowser(reqBody, cat, encCat, buffCat) {
+      const level = reqBody.level || getCurrentPlayerLevel();
+      const duration = Math.max(5, Math.min(300, parseInt(reqBody.duration) || 30));
+      const iterations = Math.max(10, Math.min(2000, parseInt(reqBody.iterations) || 200));
+      const imbue = reqBody.imbue || (level >= 10 ? 'FlametongueWeapon' : 'RockbiterWeapon');
+      const talentsStr = reqBody.talents || '--';
+      const rotationPreset = reqBody.rotation_preset || 'burst';
+      const customRotation = reqBody.custom_rotation || null;
+      const gear = reqBody.gear || {};
+      const enchants = reqBody.enchants || {};
+      const buffs = reqBody.buffs || {};
+
+      // Parse Talents
+      const talParts = talentsStr.split('-');
+      const t0 = talParts[0] || '';
+      const t1 = talParts[1] || '';
+      const t2 = talParts[2] || '';
+      const getTal = (treeStr, idx) => {
+        if (!treeStr || idx >= treeStr.length) return 0;
+        const n = parseInt(treeStr[idx]);
+        return isNaN(n) ? 0 : n;
+      };
+
+      const thunderingStrikesRank = getTal(t1, 1);
+      const ancKnowRank = getTal(t1, 2);
+      const mentalDexRank = getTal(t1, 4);
+      const elemWpnRank = getTal(t1, 6);
+      const anticipationRank = getTal(t1, 8);
+      const toughnessRank = getTal(t1, 9);
+      const stormstrikeRank = getTal(t1, 11);
+      const spiritWpnRank = getTal(t1, 13);
+      const impLsRank = getTal(t1, 5);
+
+      const impHwRank = getTal(t2, 0);
+      const tidalFocusRank = getTal(t2, 1);
+
+      // Fast item lookup
+      let itemLookup = {};
+      const targetCatalog = cat || catalog || {};
+      for (const slot in targetCatalog) {
+        const items = targetCatalog[slot];
+        if (Array.isArray(items)) {
+          for (const it of items) itemLookup[it.id] = it;
+        }
+      }
+
+      // Gear stats
+      let gearStats = {
+        Str: 0, Agi: 0, Sta: 0, Int: 0, Spi: 0,
+        AP: 0, Crit: 0, Hit: 0, Armor: 0,
+        Healing: 0, SP: 0, FireSP: 0, NatureSP: 0, FrostSP: 0,
+        Def: 0, Dodge: 0, Parry: 0, Block: 0, MP5: 0, HP5: 0
+      };
+
+      for (const slot in gear) {
+        const iId = gear[slot];
+        if (iId && itemLookup[iId]) {
+          const it = itemLookup[iId];
+          if (it.armor) gearStats.Armor += it.armor;
+          if (it.parsedStats) {
+            for (const k in it.parsedStats) {
+              if (gearStats[k] !== undefined) gearStats[k] += it.parsedStats[k];
+            }
+          }
+        }
+      }
+
+      // Enchants stats
+      let encLookup = {};
+      const targetEncCat = encCat || enchantsCatalog || [];
+      if (Array.isArray(targetEncCat)) {
+        for (const enc of targetEncCat) encLookup[enc.id] = enc;
+      }
+      for (const slot in enchants) {
+        const eId = enchants[slot];
+        if (eId && encLookup[eId]) {
+          const e = encLookup[eId];
+          if (e.stats) {
+            for (const k in e.stats) {
+              if (gearStats[k] !== undefined) gearStats[k] += e.stats[k];
+            }
+          }
+        }
+      }
+
+      // Buffs stats
+      const targetBuffCat = buffCat || buffsCatalog || {};
+      if (buffs && targetBuffCat) {
+        for (const bId in buffs) {
+          if (buffs[bId]) {
+            for (const bCat in targetBuffCat) {
+              const bList = targetBuffCat[bCat];
+              if (Array.isArray(bList)) {
+                const bObj = bList.find(b => b.id === bId);
+                if (bObj && bObj.stats) {
+                  for (const k in bObj.stats) {
+                    if (gearStats[k] !== undefined) gearStats[k] += bObj.stats[k];
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+
+      const mhItem = gear.mainhand ? itemLookup[gear.mainhand] : null;
+      const ohItem = gear.offhand ? itemLookup[gear.offhand] : null;
+      const hasShield = Boolean(ohItem && (ohItem.isShield || (ohItem.armor && ohItem.armor > 80)));
+
+      // Character Attributes
+      let totalStr = 24 + Math.floor(level * 1.35) + gearStats.Str;
+      let totalAgi = 14 + Math.floor(level * 1.05) + gearStats.Agi;
+      let totalSta = 20 + Math.floor(level * 1.6) + gearStats.Sta;
+      if (toughnessRank > 0) totalSta = Math.round(totalSta * (1 + 0.02 * toughnessRank));
+      let totalInt = 15 + Math.floor(level * 1.1) + gearStats.Int;
+      let totalSpi = 20 + Math.floor(level * 0.9) + gearStats.Spi;
+      let totalArmor = 120 + (totalAgi * 2) + gearStats.Armor;
+
+      let rockbiterBonusAP = 0;
+      if (imbue === 'RockbiterWeapon') {
+        if (level < 8) rockbiterBonusAP = 50;
+        else if (level < 16) rockbiterBonusAP = 81;
+        else if (level < 24) rockbiterBonusAP = 122;
+        else if (level < 34) rockbiterBonusAP = 173;
+        else if (level < 44) rockbiterBonusAP = 244;
+        else if (level < 54) rockbiterBonusAP = 335;
+        else rockbiterBonusAP = 446;
+      }
+
+      let totalAP = (totalStr * 2) + gearStats.AP + rockbiterBonusAP;
+      if (mentalDexRank > 0) totalAP += Math.round(totalInt * (mentalDexRank * 0.33));
+
+      let meleeCritPct = 4.5 + (totalAgi / 19.5) + (thunderingStrikesRank * 1.0) + (gearStats.Crit || 0);
+      let meleeHitPct = (gearStats.Hit || 0);
+      let spellPower = (gearStats.SP || 0);
+      let fireSP = spellPower + (gearStats.FireSP || 0);
+      let natureSP = spellPower + (gearStats.NatureSP || 0);
+      let frostSP = spellPower + (gearStats.FrostSP || 0);
+      let healPower = spellPower + (gearStats.Healing || 0);
+      let spellCritPct = 2.2 + (totalInt / 59.5);
+
+      let maxHP = 260 + (level * 24) + (totalSta * 10);
+      let maxMana = 400 + (level * 25) + (totalInt * 15);
+      if (ancKnowRank > 0) maxMana = Math.round(maxMana * (1 + 0.01 * ancKnowRank));
+
+      // Weapon specs
+      let wpnSpeed = mhItem && mhItem.speed > 0 ? mhItem.speed : 2.0;
+      let wpnMin = mhItem && mhItem.dmgMin > 0 ? mhItem.dmgMin : 1;
+      let wpnMax = mhItem && mhItem.dmgMax > 0 ? mhItem.dmgMax : (mhItem && mhItem.dmgMin ? mhItem.dmgMin + 1 : 2);
+      let is2H = mhItem ? Boolean(mhItem.is2H) : false;
+
+      // Target mitigation
+      let targetLvl = level;
+      let targetArmor = 200 + targetLvl * 65;
+      let armorDenom = targetArmor + 400 + 85 * targetLvl;
+      let armorDR = Math.min(0.75, Math.max(0.05, targetArmor / armorDenom));
+
+      // Hit tables
+      let missChance = Math.max(0.01, (5.0 - meleeHitPct) / 100.0);
+      let dodgeChance = 0.05;
+      let critChance = Math.min(1.0, Math.max(0.01, meleeCritPct / 100.0));
+      let spellCritChance = Math.min(1.0, Math.max(0.01, spellCritPct / 100.0));
+
+      // Enchants
+      let mhEncId = enchants.mainhand || 0;
+      let hasCrusader = (mhEncId === 1900);
+      let hasFiery = (mhEncId === 803 || mhEncId === 13897);
+      let hasLifesteal = (mhEncId === 20007);
+
+      // Available spells & ranks by level
+      let canCastSearingTotem = level >= 10;
+      let canCastFlameShock = level >= 10;
+      let canCastEarthShock = level >= 4;
+      let canCastStormstrike = level >= 25 && stormstrikeRank >= 1;
+      let canCastLightningShield = level >= 8;
+
+      // Spell ranks
+      let esRank = 1, esMin = 19, esMax = 22, esCost = 30;
+      if (level >= 60) { esRank = 6; esMin = 330; esMax = 350; esCost = 145; }
+      else if (level >= 48) { esRank = 5; esMin = 212; esMax = 224; esCost = 115; }
+      else if (level >= 36) { esRank = 4; esMin = 125; esMax = 132; esCost = 90; }
+      else if (level >= 24) { esRank = 3; esMin = 64; esMax = 69; esCost = 70; }
+      else if (level >= 14) { esRank = 2; esMin = 39; esMax = 43; esCost = 50; }
+
+      let fsRank = 1, fsDirectMin = 25, fsDirectMax = 29, fsDotTick = 7, fsDotTicks = 4, fsCost = 55;
+      if (level >= 60) { fsRank = 6; fsDirectMin = 310; fsDirectMax = 328; fsDotTick = 78; fsCost = 165; }
+      else if (level >= 52) { fsRank = 5; fsDirectMin = 228; fsDirectMax = 242; fsDotTick = 56; fsCost = 135; }
+      else if (level >= 40) { fsRank = 4; fsDirectMin = 145; fsDirectMax = 155; fsDotTick = 35; fsCost = 105; }
+      else if (level >= 28) { fsRank = 3; fsDirectMin = 86; fsDirectMax = 94; fsDotTick = 21; fsCost = 85; }
+      else if (level >= 18) { fsRank = 2; fsDirectMin = 51; fsDirectMax = 59; fsDotTick = 12; fsCost = 75; }
+
+      let stRank = 1, stMin = 9, stMax = 11, stInterval = 2.2, stCost = 25, stDuration = 30;
+      if (level >= 60) { stRank = 6; stMin = 50; stMax = 66; stDuration = 55; }
+      else if (level >= 50) { stRank = 5; stMin = 39; stMax = 51; stDuration = 50; }
+      else if (level >= 40) { stRank = 4; stMin = 29; stMax = 37; stDuration = 45; }
+      else if (level >= 30) { stRank = 3; stMin = 21; stMax = 27; stDuration = 40; }
+      else if (level >= 20) { stRank = 2; stMin = 14; stMax = 18; stDuration = 35; }
+
+      // Actions tracker across iterations
+      let actionsMap = {};
+      const recordAction = (name, school, icon, dmg, isCast, isHit, isCrit, isMiss) => {
+        if (!actionsMap[name]) {
+          actionsMap[name] = {
+            name, school, icon,
+            totalDamage: 0,
+            casts: 0,
+            hits: 0,
+            crits: 0,
+            misses: 0
+          };
+        }
+        actionsMap[name].totalDamage += dmg;
+        if (isCast) actionsMap[name].casts += 1;
+        if (isHit) actionsMap[name].hits += 1;
+        if (isCrit) actionsMap[name].crits += 1;
+        if (isMiss) actionsMap[name].misses += 1;
+      };
+
+      let iterationDpsList = [];
+
+      // Monte Carlo loop
+      for (let it = 0; it < iterations; it++) {
+        let t = 0;
+        let nextSwingTime = 0;
+        let nextGcdTime = 0;
+        let nextShockCd = 0;
+        let nextStormstrikeCd = 0;
+        let totemActiveUntil = -1;
+        let nextTotemBoltTime = -1;
+        let fsDotActiveUntil = -1;
+        let nextFsDotTickTime = -1;
+        let crusaderActiveUntil = -1;
+        let iterDamage = 0;
+
+        while (t < duration) {
+          let nextEvent = Math.min(
+            nextSwingTime <= duration ? nextSwingTime : duration,
+            nextTotemBoltTime > 0 && nextTotemBoltTime <= duration ? nextTotemBoltTime : duration,
+            nextFsDotTickTime > 0 && nextFsDotTickTime <= duration ? nextFsDotTickTime : duration,
+            nextGcdTime <= duration ? nextGcdTime : duration
+          );
+
+          if (nextEvent > t && nextEvent <= duration) {
+            t = nextEvent;
+          } else if (nextEvent <= t) {
+            // keep current time
+          } else {
+            t = duration;
+            break;
+          }
+
+          // 1. Process DoT tick
+          if (nextFsDotTickTime > 0 && t >= nextFsDotTickTime && t <= fsDotActiveUntil) {
+            let tickDmg = fsDotTick + (fireSP * (3.0 / 12.0));
+            let isCrit = Math.random() < spellCritChance;
+            if (isCrit) tickDmg *= 1.5;
+            iterDamage += tickDmg;
+            recordAction('Flame Shock (Rank ' + fsRank + ')', 'Fire', 'spell_fire_flameshock', tickDmg, false, true, isCrit, false);
+            nextFsDotTickTime += 3.0;
+            if (nextFsDotTickTime > fsDotActiveUntil) nextFsDotTickTime = -1;
+          }
+
+          // 2. Process Searing Totem bolt
+          if (nextTotemBoltTime > 0 && t >= nextTotemBoltTime && t <= totemActiveUntil) {
+            let boltDmg = stMin + Math.random() * (stMax - stMin) + (fireSP * 0.08);
+            let isCrit = Math.random() < spellCritChance;
+            if (isCrit) boltDmg *= 1.5;
+            iterDamage += boltDmg;
+            recordAction('Searing Totem (Rank ' + stRank + ')', 'Fire', 'spell_fire_searingtotem', boltDmg, false, true, isCrit, false);
+            nextTotemBoltTime += stInterval;
+            if (nextTotemBoltTime > totemActiveUntil) nextTotemBoltTime = -1;
+          }
+
+          // 3. Process Melee Auto-Attack
+          if (t >= nextSwingTime && t <= duration) {
+            let roll = Math.random();
+            let curAP = totalAP + (t <= crusaderActiveUntil ? 200 : 0);
+            let baseDmg = wpnMin + Math.random() * (wpnMax - wpnMin) + (curAP / 14.0) * wpnSpeed;
+
+            if (roll < missChance) {
+              recordAction('Melee (Auto-Attack)', 'Physical', mhItem && mhItem.icon ? mhItem.icon : 'inv_staff_13', 0, true, false, false, true);
+            } else if (roll < missChance + dodgeChance) {
+              recordAction('Melee (Auto-Attack)', 'Physical', mhItem && mhItem.icon ? mhItem.icon : 'inv_staff_13', 0, true, false, false, true);
+            } else {
+              let isCrit = Math.random() < critChance;
+              let mitigatedDmg = baseDmg * (1.0 - armorDR);
+              if (isCrit) mitigatedDmg *= 2.0;
+
+              iterDamage += mitigatedDmg;
+              recordAction('Melee (Auto-Attack)', 'Physical', mhItem && mhItem.icon ? mhItem.icon : 'inv_staff_13', mitigatedDmg, true, true, isCrit, false);
+
+              // Imbue proc
+              if (imbue === 'FlametongueWeapon' && level >= 10) {
+                let elemWpnMult = 1.0 + (elemWpnRank === 3 ? 0.20 : (elemWpnRank === 2 ? 0.14 : (elemWpnRank === 1 ? 0.07 : 0.0)));
+                let ftBase = (12 + level * 1.6) * (wpnSpeed / 2.0) + (fireSP * (wpnSpeed / 3.5));
+                let ftDmg = ftBase * elemWpnMult;
+                let ftCrit = Math.random() < spellCritChance;
+                if (ftCrit) ftDmg *= 1.5;
+                iterDamage += ftDmg;
+                recordAction('Flametongue Weapon (Proc)', 'Fire', 'spell_fire_flametounge', ftDmg, false, true, ftCrit, false);
+              } else if (imbue === 'FrostbrandWeapon' && level >= 20) {
+                if (Math.random() < 0.20) {
+                  let fbDmg = (45 + level * 2.2) + frostSP * 0.15;
+                  let fbCrit = Math.random() < spellCritChance;
+                  if (fbCrit) fbDmg *= 1.5;
+                  iterDamage += fbDmg;
+                  recordAction('Frostbrand Weapon (Proc)', 'Frost', 'spell_frost_frostbrand', fbDmg, false, true, fbCrit, false);
+                }
+              }
+
+              // Weapon Enchants
+              if (hasCrusader && Math.random() < (1.0 / 60.0 * wpnSpeed)) {
+                crusaderActiveUntil = t + 15.0;
+                recordAction('Holy Strength (Crusader)', 'Holy', 'spell_holy_blessingofstrength', 0, true, true, false, false);
+              }
+              if (hasFiery && Math.random() < 0.15) {
+                let fieryDmg = 40;
+                iterDamage += fieryDmg;
+                recordAction('Fiery Weapon (Proc)', 'Fire', 'spell_fire_fireweapon', fieryDmg, false, true, false, false);
+              }
+              if (hasLifesteal && Math.random() < 0.15) {
+                let lsDmg = 30;
+                iterDamage += lsDmg;
+                recordAction('Lifestealing (Proc)', 'Shadow', 'spell_shadow_lifedrain02', lsDmg, false, true, false, false);
+              }
+            }
+            nextSwingTime = t + wpnSpeed;
+          }
+
+          // 4. Process Spells / Rotation
+          if (t >= nextGcdTime && t <= duration) {
+            let actionCast = false;
+
+            if (canCastStormstrike && t >= nextStormstrikeCd) {
+              let curAP = totalAP + (t <= crusaderActiveUntil ? 200 : 0);
+              let ssDmg = (wpnMin + Math.random() * (wpnMax - wpnMin) + (curAP / 14.0) * wpnSpeed) * (1.0 - armorDR);
+              let isCrit = Math.random() < critChance;
+              if (isCrit) ssDmg *= 2.0;
+              iterDamage += ssDmg;
+              recordAction('Stormstrike', 'Physical', 'ability_shaman_stormstrike', ssDmg, true, true, isCrit, false);
+              nextStormstrikeCd = t + 20.0;
+              nextGcdTime = t + 1.5;
+              actionCast = true;
+            }
+
+            if (!actionCast && canCastFlameShock && t >= nextShockCd && t >= fsDotActiveUntil && rotationPreset !== 'earth_only' && rotationPreset !== 'melee_only') {
+              let directDmg = fsDirectMin + Math.random() * (fsDirectMax - fsDirectMin) + (fireSP * (1.5 / 3.5));
+              let isCrit = Math.random() < spellCritChance;
+              if (isCrit) directDmg *= 1.5;
+              iterDamage += directDmg;
+              recordAction('Flame Shock (Rank ' + fsRank + ')', 'Fire', 'spell_fire_flameshock', directDmg, true, true, isCrit, false);
+              nextShockCd = t + 6.0;
+              nextGcdTime = t + 1.5;
+              fsDotActiveUntil = t + 12.0;
+              nextFsDotTickTime = t + 3.0;
+              actionCast = true;
+            }
+
+            if (!actionCast && canCastEarthShock && t >= nextShockCd && rotationPreset !== 'flame_only' && rotationPreset !== 'melee_only') {
+              let esDmg = esMin + Math.random() * (esMax - esMin) + (natureSP * (1.5 / 3.5));
+              let isCrit = Math.random() < spellCritChance;
+              if (isCrit) esDmg *= 1.5;
+              iterDamage += esDmg;
+              recordAction('Earth Shock (Rank ' + esRank + ')', 'Nature', 'spell_nature_earthshock', esDmg, true, true, isCrit, false);
+              nextShockCd = t + 6.0;
+              nextGcdTime = t + 1.5;
+              actionCast = true;
+            }
+
+            if (!actionCast && canCastSearingTotem && (totemActiveUntil - t <= 1.0) && rotationPreset !== 'no_totem' && rotationPreset !== 'melee_only') {
+              totemActiveUntil = t + stDuration;
+              nextTotemBoltTime = t + 1.0;
+              recordAction('Searing Totem (Rank ' + stRank + ')', 'Fire', 'spell_fire_searingtotem', 0, true, true, false, false);
+              nextGcdTime = t + 1.5;
+              actionCast = true;
+            }
+
+            if (!actionCast) {
+              nextGcdTime = t + 0.5;
+            }
+          }
+        }
+
+        iterationDpsList.push(iterDamage / duration);
+      }
+
+      // Aggregate results
+      let avgDps = iterationDpsList.reduce((a, b) => a + b, 0) / iterations;
+      let minDps = Math.min(...iterationDpsList);
+      let maxDps = Math.max(...iterationDpsList);
+      let variance = iterationDpsList.reduce((acc, val) => acc + Math.pow(val - avgDps, 2), 0) / iterations;
+      let stdevDps = Math.sqrt(variance);
+
+      let actionsList = [];
+      for (const name in actionsMap) {
+        const a = actionsMap[name];
+        let dps = a.totalDamage / (iterations * duration);
+        let pct = avgDps > 0 ? (dps / avgDps) * 100.0 : 0.0;
+        actionsList.push({
+          name: a.name,
+          school: a.school,
+          icon: a.icon,
+          damage_per_sim: Math.round((a.totalDamage / iterations) * 10) / 10,
+          dps: Math.round(dps * 100) / 100,
+          percent: Math.round(pct * 10) / 10,
+          casts_per_sim: Math.round((a.casts / iterations) * 10) / 10,
+          hits_per_sim: Math.round((a.hits / iterations) * 10) / 10,
+          crits_per_sim: Math.round((a.crits / iterations) * 10) / 10,
+          crit_percent: a.hits > 0 ? Math.round((a.crits / a.hits) * 1000) / 10 : 0.0,
+          misses_per_sim: Math.round((a.misses / iterations) * 10) / 10
+        });
+      }
+      actionsList.sort((a, b) => b.damage_per_sim - a.damage_per_sim);
+
+      // Healing Wave calculations
+      let effectiveHeal = gearStats.Healing + spellPower;
+      let hwRank = 1, hwMin = 18, hwMax = 22, hwBaseCast = 1.5, hwMana = 25, hwCoeff = 1.5 / 3.5;
+      if (level >= 60) { hwRank = 10; hwMin = 1509; hwMax = 1765; hwBaseCast = 3.0; hwMana = 560; hwCoeff = 3.0 / 3.5; }
+      else if (level >= 18) { hwRank = 4; hwMin = 136; hwMax = 163; hwBaseCast = 2.5; hwMana = 155; hwCoeff = 2.5 / 3.5; }
+      else if (level >= 12) { hwRank = 3; hwMin = 69; hwMax = 82; hwBaseCast = 2.0; hwMana = 80; hwCoeff = 2.0 / 3.5; }
+      else if (level >= 6) { hwRank = 2; hwMin = 36; hwMax = 47; hwBaseCast = 1.5; hwMana = 45; hwCoeff = 1.5 / 3.5; }
+
+      let hwCastTime = Math.max(1.0, hwBaseCast - (impHwRank * 0.1));
+      let hwCost = Math.round(hwMana * (1.0 - (tidalFocusRank * 0.01)));
+      let minH = Math.round(hwMin + effectiveHeal * hwCoeff);
+      let maxH = Math.round(hwMax + effectiveHeal * hwCoeff);
+      let avgH = Math.round((minH + maxH) / 2);
+      let hpsVal = Math.round((avgH / hwCastTime) * 10) / 10;
+      let hpmVal = Math.round((avgH / Math.max(1, hwCost)) * 100) / 100;
+      let castsToOom = Math.round((maxMana / Math.max(1, hwCost)) * 10) / 10;
+      let timeToOom = Math.round(castsToOom * hwCastTime);
+      let healCap = Math.round(castsToOom * avgH);
+
+      let hasHealing = rotationPreset.includes('resto') || rotationPreset.includes('hybrid');
+      let healingSummary = {
+        active: hasHealing,
+        primary_spell: 'Healing Wave (Rank ' + hwRank + ')',
+        primary_hps: hpsVal,
+        primary_hpm: hpmVal,
+        avg_heal: avgH,
+        min_heal: minH,
+        max_heal: maxH,
+        crit_heal: Math.round(avgH * 1.5),
+        cast_time: hwCastTime,
+        base_cast_time: hwBaseCast,
+        cast_reduction: impHwRank * 0.1,
+        mana_cost: hwCost,
+        base_mana_cost: hwMana,
+        mana_discount_pct: tidalFocusRank * 1.0,
+        total_mana: maxMana,
+        casts_to_oom: castsToOom,
+        time_to_oom: timeToOom,
+        healing_capacity: healCap,
+        total_healing_power: effectiveHeal,
+        total_int: totalInt,
+        total_spi: totalSpi,
+        total_mp5: gearStats.MP5 || 0,
+        spell_crit: Math.round(spellCritPct * 10) / 10,
+        ranks: {}
+      };
+
+      // Tank calculations
+      let bossLvl = level + 2;
+      let tankArmorDenom = totalArmor + 400 + (85 * bossLvl);
+      let armorDrPct = Math.round(Math.min(0.75, Math.max(0.05, totalArmor / tankArmorDenom)) * 1000) / 10;
+      let dodgePct = Math.round((4.2 + (totalAgi / 14.5) + (anticipationRank * 1.0) + (gearStats.Def * 0.04) + (gearStats.Dodge || 0)) * 10) / 10;
+      let parryPct = spiritWpnRank > 0 ? Math.round((5.0 + gearStats.Def * 0.04) * 10) / 10 : 0.0;
+      let blockPct = hasShield ? Math.round((5.0 + gearStats.Def * 0.04 + anticipationRank * 1.0) * 10) / 10 : 0.0;
+      let blockVal = hasShield ? Math.round(8 + (level * 0.65) + (totalStr / 20)) : 0;
+      let missPct = Math.round((5.0 + gearStats.Def * 0.04) * 10) / 10;
+      let totalAvoidancePct = Math.round((missPct + dodgePct + parryPct + blockPct) * 10) / 10;
+
+      let avoidMult = Math.max(0.20, 1.0 - ((missPct + dodgePct + parryPct) / 100.0));
+      let ehp = Math.round(maxHP / Math.max(0.12, (1.0 - (armorDrPct / 100.0)) * avoidMult));
+
+      let rawBossDps = 42.0 + (level * 1.9);
+      let mitigatedDps = rawBossDps * (1.0 - (armorDrPct / 100.0)) * avoidMult;
+      let blockMitDps = (blockPct / 100.0) * (blockVal / 2.0);
+      let stoneskinMit = 5.5 + (level * 0.25);
+      let hp5Regen = (gearStats.HP5 || 0) / 5.0;
+      let dtps = Math.round(Math.max(6.0, mitigatedDps - blockMitDps - stoneskinMit - hp5Regen) * 10) / 10;
+      let ttd = Math.round((maxHP / Math.max(1.0, dtps)) * 10) / 10;
+
+      let earthShockDps = actionsList.filter(a => a.name.includes('Earth Shock')).reduce((sum, a) => sum + a.dps, 0);
+      let rockbiterTps = Math.round((imbue === 'RockbiterWeapon' ? (26.0 + level * 0.85) : 0.0) * 10) / 10;
+      let lsTps = Math.round((11.0 + level * 0.45) * (1.0 + 0.05 * impLsRank) * 10) / 10;
+      let totalTps = Math.round((avgDps + earthShockDps + rockbiterTps + lsTps) * 10) / 10;
+
+      let tankScore = Math.min(100, Math.round((ehp / (18 + level * 1.1)) * 0.45 + (totalTps * 0.35) + (armorDrPct * 0.45) + (hasShield ? 12 : 0)));
+      let tankGrade = tankScore >= 92 ? 'S+' : (tankScore >= 84 ? 'S' : (tankScore >= 72 ? 'A' : (tankScore >= 60 ? 'B' : 'C')));
+
+      let tankSummary = {
+        active: rotationPreset.includes('tank') || (hasShield && imbue === 'RockbiterWeapon'),
+        ehp, max_hp: maxHP, total_sta: totalSta, total_armor: totalArmor,
+        armor_dr_pct: armorDrPct, has_shield: hasShield,
+        dodge_pct: dodgePct, parry_pct: parryPct, block_pct: blockPct, block_value: blockVal,
+        miss_pct: missPct, total_avoidance_pct: totalAvoidancePct,
+        dtps, ttd, tps: totalTps, rockbiter_tps: rockbiterTps,
+        earth_shock_bonus_tps: Math.round(earthShockDps * 10) / 10,
+        lightning_shield_tps: lsTps, tank_score: tankScore, tank_grade: tankGrade
+      };
+
+      return {
+        status: 'success',
+        dps: {
+          avg: Math.round(avgDps * 100) / 100,
+          min: Math.round(minDps * 100) / 100,
+          max: Math.round(maxDps * 100) / 100,
+          stdev: Math.round(stdevDps * 100) / 100
+        },
+        healing: healingSummary,
+        tank: tankSummary,
+        fight_duration: duration,
+        iterations: iterations,
+        character_level: level,
+        actions: actionsList,
+        cli_equivalent: 'python server.py --level ' + level + ' --mode ' + (is2H ? '2h_staff' : '1h_shield') + ' --imbue ' + imbue + ' --rotation ' + rotationPreset + ' --iterations ' + iterations
+      };
+    }
+
+    function simulateSingleScenarioInBrowser(scen, req, cat, encCat, buffCat) {
+      const s_id = scen.id;
+      const category = scen.category || "pve_dps";
+      const dur = scen.duration || 30;
+      const targetCount = scen.targetCount || 1;
+      const lvlOffset = scen.targetLevelOffset || 0;
+      const charLvl = req.level || getCurrentPlayerLevel();
+      const targetLvl = charLvl + lvlOffset;
+
+      if (category === "pve_dps" || category === "pvp_burst" || category === "pvp_dps") {
+        const simRes = simulateCombatInBrowser({
+          ...req,
+          level: charLvl,
+          duration: dur,
+          iterations: 50
+        }, cat, encCat, buffCat);
+
+        let dpsVal = simRes.dps.avg;
+        let score = 50;
+        let metricText = dpsVal + " DPS";
+        let label = dur + "s Encounter Output";
+        let tip = "Optimized attack power and spell rotation maximize DPS.";
+
+        if (s_id === "pvp_burst_skirmish") {
+          let totBurst = Math.round(dpsVal * dur);
+          score = Math.min(100, Math.round(dpsVal * 1.5));
+          metricText = totBurst + " Dmg (" + dur + "s)";
+          label = "Burst Damage Window";
+          tip = "Critical Strike and weapon swing damage maximize kill pressure.";
+        } else if (s_id === "aoe_dungeon_trash") {
+          let cleaveDps = Math.round(dpsVal * (1.0 + (targetCount - 1) * 0.35) * 10) / 10;
+          score = Math.min(100, Math.round(cleaveDps * 1.3));
+          metricText = cleaveDps + " Cleave DPS";
+          label = "Cleave Across " + targetCount + " Targets";
+          tip = "Fire Nova Totem and Spell Power dramatically amplify AoE clear speeds.";
+        } else if (s_id === "pve_dungeon_boss") {
+          score = Math.min(100, Math.round(dpsVal * 1.8));
+          metricText = dpsVal + " DPS";
+          label = "Boss DPS (+3 Lvls Glancing)";
+          tip = "Hit Rating mitigates glancing blow penalties against level +3 bosses.";
+        } else if (s_id === "pve_raid_boss") {
+          score = Math.min(100, Math.round(dpsVal * 1.7));
+          metricText = dpsVal + " DPS";
+          label = "90s Raid Endurance DPS";
+          tip = "MP5 and mana efficiency sustain your rotation over 90 seconds.";
+        } else {
+          score = Math.min(100, Math.round(dpsVal * 1.6));
+        }
+
+        let grade = score >= 92 ? "S+" : (score >= 84 ? "S" : (score >= 72 ? "A" : (score >= 60 ? "B" : "C")));
+        return {
+          id: s_id,
+          name: scen.name,
+          badge: scen.badge || "Combat",
+          category: category,
+          primary_metric: metricText,
+          metric_value: dpsVal,
+          score: score,
+          grade: grade,
+          detail_label: label,
+          details: "Avg DPS: " + dpsVal + " • Fight Length: " + dur + "s • Targets: " + targetCount,
+          tip: tip
+        };
+      }
+
+      if (category === "pve_healing" || category === "pvp_healing" || category === "healing") {
+        let baseMana = 400 + (charLvl * 25);
+        let hwHeal = 20 + charLvl * 6;
+        let hwCast = 2.0;
+        let hwHps = Math.round((hwHeal / hwCast) * 10) / 10;
+        let castsToOom = Math.round(baseMana / 45);
+        let timeToOom = Math.round(castsToOom * hwCast);
+        let incoming = scen.incomingDps || 85;
+        let triageRatio = Math.min(1.5, hwHps / Math.max(1, incoming));
+        let score = Math.min(100, Math.round((hwHps * 1.8) + (triageRatio * 30)));
+        let grade = score >= 92 ? "S+" : (score >= 84 ? "S" : (score >= 72 ? "A" : (score >= 60 ? "B" : "C")));
+
+        return {
+          id: s_id,
+          name: scen.name,
+          badge: scen.badge || "Healing",
+          category: category,
+          primary_metric: hwHps + " HPS",
+          metric_value: hwHps,
+          score: score,
+          grade: grade,
+          detail_label: "Party Triage & Sustain",
+          details: "HW: ~" + Math.round(hwHeal) + " heal/cast • " + castsToOom + " casts to OOM (~" + timeToOom + "s sustain)",
+          tip: "Stacking MP5 and +Healing increases party survival during high-damage encounters."
+        };
+      }
+
+      if (category === "pve_tank") {
+        let maxHp = 260 + (charLvl * 24) + 200;
+        let totalArmor = 200 + charLvl * 30;
+        let denom = totalArmor + 400 + 85 * targetLvl;
+        let armorDr = Math.min(0.75, Math.max(0.05, totalArmor / denom));
+        let armorDrPct = Math.round(armorDr * 1000) / 10;
+        let avoidMult = 0.85;
+        let ehp = Math.round(maxHp / Math.max(0.12, (1.0 - armorDr) * avoidMult));
+        let incomingRaw = scen.incomingDps || 68;
+        let dtps = Math.round(Math.max(6.0, incomingRaw * (1.0 - armorDr) * avoidMult) * 10) / 10;
+        let ttd = Math.round((maxHp / Math.max(1.0, dtps)) * 10) / 10;
+        let tps = Math.round((25 + charLvl * 1.5) * 10) / 10;
+
+        let score = Math.min(100, Math.round((ehp / (20 + charLvl * 1.15)) * 0.45 + (tps * 0.35) + (armorDrPct * 0.45)));
+        let grade = score >= 92 ? "S+" : (score >= 84 ? "S" : (score >= 72 ? "A" : (score >= 60 ? "B" : "C")));
+
+        return {
+          id: s_id,
+          name: scen.name,
+          badge: scen.badge || "Tank",
+          category: category,
+          primary_metric: ehp + " EHP • " + tps + " TPS",
+          metric_value: ehp,
+          score: score,
+          grade: grade,
+          detail_label: "Main Tank EHP & Threat",
+          details: maxHp + " HP • " + totalArmor + " Armor (" + armorDrPct + "% DR) • " + dtps + " DTPS • " + ttd + "s Unhealed TTD",
+          tip: "Equipping a high-Armor Shield + Stamina gear and Rockbiter Weapon maximizes EHP and Boss Threat."
+        };
+      }
+
+      if (s_id === "pvp_flag_runner") {
+        let baseHp = 300 + (charLvl * 28) + 200;
+        let totalArmor = 200 + charLvl * 30;
+        let denom = totalArmor + 400 + 85 * charLvl;
+        let armorDr = Math.min(0.75, Math.max(0.05, totalArmor / denom));
+        let hasWolf = charLvl >= 20;
+        let speedPct = hasWolf ? 140 : 100;
+        let transitTime = hasWolf ? 10.2 : 14.3;
+        let incomingDps = scen.incomingDps || 75;
+        let netDps = incomingDps * (1.0 - armorDr);
+        let dmgTaken = netDps * transitTime;
+        let survHp = baseHp - dmgTaken;
+        let survRate = Math.max(5, Math.min(99, Math.round((survHp / Math.max(1, baseHp)) * 100)));
+        let score = Math.min(100, Math.round((survRate * 0.7) + (armorDr * 50) + (hasWolf ? 15 : 0)));
+        let grade = score >= 92 ? "S+" : (score >= 84 ? "S" : (score >= 72 ? "A" : (score >= 60 ? "B" : "C")));
+
+        return {
+          id: s_id,
+          name: scen.name,
+          badge: scen.badge || "Flag Runner",
+          category: category,
+          primary_metric: survRate + "% Escape Rate",
+          metric_value: survRate,
+          score: score,
+          grade: grade,
+          detail_label: "Flag Transit Survival",
+          details: baseHp + " HP • " + totalArmor + " Armor (" + Math.round(armorDr * 100) + "% DR) • " + transitTime.toFixed(1) + "s cross time (" + speedPct + "% speed)",
+          tip: "High Armor + Stamina ensures surviving physical ranged fire across the midfield."
+        };
+      }
+
+      return {
+        id: s_id,
+        name: scen.name,
+        badge: scen.badge || "Scenario",
+        category: category,
+        score: 60,
+        grade: "B",
+        primary_metric: "--",
+        details: "Scenario executed"
+      };
+    }
+
+    function simulateSuiteInBrowser(payload, cat, encCat, buffCat) {
+      const activeScenarios = payload.scenarios || [];
+      const results = [];
+      let totalScore = 0;
+
+      for (const scen of activeScenarios) {
+        const res = simulateSingleScenarioInBrowser(scen, payload, cat, encCat, buffCat);
+        results.push(res);
+        totalScore += res.score;
+      }
+
+      const avgScore = results.length > 0 ? Math.round(totalScore / results.length) : 0;
+      const grade = avgScore >= 92 ? "S+" : (avgScore >= 84 ? "S" : (avgScore >= 72 ? "A" : (avgScore >= 60 ? "B" : "C")));
+
+      let sorted = [...results].sort((a, b) => b.score - a.score);
+      let best = sorted[0] || null;
+      let weakest = sorted[sorted.length - 1] || null;
+
+      let radar = {
+        pve_dps: 60,
+        pve_tank: 60,
+        pve_healing: 60,
+        pvp_dps: 60,
+        pvp_flag: 60
+      };
+      results.forEach(r => {
+        if (r.id === "pve_dungeon_boss" || r.id === "aoe_dungeon_trash" || r.id === "pve_raid_boss") {
+          radar.pve_dps = r.score;
+        } else if (r.id === "pve_main_tank" || r.id === "pve_aoe_tank_pack") {
+          radar.pve_tank = r.score;
+        } else if (r.category && r.category.includes("healing")) {
+          radar.pve_healing = r.score;
+        } else if (r.id === "pvp_burst_skirmish") {
+          radar.pvp_dps = r.score;
+        } else if (r.id === "pvp_flag_runner") {
+          radar.pvp_flag = r.score;
+        }
+      });
+
+      return {
+        status: "success",
+        composite_score: avgScore,
+        composite_grade: grade,
+        best_scenario: best ? { name: best.name, metric: best.primary_metric, score: best.score } : null,
+        weakest_scenario: weakest ? { name: weakest.name, metric: weakest.primary_metric, score: weakest.score } : null,
+        scenarios_run: results.length,
+        radar: radar,
+        results: results
+      };
+    }
+
     // --- SIMULATION WITH AUTHENTIC ABILITY ICONS & UNIFIED TOOLTIPS ---
-    async function runSimulation() {
+        async function runSimulation() {
       const btn = document.getElementById('btn-simulate');
       const btnText = document.getElementById('btn-text');
 
@@ -8290,7 +9029,7 @@
 
         // Calculate Leveling BiS power score
         let totalScore = 0;
-        const currentLvl = parseInt(document.getElementById('cfg-level').value) || 19;
+        const currentLvl = getCurrentPlayerLevel();
         for (const [slot, id] of Object.entries(currentGear)) {
           if (id > 0) {
             const rawItems = getCatalogForSlot(slot);
@@ -8310,20 +9049,20 @@
       }
 
       const reqBody = {
-        level: parseInt(document.getElementById('cfg-level').value) || 19,
+        level: getCurrentPlayerLevel(),
         imbue: currentImbue,
         talents: getSerializedTalents(),
         rotation_preset: activeRotationPresetKey,
         custom_rotation: currentRotation,
-        duration: parseInt(document.getElementById('cfg-duration').value),
-        iterations: parseInt(document.getElementById('cfg-iterations').value),
+        duration: parseInt(document.getElementById('cfg-duration').value) || 30,
+        iterations: parseInt(document.getElementById('cfg-iterations').value) || 200,
         gear: currentGear,
         enchants: currentEnchants,
         buffs: activeBuffs || {}
       };
 
       // Instant cached results if available
-      const simKey = `twinksim_last_result_${reqBody.level}_${reqBody.imbue}_${reqBody.talents}_${reqBody.rotation_preset}_${reqBody.duration}_${reqBody.iterations}_${JSON.stringify(reqBody.gear)}_${JSON.stringify(reqBody.enchants)}`;
+      const simKey = `wowsim_last_result_${reqBody.level}_${reqBody.imbue}_${reqBody.talents}_${reqBody.rotation_preset}_${reqBody.duration}_${reqBody.iterations}_${JSON.stringify(reqBody.gear)}_${JSON.stringify(reqBody.enchants)}`;
       try {
         const cachedSim = sessionStorage.getItem(simKey);
         if (cachedSim) {
@@ -8339,39 +9078,49 @@
       btnText.innerHTML = '<span class="loading-spinner"></span> Simulating...';
       document.getElementById('sim-meta').innerText = 'Status: Simulating...';
 
-      try {
-        const resp = await fetch('/api/simulate', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(reqBody)
-        });
+      let simData = null;
+      const isStaticHost = window.location.hostname.includes('github.io') || window.location.protocol === 'file:';
 
-        if (!resp.ok) {
-          const err = await resp.json();
-          alert("Simulation Error: " + (err.detail || "Engine failed"));
-          document.getElementById('sim-meta').innerText = 'Status: Error';
-          return;
-        }
-
-        const data = await resp.json();
+      // If running with local Python backend, try /api/simulate; on GitHub Pages or if offline, simulate directly in browser!
+      if (!isStaticHost) {
         try {
-          sessionStorage.setItem(simKey, JSON.stringify(data));
-        } catch (e) {}
-        updateResults(data);
-      } catch (err) {
-        console.error(err);
-        const isStaticHost = window.location.hostname.includes('github.io') || window.location.protocol === 'file:';
-        if (isStaticHost) {
-          alert("⚡ GitHub Pages Static Mode Notice:\n\nYou are viewing TwinkSim on GitHub Pages! Gear optimization, Pawn stat evaluation, BiS upgrade roadmap, talent calculator, and item picking run 100% in your browser.\n\nRunning raw C++ combat iterations (/api/simulate) requires the local backend server (python server.py).");
-          document.getElementById('sim-meta').innerText = 'Status: GitHub Pages (Local Server Required for Combat CLI)';
-        } else {
-          alert("Network error communicating with the simulator engine.\n\nPlease ensure 'python server.py' is running on http://localhost:8090/.");
-          document.getElementById('sim-meta').innerText = 'Status: Network Error';
+          const controller = new AbortController();
+          const timeoutId = setTimeout(() => controller.abort(), 1800);
+          const resp = await fetch('/api/simulate', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(reqBody),
+            signal: controller.signal
+          });
+          clearTimeout(timeoutId);
+          if (resp.ok) {
+            simData = await resp.json();
+          }
+        } catch (e) {
+          // Fall through to in-browser simulation
         }
-      } finally {
-        btn.disabled = false;
-        btnText.innerText = "▶ SIMULATE";
       }
+
+      if (!simData) {
+        const t0 = performance.now();
+        simData = simulateCombatInBrowser(reqBody, catalog, enchantsCatalog, buffsCatalog);
+        simData._clientTimeMs = Math.max(1, Math.round(performance.now() - t0));
+      }
+
+      try {
+        sessionStorage.setItem(simKey, JSON.stringify(simData));
+      } catch (e) {}
+
+      updateResults(simData);
+
+      if (simData._clientTimeMs !== undefined) {
+        document.getElementById('sim-meta').innerText = `${simData.iterations} iters • ${simData.fight_duration}s • Done (Browser Engine: ${simData._clientTimeMs}ms)`;
+      } else {
+        document.getElementById('sim-meta').innerText = `${simData.iterations} iters • ${simData.fight_duration}s • Done`;
+      }
+
+      btn.disabled = false;
+      btnText.innerText = "▶ SIMULATE";
     }
 
     function updateResults(data) {
@@ -8747,9 +9496,20 @@
       return all;
     }
 
-    function getCurrentTwinkLevel() {
+    
+    function getCurrentPlayerLevel() {
       const el = document.getElementById('cfg-level');
-      return el ? (parseInt(el.value, 10) || 19) : 19;
+      const val = el ? parseInt(el.value, 10) : 1;
+      return (!isNaN(val) && val >= 1 && val <= 60) ? val : 1;
+    }
+
+    function getCurrentTwinkLevel() {
+      return getCurrentPlayerLevel();
+    }
+
+    function _oldGetCurrentTwinkLevel() {
+      const el = document.getElementById('cfg-level');
+      return el ? (getCurrentPlayerLevel()) : 19;
     }
 
     function filterScenariosView(cat) {

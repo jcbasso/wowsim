@@ -1,14 +1,19 @@
-# WoW Forever TwinkSim ⚡
+# WoW Forever • WoW Sim ⚡
 
-> **Interactive Level 10–60 Character Sheet, BiS Optimizer & Twink Simulator tailored for WoW Forever (Classic 1.12.1 Custom Scaled & Blizzlike Rates).**
+> **Interactive Level 1–60 Character Sheet, BiS Optimizer & Combat Simulator tailored for WoW Forever (Classic 1.12.1 Custom Scaled & Blizzlike Rates).**
 
-[![GitHub Pages](https://img.shields.io/badge/GitHub%20Pages-Live%20Demo-brightgreen?style=flat-square&logo=github)](https://jcbasso.github.io/twinksim/)
+[![GitHub Pages](https://img.shields.io/badge/GitHub%20Pages-Live%20Demo-brightgreen?style=flat-square&logo=github)](https://jcbasso.github.io/wowsim/)
 [![WoW Forever Version](https://img.shields.io/badge/WoW%20Forever-v1.4.2%20Live-orange?style=flat-square)](https://wowforever.site/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=flat-square)](LICENSE)
 
 ---
 
 ## 🌟 Key Features
+
+- **⚡ In-Browser Client Monte-Carlo Combat Simulator:**
+  - Runs 50–2,000 iterations of full combat encounters directly in your browser client in milliseconds.
+  - Complete simulation of auto-attacks, weapon imbues (Flametongue, Rockbiter, Frostbrand, Windfury), spell rotations (Shocks, Totems, Stormstrike), and enchant procs (Crusader, Fiery Weapon, Lifestealing).
+  - Works 100% standalone on **GitHub Pages** with zero backend or installation required.
 
 - **🛡️ Authentic Character Equipment Sheet:**
   - 17 gear slot cards with authentic WoW item rarity borders, Wowhead dynamic tooltips, and middle-click Wowhead navigation.
@@ -25,14 +30,15 @@
   - Customizable Pawn stat weights (Strength, Agility, Attack Power, Melee/Spell Crit, Spell Power, MP5, Armor, Defense, Dodge).
 
 - **🌳 Authentic Talent Calculator:**
-  - Interactive talent trees (Elemental, Enhancement, Restoration) with level 10–60 point constraints.
-  - One-click talent builds and auto-optimization based on target level and chosen spec.
+  - Interactive talent trees (Elemental, Enhancement, Restoration) with level 1–60 point constraints.
+  - Default starter setup at Level 1 with 0 talent points, unlocking points dynamically as you level.
 
 - **🍲 Consumables & Buffs Studio:**
   - Well Fed food ranking (+6 Str, +6 Agi, +6 Sta, +3 Spell Damage Smoked Sagefish), Battle & Guardian elixirs, scrolls, alcohol, and party buffs.
 
-- **⚡ Full Monte-Carlo Combat Simulator:**
-  - Integrated with `wowsimcli.exe` C++ engine for deep combat iterations, damage breakdowns, threat (TPS), and effective health (EHP).
+- **🔬 Scenarios Multi-Environment Lab:**
+  - 12 built-in and customizable encounters: Dungeon Bosses, AoE Cleave Trash, Raid Boss Endurance, WSG Flag Runner, Main Tank, AoE Tank Pack, and Dungeon/Raid/PvP Healing.
+  - Evaluates composite score, letter grade, and multi-axis radar chart directly in your browser.
 
 ---
 
@@ -40,11 +46,11 @@
 
 1. **Clone the repository:**
    ```bash
-   git clone https://github.com/jcbasso/twinksim.git
-   cd twinksim
+   git clone https://github.com/jcbasso/wowsim.git
+   cd wowsim
    ```
 
-2. **Start the local Python server:**
+2. **Start the local Python server (optional for local C++ CLI execution):**
    ```bash
    python server.py
    ```
@@ -53,12 +59,13 @@
    ```
    http://localhost:8090/
    ```
+   *(Or simply open `index.html` directly in any web browser!)*
 
 ---
 
 ## 🌐 GitHub Pages Deployment
 
-This repository is built to run directly on **GitHub Pages** as a static web application:
+This repository runs directly on **GitHub Pages** as a static web application:
 
 1. Go to your repository on GitHub: `https://github.com/<your-username>/<repo-name>`
 2. Navigate to **Settings** ➔ **Pages**.
