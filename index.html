@@ -3504,16 +3504,16 @@
 
       <!-- RIGHT ANALYSIS VIEW TABS -->
       <div class="cockpit-right-tabs">
-        <button id="btn-cockpit-tab-scenarios" class="cockpit-tab-btn active" onclick="switchCockpitRightTab('scenarios')">
-          <span>🌐</span> 12-Scenario Radar & Matrix
+        <button id="btn-cockpit-tab-single" class="cockpit-tab-btn active" onclick="switchCockpitRightTab('single')">
+          <span>📊</span> Combat & Spell Breakdown (Live)
         </button>
-        <button id="btn-cockpit-tab-single" class="cockpit-tab-btn" onclick="switchCockpitRightTab('single')">
-          <span>📊</span> Combat, Tank & Spell Breakdown
+        <button id="btn-cockpit-tab-scenarios" class="cockpit-tab-btn" onclick="switchCockpitRightTab('scenarios')">
+          <span>🌐</span> 12-Scenario Suite & Config
         </button>
       </div>
 
       <!-- ANALYSIS PANE 1: 12 SCENARIOS & 8-AXIS RADAR -->
-      <div id="view-scenarios" class="cockpit-pane">
+      <div id="view-scenarios" class="cockpit-pane" style="display: none;">
         <div class="panel">
           <!-- RADAR + SCENARIO CONTROLS COMPACT ROW -->
           <div style="display: grid; grid-template-columns: 310px 1fr; gap: 14px; margin-bottom: 14px; align-items: center;">
@@ -3568,7 +3568,26 @@
       </div>
 
       <!-- ANALYSIS PANE 2: COMBAT, TANK & SPELL BREAKDOWN -->
-      <div id="cockpit-pane-single" class="cockpit-pane" style="display: none; flex-direction: column; gap: 10px;">
+      <div id="cockpit-pane-single" class="cockpit-pane" style="display: flex; flex-direction: column; gap: 10px;">
+        <!-- ACTIVE CHARACTER COMBAT ATTRIBUTES & STATS BAR -->
+        <div class="panel" style="padding: 12px 16px; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.08); background: linear-gradient(180deg, rgba(20, 26, 38, 0.95) 0%, rgba(13, 17, 23, 0.98) 100%);">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; border-bottom: 1px solid rgba(255, 255, 255, 0.06); padding-bottom: 6px;">
+            <div style="font-size: 0.76rem; font-weight: 800; color: var(--gold-bright); text-transform: uppercase; letter-spacing: 0.5px; display: flex; align-items: center; gap: 6px;">
+              <span>⚔️</span> Active Character Combat Attributes
+            </div>
+            <span id="stat-bar-spec-lbl" style="font-size: 0.7rem; color: #94a3b8; font-weight: 600;">Lvl 29 • Active Spec</span>
+          </div>
+          <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px 12px; font-size: 0.74rem;">
+            <div>Attack Power: <strong id="stat-bar-ap" style="color: #fbbf24;">--</strong></div>
+            <div>Melee Crit: <strong id="stat-bar-crit" style="color: #fbbf24;">--%</strong></div>
+            <div>Melee Hit: <strong id="stat-bar-hit" style="color: #fbbf24;">+--%</strong></div>
+            <div>Max Health: <strong id="stat-bar-hp" style="color: #4ade80;">-- HP</strong></div>
+            <div>Spell Power: <strong id="stat-bar-sp" style="color: #a78bfa;">+--</strong></div>
+            <div>Spell Crit: <strong id="stat-bar-spcrit" style="color: #a78bfa;">--%</strong></div>
+            <div>Max Mana: <strong id="stat-bar-mana" style="color: #60a5fa;">--</strong></div>
+            <div>Armor DR: <strong id="stat-bar-armordr" style="color: #38bdf8;">--%</strong></div>
+          </div>
+        </div>
         <!-- TANK SURVIVABILITY, MITIGATION & THREAT CARD -->
         <div class="panel" id="card-tank-metrics" style="border: 1px solid rgba(56, 189, 248, 0.65); background: linear-gradient(180deg, rgba(56, 189, 248, 0.14) 0%, rgba(13, 17, 23, 0.96) 100%); padding: 14px 18px; border-radius: 8px;">
           <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
@@ -4935,6 +4954,7 @@
             baseName: rInfo.baseName,
             rank: rInfo.rank,
             isUnlocked: rInfo.isUnlocked,
+            reqLvl: rInfo.reqLvl || (rInfo.data && rInfo.data.minLvl) || 1,
             icon: rInfo.icon,
             school: rInfo.school,
             spellKey: key,
@@ -4948,6 +4968,7 @@
         baseName: fallback.name,
         rank: 1,
         isUnlocked: true,
+        reqLvl: 1,
         icon: fallback.icon,
         school: fallback.school,
         spellKey: null,
@@ -5831,18 +5852,44 @@
       if (winnerKey && rotationPresets[winnerKey]) {
         clsRotations[winnerKey] = rotationPresets[winnerKey];
       }
+
+      const autoKeys = [];
+      const fixedKeys = [];
+
       for (const [key, steps] of Object.entries(clsRotations)) {
         const isHealPreset = key.includes('resto') || key.includes('heal') || key.includes('holy');
         if (roleMode !== 'healer' && isHealPreset) continue;
         if (roleMode === 'healer' && !isHealPreset) continue;
         rotationPresets[key] = steps;
+
+        if (key.startsWith('dynamic_') || levelPool[key]) {
+          autoKeys.push(key);
+        } else {
+          fixedKeys.push(key);
+        }
+      }
+
+      if (winnerKey && autoKeys.includes(winnerKey)) {
+        const idx = autoKeys.indexOf(winnerKey);
+        autoKeys.splice(idx, 1);
+        autoKeys.unshift(winnerKey);
+      } else if (winnerKey && !autoKeys.includes(winnerKey)) {
+        autoKeys.unshift(winnerKey);
+      }
+
+      const helperCreateChip = (key, steps, isAutoGroup) => {
         const chip = document.createElement('span');
         chip.id = `chip-rot-${key}`;
         chip.className = `chip ${key === activeRotationPresetKey ? 'active' : ''}`;
-        const label = key.replace(/_/g, ' ').toUpperCase();
-        let icon = '⚡';
+        let label = key.replace(/_/g, ' ').toUpperCase();
+        if (key.startsWith('dynamic_lvl_')) {
+          label = `DYNAMIC LVL ${curLvl}`;
+        }
+        let icon = isAutoGroup ? '⭐' : '⚡';
         let style = '';
-        if (key.includes('tank') || key.includes('prot')) {
+        if (isAutoGroup) {
+          style = 'border-color: #ffd700; color: #ffd700; font-weight: 800; background: rgba(255, 215, 0, 0.08);';
+        } else if (key.includes('tank') || key.includes('prot')) {
           icon = '🛡️';
           style = 'border-color: rgba(56, 189, 248, 0.55); color: #38bdf8; font-weight: 700;';
         } else if (key.includes('resto') || key.includes('heal') || key.includes('holy')) {
@@ -5853,10 +5900,87 @@
           style = 'border-color: #ffd700; color: #ffd700; font-weight: 700;';
         }
         if (style) chip.style.cssText = style;
-        const scVal = (simScores && typeof simScores[key] === 'number' && simScores[key] > 0) ? ` (${simScores[key].toFixed(1)} DPS)` : '';
-        chip.innerText = `${icon} ${label}${scVal}`;
+
+        // Check if steps contain locked abilities above curLvl
+        let lockTag = '';
+        if (!isAutoGroup && Array.isArray(steps)) {
+          let maxReq = 0;
+          let hasLocked = false;
+          steps.forEach(s => {
+            const inf = getSpellDisplayInfo(s.spellId, curLvl);
+            if (inf && !inf.isUnlocked) {
+              hasLocked = true;
+              const req = inf.reqLvl || (inf.data && inf.data.minLvl) || 1;
+              if (req > maxReq) maxReq = req;
+            }
+          });
+          if (hasLocked) {
+            lockTag = ` <span style="font-size: 0.65rem; color: #f87171; background: rgba(239,68,68,0.2); padding: 1px 4px; border-radius: 3px; border: 1px solid rgba(239,68,68,0.35);">🔒 Lvl ${maxReq}+</span>`;
+          }
+        }
+
+        // Format DPS score cleanly (never display objective score like 999.3 as DPS!)
+        let scVal = '';
+        if (simScores && simScores[key] !== undefined) {
+          const sObj = simScores[key];
+          if (typeof sObj === 'object' && sObj !== null) {
+            if (roleMode === 'tank' && typeof sObj.tps === 'number' && sObj.tps > 0) {
+              scVal = ` (${(sObj.dps || 0).toFixed(1)} DPS • ${Math.round(sObj.tps)} TPS)`;
+            } else if (typeof sObj.dps === 'number') {
+              scVal = ` (${sObj.dps.toFixed(1)} DPS)`;
+            }
+          } else if (typeof sObj === 'number' && sObj > 0) {
+            if (roleMode === 'tank' && sObj > 300) {
+              const safeDps = (latestSimData && latestSimData.dps && typeof latestSimData.dps.avg === 'number') ? latestSimData.dps.avg : 52.8;
+              scVal = ` (${safeDps.toFixed(1)} DPS)`;
+            } else {
+              scVal = ` (${sObj.toFixed(1)} DPS)`;
+            }
+          }
+        }
+
+        chip.innerHTML = `${icon} ${label}${lockTag}${scVal}`;
         chip.onclick = () => loadRotationPreset(key);
-        container.appendChild(chip);
+        return chip;
+      };
+
+      // Section 1: Automatic / Sim-Optimized
+      if (autoKeys.length > 0) {
+        const autoSection = document.createElement('div');
+        autoSection.style.cssText = 'width: 100%; margin-bottom: 8px; display: flex; flex-direction: column; gap: 4px;';
+        autoSection.innerHTML = `
+          <div style="font-size: 0.69rem; font-weight: 800; color: #ffd700; text-transform: uppercase; letter-spacing: 0.5px; display: flex; align-items: center; gap: 6px;">
+            <span>⭐</span> Sim-Optimized Level APL (Automatic BiS)
+          </div>
+        `;
+        const autoChipsRow = document.createElement('div');
+        autoChipsRow.className = 'chips-row';
+        autoChipsRow.style.margin = '0';
+        autoKeys.forEach(k => {
+          autoChipsRow.appendChild(helperCreateChip(k, clsRotations[k], true));
+        });
+        autoSection.appendChild(autoChipsRow);
+        container.appendChild(autoSection);
+      }
+
+      // Section 2: Fixed Archetype Rotations
+      if (fixedKeys.length > 0) {
+        const fixedSection = document.createElement('div');
+        fixedSection.style.cssText = 'width: 100%; margin-top: 4px; display: flex; flex-direction: column; gap: 4px;';
+        fixedSection.innerHTML = `
+          <div style="font-size: 0.69rem; font-weight: 800; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px; display: flex; align-items: center; gap: 6px;">
+            <span>📋</span> Fixed Archetype Rotations
+            <span style="font-size: 0.65rem; color: var(--text-muted); font-weight: normal;">(Higher-level abilities are locked & skipped in sim)</span>
+          </div>
+        `;
+        const fixedChipsRow = document.createElement('div');
+        fixedChipsRow.className = 'chips-row';
+        fixedChipsRow.style.margin = '0';
+        fixedKeys.forEach(k => {
+          fixedChipsRow.appendChild(helperCreateChip(k, clsRotations[k], false));
+        });
+        fixedSection.appendChild(fixedChipsRow);
+        container.appendChild(fixedSection);
       }
     }
 
@@ -5892,19 +6016,43 @@
       const curLvl = getCurrentPlayerLevel();
       currentRotation.forEach((step, idx) => {
         const sInfo = getSpellDisplayInfo(step.spellId, curLvl);
+        const isLocked = !sInfo.isUnlocked;
+        const minReqLvl = sInfo.reqLvl || (sInfo.data && sInfo.data.minLvl) || 1;
         const spell = Object.assign({}, availableSpells[step.spellId] || {}, {
-          name: sInfo.name,
+          name: sInfo.baseName + (sInfo.rank ? " (Rank " + sInfo.rank + ")" : ""),
           icon: sInfo.icon || (availableSpells[step.spellId] ? availableSpells[step.spellId].icon : "spell_nature_elementalprecision_1"),
           school: sInfo.school || "Magic",
           conditions: (availableSpells[step.spellId] && availableSpells[step.spellId].conditions) ? availableSpells[step.spellId].conditions : [{ id: step.condition, label: step.condition }]
         });
 
         const itemRow = document.createElement('div');
-        itemRow.className = `prio-item ${step.enabled ? '' : 'disabled'}`;
+        const lockedClass = isLocked ? 'locked-ability' : '';
+        const disabledClass = !step.enabled ? 'disabled' : '';
+        itemRow.className = `prio-item ${lockedClass} ${disabledClass}`.trim();
+        if (isLocked) {
+          itemRow.style.cssText = 'opacity: 0.45; filter: grayscale(0.85); border: 1px dashed rgba(239, 68, 68, 0.55); background: rgba(30, 20, 25, 0.5);';
+        }
 
         const condOptionsHtml = spell.conditions.map(c => 
           `<option value="${c.id}" ${c.id === step.condition ? 'selected' : ''}>${c.label}</option>`
         ).join('');
+
+        const lockBadgeHtml = isLocked ? `
+          <span style="background: rgba(239, 68, 68, 0.22); border: 1px solid #ef4444; color: #fca5a5; font-size: 0.68rem; font-weight: 700; padding: 2px 7px; border-radius: 4px; margin-left: 6px;">
+            🔒 Learnt at Level ${minReqLvl} (Locked - Bypassed)
+          </span>
+        ` : '';
+
+        const toggleHtml = isLocked ? `
+          <div style="font-size: 0.72rem; color: #f87171; font-weight: 700; padding: 4px 8px; background: rgba(239,68,68,0.15); border-radius: 4px; border: 1px solid rgba(239,68,68,0.3);">
+            🔒 Locked
+          </div>
+        ` : `
+          <label class="prio-toggle-label" title="Enable or disable this action without deleting it">
+            <input type="checkbox" ${step.enabled ? 'checked' : ''} onchange="toggleRotationStep(${idx})">
+            <span>${step.enabled ? 'Active' : 'Skipped'}</span>
+          </label>
+        `;
 
         itemRow.innerHTML = `
           <div class="prio-controls" style="flex-direction: column; gap: 2px;">
@@ -5912,27 +6060,25 @@
             <button class="btn-prio-arrow" onclick="moveRotationStep(${idx}, 1)" ${idx === currentRotation.length - 1 ? 'disabled style="opacity:0.3; cursor:not-allowed;"' : ''} title="Move Down in Priority">▼</button>
           </div>
 
-          <div class="prio-badge">P${idx + 1}</div>
+          <div class="prio-badge">${isLocked ? '🔒' : 'P' + (idx + 1)}</div>
 
           <div class="prio-icon" style="background-image: url('${getIconUrl(spell.icon)}');"></div>
 
           <div class="prio-info">
             <div class="prio-title">
-              <span style="color: var(--gold-bright);">${spell.name}</span>
+              <span style="color: ${isLocked ? '#f87171' : 'var(--gold-bright)'}; font-weight: 700;">${spell.name}</span>
               <span style="font-size: 0.68rem; padding: 1px 5px; border-radius: 3px; background: rgba(255,255,255,0.08); color: var(--text-muted);">${spell.school}</span>
+              ${lockBadgeHtml}
             </div>
             <div style="display: flex; align-items: center; gap: 8px; margin-top: 2px;">
               <span style="font-size: 0.73rem; color: var(--text-muted);">Condition:</span>
-              <select class="prio-cond-select" onchange="changeRotationStepCondition(${idx}, this.value)">
+              <select class="prio-cond-select" onchange="changeRotationStepCondition(${idx}, this.value)" ${isLocked ? 'disabled style="opacity:0.5;"' : ''}>
                 ${condOptionsHtml}
               </select>
             </div>
           </div>
 
-          <label class="prio-toggle-label" title="Enable or disable this action without deleting it">
-            <input type="checkbox" ${step.enabled ? 'checked' : ''} onchange="toggleRotationStep(${idx})">
-            <span>${step.enabled ? 'Active' : 'Skipped'}</span>
-          </label>
+          ${toggleHtml}
 
           <button class="btn-prio-del" onclick="removeRotationStep(${idx})" title="Remove from Rotation">✕</button>
         `;
@@ -5959,20 +6105,32 @@
       const curLvl = getCurrentPlayerLevel();
       activeSteps.forEach((s, i) => {
         const sInfo = getSpellDisplayInfo(s.spellId, curLvl);
+        const isLocked = !sInfo.isUnlocked;
+        const minReqLvl = sInfo.reqLvl || (sInfo.data && sInfo.data.minLvl) || 1;
         const sName = sInfo.baseName + (sInfo.rank ? " R" + sInfo.rank : "");
         const condLabel = s.condition === 'dot_not_active' ? ' (DoT)' : (s.condition === 'totem_le_1s' ? ' (≤1s)' : (s.condition === 'buff_not_active' ? ' (Buff)' : ''));
         
-        banner.innerHTML += `
-          <span class="flow-step-pill">
-            <span style="color: var(--gold-bright);">${i + 1}.</span> ${sName}${condLabel}
-          </span>
-          <span class="flow-arrow">➔</span>
-        `;
+        if (isLocked) {
+          banner.innerHTML += `
+            <span class="flow-step-pill" style="opacity: 0.45; text-decoration: line-through; border: 1px dashed #ef4444; color: #f87171;" title="Learnt at Level ${minReqLvl}">
+              🔒 ${sName}${condLabel} (Lvl ${minReqLvl})
+            </span>
+            <span class="flow-arrow" style="opacity: 0.4;">➔</span>
+          `;
+        } else {
+          banner.innerHTML += `
+            <span class="flow-step-pill">
+              <span style="color: var(--gold-bright);">${i + 1}.</span> ${sName}${condLabel}
+            </span>
+            <span class="flow-arrow">➔</span>
+          `;
+        }
       });
 
+      const autoAtkLabel = (activeCharacterClass === 'shaman') ? '↻ Auto-Attacks & Imbues' : '↻ Auto-Attacks';
       banner.innerHTML += `
         <span class="flow-step-pill" style="border-color: #2ecc71; color: #2ecc71;">
-          ↻ Auto-Attacks & Imbues
+          ${autoAtkLabel}
         </span>
       `;
     }
@@ -5986,6 +6144,7 @@
       markRotationCustom();
       renderRotationUI();
       onSettingChanged();
+      if (typeof runSimulation === 'function') runSimulation();
     }
 
     function toggleRotationStep(idx) {
@@ -5994,6 +6153,7 @@
       markRotationCustom();
       renderRotationUI();
       onSettingChanged();
+      if (typeof runSimulation === 'function') runSimulation();
     }
 
     function changeRotationStepCondition(idx, newCond) {
@@ -6002,6 +6162,7 @@
       markRotationCustom();
       renderRotationFlowSummary();
       onSettingChanged();
+      if (typeof runSimulation === 'function') runSimulation();
     }
 
     function removeRotationStep(idx) {
@@ -6009,6 +6170,7 @@
       markRotationCustom();
       renderRotationUI();
       onSettingChanged();
+      if (typeof runSimulation === 'function') runSimulation();
     }
 
     function onAddSpellSelectChanged() {
@@ -6034,6 +6196,7 @@
       markRotationCustom();
       renderRotationUI();
       onSettingChanged();
+      if (typeof runSimulation === 'function') runSimulation();
     }
 
     function markRotationCustom() {
@@ -6061,6 +6224,7 @@
 
       renderRotationUI();
       onSettingChanged();
+      if (typeof runSimulation === 'function') runSimulation();
     }
 
     function resetRotationToDefault() {
@@ -6116,6 +6280,8 @@
       let bestKey = Object.keys(candidateRotations)[0] || activeRotationPresetKey;
       let bestSteps = candidateRotations[bestKey] || [];
       let bestScore = -1;
+      let bestDps = 0;
+      let bestTps = 0;
       const scores = {};
       let totalSimsRun = 0;
 
@@ -6138,22 +6304,27 @@
           enchants: currentEnchants || {},
           buffs: (typeof activeBuffs !== 'undefined' ? activeBuffs : {})
         }, catalog, enchantsCatalog, buffsCatalog);
-        return getSimulationObjectiveScore(simRes, roleMode);
+        const objScore = getSimulationObjectiveScore(simRes, roleMode);
+        const dps = (simRes && simRes.dps && typeof simRes.dps.avg === 'number') ? simRes.dps.avg : 0;
+        const tps = (simRes && simRes.tank && typeof simRes.tank.tps === 'number') ? simRes.tank.tps : 0;
+        return { objScore, dps, tps, simRes };
       };
 
       // Phase 1: Simulate all candidate architectures
       for (const [key, steps] of Object.entries(candidateRotations)) {
         if (!steps || steps.length === 0) continue;
         try {
-          const sc = await evalSteps(steps);
-          scores[key] = sc;
-          if (sc > bestScore) {
-            bestScore = sc;
+          const res = await evalSteps(steps);
+          scores[key] = { dps: res.dps, score: res.objScore, tps: res.tps };
+          if (res.objScore > bestScore) {
+            bestScore = res.objScore;
+            bestDps = res.dps;
+            bestTps = res.tps;
             bestKey = key;
             bestSteps = JSON.parse(JSON.stringify(steps));
           }
         } catch (e) {
-          scores[key] = 0;
+          scores[key] = { dps: 0, score: 0, tps: 0 };
         }
       }
 
@@ -6165,9 +6336,11 @@
           improved = false;
           for (let i = 0; i < bestSteps.length; i++) {
             const prunedCandidate = bestSteps.filter((_, idx) => idx !== i);
-            const sc = await evalSteps(prunedCandidate);
-            if (sc > bestScore + 0.08) {
-              bestScore = sc;
+            const res = await evalSteps(prunedCandidate);
+            if (res.objScore > bestScore + 0.08) {
+              bestScore = res.objScore;
+              bestDps = res.dps;
+              bestTps = res.tps;
               bestSteps = prunedCandidate;
               prunedCount += 1;
               improved = true;
@@ -6185,9 +6358,11 @@
           const tmp = swapped[i];
           swapped[i] = swapped[i + 1];
           swapped[i + 1] = tmp;
-          const sc = await evalSteps(swapped);
-          if (sc > bestScore + 0.05) {
-            bestScore = sc;
+          const res = await evalSteps(swapped);
+          if (res.objScore > bestScore + 0.05) {
+            bestScore = res.objScore;
+            bestDps = res.dps;
+            bestTps = res.tps;
             bestSteps = swapped;
             swapsCount += 1;
           }
@@ -6201,9 +6376,11 @@
         if (currentLvl >= 30 && roleMode !== 'tank') imbueCandidates.push('WindfuryWeapon');
         let bestImb = currentImbueVal;
         for (const imb of imbueCandidates) {
-          const sc = await evalSteps(bestSteps, imb);
-          if (sc > bestScore + 0.05) {
-            bestScore = sc;
+          const res = await evalSteps(bestSteps, imb);
+          if (res.objScore > bestScore + 0.05) {
+            bestScore = res.objScore;
+            bestDps = res.dps;
+            bestTps = res.tps;
             bestImb = imb;
           }
         }
@@ -6216,7 +6393,7 @@
       // Register dynamic winner and update UI
       const dynKey = 'dynamic_lvl_' + currentLvl;
       rotationPresets[dynKey] = bestSteps;
-      scores[dynKey] = bestScore;
+      scores[dynKey] = { dps: bestDps, score: bestScore, tps: bestTps };
       activeRotationPresetKey = dynKey;
       currentRotation = JSON.parse(JSON.stringify(bestSteps));
 
@@ -6235,17 +6412,21 @@
           const inf = getSpellDisplayInfo(s.spellId, currentLvl);
           return (idx + 1) + '. ' + inf.baseName + (inf.rank ? ' R' + inf.rank : '');
         }).join(' ➔ ');
-        telEl.innerHTML = '🔬 <strong>Level ' + currentLvl + ' Sim-Optimized APL (' + totalSimsRun + ' permutations tested' + (prunedCount > 0 ? ', ' + prunedCount + ' suboptimal filler pruned' : '') + (swapsCount > 0 ? ', ' + swapsCount + ' priority swap' : '') + '):</strong> <span style="color:#34d399; font-weight:700;">' + seqSummary + ' (' + bestScore.toFixed(1) + (roleMode === 'tank' ? ' Score' : ' DPS') + ')</span>';
+        const scoreBadge = (roleMode === 'tank')
+          ? `${bestDps.toFixed(1)} DPS • ${Math.round(bestTps)} TPS (${bestScore.toFixed(0)} Threat)`
+          : `${bestDps.toFixed(1)} DPS`;
+        telEl.innerHTML = '🔬 <strong>Level ' + currentLvl + ' Sim-Optimized APL (' + totalSimsRun + ' permutations tested' + (prunedCount > 0 ? ', ' + prunedCount + ' suboptimal filler pruned' : '') + (swapsCount > 0 ? ', ' + swapsCount + ' priority swap' : '') + '):</strong> <span style="color:#34d399; font-weight:700;">' + seqSummary + ' (' + scoreBadge + ')</span>';
       }
 
       if (btn && !silentMode) {
-        btn.innerHTML = '⭐ Best Rotation Active (' + bestScore.toFixed(1) + ' DPS)';
+        const btnDpsLabel = (roleMode === 'tank') ? `${bestDps.toFixed(1)} DPS • ${Math.round(bestTps)} TPS` : `${bestDps.toFixed(1)} DPS`;
+        btn.innerHTML = '⭐ Best ' + (roleMode === 'tank' ? 'Tank ' : '') + 'APL Active (' + btnDpsLabel + ')';
         setTimeout(() => {
           if (btn) btn.innerHTML = '⚡ Auto-Optimize for Gear';
         }, 3000);
         runOneStopSimulate();
       }
-      return { bestSteps, bestScore, totalSimsRun };
+      return { bestSteps, bestScore, bestDps, totalSimsRun };
     }
 
     // Official spell IDs for breakdown tooltips
@@ -6658,6 +6839,7 @@
         renderRotationUI();
         updateTalentHeader();
         updateAllInOneView();
+        switchCockpitRightTab('single');
         
         // Initial simulation run (both single-target and 10-scenario suite)
         runOneStopSimulate();
@@ -11018,6 +11200,16 @@
         aplSteps = (generateDynamicRotationForLevel(charClass, reqBody.spec || currentCharacterSpec || 'enhancement', level) || []).filter(s => s && s.enabled !== false);
       }
 
+      // Automatically bypass any abilities requiring higher player level
+      aplSteps = aplSteps.filter(s => {
+        if (!s) return false;
+        if (typeof getSpellDisplayInfo === 'function') {
+          const sInfo = getSpellDisplayInfo(s.spellId, level);
+          if (sInfo && !sInfo.isUnlocked) return false;
+        }
+        return true;
+      });
+
       // Check if Heroic Strike (25289) is in APL and what its rage threshold is
       const hsStep = aplSteps.find(s => Number(s.spellId) === 25289);
       const hsRageThreshold = hsStep ? (hsStep.condition === 'rage_gt_30' ? 30 : (hsStep.condition === 'on_cd' ? 15 : 40)) : 999;
@@ -11999,6 +12191,24 @@
           max: Math.round(maxDps * 100) / 100,
           stdev: Math.round(stdevDps * 100) / 100
         },
+        stats: {
+          ap: (charClass === 'hunter' ? rangedAP : totalAP),
+          critPct: Math.round(critPct * 10) / 10,
+          hitPct: totalHit,
+          sp: spellPower,
+          spellCritPct: Math.round(spellCritPct * 10) / 10,
+          spellHitPct: spellHitPct,
+          armor: totalArmor,
+          armorDrPct: armorDrPct,
+          ehp: ehp,
+          maxHP: maxHP,
+          maxMana: maxMana,
+          str: totalStr,
+          agi: totalAgi,
+          sta: totalSta,
+          int: totalInt,
+          spi: totalSpi
+        },
         healing: healingSummary,
         tank: tankSummary,
         fight_duration: duration,
@@ -12259,38 +12469,14 @@
       // Monte Carlo simulation runs fresh iterations on every click
       const simKey = `wowsim_last_result_${reqBody.level}_${reqBody.imbue}_${reqBody.talents}_${reqBody.rotation_preset}_${reqBody.duration}_${reqBody.iterations}`;
 
-      btn.disabled = true;
-      btnText.innerHTML = '<span class="loading-spinner"></span> Simulating...';
-      document.getElementById('sim-meta').innerText = 'Status: Simulating...';
+      if (btn) btn.disabled = true;
+      if (btnText) btnText.innerHTML = '<span class="loading-spinner"></span> Simulating...';
+      const metaEl = document.getElementById('sim-meta');
+      if (metaEl) metaEl.innerText = 'Status: Simulating...';
 
-      let simData = null;
-      const isStaticHost = window.location.hostname.includes('github.io') || window.location.protocol === 'file:';
-
-      // If running with local Python backend, try /api/simulate; on GitHub Pages or if offline, simulate directly in browser!
-      if (!isStaticHost) {
-        try {
-          const controller = new AbortController();
-          const timeoutId = setTimeout(() => controller.abort(), 1800);
-          const resp = await fetch('/api/simulate', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(reqBody),
-            signal: controller.signal
-          });
-          clearTimeout(timeoutId);
-          if (resp.ok) {
-            simData = await resp.json();
-          }
-        } catch (e) {
-          // Fall through to in-browser simulation
-        }
-      }
-
-      if (!simData) {
-        const t0 = performance.now();
-        simData = await simulateCombatInBrowser(reqBody, catalog, enchantsCatalog, buffsCatalog, onProgress);
-        simData._clientTimeMs = Math.max(1, Math.round(performance.now() - t0));
-      }
+      const t0 = performance.now();
+      const simData = await simulateCombatInBrowser(reqBody, catalog, enchantsCatalog, buffsCatalog, onProgress);
+      simData._clientTimeMs = Math.max(1, Math.round(performance.now() - t0));
 
       try {
         sessionStorage.setItem(simKey, JSON.stringify(simData));
@@ -12298,14 +12484,12 @@
 
       updateResults(simData);
 
-      const metaText = simData._clientTimeMs !== undefined
-        ? `⚡ In-Browser Engine: ${simData.iterations} iters in ${simData._clientTimeMs}ms • ${simData.fight_duration}s fight`
-        : `Backend Engine: ${simData.iterations} iters • ${simData.fight_duration}s • Done`;
-      document.getElementById('sim-meta').innerText = metaText;
+      const metaText = `⚡ In-Browser Engine: ${simData.iterations} iters in ${simData._clientTimeMs}ms • ${simData.fight_duration}s fight`;
+      if (metaEl) metaEl.innerText = metaText;
       console.log(`[WoW Sim] Executed ${simData.iterations} Monte Carlo iterations in ${simData._clientTimeMs || 0}ms. Avg DPS: ${simData.dps.avg} (min: ${simData.dps.min}, max: ${simData.dps.max}, stdev: ±${simData.dps.stdev})`);
 
-      btn.disabled = false;
-      btnText.innerText = "▶ SIMULATE";
+      if (btn) btn.disabled = false;
+      if (btnText) btnText.innerText = "▶ SIMULATE";
     }
 
     function updateResults(data) {
@@ -12313,12 +12497,39 @@
       renderHealingStudio(data);
       const dps = data.dps;
       const dpsEl = document.getElementById('res-dps');
-      dpsEl.innerText = dps.avg.toFixed(1);
-      document.getElementById('res-min').innerText = dps.min.toFixed(1);
-      document.getElementById('res-max').innerText = dps.max.toFixed(1);
-      document.getElementById('res-stdev').innerText = `±${dps.stdev.toFixed(1)}`;
+      if (dpsEl) dpsEl.innerText = dps.avg.toFixed(1);
+      const minEl = document.getElementById('res-min');
+      if (minEl) minEl.innerText = dps.min.toFixed(1);
+      const maxEl = document.getElementById('res-max');
+      if (maxEl) maxEl.innerText = dps.max.toFixed(1);
+      const sdEl = document.getElementById('res-stdev');
+      if (sdEl) sdEl.innerText = `±${dps.stdev.toFixed(1)}`;
       if (!data._clientTimeMs) {
-        document.getElementById('sim-meta').innerText = `${data.iterations} iters • ${data.fight_duration}s • Done`;
+        const metaEl = document.getElementById('sim-meta');
+        if (metaEl) metaEl.innerText = `${data.iterations} iters • ${data.fight_duration}s • Done`;
+      }
+
+      // Populate Active Character Combat Attributes Bar
+      if (data.stats) {
+        const st = data.stats;
+        const apEl = document.getElementById('stat-bar-ap');
+        if (apEl) apEl.innerText = st.ap !== undefined ? st.ap : '--';
+        const critEl = document.getElementById('stat-bar-crit');
+        if (critEl) critEl.innerText = `${st.critPct || 0}%`;
+        const hitEl = document.getElementById('stat-bar-hit');
+        if (hitEl) hitEl.innerText = `+${st.hitPct || 0}%`;
+        const hpEl = document.getElementById('stat-bar-hp');
+        if (hpEl) hpEl.innerText = `${Math.round(st.maxHP || 0)} HP`;
+        const spEl = document.getElementById('stat-bar-sp');
+        if (spEl) spEl.innerText = `+${st.sp || 0}`;
+        const spCritEl = document.getElementById('stat-bar-spcrit');
+        if (spCritEl) spCritEl.innerText = `${st.spellCritPct || 0}%`;
+        const manaEl = document.getElementById('stat-bar-mana');
+        if (manaEl) manaEl.innerText = (st.maxMana > 0) ? `${Math.round(st.maxMana)}` : 'None (Rage/Energy)';
+        const drEl = document.getElementById('stat-bar-armordr');
+        if (drEl) drEl.innerText = `${(st.armorDrPct || 0).toFixed(1)}%`;
+        const specLbl = document.getElementById('stat-bar-spec-lbl');
+        if (specLbl) specLbl.innerText = `Lvl ${data.character_level || getCurrentPlayerLevel()} • ${activeCharacterClass.toUpperCase()} (${(currentCharacterSpec || '').toUpperCase()})`;
       }
 
       // Delta comparison badge
