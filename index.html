@@ -5316,9 +5316,11 @@
       if (!targetVal || targetVal === 'all') {
         // Restore active spec profile weights and run full BiS (Gear + Enchants + Talents + Consumes)
         const cSpec = currentCharacterSpec || 'enhancement';
-        const specProfile = cSpec === 'tank' ? 'shaman_tank' : (cSpec === 'resto' ? 'resto' : (cSpec === 'elemental' ? 'elemental' : 'enhancement'));
-        if (defaultStatWeightProfiles[specProfile]) {
-          selectWeightProfile(specProfile);
+        const profKey = `${activeCharacterClass}_${cSpec}`;
+        if (defaultStatWeightProfiles[profKey]) {
+          selectWeightProfile(profKey);
+        } else if (defaultStatWeightProfiles[cSpec]) {
+          selectWeightProfile(cSpec);
         }
         const styleSelect = document.getElementById('cfg-weapon-style');
         if (styleSelect && activeCharacterClass === 'shaman') {
@@ -9144,6 +9146,7 @@
         if (isMiss) actionsMap[name].misses += 1;
       };
 
+      let blockVal = hasShield ? Math.round(8 + (level * 0.65) + (totalStr / 20) + (gearStats.Block || 0)) : 0;
       let iterationDpsList = [];
 
       // Monte Carlo loop
@@ -9660,7 +9663,7 @@
       let dodgePct = Math.round((4.2 + (totalAgi / 14.5) + (anticipationRank * 1.0) + (gearStats.Def * 0.04) + (gearStats.Dodge || 0)) * 10) / 10;
       let parryPct = (spiritWpnRank > 0 || charClass === 'warrior' || charClass === 'paladin' || charClass === 'rogue') ? Math.round((5.0 + gearStats.Def * 0.04) * 10) / 10 : 0.0;
       let blockPct = hasShield ? Math.round((5.0 + gearStats.Def * 0.04 + anticipationRank * 1.0) * 10) / 10 : 0.0;
-      let blockVal = hasShield ? Math.round(8 + (level * 0.65) + (totalStr / 20)) : 0;
+      blockVal = hasShield ? Math.round(8 + (level * 0.65) + (totalStr / 20) + (gearStats.Block || 0)) : 0;
       let missPct = Math.round((5.0 + gearStats.Def * 0.04) * 10) / 10;
       let totalAvoidancePct = Math.round((missPct + dodgePct + parryPct + blockPct) * 10) / 10;
 
