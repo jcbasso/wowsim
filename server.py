@@ -16,9 +16,14 @@ from pydantic import BaseModel
 
 app = FastAPI(title="WoW Forever Lvl 19 Twink Simulator", version="2.0")
 
-CLI_PATH = r"C:\Users\jcbas\.gemini\antigravity\scratch\wowsimcli.exe"
-BASE_JSON_PATH = r"C:\Users\jcbas\.gemini\antigravity\scratch\test_twink_request.json"
-WEB_DIR = r"C:\Users\jcbas\.gemini\antigravity\scratch\twinksim_web"
+WEB_DIR = os.path.dirname(os.path.abspath(__file__))
+CLI_PATH = os.path.join(WEB_DIR, "wowsimcli.exe")
+if not os.path.exists(CLI_PATH):
+    CLI_PATH = r"C:\Users\jcbas\.gemini\antigravity\scratch\wowsimcli.exe"
+
+BASE_JSON_PATH = os.path.join(WEB_DIR, "test_twink_request.json")
+if not os.path.exists(BASE_JSON_PATH):
+    BASE_JSON_PATH = r"C:\Users\jcbas\.gemini\antigravity\scratch\test_twink_request.json"
 CATALOG_PATH = os.path.join(WEB_DIR, "catalog_full.json")
 TALENTS_PATH = os.path.join(WEB_DIR, "talents_data.json")
 ENCHANTS_PATH = os.path.join(WEB_DIR, "enchants_data.json")
