@@ -4800,22 +4800,35 @@
     async function init() {
       isInitializing = true;
       try {
-        const [catResp, talResp, encResp, scResp, buffResp] = await Promise.all([
-          fetch('/api/catalog?v=bop_fix_v2'),
-          fetch('/api/talents?v=bop_fix_v2'),
-          fetch('/api/enchants?v=bop_fix_v2'),
-          fetch('/api/scenarios').catch(() => null),
-          fetch('/api/buffs').catch(() => null)
+        const fetchAsset = async (endpoint, staticFallback) => {
+          try {
+            const resp = await fetch(endpoint);
+            if (resp.ok) return await resp.json();
+          } catch (e) {}
+          try {
+            const fallbackResp = await fetch(staticFallback);
+            if (fallbackResp.ok) return await fallbackResp.json();
+          } catch (e) {}
+          return null;
+        };
+
+        const [catData, talData, encData, scData, buffData] = await Promise.all([
+          fetchAsset('/api/catalog?v=bop_fix_v2', './catalog_full.json'),
+          fetchAsset('/api/talents?v=bop_fix_v2', './talents_data.json'),
+          fetchAsset('/api/enchants?v=bop_fix_v2', './enchants_data.json'),
+          fetchAsset('/api/scenarios', './scenarios_data.json'),
+          fetchAsset('/api/buffs', './buffs_data.json')
         ]);
-        catalog = await catResp.json();
-        talentTrees = await talResp.json();
-        enchantsCatalog = await encResp.json();
-        if (scResp && scResp.ok) {
-          scenariosData = await scResp.json();
+
+        catalog = catData || {};
+        talentTrees = talData || [];
+        enchantsCatalog = encData || [];
+        if (scData) {
+          scenariosData = scData;
         }
         loadCustomScenarios();
-        if (buffResp && buffResp.ok) {
-          buffsCatalog = await buffResp.json();
+        if (buffData) {
+          buffsCatalog = buffData;
         }
         loadActiveBuffs();
 
@@ -8347,8 +8360,14 @@
         updateResults(data);
       } catch (err) {
         console.error(err);
-        alert("Network error communicating with the simulator engine.");
-        document.getElementById('sim-meta').innerText = 'Status: Network Error';
+        const isStaticHost = window.location.hostname.includes('github.io') || window.location.protocol === 'file:';
+        if (isStaticHost) {
+          alert("⚡ GitHub Pages Static Mode Notice:\n\nYou are viewing TwinkSim on GitHub Pages! Gear optimization, Pawn stat evaluation, BiS upgrade roadmap, talent calculator, and item picking run 100% in your browser.\n\nRunning raw C++ combat iterations (/api/simulate) requires the local backend server (python server.py).");
+          document.getElementById('sim-meta').innerText = 'Status: GitHub Pages (Local Server Required for Combat CLI)';
+        } else {
+          alert("Network error communicating with the simulator engine.\n\nPlease ensure 'python server.py' is running on http://localhost:8090/.");
+          document.getElementById('sim-meta').innerText = 'Status: Network Error';
+        }
       } finally {
         btn.disabled = false;
         btnText.innerText = "▶ SIMULATE";
@@ -9206,7 +9225,12 @@
 
       } catch (err) {
         console.error('Error running scenarios suite:', err);
-        alert('Simulation suite error: ' + err.message);
+        const isStaticHost = window.location.hostname.includes('github.io') || window.location.protocol === 'file:';
+        if (isStaticHost) {
+          alert('⚡ GitHub Pages Static Mode Notice:\n\nScenario Monte-Carlo execution requires the local backend server (python server.py).');
+        } else {
+          alert('Simulation suite error: ' + err.message);
+        }
       } finally {
         if (runBtn) {
           runBtn.innerHTML = '⚡ Run All Scenarios (Suite)';
@@ -9750,9 +9774,18 @@
           const resp = await fetch('/api/patch-notes');
           if (resp.ok) {
             cachedPatchData = await resp.json();
+          } else {
+            throw new Error('API unavailable');
           }
         } catch (e) {
-          console.warn("Could not fetch patch notes:", e);
+          try {
+            const fallbackResp = await fetch('./wow_forever_patches.json');
+            if (fallbackResp.ok) {
+              cachedPatchData = await fallbackResp.json();
+            }
+          } catch (err) {
+            console.warn("Could not fetch patch notes:", err);
+          }
         }
       }
 

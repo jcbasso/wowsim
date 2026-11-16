@@ -1,0 +1,395 @@
+{
+  "food_sagefish_delight": {
+    "id": "food_sagefish_delight",
+    "name": "Sagefish Delight",
+    "category": "food",
+    "stats": {
+      "SP": 6,
+      "Healing": 6,
+      "MP5": 6
+    },
+    "icon": "inv_misc_fish_02",
+    "desc": "+6 Spell Damage, +6 Healing, and +6 Mana every 5 sec for 15 min (Well Fed - Caster / Healer Top BiS)",
+    "level": 25
+  },
+  "food_sagefish": {
+    "id": "food_sagefish",
+    "name": "Smoked Sagefish",
+    "category": "food",
+    "stats": {
+      "SP": 3,
+      "Healing": 3,
+      "MP5": 3
+    },
+    "icon": "inv_misc_fish_02",
+    "desc": "+3 Spell Damage, +3 Healing, and +3 Mana every 5 sec for 15 min (Well Fed - Caster / Healer BiS Level 10-24)",
+    "level": 10
+  },
+  "food_heavy_croc": {
+    "id": "food_heavy_croc",
+    "name": "Soothing Turtle Bisque / Heavy Crocolisk Stew",
+    "category": "food",
+    "stats": {
+      "Sta": 8,
+      "Spi": 8
+    },
+    "icon": "inv_misc_food_14",
+    "desc": "+8 Stamina and +8 Spirit for 15 min (Well Fed - Top Level 25-29 Stamina BiS)",
+    "level": 25
+  },
+  "food_wolf_ribs": {
+    "id": "food_wolf_ribs",
+    "name": "Hot Wolf Ribs / Roast Raptor (Rank 2)",
+    "category": "food",
+    "stats": {
+      "Spi": 8,
+      "Sta": 8
+    },
+    "icon": "inv_misc_food_09",
+    "desc": "+8 Spirit and +8 Stamina for 15 min (Well Fed - Level 25+)",
+    "level": 25
+  },
+  "food_dragonbreath": {
+    "id": "food_dragonbreath",
+    "name": "Dragonbreath Chili",
+    "category": "food",
+    "stats": {
+      "FireSP": 8,
+      "SP": 6
+    },
+    "icon": "spell_fire_incinerate",
+    "desc": "Periodically belches fire at enemies in combat for 10 min (Damage/Fire Caster BiS)",
+    "level": 25
+  },
+  "food_raptor": {
+    "id": "food_raptor",
+    "name": "Roast Raptor / Clamlette Surprise",
+    "category": "food",
+    "stats": {
+      "Sta": 6,
+      "Spi": 6
+    },
+    "icon": "inv_misc_food_14",
+    "desc": "+6 Stamina and +6 Spirit for 15 min (Well Fed - Level 15-24 Stamina BiS)",
+    "level": 15
+  },
+  "food_lion": {
+    "id": "food_lion",
+    "name": "Hot Lion Chops / Clam Chowder",
+    "category": "food",
+    "stats": {
+      "Str": 6,
+      "Spi": 6
+    },
+    "icon": "inv_misc_food_23",
+    "desc": "+6 Strength and +6 Spirit for 15 min (Well Fed - Level 15-24 Melee DPS BiS)",
+    "level": 15
+  },
+  "food_digrat": {
+    "id": "food_digrat",
+    "name": "Dig Rat Stew",
+    "category": "food",
+    "stats": {
+      "Agi": 6,
+      "Spi": 6
+    },
+    "icon": "inv_misc_food_11",
+    "desc": "+6 Agility and +6 Spirit for 15 min (Well Fed - Level 15-24 Agility BiS)",
+    "level": 15
+  },
+  "food_crispy_bat": {
+    "id": "food_crispy_bat",
+    "name": "Crispy Bat Wing / Boiled Clams",
+    "category": "food",
+    "stats": {
+      "Sta": 4,
+      "Spi": 4
+    },
+    "icon": "inv_misc_food_05",
+    "desc": "+4 Stamina and +4 Spirit for 15 min (Well Fed - Level 10-14)",
+    "level": 10
+  },
+  "food_eggs": {
+    "id": "food_eggs",
+    "name": "Herb Baked Eggs / Spiced Wolf",
+    "category": "food",
+    "stats": {
+      "Sta": 2,
+      "Spi": 2
+    },
+    "icon": "inv_misc_food_16",
+    "desc": "+2 Stamina and +2 Spirit for 15 min (Well Fed - Level 1-9 Starter BiS)",
+    "level": 1
+  },
+  "consum_rumsey_black": {
+    "id": "consum_rumsey_black",
+    "name": "Rumsey Rum Black Label",
+    "category": "potion",
+    "stats": {
+      "Sta": 15,
+      "Spi": -5
+    },
+    "icon": "inv_drink_04",
+    "desc": "Increases Stamina by 15, decreases Spirit by 5 for 15 min (Alcohol / Stackable)",
+    "level": 1
+  },
+  "consum_gordok_grog": {
+    "id": "consum_gordok_grog",
+    "name": "Gordok Green Grog",
+    "category": "potion",
+    "stats": {
+      "Sta": 10
+    },
+    "icon": "inv_drink_07",
+    "desc": "Increases Stamina by 10 for 15 min (Alcohol / Stackable)",
+    "level": 1
+  },
+  "consum_kreeg_stout": {
+    "id": "consum_kreeg_stout",
+    "name": "Kreeg's Stout Beatdown",
+    "category": "potion",
+    "stats": {
+      "Spi": 25,
+      "Int": -5
+    },
+    "icon": "inv_drink_05",
+    "desc": "Increases Spirit by 25, decreases Intellect by 5 for 15 min (Alcohol / Stackable)",
+    "level": 1
+  },
+  "elixir_giant_growth": {
+    "id": "elixir_giant_growth",
+    "name": "Elixir of Giant Growth",
+    "category": "potion",
+    "stats": {
+      "Str": 8
+    },
+    "icon": "inv_potion_14",
+    "desc": "Increases Strength by 8 and character size for 20 min",
+    "level": 8
+  },
+  "elixir_lesser_agility": {
+    "id": "elixir_lesser_agility",
+    "name": "Elixir of Lesser Agility",
+    "category": "potion",
+    "stats": {
+      "Agi": 8
+    },
+    "icon": "inv_potion_93",
+    "desc": "Increases Agility by 8 for 1 hr",
+    "level": 18
+  },
+  "elixir_minor_agility": {
+    "id": "elixir_minor_agility",
+    "name": "Elixir of Minor Agility",
+    "category": "potion",
+    "stats": {
+      "Agi": 4
+    },
+    "icon": "inv_potion_93",
+    "desc": "Increases Agility by 4 for 1 hr",
+    "level": 2
+  },
+  "elixir_wisdom": {
+    "id": "elixir_wisdom",
+    "name": "Elixir of Wisdom",
+    "category": "potion",
+    "stats": {
+      "Int": 6
+    },
+    "icon": "inv_potion_91",
+    "desc": "Increases Intellect by 6 for 1 hr",
+    "level": 17
+  },
+  "elixir_defense": {
+    "id": "elixir_defense",
+    "name": "Elixir of Defense",
+    "category": "potion",
+    "stats": {
+      "Armor": 50
+    },
+    "icon": "inv_potion_66",
+    "desc": "Increases Armor by 50 for 1 hr",
+    "level": 16
+  },
+  "elixir_troll_blood": {
+    "id": "elixir_troll_blood",
+    "name": "Strong Troll's Blood Potion",
+    "category": "potion",
+    "stats": {
+      "HP5": 6
+    },
+    "icon": "inv_potion_79",
+    "desc": "Regenerates 6 health every 5 seconds for 1 hr",
+    "level": 15
+  },
+  "elixir_ogre_strength": {
+    "id": "elixir_ogre_strength",
+    "name": "Elixir of Ogre's Strength",
+    "category": "potion",
+    "stats": {
+      "Str": 8
+    },
+    "icon": "inv_potion_87",
+    "desc": "Increases Strength by 8 for 1 hr",
+    "level": 20
+  },
+  "elixir_fortitude": {
+    "id": "elixir_fortitude",
+    "name": "Elixir of Fortitude",
+    "category": "potion",
+    "stats": {
+      "Sta": 12
+    },
+    "icon": "inv_potion_43",
+    "desc": "Increases maximum health by 120 (+12 Stamina equivalent) for 1 hr",
+    "level": 25
+  },
+  "scroll_agi_2": {
+    "id": "scroll_agi_2",
+    "name": "Scroll of Agility II",
+    "category": "scroll",
+    "stats": {
+      "Agi": 5
+    },
+    "icon": "inv_scroll_02",
+    "desc": "Increases the target's Agility by 5 for 30 min",
+    "level": 15
+  },
+  "scroll_str_2": {
+    "id": "scroll_str_2",
+    "name": "Scroll of Strength II",
+    "category": "scroll",
+    "stats": {
+      "Str": 5
+    },
+    "icon": "inv_scroll_01",
+    "desc": "Increases the target's Strength by 5 for 30 min",
+    "level": 15
+  },
+  "scroll_prot_2": {
+    "id": "scroll_prot_2",
+    "name": "Scroll of Protection II",
+    "category": "scroll",
+    "stats": {
+      "Armor": 60
+    },
+    "icon": "inv_scroll_08",
+    "desc": "Increases Armor by 60 for 30 min",
+    "level": 15
+  },
+  "scroll_sta_2": {
+    "id": "scroll_sta_2",
+    "name": "Scroll of Stamina II",
+    "category": "scroll",
+    "stats": {
+      "Sta": 5
+    },
+    "icon": "inv_scroll_07",
+    "desc": "Increases the target's Stamina by 5 for 30 min",
+    "level": 15
+  },
+  "scroll_int_2": {
+    "id": "scroll_int_2",
+    "name": "Scroll of Intellect II",
+    "category": "scroll",
+    "stats": {
+      "Int": 5
+    },
+    "icon": "inv_scroll_04",
+    "desc": "Increases the target's Intellect by 5 for 30 min",
+    "level": 15
+  },
+  "oil_wizard": {
+    "id": "oil_wizard",
+    "name": "Minor Wizard Oil",
+    "category": "oil",
+    "stats": {
+      "SP": 10
+    },
+    "icon": "inv_potion_105",
+    "desc": "While applied to target weapon it increases spell damage by up to 10 for 30 min",
+    "level": 20
+  },
+  "oil_mana": {
+    "id": "oil_mana",
+    "name": "Minor Mana Oil",
+    "category": "oil",
+    "stats": {
+      "MP5": 4
+    },
+    "icon": "inv_potion_99",
+    "desc": "While applied to target weapon it restores 4 mana every 5 seconds for 30 min",
+    "level": 20
+  },
+  "oil_blackfathom": {
+    "id": "oil_blackfathom",
+    "name": "Blackfathom Oil",
+    "category": "oil",
+    "stats": {
+      "Hit": 2
+    },
+    "icon": "inv_potion_26",
+    "desc": "Increases chance to hit with melee and spells by 2% for 30 min",
+    "level": 15
+  },
+  "buff_fortitude": {
+    "id": "buff_fortitude",
+    "name": "Power Word: Fortitude",
+    "category": "class",
+    "stats": {
+      "Sta": 14
+    },
+    "icon": "spell_holy_wordfortitude",
+    "desc": "Priest Buff: Increases Stamina by 14 for 30 min",
+    "level": 12
+  },
+  "buff_intellect": {
+    "id": "buff_intellect",
+    "name": "Arcane Intellect",
+    "category": "class",
+    "stats": {
+      "Int": 7
+    },
+    "icon": "spell_holy_magicalsentry",
+    "desc": "Mage Buff: Increases Intellect by 7 for 30 min",
+    "level": 14
+  },
+  "buff_motw": {
+    "id": "buff_motw",
+    "name": "Mark of the Wild",
+    "category": "class",
+    "stats": {
+      "Str": 1,
+      "Agi": 1,
+      "Sta": 1,
+      "Int": 1,
+      "Spi": 1,
+      "Armor": 25
+    },
+    "icon": "spell_nature_regeneration",
+    "desc": "Druid Buff: Increases all attributes by 1 and Armor by 25 for 30 min",
+    "level": 10
+  },
+  "buff_battle_shout": {
+    "id": "buff_battle_shout",
+    "name": "Battle Shout",
+    "category": "class",
+    "stats": {
+      "AP": 15
+    },
+    "icon": "ability_warrior_battleshout",
+    "desc": "Warrior Shout: Increases Attack Power by 15 for 2 min",
+    "level": 12
+  },
+  "buff_might": {
+    "id": "buff_might",
+    "name": "Blessing of Might",
+    "category": "class",
+    "stats": {
+      "AP": 20
+    },
+    "icon": "spell_holy_fistofjustice",
+    "desc": "Paladin Blessing: Increases Attack Power by 20 for 5 min",
+    "level": 12
+  }
+}
