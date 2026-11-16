@@ -3932,11 +3932,11 @@
         const hasProf = isCharacterProfession(item.requiredProfessionName);
         const badgeClass = hasProf ? 'badge-has-prof' : 'badge-req-prof';
         reqProfBadge = `<span class="${badgeClass}">Req ${item.requiredProfessionName}</span>`;
-      } else if (item.craftedProfession) {
+      } else if (item.isBoP && item.craftedProfession) {
         const hasProf = isCharacterProfession(item.craftedProfession);
         const badgeClass = hasProf ? 'badge-has-prof' : 'badge-req-prof';
         const profDisplay = item.craftedProfession.charAt(0).toUpperCase() + item.craftedProfession.slice(1);
-        reqProfBadge = `<span class="${badgeClass}">${hasProf ? 'Crafted' : 'Req'} (${profDisplay}${item.isBoP ? ' BoP' : ''})</span>`;
+        reqProfBadge = `<span class="${badgeClass}">${hasProf ? 'Crafted (' + profDisplay + ' BoP)' : 'Req ' + profDisplay + ' (BoP)'}</span>`;
       }
 
       return `<span class="badge-source ${cat}" title="${label}">${icon} ${label}</span><span class="badge-bind ${bindClass}">${bindText}</span>${reqProfBadge}`;
@@ -6158,20 +6158,22 @@
         }
       }
 
-      // Crafted Profession check: If an item is crafted by a specific profession (e.g. Blacksmithing, Leatherworking, Engineering, Tailoring)
-      // and the player did not select that profession in cfg-prof1 / cfg-prof2:
-      // Exclude items from unselected professions from auto-equip and BiS recommendations!
-      const craftProf = item.craftedProfession || (item.sourceLabel && item.sourceLabel.match(/Crafted\s*\(([^)]+)\)/i)?.[1]?.toLowerCase());
-      if (craftProf && !isCharacterProfession(craftProf)) {
-        const profDisplay = craftProf.charAt(0).toUpperCase() + craftProf.slice(1);
-        return {
-          score: 0,
-          isOverlevel: false,
-          isProfessionIneligible: true,
-          reqLvl: req,
-          reason: 'Requires ' + profDisplay + ' profession',
-          profReason: 'Requires ' + profDisplay + ' profession'
-        };
+      // Crafted BoP Profession check: If an item is BoP AND crafted by a specific profession (e.g. Veteran's Chain Helm, Defender's Leather Helm, Enchanting relics)
+      // A player CANNOT obtain or equip it if they do not have that crafting profession!
+      // (BoE crafted items like Fletcher's Gloves or Deviate Scale Belt are tradeable and allowed for all players).
+      if (item.isBoP) {
+        const craftProf = item.craftedProfession || (item.sourceLabel && item.sourceLabel.match(/Crafted\s*\(([^)]+)\)/i)?.[1]?.toLowerCase());
+        if (craftProf && !isCharacterProfession(craftProf)) {
+          const profDisplay = craftProf.charAt(0).toUpperCase() + craftProf.slice(1);
+          return {
+            score: 0,
+            isOverlevel: false,
+            isProfessionIneligible: true,
+            reqLvl: req,
+            reason: 'Requires ' + profDisplay + ' to craft (BoP)',
+            profReason: 'Requires ' + profDisplay + ' to craft (BoP)'
+          };
+        }
       }
 
       // Class Ranged & Relic Weapon Type Filtering
@@ -7568,7 +7570,7 @@
           if (entry.isProfessionIneligible) continue;
           if (item.requiredProfessionName && !isCharacterProfession(item.requiredProfessionName)) continue;
           const cp = item.craftedProfession || (item.sourceCategory === 'crafted' ? (item.sourceLabel && item.sourceLabel.match(/Crafted\s*\(([^)]+)\)/i)?.[1]?.toLowerCase()) : null);
-          if (cp && !isCharacterProfession(cp)) continue;
+          if (item.isBoP && cp && !isCharacterProfession(cp)) continue;
         } else if (profFilterVal !== 'all') {
           const itCrafted = (item.craftedProfession || '').toLowerCase();
           const itReq = (item.requiredProfessionName || '').toLowerCase();
