@@ -5768,6 +5768,38 @@
     let currentRotation = JSON.parse(JSON.stringify(rotationPresets.burst));
 
 
+    // --- ROTATION SUBPANEL & HEADER CENTRALIZED SYNC ---
+    function syncRotationPanelsForCurrentClassAndSpec() {
+      const cls = activeCharacterClass || 'shaman';
+      const roleMode = (typeof getActiveCharacterRoleMode === 'function') ? getActiveCharacterRoleMode() : 'dps';
+
+      // 1. Weapon Imbues panel (ONLY Shaman has Weapon Imbues)
+      const imbuesPanel = document.getElementById('weapon-imbues-panel');
+      if (imbuesPanel) {
+        imbuesPanel.style.display = (cls === 'shaman') ? 'block' : 'none';
+      }
+
+      // 2. Healing Analysis panel (ONLY for active healer spec on healer classes)
+      const healPanel = document.getElementById('healing-analysis-panel');
+      if (healPanel) {
+        const isHealerRole = (roleMode === 'healer');
+        const isHealerClass = ['shaman', 'priest', 'paladin', 'druid'].includes(cls);
+        healPanel.style.display = (isHealerRole && isHealerClass) ? 'block' : 'none';
+      }
+
+      // 3. Update Rotation Tab Header label
+      const rotTabBtn = document.getElementById('btn-build-rotation');
+      if (rotTabBtn) {
+        if (cls === 'shaman') {
+          rotTabBtn.innerHTML = '<span>⚡</span> Rotation & Imbues';
+        } else if (['priest', 'paladin', 'druid'].includes(cls) && roleMode === 'healer') {
+          rotTabBtn.innerHTML = '<span>💚</span> Rotation & Healing';
+        } else {
+          rotTabBtn.innerHTML = '<span>⚡</span> Rotation & Spells';
+        }
+      }
+    }
+
     function updateRotationForClass(classKey) {
       const clsSpells = ALL_CLASS_SPELLS[classKey] || ALL_CLASS_SPELLS.shaman;
       const clsRotations = ALL_CLASS_ROTATIONS[classKey] || ALL_CLASS_ROTATIONS.shaman;
@@ -5782,31 +5814,7 @@
       activeRotationPresetKey = defaultPresetKey;
       currentRotation = JSON.parse(JSON.stringify(clsRotations[defaultPresetKey] || []));
 
-      // 1. Show/Hide Weapon Imbues panel (ONLY Shaman has Weapon Imbues)
-      const imbuesPanel = document.getElementById('weapon-imbues-panel');
-      if (imbuesPanel) {
-        imbuesPanel.style.display = (classKey === 'shaman') ? 'block' : 'none';
-      }
-
-      // 2. Show/Hide Healing Analysis panel (ONLY for active healer spec on healer classes)
-      const healPanel = document.getElementById('healing-analysis-panel');
-      if (healPanel) {
-        const isHealerRole = ['resto', 'holy', 'restoration'].includes((currentCharacterSpec || '').toLowerCase());
-        healPanel.style.display = (isHealerRole && ['shaman', 'priest', 'paladin', 'druid'].includes(classKey)) ? 'block' : 'none';
-      }
-
-      // 3. Update Rotation Tab Header label
-      const rotTabBtn = document.getElementById('btn-build-rotation');
-      if (rotTabBtn) {
-        if (classKey === 'shaman') {
-          rotTabBtn.innerHTML = '<span>⚡</span> Rotation & Imbues';
-        } else if (classKey === 'priest' || classKey === 'paladin' || classKey === 'druid') {
-          rotTabBtn.innerHTML = '<span>⚡</span> Rotation & Healing';
-        } else {
-          rotTabBtn.innerHTML = '<span>⚡</span> Rotation & Spells';
-        }
-      }
-
+      syncRotationPanelsForCurrentClassAndSpec();
       renderRotationPresetChipsForClass(classKey);
       renderRotationUI();
       populateAddSpellDropdown(classKey);
@@ -6701,15 +6709,7 @@
       } else if (activeSub === 'talents') {
         renderTalentTrees();
       } else if (activeSub === 'rotation') {
-        const imbuesPanel = document.getElementById('weapon-imbues-panel');
-        if (imbuesPanel) {
-          imbuesPanel.style.display = (activeCharacterClass === 'shaman') ? 'block' : 'none';
-        }
-        const healPanel = document.getElementById('healing-analysis-panel');
-        if (healPanel) {
-          const isHealerRole = ['resto', 'holy', 'restoration'].includes((currentCharacterSpec || '').toLowerCase());
-          healPanel.style.display = (isHealerRole && ['shaman', 'priest', 'paladin', 'druid'].includes(activeCharacterClass)) ? 'block' : 'none';
-        }
+        syncRotationPanelsForCurrentClassAndSpec();
         syncSpellRanksForLevel(getCurrentPlayerLevel());
         renderRotationPresetChipsForClass(activeCharacterClass);
         renderRotationUI();
@@ -7015,9 +7015,10 @@
 
       // Step 6: Coordinate Ascent Pass 2 - Refine Weights and Final Armor Verification
       await computeDynamicStatWeights(roleMode);
-      autoEquipLevelingBiS();
+      autoEquipLevelingBiS(true); // Preserve the sim-optimized weapon from Step 4!
       autoEnchantAllSlots();
       autoOptimizeBiSConsumables();
+      await optimizeTalentsAndRotationInSim(roleMode); // Final rotation re-sync against fully converged armor, enchants & consumes
 
       if (progBar) progBar.style.width = '90%';
 
@@ -7563,6 +7564,9 @@
       if (targetRotPreset && rotationPresets[targetRotPreset]) {
         loadRotationPreset(targetRotPreset);
       }
+      syncRotationPanelsForCurrentClassAndSpec();
+      renderRotationPresetChipsForClass(activeCharacterClass);
+      renderRotationUI();
 
       // Weapon style
       const styleSelect = document.getElementById('cfg-weapon-style');
@@ -8190,7 +8194,7 @@
       }
     }
 
-    function autoEquipLevelingBiS() {
+    function autoEquipLevelingBiS(preserveWeapons = false) {
       const currentLvl = getCurrentPlayerLevel();
       if (!catalog) return;
 
@@ -8199,13 +8203,20 @@
 
       const usedItemIds = new Set();
       const usedItemNames = new Set();
-      const slotsToEquip = [
+      let slotsToEquip = [
         'mainhand', 'offhand', 'head', 'neck', 'shoulders', 'back', 'chest',
         'wrist', 'hands', 'waist', 'legs', 'feet', 'ring1', 'ring2',
         'trinket1', 'trinket2', 'relic'
       ];
 
-      let mainhandIs2H = false;
+      // When preserveWeapons is true, keep sim-optimized weapon shootout winners intact
+      if (preserveWeapons && currentGear['mainhand']) {
+        slotsToEquip = slotsToEquip.filter(s => s !== 'mainhand' && s !== 'offhand');
+        usedItemIds.add(currentGear['mainhand']);
+        if (currentGear['offhand']) usedItemIds.add(currentGear['offhand']);
+      }
+
+      let mainhandIs2H = Boolean(currentGear['mainhand'] && catalog['mainhand']?.find(it => it.id === currentGear['mainhand'])?.is2H);
 
       for (const slot of slotsToEquip) {
         if (slot === 'offhand' && (mainhandIs2H || weaponStyle === 'twohand')) {
@@ -10715,13 +10726,19 @@
       if (buffs && targetBuffCat) {
         for (const bId in buffs) {
           if (buffs[bId]) {
-            for (const bCat in targetBuffCat) {
-              const bList = targetBuffCat[bCat];
-              if (Array.isArray(bList)) {
-                const bObj = bList.find(b => b.id === bId);
-                if (bObj && bObj.stats) {
-                  for (const k in bObj.stats) {
-                    if (gearStats[k] !== undefined) gearStats[k] += bObj.stats[k];
+            if (targetBuffCat[bId] && targetBuffCat[bId].stats) {
+              for (const k in targetBuffCat[bId].stats) {
+                if (gearStats[k] !== undefined) gearStats[k] += targetBuffCat[bId].stats[k];
+              }
+            } else {
+              for (const bCat in targetBuffCat) {
+                const bList = targetBuffCat[bCat];
+                if (Array.isArray(bList)) {
+                  const bObj = bList.find(b => b.id === bId);
+                  if (bObj && bObj.stats) {
+                    for (const k in bObj.stats) {
+                      if (gearStats[k] !== undefined) gearStats[k] += bObj.stats[k];
+                    }
                   }
                 }
               }
