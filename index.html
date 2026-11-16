@@ -8534,11 +8534,11 @@
       let iterationDpsList = [];
 
       // Monte Carlo loop
-      const batchSize = Math.max(5, Math.ceil(iterations / 25));
+      const batchSize = Math.max(4, Math.ceil(iterations / 35));
       for (let it = 0; it < iterations; it++) {
         if (it > 0 && it % batchSize === 0) {
           if (onProgress) onProgress(it, iterations);
-          await new Promise(r => setTimeout(r, 16));
+          await new Promise(r => setTimeout(r, 32));
         }
         let t = 0;
         let nextSwingTime = 0;
@@ -8840,7 +8840,7 @@
       };
     }
 
-    function simulateSingleScenarioInBrowser(scen, req, cat, encCat, buffCat) {
+    async function simulateSingleScenarioInBrowser(scen, req, cat, encCat, buffCat) {
       const s_id = scen.id;
       const category = scen.category || "pve_dps";
       const dur = scen.duration || 30;
@@ -8850,14 +8850,14 @@
       const targetLvl = charLvl + lvlOffset;
 
       if (category === "pve_dps" || category === "pvp_burst" || category === "pvp_dps") {
-        const simRes = simulateCombatInBrowser({
+        const simRes = await simulateCombatInBrowser({
           ...req,
           level: charLvl,
           duration: dur,
           iterations: 50
         }, cat, encCat, buffCat);
 
-        let dpsVal = simRes.dps.avg;
+        let dpsVal = (simRes && simRes.dps && typeof simRes.dps.avg === 'number') ? simRes.dps.avg : 40.0;
         let score = 50;
         let metricText = dpsVal + " DPS";
         let label = dur + "s Encounter Output";
@@ -9014,10 +9014,12 @@
       for (let i = 0; i < activeScenarios.length; i++) {
         const scen = activeScenarios[i];
         if (onProgress) onProgress(i, activeScenarios.length, scen.name);
-        const res = simulateSingleScenarioInBrowser(scen, payload, cat, encCat, buffCat);
-        results.push(res);
-        totalScore += res.score;
-        await new Promise(r => setTimeout(r, 20));
+        const res = await simulateSingleScenarioInBrowser(scen, payload, cat, encCat, buffCat);
+        if (res) {
+          results.push(res);
+          totalScore += (res.score || 60);
+        }
+        await new Promise(r => setTimeout(r, 65));
       }
       if (onProgress) onProgress(activeScenarios.length, activeScenarios.length, 'Complete');
 
@@ -10093,7 +10095,7 @@
       }
 
       if (!res) {
-        res = simulateSingleScenarioInBrowser(target, payload, catalog, enchantsCatalog, buffsCatalog);
+        res = await simulateSingleScenarioInBrowser(target, payload, catalog, enchantsCatalog, buffsCatalog);
       }
 
       if (res) {
