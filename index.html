@@ -3443,9 +3443,9 @@
         <!-- Card 1: Single-Target DPS / Tank Telemetry -->
         <div class="telemetry-card dps-card">
           <div class="telemetry-label" id="telemetry-primary-label">Single-Target DPS</div>
-          <div class="telemetry-main-row">
-            <span class="telemetry-big-val" id="res-dps">--.-</span>
-            <span style="font-size: 0.92rem; font-weight: 800; color: #f59e0b; margin-left: 2px;">DPS</span>
+          <div class="telemetry-main-row" style="align-items: baseline; gap: 6px;">
+            <span class="telemetry-big-val" id="res-dps" style="letter-spacing: -0.5px;">--.-</span>
+            <span style="font-size: 0.85rem; font-weight: 800; background: rgba(245, 158, 11, 0.16); border: 1px solid #f59e0b; color: #fbbf24; padding: 2px 7px; border-radius: 4px; letter-spacing: 0.5px;">DPS</span>
             <span id="res-diff-badge" style="display: none; font-size: 0.68rem; padding: 2px 6px;" class="dps-diff"></span>
           </div>
           <div class="telemetry-sub-row" id="telemetry-primary-subrow">
@@ -4084,6 +4084,593 @@
 
     // --- ROTATION APL ENGINE STATE ---
 
+    // --- COMPREHENSIVE MULTI-CLASS SPELL RANK DATABASE & LEVEL SCALING ---
+    const SPELL_RANK_TABLE = {
+      // --- WARRIOR ---
+      mortal_strike: {
+        baseName: "Mortal Strike", icon: "ability_warrior_savageblow", school: "Physical", minLvl: 40,
+        ranks: [
+          { rank: 1, minLvl: 40, bonusDmg: 85, rageCost: 30 },
+          { rank: 2, minLvl: 48, bonusDmg: 110, rageCost: 30 },
+          { rank: 3, minLvl: 56, bonusDmg: 135, rageCost: 30 },
+          { rank: 4, minLvl: 60, bonusDmg: 160, rageCost: 30 }
+        ]
+      },
+      bloodthirst: {
+        baseName: "Bloodthirst", icon: "spell_nature_bloodlust", school: "Physical", minLvl: 40,
+        ranks: [
+          { rank: 1, minLvl: 40, apRatio: 0.45, rageCost: 30 }
+        ]
+      },
+      shield_slam: {
+        baseName: "Shield Slam", icon: "inv_shield_05", school: "Physical", minLvl: 40,
+        ranks: [
+          { rank: 1, minLvl: 40, baseDmg: 225, rageCost: 20 },
+          { rank: 2, minLvl: 48, baseDmg: 265, rageCost: 20 },
+          { rank: 3, minLvl: 54, baseDmg: 305, rageCost: 20 },
+          { rank: 4, minLvl: 60, baseDmg: 345, rageCost: 20 }
+        ]
+      },
+      overpower: {
+        baseName: "Overpower", icon: "ability_meleedamage", school: "Physical", minLvl: 12,
+        ranks: [
+          { rank: 1, minLvl: 12, bonusDmg: 5, rageCost: 5 },
+          { rank: 2, minLvl: 20, bonusDmg: 15, rageCost: 5 },
+          { rank: 3, minLvl: 30, bonusDmg: 25, rageCost: 5 },
+          { rank: 4, minLvl: 44, bonusDmg: 35, rageCost: 5 }
+        ]
+      },
+      heroic_strike: {
+        baseName: "Heroic Strike", icon: "ability_rogue_ambush", school: "Physical", minLvl: 1,
+        ranks: [
+          { rank: 1, minLvl: 1, bonusDmg: 11, rageCost: 15 },
+          { rank: 2, minLvl: 8, bonusDmg: 21, rageCost: 15 },
+          { rank: 3, minLvl: 16, bonusDmg: 32, rageCost: 15 },
+          { rank: 4, minLvl: 24, bonusDmg: 44, rageCost: 15 },
+          { rank: 5, minLvl: 32, bonusDmg: 58, rageCost: 15 },
+          { rank: 6, minLvl: 40, bonusDmg: 80, rageCost: 15 },
+          { rank: 7, minLvl: 48, bonusDmg: 110, rageCost: 15 },
+          { rank: 8, minLvl: 56, bonusDmg: 138, rageCost: 15 },
+          { rank: 9, minLvl: 60, bonusDmg: 157, rageCost: 15 }
+        ]
+      },
+      rend: {
+        baseName: "Rend", icon: "ability_gouge", school: "Physical", minLvl: 4,
+        ranks: [
+          { rank: 1, minLvl: 4, dotDmg: 15, duration: 9 },
+          { rank: 2, minLvl: 10, dotDmg: 28, duration: 12 },
+          { rank: 3, minLvl: 18, dotDmg: 45, duration: 15 },
+          { rank: 4, minLvl: 26, dotDmg: 66, duration: 18 },
+          { rank: 5, minLvl: 34, dotDmg: 90, duration: 21 },
+          { rank: 6, minLvl: 42, dotDmg: 117, duration: 21 },
+          { rank: 7, minLvl: 50, dotDmg: 147, duration: 21 },
+          { rank: 8, minLvl: 58, dotDmg: 180, duration: 21 }
+        ]
+      },
+      whirlwind: {
+        baseName: "Whirlwind", icon: "ability_whirlwind", school: "Physical", minLvl: 36,
+        ranks: [
+          { rank: 1, minLvl: 36, rageCost: 25 }
+        ]
+      },
+      revenge: {
+        baseName: "Revenge", icon: "ability_warrior_revenge", school: "Physical", minLvl: 14,
+        ranks: [
+          { rank: 1, minLvl: 14, baseDmg: 12, rageCost: 5 },
+          { rank: 2, minLvl: 24, baseDmg: 22, rageCost: 5 },
+          { rank: 3, minLvl: 34, baseDmg: 38, rageCost: 5 },
+          { rank: 4, minLvl: 44, baseDmg: 58, rageCost: 5 },
+          { rank: 5, minLvl: 54, baseDmg: 80, rageCost: 5 },
+          { rank: 6, minLvl: 60, baseDmg: 95, rageCost: 5 }
+        ]
+      },
+      sunder_armor: {
+        baseName: "Sunder Armor", icon: "ability_warrior_sunder", school: "Physical", minLvl: 10,
+        ranks: [
+          { rank: 1, minLvl: 10, rageCost: 15 },
+          { rank: 2, minLvl: 22, rageCost: 15 },
+          { rank: 3, minLvl: 34, rageCost: 15 },
+          { rank: 4, minLvl: 46, rageCost: 15 },
+          { rank: 5, minLvl: 58, rageCost: 15 }
+        ]
+      },
+
+      // --- SHAMAN ---
+      earth_shock: {
+        baseName: "Earth Shock", icon: "spell_nature_earthshock", school: "Nature", minLvl: 4,
+        ranks: [
+          { rank: 1, minLvl: 4, minD: 19, maxD: 22, mana: 30 },
+          { rank: 2, minLvl: 14, minD: 39, maxD: 43, mana: 50 },
+          { rank: 3, minLvl: 24, minD: 64, maxD: 69, mana: 70 },
+          { rank: 4, minLvl: 36, minD: 125, maxD: 132, mana: 90 },
+          { rank: 5, minLvl: 48, minD: 212, maxD: 224, mana: 115 },
+          { rank: 6, minLvl: 60, minD: 330, maxD: 350, mana: 145 },
+          { rank: 7, minLvl: 60, minD: 385, maxD: 408, mana: 165 }
+        ]
+      },
+      flame_shock: {
+        baseName: "Flame Shock", icon: "spell_fire_flameshock", school: "Fire", minLvl: 10,
+        ranks: [
+          { rank: 1, minLvl: 10, directMin: 15, directMax: 18, dotTick: 4, mana: 45 },
+          { rank: 2, minLvl: 18, directMin: 25, directMax: 29, dotTick: 7, mana: 55 },
+          { rank: 3, minLvl: 28, directMin: 45, directMax: 51, dotTick: 12, mana: 85 },
+          { rank: 4, minLvl: 40, directMin: 80, directMax: 90, dotTick: 20, mana: 115 },
+          { rank: 5, minLvl: 52, directMin: 135, directMax: 149, dotTick: 32, mana: 160 },
+          { rank: 6, minLvl: 60, directMin: 205, directMax: 225, dotTick: 48, mana: 210 }
+        ]
+      },
+      stormstrike: {
+        baseName: "Stormstrike", icon: "ability_shaman_stormstrike", school: "Physical", minLvl: 20,
+        ranks: [
+          { rank: 1, minLvl: 20, manaCost: 65 }
+        ]
+      },
+      searing_totem: {
+        baseName: "Searing Totem", icon: "spell_fire_searingtotem", school: "Fire", minLvl: 10,
+        ranks: [
+          { rank: 1, minLvl: 10, minD: 9, maxD: 11, mana: 40 },
+          { rank: 2, minLvl: 20, minD: 14, maxD: 18, mana: 60 },
+          { rank: 3, minLvl: 30, minD: 20, maxD: 26, mana: 90 },
+          { rank: 4, minLvl: 40, minD: 29, maxD: 37, mana: 120 },
+          { rank: 5, minLvl: 50, minD: 37, maxD: 49, mana: 150 },
+          { rank: 6, minLvl: 60, minD: 40, maxD: 54, mana: 170 }
+        ]
+      },
+      lightning_shield: {
+        baseName: "Lightning Shield", icon: "spell_nature_lightningshield", school: "Nature", minLvl: 8,
+        ranks: [
+          { rank: 1, minLvl: 8, dmg: 13, mana: 45 },
+          { rank: 2, minLvl: 16, dmg: 29, mana: 70 },
+          { rank: 3, minLvl: 24, dmg: 51, mana: 105 },
+          { rank: 4, minLvl: 32, dmg: 80, mana: 150 },
+          { rank: 5, minLvl: 40, dmg: 114, mana: 195 },
+          { rank: 6, minLvl: 48, dmg: 154, mana: 245 },
+          { rank: 7, minLvl: 56, dmg: 198, mana: 300 }
+        ]
+      },
+      healing_wave: {
+        baseName: "Healing Wave", icon: "spell_nature_magicimmunity", school: "Nature (Heal)", minLvl: 1,
+        ranks: [
+          { rank: 1, minLvl: 1, healMin: 34, healMax: 44, mana: 25 },
+          { rank: 2, minLvl: 6, healMin: 64, healMax: 78, mana: 45 },
+          { rank: 3, minLvl: 12, healMin: 129, healMax: 155, mana: 80 },
+          { rank: 4, minLvl: 18, healMin: 268, healMax: 316, mana: 155 },
+          { rank: 5, minLvl: 24, healMin: 376, healMax: 440, mana: 200 },
+          { rank: 6, minLvl: 30, healMin: 536, healMax: 622, mana: 265 },
+          { rank: 7, minLvl: 36, healMin: 740, healMax: 854, mana: 340 },
+          { rank: 8, minLvl: 42, healMin: 1017, healMax: 1167, mana: 440 },
+          { rank: 9, minLvl: 48, healMin: 1367, healMax: 1561, mana: 560 },
+          { rank: 10, minLvl: 54, healMin: 1620, healMax: 1850, mana: 650 }
+        ]
+      },
+
+      // --- ROGUE ---
+      sinister_strike: {
+        baseName: "Sinister Strike", icon: "spell_shadow_ritualofsacrifice", school: "Physical", minLvl: 1,
+        ranks: [
+          { rank: 1, minLvl: 1, bonusDmg: 3, energy: 45 },
+          { rank: 2, minLvl: 6, bonusDmg: 6, energy: 45 },
+          { rank: 3, minLvl: 14, bonusDmg: 10, energy: 45 },
+          { rank: 4, minLvl: 22, bonusDmg: 15, energy: 45 },
+          { rank: 5, minLvl: 30, bonusDmg: 22, energy: 45 },
+          { rank: 6, minLvl: 38, bonusDmg: 33, energy: 45 },
+          { rank: 7, minLvl: 46, bonusDmg: 52, energy: 45 },
+          { rank: 8, minLvl: 54, bonusDmg: 68, energy: 45 }
+        ]
+      },
+      backstab: {
+        baseName: "Backstab", icon: "ability_backstab", school: "Physical", minLvl: 4,
+        ranks: [
+          { rank: 1, minLvl: 4, bonusDmg: 15, energy: 60 },
+          { rank: 2, minLvl: 12, bonusDmg: 30, energy: 60 },
+          { rank: 3, minLvl: 20, bonusDmg: 60, energy: 60 },
+          { rank: 4, minLvl: 28, bonusDmg: 90, energy: 60 },
+          { rank: 5, minLvl: 36, bonusDmg: 125, energy: 60 },
+          { rank: 6, minLvl: 44, bonusDmg: 165, energy: 60 },
+          { rank: 7, minLvl: 52, bonusDmg: 210, energy: 60 },
+          { rank: 8, minLvl: 60, bonusDmg: 255, energy: 60 }
+        ]
+      },
+      eviscerate: {
+        baseName: "Eviscerate", icon: "ability_rogue_eviscerate", school: "Physical", minLvl: 1,
+        ranks: [
+          { rank: 1, minLvl: 1, perCp: 7, energy: 35 },
+          { rank: 2, minLvl: 8, perCp: 15, energy: 35 },
+          { rank: 3, minLvl: 16, perCp: 28, energy: 35 },
+          { rank: 4, minLvl: 24, perCp: 44, energy: 35 },
+          { rank: 5, minLvl: 32, perCp: 68, energy: 35 },
+          { rank: 6, minLvl: 40, perCp: 96, energy: 35 },
+          { rank: 7, minLvl: 48, perCp: 135, energy: 35 },
+          { rank: 8, minLvl: 56, perCp: 175, energy: 35 },
+          { rank: 9, minLvl: 60, perCp: 205, energy: 35 }
+        ]
+      },
+      slice_and_dice: {
+        baseName: "Slice and Dice", icon: "ability_rogue_slicedice", school: "Physical", minLvl: 10,
+        ranks: [
+          { rank: 1, minLvl: 10, haste: 0.23, energy: 25 },
+          { rank: 2, minLvl: 42, haste: 0.30, energy: 25 }
+        ]
+      },
+
+      // --- MAGE ---
+      frostbolt: {
+        baseName: "Frostbolt", icon: "spell_frost_frostbolt02", school: "Frost", minLvl: 4,
+        ranks: [
+          { rank: 1, minLvl: 4, minD: 18, maxD: 20, mana: 25 },
+          { rank: 2, minLvl: 8, minD: 32, maxD: 36, mana: 35 },
+          { rank: 3, minLvl: 14, minD: 53, maxD: 59, mana: 50 },
+          { rank: 4, minLvl: 20, minD: 83, maxD: 91, mana: 65 },
+          { rank: 5, minLvl: 26, minD: 126, maxD: 138, mana: 85 },
+          { rank: 6, minLvl: 32, minD: 180, maxD: 196, mana: 110 },
+          { rank: 7, minLvl: 38, minD: 244, maxD: 266, mana: 140 },
+          { rank: 8, minLvl: 44, minD: 322, maxD: 348, mana: 175 },
+          { rank: 9, minLvl: 50, minD: 419, maxD: 453, mana: 215 },
+          { rank: 10, minLvl: 56, minD: 446, maxD: 482, mana: 245 },
+          { rank: 11, minLvl: 60, minD: 515, maxD: 555, mana: 290 }
+        ]
+      },
+      fireball: {
+        baseName: "Fireball", icon: "spell_fire_flamebolt", school: "Fire", minLvl: 1,
+        ranks: [
+          { rank: 1, minLvl: 1, minD: 16, maxD: 25, mana: 30 },
+          { rank: 2, minLvl: 6, minD: 34, maxD: 49, mana: 45 },
+          { rank: 3, minLvl: 12, minD: 58, maxD: 81, mana: 65 },
+          { rank: 4, minLvl: 18, minD: 89, maxD: 122, mana: 95 },
+          { rank: 5, minLvl: 24, minD: 140, maxD: 189, mana: 140 },
+          { rank: 6, minLvl: 30, minD: 208, maxD: 275, mana: 185 },
+          { rank: 7, minLvl: 36, minD: 290, maxD: 379, mana: 240 },
+          { rank: 8, minLvl: 42, minD: 387, maxD: 501, mana: 305 },
+          { rank: 9, minLvl: 48, minD: 494, maxD: 636, mana: 375 },
+          { rank: 10, minLvl: 54, minD: 561, maxD: 715, mana: 435 },
+          { rank: 11, minLvl: 60, minD: 596, maxD: 760, mana: 465 }
+        ]
+      },
+      pyroblast: {
+        baseName: "Pyroblast", icon: "spell_fire_fireball02", school: "Fire", minLvl: 20,
+        ranks: [
+          { rank: 1, minLvl: 20, minD: 148, maxD: 195, mana: 125 },
+          { rank: 2, minLvl: 24, minD: 188, maxD: 243, mana: 150 },
+          { rank: 3, minLvl: 30, minD: 263, maxD: 337, mana: 195 },
+          { rank: 4, minLvl: 36, minD: 349, maxD: 442, mana: 240 },
+          { rank: 5, minLvl: 42, minD: 444, maxD: 557, mana: 295 },
+          { rank: 6, minLvl: 48, minD: 549, maxD: 686, mana: 355 },
+          { rank: 7, minLvl: 54, minD: 616, maxD: 768, mana: 405 },
+          { rank: 8, minLvl: 60, minD: 711, maxD: 884, mana: 440 }
+        ]
+      },
+
+      // --- HUNTER ---
+      aimed_shot: {
+        baseName: "Aimed Shot", icon: "inv_spear_07", school: "Physical", minLvl: 20,
+        ranks: [
+          { rank: 1, minLvl: 20, bonusDmg: 70, mana: 75 },
+          { rank: 2, minLvl: 28, bonusDmg: 125, mana: 115 },
+          { rank: 3, minLvl: 36, bonusDmg: 200, mana: 160 },
+          { rank: 4, minLvl: 44, bonusDmg: 330, mana: 210 },
+          { rank: 5, minLvl: 52, bonusDmg: 460, mana: 260 },
+          { rank: 6, minLvl: 60, bonusDmg: 600, mana: 310 }
+        ]
+      },
+      arcane_shot: {
+        baseName: "Arcane Shot", icon: "ability_impalingbolt", school: "Arcane", minLvl: 8,
+        ranks: [
+          { rank: 1, minLvl: 8, dmg: 14, mana: 25 },
+          { rank: 2, minLvl: 16, dmg: 23, mana: 35 },
+          { rank: 3, minLvl: 24, dmg: 36, mana: 50 },
+          { rank: 4, minLvl: 32, dmg: 63, mana: 80 },
+          { rank: 5, minLvl: 40, dmg: 91, mana: 105 },
+          { rank: 6, minLvl: 48, dmg: 125, mana: 135 },
+          { rank: 7, minLvl: 56, dmg: 158, mana: 160 },
+          { rank: 8, minLvl: 60, dmg: 183, mana: 190 }
+        ]
+      },
+      serpent_sting: {
+        baseName: "Serpent Sting", icon: "ability_hunter_quickshot", school: "Nature", minLvl: 4,
+        ranks: [
+          { rank: 1, minLvl: 4, dmg: 20, mana: 15 },
+          { rank: 2, minLvl: 10, dmg: 40, mana: 30 },
+          { rank: 3, minLvl: 18, dmg: 80, mana: 50 },
+          { rank: 4, minLvl: 26, dmg: 140, mana: 80 },
+          { rank: 5, minLvl: 34, dmg: 215, mana: 115 },
+          { rank: 6, minLvl: 42, dmg: 310, mana: 155 },
+          { rank: 7, minLvl: 50, dmg: 415, mana: 205 },
+          { rank: 8, minLvl: 58, dmg: 490, mana: 245 },
+          { rank: 9, minLvl: 60, dmg: 555, mana: 275 }
+        ]
+      },
+
+      // --- WARLOCK ---
+      shadow_bolt: {
+        baseName: "Shadow Bolt", icon: "spell_shadow_shadowbolt", school: "Shadow", minLvl: 1,
+        ranks: [
+          { rank: 1, minLvl: 1, minD: 12, maxD: 16, mana: 25 },
+          { rank: 2, minLvl: 6, minD: 23, maxD: 29, mana: 40 },
+          { rank: 3, minLvl: 12, minD: 48, maxD: 56, mana: 70 },
+          { rank: 4, minLvl: 20, minD: 86, maxD: 98, mana: 110 },
+          { rank: 5, minLvl: 28, minD: 136, maxD: 153, mana: 160 },
+          { rank: 6, minLvl: 36, minD: 204, maxD: 230, mana: 210 },
+          { rank: 7, minLvl: 44, minD: 281, maxD: 315, mana: 265 },
+          { rank: 8, minLvl: 52, minD: 360, maxD: 402, mana: 315 },
+          { rank: 9, minLvl: 60, minD: 455, maxD: 507, mana: 370 },
+          { rank: 10, minLvl: 60, minD: 482, maxD: 538, mana: 380 }
+        ]
+      },
+      corruption: {
+        baseName: "Corruption", icon: "spell_shadow_abominationexplosion", school: "Shadow", minLvl: 4,
+        ranks: [
+          { rank: 1, minLvl: 4, dmg: 40, mana: 35 },
+          { rank: 2, minLvl: 14, dmg: 90, mana: 55 },
+          { rank: 3, minLvl: 24, dmg: 222, mana: 100 },
+          { rank: 4, minLvl: 34, dmg: 324, mana: 155 },
+          { rank: 5, minLvl: 44, dmg: 486, mana: 225 },
+          { rank: 6, minLvl: 54, dmg: 666, mana: 290 },
+          { rank: 7, minLvl: 60, dmg: 822, mana: 340 }
+        ]
+      },
+
+      // --- PRIEST ---
+      shadow_word_pain: {
+        baseName: "Shadow Word: Pain", icon: "spell_shadow_shadowwordpain", school: "Shadow", minLvl: 4,
+        ranks: [
+          { rank: 1, minLvl: 4, dmg: 30, mana: 25 },
+          { rank: 2, minLvl: 10, dmg: 66, mana: 50 },
+          { rank: 3, minLvl: 18, dmg: 132, mana: 95 },
+          { rank: 4, minLvl: 26, dmg: 234, mana: 155 },
+          { rank: 5, minLvl: 34, dmg: 366, mana: 230 },
+          { rank: 6, minLvl: 42, dmg: 510, mana: 305 },
+          { rank: 7, minLvl: 50, dmg: 672, mana: 385 },
+          { rank: 8, minLvl: 58, dmg: 852, mana: 470 }
+        ]
+      },
+      mind_blast: {
+        baseName: "Mind Blast", icon: "spell_shadow_unholyfrenzy", school: "Shadow", minLvl: 10,
+        ranks: [
+          { rank: 1, minLvl: 10, minD: 42, maxD: 46, mana: 50 },
+          { rank: 2, minLvl: 16, minD: 73, maxD: 79, mana: 75 },
+          { rank: 3, minLvl: 22, minD: 115, maxD: 124, mana: 110 },
+          { rank: 4, minLvl: 28, minD: 174, maxD: 187, mana: 150 },
+          { rank: 5, minLvl: 34, minD: 225, maxD: 239, mana: 185 },
+          { rank: 6, minLvl: 40, minD: 279, maxD: 297, mana: 225 },
+          { rank: 7, minLvl: 46, minD: 340, maxD: 362, mana: 265 },
+          { rank: 8, minLvl: 52, minD: 411, maxD: 437, mana: 310 },
+          { rank: 9, minLvl: 58, minD: 508, maxD: 538, mana: 350 }
+        ]
+      },
+
+      // --- PALADIN ---
+      consecration: {
+        baseName: "Consecration", icon: "spell_holy_innerfire", school: "Holy", minLvl: 20,
+        ranks: [
+          { rank: 1, minLvl: 20, dmg: 64, mana: 135 },
+          { rank: 2, minLvl: 30, dmg: 120, mana: 235 },
+          { rank: 3, minLvl: 40, dmg: 192, mana: 320 },
+          { rank: 4, minLvl: 50, dmg: 280, mana: 435 },
+          { rank: 5, minLvl: 60, dmg: 384, mana: 565 }
+        ]
+      },
+      judgement: {
+        baseName: "Judgement", icon: "spell_holy_righteousfury", school: "Holy", minLvl: 4,
+        ranks: [
+          { rank: 1, minLvl: 4, mana: 20 },
+          { rank: 2, minLvl: 60, mana: 50 }
+        ]
+      },
+
+      // --- DRUID ---
+      claw: {
+        baseName: "Claw", icon: "ability_druid_rake", school: "Physical", minLvl: 20,
+        ranks: [
+          { rank: 1, minLvl: 20, bonusDmg: 27, energy: 45 },
+          { rank: 2, minLvl: 28, bonusDmg: 39, energy: 45 },
+          { rank: 3, minLvl: 38, bonusDmg: 57, energy: 45 },
+          { rank: 4, minLvl: 48, bonusDmg: 88, energy: 45 },
+          { rank: 5, minLvl: 58, bonusDmg: 115, energy: 45 }
+        ]
+      },
+      shred: {
+        baseName: "Shred", icon: "spell_shadow_vampiricaura", school: "Physical", minLvl: 22,
+        ranks: [
+          { rank: 1, minLvl: 22, bonusDmg: 54, energy: 60 },
+          { rank: 2, minLvl: 30, bonusDmg: 72, energy: 60 },
+          { rank: 3, minLvl: 38, bonusDmg: 99, energy: 60 },
+          { rank: 4, minLvl: 46, bonusDmg: 144, energy: 60 },
+          { rank: 5, minLvl: 54, bonusDmg: 180, energy: 60 }
+        ]
+      },
+      ferocious_bite: {
+        baseName: "Ferocious Bite", icon: "ability_druid_ferociousbite", school: "Physical", minLvl: 32,
+        ranks: [
+          { rank: 1, minLvl: 32, perCp: 44, energy: 35 },
+          { rank: 2, minLvl: 40, perCp: 67, energy: 35 },
+          { rank: 3, minLvl: 48, perCp: 99, energy: 35 },
+          { rank: 4, minLvl: 56, perCp: 142, energy: 35 },
+          { rank: 5, minLvl: 60, perCp: 168, energy: 35 }
+        ]
+      },
+      moonfire: {
+        baseName: "Moonfire", icon: "spell_nature_starfall", school: "Arcane", minLvl: 4,
+        ranks: [
+          { rank: 1, minLvl: 4, directD: 9, dotD: 12, mana: 25 },
+          { rank: 2, minLvl: 10, directD: 17, dotD: 32, mana: 50 },
+          { rank: 3, minLvl: 16, directD: 30, dotD: 52, mana: 75 },
+          { rank: 4, minLvl: 22, directD: 47, dotD: 80, mana: 105 },
+          { rank: 5, minLvl: 28, directD: 70, dotD: 124, mana: 150 },
+          { rank: 6, minLvl: 34, directD: 97, dotD: 172, mana: 195 },
+          { rank: 7, minLvl: 40, directD: 130, dotD: 232, mana: 245 },
+          { rank: 8, minLvl: 46, directD: 168, dotD: 300, mana: 305 },
+          { rank: 9, minLvl: 52, directD: 211, dotD: 384, mana: 375 },
+          { rank: 10, minLvl: 58, directD: 260, dotD: 476, mana: 450 }
+        ]
+      }
+    };
+
+    const SPELL_ID_TO_KEY = {
+      12294: 'mortal_strike',
+      23881: 'bloodthirst',
+      23925: 'shield_slam',
+      7384: 'overpower',
+      25289: 'heroic_strike',
+      11574: 'rend',
+      1680: 'whirlwind',
+      11601: 'revenge',
+      11597: 'sunder_armor',
+      8045: 'earth_shock',
+      8052: 'flame_shock',
+      17364: 'stormstrike',
+      3599: 'searing_totem',
+      324: 'lightning_shield',
+      913: 'healing_wave',
+      547: 'healing_wave',
+      332: 'healing_wave',
+      331: 'healing_wave',
+      11294: 'sinister_strike',
+      11286: 'backstab',
+      11305: 'eviscerate',
+      6774: 'slice_and_dice',
+      10181: 'frostbolt',
+      10151: 'fireball',
+      10199: 'pyroblast',
+      20904: 'aimed_shot',
+      20900: 'arcane_shot',
+      13555: 'serpent_sting',
+      11661: 'shadow_bolt',
+      11675: 'corruption',
+      10894: 'shadow_word_pain',
+      10947: 'mind_blast',
+      20924: 'consecration',
+      20271: 'judgement',
+      9881: 'claw',
+      9830: 'shred',
+      22829: 'ferocious_bite',
+      9835: 'moonfire'
+    };
+
+    function getHighestSpellRank(spellKey, playerLvl) {
+      const def = SPELL_RANK_TABLE[spellKey];
+      if (!def || !def.ranks || def.ranks.length === 0) return null;
+      const availableRanks = def.ranks.filter(r => playerLvl >= r.minLvl);
+      if (availableRanks.length === 0) {
+        const lowest = def.ranks[0];
+        return { ...lowest, isUnlocked: false, reqLvl: def.minLvl, baseName: def.baseName, icon: def.icon, school: def.school };
+      }
+      const highest = availableRanks[availableRanks.length - 1];
+      return { ...highest, isUnlocked: true, reqLvl: def.minLvl, baseName: def.baseName, icon: def.icon, school: def.school };
+    }
+
+    function getSpellDisplayInfo(spellId, currentLvl = getCurrentPlayerLevel()) {
+      const key = SPELL_ID_TO_KEY[spellId];
+      if (key && SPELL_RANK_TABLE[key]) {
+        const rInfo = getHighestSpellRank(key, currentLvl);
+        if (rInfo) {
+          const rankSuffix = rInfo.rank ? " (Rank " + rInfo.rank + ")" : "";
+          const lockSuffix = !rInfo.isUnlocked ? " [Requires Lvl " + rInfo.reqLvl + "]" : "";
+          return {
+            name: rInfo.baseName + rankSuffix + lockSuffix,
+            baseName: rInfo.baseName,
+            rank: rInfo.rank,
+            isUnlocked: rInfo.isUnlocked,
+            icon: rInfo.icon,
+            school: rInfo.school,
+            spellKey: key,
+            data: rInfo
+          };
+        }
+      }
+      const fallback = (typeof availableSpells !== 'undefined' && availableSpells[spellId]) ? availableSpells[spellId] : { name: "Spell " + spellId, icon: 'inv_misc_questionmark', school: 'Physical' };
+      return {
+        name: fallback.name,
+        baseName: fallback.name,
+        rank: 1,
+        isUnlocked: true,
+        icon: fallback.icon,
+        school: fallback.school,
+        spellKey: null,
+        data: null
+      };
+    }
+
+    function syncSpellRanksForLevel(lvl = getCurrentPlayerLevel()) {
+      if (typeof availableSpells === 'undefined') return;
+      for (const sid in availableSpells) {
+        const sInfo = getSpellDisplayInfo(parseInt(sid), lvl);
+        if (sInfo && sInfo.name) {
+          availableSpells[sid].name = sInfo.name;
+        }
+      }
+    }
+
+    function generateDynamicRotationForLevel(classKey, specKey, lvl = getCurrentPlayerLevel()) {
+      if (classKey === 'warrior') {
+        if (specKey === 'protection') {
+          const steps = [];
+          if (lvl >= 40) steps.push({ spellId: 23925, condition: "on_cd", enabled: true }); // Shield Slam
+          if (lvl >= 14) steps.push({ spellId: 11601, condition: "on_proc", enabled: true }); // Revenge
+          if (lvl >= 10) steps.push({ spellId: 11597, condition: "stack_lt_5", enabled: true }); // Sunder Armor
+          steps.push({ spellId: 25289, condition: "rage_gt_40", enabled: true }); // Heroic Strike
+          return steps;
+        } else if (specKey === 'fury') {
+          const steps = [];
+          if (lvl >= 40) steps.push({ spellId: 23881, condition: "on_cd", enabled: true }); // Bloodthirst
+          if (lvl >= 36) steps.push({ spellId: 1680, condition: "on_cd", enabled: true }); // Whirlwind
+          if (lvl >= 4) steps.push({ spellId: 11574, condition: "dot_not_active", enabled: true }); // Rend
+          steps.push({ spellId: 25289, condition: "rage_gt_40", enabled: true }); // Heroic Strike
+          return steps;
+        } else {
+          // Arms
+          const steps = [];
+          if (lvl >= 40) steps.push({ spellId: 12294, condition: "on_cd", enabled: true }); // Mortal Strike
+          if (lvl >= 12) steps.push({ spellId: 7384, condition: "on_proc", enabled: true }); // Overpower
+          if (lvl >= 4) steps.push({ spellId: 11574, condition: "dot_not_active", enabled: true }); // Rend
+          steps.push({ spellId: 25289, condition: "rage_gt_40", enabled: true }); // Heroic Strike
+          return steps;
+        }
+      } else if (classKey === 'shaman') {
+        if (specKey === 'tank') {
+          return [
+            { spellId: 3599, condition: "totem_le_1s", enabled: true },
+            { spellId: 8052, condition: "dot_not_active", enabled: true },
+            { spellId: 8045, condition: "on_cd", enabled: true }
+          ];
+        } else if (specKey === 'resto') {
+          return [
+            { spellId: 913, condition: "continuous_heal", enabled: true }
+          ];
+        } else {
+          const steps = [];
+          if (lvl >= 20) steps.push({ spellId: 17364, condition: "on_cd", enabled: true }); // Stormstrike
+          if (lvl >= 10) steps.push({ spellId: 8052, condition: "dot_not_active", enabled: true }); // Flame Shock
+          if (lvl >= 4) steps.push({ spellId: 8045, condition: "on_cd", enabled: true }); // Earth Shock
+          if (lvl >= 10) steps.push({ spellId: 3599, condition: "totem_le_1s", enabled: true }); // Searing Totem
+          return steps;
+        }
+      } else if (classKey === 'rogue') {
+        return [
+          { spellId: 6774, condition: "buff_not_active", enabled: true }, // Slice and Dice
+          { spellId: 11305, condition: "cp_gt_4", enabled: true }, // Eviscerate
+          { spellId: 11294, condition: "on_cd", enabled: true } // Sinister Strike
+        ];
+      } else if (classKey === 'mage') {
+        if (specKey === 'fire') {
+          return [
+            { spellId: 10199, condition: "on_cd", enabled: true }, // Pyroblast
+            { spellId: 10151, condition: "continuous", enabled: true } // Fireball
+          ];
+        } else {
+          return [
+            { spellId: 10181, condition: "continuous", enabled: true } // Frostbolt
+          ];
+        }
+      } else if (classKey === 'hunter') {
+        const steps = [];
+        if (lvl >= 20) steps.push({ spellId: 20904, condition: "on_cd", enabled: true }); // Aimed Shot
+        if (lvl >= 8) steps.push({ spellId: 20900, condition: "on_cd", enabled: true }); // Arcane Shot
+        if (lvl >= 4) steps.push({ spellId: 13555, condition: "dot_not_active", enabled: true }); // Serpent Sting
+        return steps;
+      }
+      return null;
+    }
+
     // --- MULTI-CLASS SPELL & ROTATION REGISTRY ---
     const ALL_CLASS_SPELLS = {
       shaman: {
@@ -4497,10 +5084,11 @@
         imbuesPanel.style.display = (classKey === 'shaman') ? 'block' : 'none';
       }
 
-      // 2. Show/Hide Healing Analysis panel (ONLY for classes with healing spells: Shaman, Priest, Paladin, Druid)
+      // 2. Show/Hide Healing Analysis panel (ONLY for active healer spec on healer classes)
       const healPanel = document.getElementById('healing-analysis-panel');
       if (healPanel) {
-        healPanel.style.display = (classKey === 'shaman' || classKey === 'priest' || classKey === 'paladin' || classKey === 'druid') ? 'block' : 'none';
+        const isHealerRole = ['resto', 'holy', 'restoration'].includes((currentCharacterSpec || '').toLowerCase());
+        healPanel.style.display = (isHealerRole && ['shaman', 'priest', 'paladin', 'druid'].includes(classKey)) ? 'block' : 'none';
       }
 
       // 3. Update Rotation Tab Header label
@@ -4578,13 +5166,15 @@
         return;
       }
 
+      const curLvl = getCurrentPlayerLevel();
       currentRotation.forEach((step, idx) => {
-        const spell = availableSpells[step.spellId] || {
-          name: `Spell ${step.spellId}`,
-          icon: "spell_nature_elementalprecision_1",
-          school: "Magic",
-          conditions: [{ id: step.condition, label: step.condition }]
-        };
+        const sInfo = getSpellDisplayInfo(step.spellId, curLvl);
+        const spell = Object.assign({}, availableSpells[step.spellId] || {}, {
+          name: sInfo.name,
+          icon: sInfo.icon || (availableSpells[step.spellId] ? availableSpells[step.spellId].icon : "spell_nature_elementalprecision_1"),
+          school: sInfo.school || "Magic",
+          conditions: (availableSpells[step.spellId] && availableSpells[step.spellId].conditions) ? availableSpells[step.spellId].conditions : [{ id: step.condition, label: step.condition }]
+        });
 
         const itemRow = document.createElement('div');
         itemRow.className = `prio-item ${step.enabled ? '' : 'disabled'}`;
@@ -4643,9 +5233,10 @@
         return;
       }
 
+      const curLvl = getCurrentPlayerLevel();
       activeSteps.forEach((s, i) => {
-        const spell = availableSpells[s.spellId];
-        const sName = spell ? spell.name.split(' (')[0] : `Spell ${s.spellId}`;
+        const sInfo = getSpellDisplayInfo(s.spellId, curLvl);
+        const sName = sInfo.baseName + (sInfo.rank ? " R" + sInfo.rank : "");
         const condLabel = s.condition === 'dot_not_active' ? ' (DoT)' : (s.condition === 'totem_le_1s' ? ' (≤1s)' : (s.condition === 'buff_not_active' ? ' (Buff)' : ''));
         
         banner.innerHTML += `
@@ -4771,17 +5362,45 @@
 
     async function autoOptimizeRotationForCurrentGear() {
       const btn = document.getElementById('btn-optimize-rot');
-      if (btn) btn.innerHTML = '⏳ Simulating Rotations...';
+      if (btn) btn.innerHTML = '⏳ Simulating Dynamic Rotations...';
 
-      const clsRotations = ALL_CLASS_ROTATIONS[activeCharacterClass] || ALL_CLASS_ROTATIONS.shaman;
       const currentLvl = getCurrentPlayerLevel();
       const currentImbueVal = (activeCharacterClass === 'shaman') ? currentImbue : 'None';
-      
+      const roleMode = getActiveCharacterRoleMode();
+
+      // Gather candidate rotations suitable for current role
+      const clsRotations = ALL_CLASS_ROTATIONS[activeCharacterClass] || ALL_CLASS_ROTATIONS.shaman;
+      let candidateRotations = {};
+
+      for (const [key, steps] of Object.entries(clsRotations)) {
+        const isHealPreset = key.includes('resto') || key.includes('heal') || key.includes('holy');
+        const isTankPreset = key.includes('tank') || key.includes('prot');
+
+        if (roleMode === 'healer') {
+          if (isHealPreset) candidateRotations[key] = steps;
+        } else if (roleMode === 'tank') {
+          if (isTankPreset || (!isHealPreset)) candidateRotations[key] = steps;
+        } else {
+          // DPS role: strictly exclude pure healing rotations so characters don't just heal and auto-attack!
+          if (!isHealPreset) candidateRotations[key] = steps;
+        }
+      }
+
+      if (Object.keys(candidateRotations).length === 0) {
+        candidateRotations = clsRotations;
+      }
+
+      // Add dynamic level-tailored rotation
+      const dynVariant = generateDynamicRotationForLevel(activeCharacterClass, currentCharacterSpec, currentLvl);
+      if (dynVariant && dynVariant.length > 0) {
+        candidateRotations['dynamic_optimal'] = dynVariant;
+      }
+
       let bestKey = activeRotationPresetKey;
-      let bestDps = -1;
+      let bestScore = -1;
       const scores = {};
 
-      const entries = Object.entries(clsRotations);
+      const entries = Object.entries(candidateRotations);
       for (let i = 0; i < entries.length; i++) {
         const [key, steps] = entries[i];
         try {
@@ -4790,8 +5409,11 @@
             spec: currentCharacterSpec,
             level: currentLvl,
             imbue: currentImbueVal,
+            talents: (typeof getSerializedTalents === 'function') ? getSerializedTalents() : '--',
             duration: 30,
-            iterations: 40,
+            iterations: 50,
+            seed: 42,
+            fastMode: true,
             rotation_preset: key,
             custom_rotation: steps,
             gear: currentGear || {},
@@ -4799,10 +5421,10 @@
             buffs: (typeof activeBuffs !== 'undefined' ? activeBuffs : {})
           }, catalog, enchantsCatalog, buffsCatalog);
 
-          const dps = (simRes && simRes.dps && typeof simRes.dps.avg === 'number') ? simRes.dps.avg : 0;
-          scores[key] = dps;
-          if (dps > bestDps) {
-            bestDps = dps;
+          const sc = getSimulationObjectiveScore(simRes, roleMode);
+          scores[key] = sc;
+          if (sc > bestScore) {
+            bestScore = sc;
             bestKey = key;
           }
         } catch (e) {
@@ -4810,23 +5432,17 @@
         }
       }
 
-      // Update chip badges with DPS metrics
-      for (const [key, dps] of Object.entries(scores)) {
-        const chip = document.getElementById(`chip-rot-${key}`);
-        if (chip) {
-          const isWinner = (key === bestKey);
-          const label = key.replace(/_/g, ' ').toUpperCase();
-          let icon = isWinner ? '⭐' : (key.includes('tank') ? '🛡️' : (key.includes('resto') || key.includes('heal') ? '💚' : '⚡'));
-          chip.innerHTML = `${icon} ${label} <span style="font-size:0.68rem; font-weight:700; opacity:0.85; margin-left:3px;">(${dps.toFixed(1)} DPS)</span>`;
-          if (isWinner) {
-            chip.style.borderColor = '#ffd700';
-            chip.style.color = '#ffd700';
-          }
-        }
+      if (bestKey === 'dynamic_optimal' && dynVariant) {
+        rotationPresets['dynamic_optimal'] = dynVariant;
+        activeRotationPresetKey = 'dynamic_optimal';
+        currentRotation = JSON.parse(JSON.stringify(dynVariant));
+      } else if (rotationPresets[bestKey]) {
+        loadRotationPreset(bestKey);
       }
 
-      // Load winning preset and re-run main simulation
-      loadRotationPreset(bestKey);
+      renderRotationPresetChipsForClass(activeCharacterClass);
+      renderRotationUI();
+
       if (btn) btn.innerHTML = '⭐ Best Rotation Active!';
       setTimeout(() => {
         if (btn) btn.innerHTML = '⚡ Auto-Optimize for Gear';
@@ -5296,6 +5912,18 @@
       } else if (activeSub === 'talents') {
         renderTalentTrees();
       } else if (activeSub === 'rotation') {
+        const imbuesPanel = document.getElementById('weapon-imbues-panel');
+        if (imbuesPanel) {
+          imbuesPanel.style.display = (activeCharacterClass === 'shaman') ? 'block' : 'none';
+        }
+        const healPanel = document.getElementById('healing-analysis-panel');
+        if (healPanel) {
+          const isHealerRole = ['resto', 'holy', 'restoration'].includes((currentCharacterSpec || '').toLowerCase());
+          healPanel.style.display = (isHealerRole && ['shaman', 'priest', 'paladin', 'druid'].includes(activeCharacterClass)) ? 'block' : 'none';
+        }
+        syncSpellRanksForLevel(getCurrentPlayerLevel());
+        renderRotationPresetChipsForClass(activeCharacterClass);
+        renderRotationUI();
         if (latestSimData) renderHealingStudio(latestSimData);
       } else if (activeSub === 'buffs') {
         renderBuffsView();
@@ -6277,10 +6905,16 @@
     function onLevelChanged() {
       const lvl = getCurrentPlayerLevel();
       maxTalentPoints = Math.max(0, lvl - 9);
-      document.getElementById('calc-max-points').innerText = maxTalentPoints;
+      const calcMax = document.getElementById('calc-max-points');
+      if (calcMax) calcMax.innerText = maxTalentPoints;
       
       // Update all .cur-lvl-label across UI
       document.querySelectorAll('.cur-lvl-label').forEach(el => el.innerText = lvl);
+
+      // Dynamically upgrade spell ranks in availableSpells and active rotation for the new level
+      syncSpellRanksForLevel(lvl);
+      renderRotationPresetChipsForClass(activeCharacterClass);
+      renderRotationUI();
 
       updateTalentHeader();
       renderTalentTrees();
@@ -9716,10 +10350,11 @@
 
               // Warrior Heroic Strike on swing if rage >= 40
               if (charClass === 'warrior' && rage >= 40) {
-                let hsBonus = 15 + level * 2.5;
+                const hsInfo = getSpellDisplayInfo(25289, level);
+                const hsBonus = (hsInfo.data && hsInfo.data.bonusDmg) ? hsInfo.data.bonusDmg : (15 + level * 2.5);
                 mitigatedDmg += hsBonus * (1.0 - armorDR);
                 rage -= 15;
-                recordAction('Heroic Strike', 'Physical', 'ability_rogue_ambush', hsBonus, true, true, isCrit, false);
+                recordAction(hsInfo.name, 'Physical', 'ability_rogue_ambush', hsBonus, true, true, isCrit, false);
               }
 
               iterDamage += mitigatedDmg;
@@ -9782,32 +10417,37 @@
             let actionCast = false;
 
             if (charClass === 'warrior') {
-              if (t >= nextClassCd1 && rage >= 30) {
+              if (level >= 40 && t >= nextClassCd1 && rage >= 30) {
                 if (rotationPreset.includes('fury')) {
                   let btDmg = (curAP * 0.45) * (1.0 - armorDR);
                   let isCrit = Math.random() < critChance;
                   if (isCrit) btDmg *= 2.0;
                   iterDamage += btDmg;
                   rage -= 30; nextClassCd1 = t + 6.0; nextGcdTime = t + 1.5; actionCast = true;
-                  recordAction('Bloodthirst', 'Physical', 'spell_nature_bloodlust', btDmg, true, true, isCrit, false);
+                  const sInfo = getSpellDisplayInfo(23881, level);
+                  recordAction(sInfo.name, 'Physical', 'spell_nature_bloodlust', btDmg, true, true, isCrit, false);
                 } else {
-                  let msDmg = (wpnMin + Math.random() * (wpnMax - wpnMin) + (curAP / 14.0) * wpnSpeed + 85 + level * 2.2) * (1.0 - armorDR);
+                  const msInfo = getSpellDisplayInfo(12294, level);
+                  const msBonus = (msInfo.data && msInfo.data.bonusDmg) ? msInfo.data.bonusDmg : 85;
+                  let msDmg = (wpnMin + Math.random() * (wpnMax - wpnMin) + (curAP / 14.0) * wpnSpeed + msBonus) * (1.0 - armorDR);
                   let isCrit = Math.random() < critChance;
                   if (isCrit) msDmg *= 2.0;
                   iterDamage += msDmg;
                   rage -= 30; nextClassCd1 = t + 6.0; nextGcdTime = t + 1.5; actionCast = true;
-                  recordAction('Mortal Strike', 'Physical', 'ability_warrior_savageblow', msDmg, true, true, isCrit, false);
+                  recordAction(msInfo.name, 'Physical', 'ability_warrior_savageblow', msDmg, true, true, isCrit, false);
                 }
               }
-              if (!actionCast && hasShield && t >= nextClassCd2 && rage >= 20) {
-                let ssDmg = (225 + blockVal) * (1.0 - armorDR);
+              if (!actionCast && level >= 40 && hasShield && t >= nextClassCd2 && rage >= 20) {
+                const ssInfo = getSpellDisplayInfo(23925, level);
+                const ssBase = (ssInfo.data && ssInfo.data.baseDmg) ? ssInfo.data.baseDmg : 225;
+                let ssDmg = (ssBase + blockVal) * (1.0 - armorDR);
                 let isCrit = Math.random() < critChance;
                 if (isCrit) ssDmg *= 2.0;
                 iterDamage += ssDmg;
                 rage -= 20; nextClassCd2 = t + 6.0; nextGcdTime = t + 1.5; actionCast = true;
-                recordAction('Shield Slam', 'Physical', 'inv_shield_05', ssDmg, true, true, isCrit, false);
+                recordAction(ssInfo.name, 'Physical', 'inv_shield_05', ssDmg, true, true, isCrit, false);
               }
-              if (!actionCast && t >= nextClassCd3 && rage >= 25) {
+              if (!actionCast && level >= 36 && t >= nextClassCd3 && rage >= 25) {
                 let wwDmg = (wpnMin + Math.random() * (wpnMax - wpnMin) + (curAP / 14.0) * wpnSpeed) * (1.0 - armorDR);
                 let isCrit = Math.random() < critChance;
                 if (isCrit) wwDmg *= 2.0;
@@ -9818,7 +10458,8 @@
               if (!actionCast && t >= dotActiveUntil && rage >= 10) {
                 dotActiveUntil = t + 15.0; nextDotTickTime = t + 3.0;
                 rage -= 10; nextGcdTime = t + 1.5; actionCast = true;
-                recordAction('Rend', 'Physical', 'ability_gouge', 0, true, true, false, false);
+                const rendInfo = getSpellDisplayInfo(11574, level);
+                recordAction(rendInfo.name, 'Physical', 'ability_gouge', 0, true, true, false, false);
               }
             } else if (charClass === 'rogue') {
               if (t >= sliceDiceActiveUntil && comboPoints >= 1 && energy >= 25) {
@@ -9826,19 +10467,23 @@
                 energy -= 25; comboPoints = 0; nextGcdTime = t + 1.0; actionCast = true;
                 recordAction('Slice and Dice', 'Physical', 'ability_rogue_slicedice', 0, true, true, false, false);
               } else if (comboPoints >= 4 && energy >= 35) {
-                let eviDmg = (comboPoints * (35 + level * 3.5) + curAP * 0.15 * comboPoints) * (1.0 - armorDR);
+                const eviInfo = getSpellDisplayInfo(11305, level);
+                const perCp = (eviInfo.data && eviInfo.data.perCp) ? eviInfo.data.perCp : (35 + level * 3.5);
+                let eviDmg = (comboPoints * perCp + curAP * 0.15 * comboPoints) * (1.0 - armorDR);
                 let isCrit = Math.random() < critChance;
                 if (isCrit) eviDmg *= 2.0;
                 iterDamage += eviDmg;
                 energy -= 35; comboPoints = 0; nextGcdTime = t + 1.0; actionCast = true;
-                recordAction('Eviscerate', 'Physical', 'ability_rogue_eviscerate', eviDmg, true, true, isCrit, false);
+                recordAction(eviInfo.name, 'Physical', 'ability_rogue_eviscerate', eviDmg, true, true, isCrit, false);
               } else if (energy >= 40) {
-                let ssDmg = (wpnMin + Math.random() * (wpnMax - wpnMin) + (curAP / 14.0) * wpnSpeed + 15 + level * 1.5) * (1.0 - armorDR);
+                const ssInfo = getSpellDisplayInfo(11294, level);
+                const ssBonus = (ssInfo.data && ssInfo.data.bonusDmg) ? ssInfo.data.bonusDmg : (15 + level * 1.5);
+                let ssDmg = (wpnMin + Math.random() * (wpnMax - wpnMin) + (curAP / 14.0) * wpnSpeed + ssBonus) * (1.0 - armorDR);
                 let isCrit = Math.random() < critChance;
                 if (isCrit) ssDmg *= 2.0;
                 iterDamage += ssDmg;
                 energy -= 40; comboPoints = Math.min(5, comboPoints + 1); nextGcdTime = t + 1.0; actionCast = true;
-                recordAction('Sinister Strike', 'Physical', 'spell_shadow_ritualofsacrifice', ssDmg, true, true, isCrit, false);
+                recordAction(ssInfo.name, 'Physical', 'spell_shadow_ritualofsacrifice', ssDmg, true, true, isCrit, false);
               }
             } else if (charClass === 'mage') {
               if (t >= nextClassCd1) {
@@ -9849,19 +10494,23 @@
                 nextClassCd1 = t + 8.0; nextGcdTime = t + 1.5; actionCast = true;
                 recordAction('Fire Blast', 'Fire', 'spell_fire_fireball', fbDmg, true, true, isCrit, false);
               } else if (rotationPreset.includes('fire')) {
-                let fDmg = (45 + level * 8) + fireSP * (3.0 / 3.5);
+                const fbInfo = getSpellDisplayInfo(10151, level);
+                let fBase = (fbInfo.data && fbInfo.data.minD) ? ((fbInfo.data.minD + fbInfo.data.maxD) / 2) : (45 + level * 8);
+                let fDmg = fBase + fireSP * (3.0 / 3.5);
                 let isCrit = Math.random() < spellCritChance;
                 if (isCrit) fDmg *= 1.5;
                 iterDamage += fDmg;
                 nextGcdTime = t + 3.0; actionCast = true;
-                recordAction('Fireball', 'Fire', 'spell_fire_flamebolt', fDmg, true, true, isCrit, false);
+                recordAction(fbInfo.name, 'Fire', 'spell_fire_flamebolt', fDmg, true, true, isCrit, false);
               } else {
-                let fbDmg = (35 + level * 7) + frostSP * (2.5 / 3.5);
+                const frInfo = getSpellDisplayInfo(10181, level);
+                let frBase = (frInfo.data && frInfo.data.minD) ? ((frInfo.data.minD + frInfo.data.maxD) / 2) : (35 + level * 7);
+                let fbDmg = frBase + frostSP * (2.5 / 3.5);
                 let isCrit = Math.random() < spellCritChance;
                 if (isCrit) fbDmg *= 1.5;
                 iterDamage += fbDmg;
                 nextGcdTime = t + 2.5; actionCast = true;
-                recordAction('Frostbolt', 'Frost', 'spell_frost_frostbolt02', fbDmg, true, true, isCrit, false);
+                recordAction(frInfo.name, 'Frost', 'spell_frost_frostbolt02', fbDmg, true, true, isCrit, false);
               }
             } else if (charClass === 'hunter') {
               if (t >= nextClassCd1) {
