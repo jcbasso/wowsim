@@ -6762,11 +6762,14 @@
     async function init() {
       isInitializing = true;
       try {
+        const isStatic = window.location.hostname.includes('github.io') || window.location.protocol === 'file:';
         const fetchAsset = async (endpoint, staticFallback) => {
-          try {
-            const resp = await fetch(endpoint);
-            if (resp.ok) return await resp.json();
-          } catch (e) {}
+          if (!isStatic) {
+            try {
+              const resp = await fetch(endpoint);
+              if (resp.ok) return await resp.json();
+            } catch (e) {}
+          }
           try {
             const fallbackResp = await fetch(staticFallback);
             if (fallbackResp.ok) return await fallbackResp.json();
@@ -12193,11 +12196,11 @@
         },
         stats: {
           ap: (charClass === 'hunter' ? rangedAP : totalAP),
-          critPct: Math.round(critPct * 10) / 10,
-          hitPct: totalHit,
+          critPct: Math.round(meleeCritPct * 10) / 10,
+          hitPct: Math.round(meleeHitPct * 10) / 10,
           sp: spellPower,
           spellCritPct: Math.round(spellCritPct * 10) / 10,
-          spellHitPct: spellHitPct,
+          spellHitPct: (gearStats.Hit || 0),
           armor: totalArmor,
           armorDrPct: armorDrPct,
           ehp: ehp,
