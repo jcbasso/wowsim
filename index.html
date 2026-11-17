@@ -3336,9 +3336,6 @@
               <h2><span>⚡</span> Rotation</h2>
               <div style="font-size: 0.74rem; color: var(--text-muted); margin-top: 2px;">Every global cooldown, the sim casts the <strong>first available</strong> action from top to bottom. Auto-attacks run in the background.</div>
             </div>
-            <button id="btn-optimize-rot" class="btn btn-secondary btn-sm" onclick="autoOptimizeRotationForCurrentGear()" style="border-color: #ffd700; color: #ffd700; font-weight: 700; display: inline-flex; align-items: center; gap: 5px;" title="Simulate many rotation variants with your current gear, talents and level, then pick the best">
-              ✨ Find best rotation
-            </button>
           </div>
 
           <div class="rot-section-title"><span class="num">1</span> Choose a rotation <span class="hint">Click any card to load it &amp; re-simulate</span></div>
@@ -3515,7 +3512,7 @@
           <div class="telemetry-label" id="telemetry-primary-label">Single-Target DPS</div>
           <div class="telemetry-main-row" style="align-items: baseline; gap: 6px;">
             <span class="telemetry-big-val" id="res-dps" style="letter-spacing: -0.5px;">--.-</span>
-            <span style="font-size: 0.85rem; font-weight: 800; background: rgba(245, 158, 11, 0.16); border: 1px solid #f59e0b; color: #fbbf24; padding: 2px 7px; border-radius: 4px; letter-spacing: 0.5px;">DPS</span>
+            <span id="res-unit-pill" style="font-size: 0.85rem; font-weight: 800; background: rgba(245, 158, 11, 0.16); border: 1px solid #f59e0b; color: #fbbf24; padding: 2px 7px; border-radius: 4px; letter-spacing: 0.5px;">DPS</span>
             <span id="res-diff-badge" style="display: none; font-size: 0.68rem; padding: 2px 6px;" class="dps-diff"></span>
           </div>
           <div class="telemetry-sub-row" id="telemetry-primary-subrow">
@@ -3980,6 +3977,8 @@
     let talentPoints = [[], [], []];
     let currentImbue = "FlametongueWeapon";
     let previousDps = null;
+    let previousPrimaryVal = null;
+    let previousPrimaryRole = null;
     let maxTalentPoints = 10;
     let activeSlotPicking = null;
     let activeSlotEnchantPicking = null;
@@ -5884,9 +5883,17 @@
       for (const k in rotationPresets) delete rotationPresets[k];
       Object.assign(rotationPresets, clsRotations);
 
-      const defaultPresetKey = Object.keys(clsRotations)[0] || 'burst';
-      activeRotationPresetKey = defaultPresetKey;
-      currentRotation = JSON.parse(JSON.stringify(clsRotations[defaultPresetKey] || []));
+      const curLvl = getCurrentPlayerLevel();
+      const dynKey = 'dynamic_lvl_' + curLvl;
+      const lvlCandidates = (typeof generateCandidateRotationsForLevel === 'function')
+        ? generateCandidateRotationsForLevel(classKey, currentCharacterSpec, curLvl)
+        : {};
+      Object.assign(rotationPresets, lvlCandidates);
+      const candKeys = Object.keys(lvlCandidates);
+      const defaultSteps = rotationPresets[dynKey] || (candKeys.length ? lvlCandidates[candKeys[0]] : (clsRotations[Object.keys(clsRotations)[0]] || []));
+      rotationPresets[dynKey] = defaultSteps;
+      activeRotationPresetKey = dynKey;
+      currentRotation = JSON.parse(JSON.stringify(defaultSteps));
 
       syncRotationPanelsForCurrentClassAndSpec();
       renderRotationPresetChipsForClass(classKey);
@@ -5953,7 +5960,22 @@
         const s = scoreMap[key];
         if (s === undefined || s === null) return '';
         if (typeof s === 'object') {
-          if (roleMode === 'tank' && s.tps > 0) return (s.dps || 0).toFixed(1) + ' DPS · ' + Math.round(s.tps) + ' TPS';
+          if (roleMode === 'tank') {
+            const tpsVal = (typeof s.tps === 'number' && s.tps > 0)
+              ? s.tps.toFixed(1) + ' TPS'
+              : (typeof s.score === 'number' && s.score > 0 ? Math.round(s.score) + ' TPS' : '');
+            const dpsVal = typeof s.dps === 'number' ? s.dps.toFixed(1) + ' DPS' : '';
+            if (tpsVal && dpsVal) return tpsVal + ' · ' + dpsVal;
+            return tpsVal || dpsVal || '';
+          }
+          if (roleMode === 'healer') {
+            const hpsVal = (typeof s.hps === 'number' && s.hps > 0)
+              ? s.hps.toFixed(1) + ' HPS'
+              : (typeof s.score === 'number' && s.score > 0 ? s.score.toFixed(1) + ' HPS' : '');
+            const dpsVal = typeof s.dps === 'number' ? s.dps.toFixed(1) + ' DPS' : '';
+            if (hpsVal && dpsVal) return hpsVal + ' · ' + dpsVal;
+            return hpsVal || dpsVal || '';
+          }
           return typeof s.dps === 'number' ? s.dps.toFixed(1) + ' DPS' : '';
         }
         return '';
@@ -5972,25 +5994,36 @@
       const dynSteps = rotationPresets[dynKey];
       const featured = document.createElement('div');
       featured.id = 'chip-rot-' + dynKey;
+      const btnOptimizeHtml = '<button id="btn-optimize-rot" class="btn btn-secondary btn-sm" onclick="event.stopPropagation(); autoOptimizeRotationForCurrentGear();" style="margin-left:auto; border-color:#ffd700; color:#ffd700; font-weight:700; padding:2px 10px; font-size:0.75rem; display:inline-flex; align-items:center; gap:5px;" title="Simulate rotation variants for current gear & talents to find the highest performance">✨ Re-optimize</button>';
       if (dynSteps && dynSteps.length) {
         featured.className = 'rot-featured' + (activeRotationPresetKey === dynKey ? ' active' : '');
         const sc = fmtScore(dynKey);
         const scParts = sc ? sc.split(' · ') : [];
+        const secLabel = scParts[1] ? scParts[1] : (roleMode === 'tank' ? 'threat & mitigation' : (roleMode === 'healer' ? 'healing throughput' : 'simulated, single target'));
         featured.innerHTML =
           '<div style="font-size:1.5rem;">⭐</div>' +
           '<div class="rf-body">' +
-            '<div class="rf-title">Auto-Optimized for Lvl ' + curLvl + ' <span class="rot-pill rec">RECOMMENDED</span>' +
-            (activeRotationPresetKey === dynKey ? '<span class="rot-pill on">ACTIVE</span>' : '') + '</div>' +
+            '<div class="rf-title" style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">' +
+              '<span>Auto-Optimized for Lvl ' + curLvl + '</span>' +
+              '<span class="rot-pill rec">RECOMMENDED</span>' +
+              (activeRotationPresetKey === dynKey ? '<span class="rot-pill on">ACTIVE</span>' : '') +
+              btnOptimizeHtml +
+            '</div>' +
             '<div class="rf-steps">' + summarizeRotationSteps(dynSteps, curLvl, 6) + '</div>' +
           '</div>' +
-          (sc ? '<div class="rf-score">' + scParts[0] + '<small>' + (scParts[1] ? scParts[1] : 'simulated, single target') + '</small></div>' : '');
+          (sc ? '<div class="rf-score">' + scParts[0] + '<small>' + secLabel + '</small></div>' : '');
         featured.onclick = () => loadRotationPreset(dynKey);
       } else {
         featured.className = 'rot-featured';
         featured.innerHTML =
           '<div style="font-size:1.5rem;">⭐</div>' +
-          '<div class="rf-body"><div class="rf-title">Auto-Optimized Rotation</div>' +
-          '<div class="rf-steps">Not computed yet for Lvl ' + curLvl + ' — click <strong>Find best rotation</strong> (or Auto-Build BiS) and the sim will pick the strongest one for your gear.</div></div>';
+          '<div class="rf-body">' +
+            '<div class="rf-title" style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">' +
+              '<span>Auto-Optimized Rotation</span>' +
+              '<button id="btn-optimize-rot" class="btn btn-secondary btn-sm" onclick="event.stopPropagation(); autoOptimizeRotationForCurrentGear();" style="margin-left:auto; border-color:#ffd700; color:#ffd700; font-weight:700; padding:2px 10px; font-size:0.75rem; display:inline-flex; align-items:center; gap:5px;" title="Find best rotation for current gear & level">✨ Find best rotation</button>' +
+            '</div>' +
+            '<div class="rf-steps">Simulate permutations for your gear, talents and level to discover the highest performance.</div>' +
+          '</div>';
         featured.onclick = () => autoOptimizeRotationForCurrentGear();
       }
       container.appendChild(featured);
@@ -6005,7 +6038,7 @@
         const sc = fmtScore(key);
         card.innerHTML =
           '<div class="rc-top"><span class="rc-name" title="' + prettyRotationName(key) + '">' + (isTank ? '🛡️ ' : (isHeal ? '💚 ' : '')) + prettyRotationName(key) + '</span>' +
-          (sc ? '<span class="rc-score">' + sc.split(' · ')[0] + '</span>' : '') + '</div>' +
+          (sc ? '<span class="rc-score">' + sc.split(' · ')[0] + (sc.includes(' · ') ? '<small style="display:block; font-size:0.65em; color:#8b97ab; font-weight:600;">' + sc.split(' · ')[1] + '</small>' : '') + '</span>' : '') + '</div>' +
           '<div class="rc-steps">' + summarizeRotationSteps(steps, curLvl) + '</div>' +
           '<div class="rc-meta">' + (lock ? '<span class="rot-pill lock">🔒 needs Lvl ' + lock + '</span>' : '') +
           (key === activeRotationPresetKey ? '<span class="rot-pill on">ACTIVE</span>' : '') + '</div>';
@@ -6478,10 +6511,10 @@
       }
 
       if (btn && !silentMode) {
-        const btnDpsLabel = (roleMode === 'tank') ? `${bestDps.toFixed(1)} DPS • ${Math.round(bestTps)} TPS` : `${bestDps.toFixed(1)} DPS`;
-        btn.innerHTML = '⭐ Best found: ' + btnDpsLabel;
+        const btnLabel = (roleMode === 'tank') ? Math.round(bestTps) + ' TPS (' + bestDps.toFixed(1) + ' DPS)' : (roleMode === 'healer' ? (bestScore ? bestScore.toFixed(1) : bestDps.toFixed(1)) + ' HPS' : bestDps.toFixed(1) + ' DPS');
+        btn.innerHTML = '⭐ Best: ' + btnLabel;
         setTimeout(() => {
-          if (btn) btn.innerHTML = '✨ Find best rotation';
+          if (btn) btn.innerHTML = '✨ Re-optimize';
         }, 3000);
         runOneStopSimulate();
       }
@@ -7802,36 +7835,53 @@
       }
       autoOptimizeTalentsForLevel();
 
-      // Rotation preset selection
-      let targetRotPreset = null;
+      // Set appropriate class weapon imbue
       if (activeCharacterClass === 'shaman') {
-        if (specKey === 'tank') {
-          setImbue('RockbiterWeapon');
-          targetRotPreset = 'tank_threat';
-        } else if (specKey === 'resto') {
-          setImbue('FlametongueWeapon');
-          targetRotPreset = 'resto_burst';
-        } else if (specKey === 'elemental') {
-          setImbue('FlametongueWeapon');
-          targetRotPreset = 'smart';
-        } else {
-          setImbue('FlametongueWeapon');
-          targetRotPreset = (talentPoints[1] && talentPoints[1][11] > 0) ? 'twink29_burst' : 'burst';
-        }
-      } else {
-        const clsRotations = ALL_CLASS_ROTATIONS[activeCharacterClass] || {};
-        const rotKeys = Object.keys(clsRotations);
-        targetRotPreset = rotKeys.find(k => 
-          k.includes(specKey) || 
-          k.toLowerCase().includes(specKey.toLowerCase().slice(0, 4))
-        ) || rotKeys[0];
+        if (specKey === 'tank') setImbue('RockbiterWeapon');
+        else if (specKey === 'resto' || specKey === 'elemental') setImbue('FlametongueWeapon');
       }
-      if (targetRotPreset && rotationPresets[targetRotPreset]) {
-        loadRotationPreset(targetRotPreset);
+
+      // Default to Auto-Optimized rotation for the active level & spec
+      const curLvl = getCurrentPlayerLevel();
+      const dynKey = 'dynamic_lvl_' + curLvl;
+      const lvlCandidates = (typeof generateCandidateRotationsForLevel === 'function')
+        ? generateCandidateRotationsForLevel(activeCharacterClass, specKey, curLvl)
+        : {};
+      Object.assign(rotationPresets, lvlCandidates);
+
+      let bestDefaultSteps = rotationPresets[dynKey];
+      if (!bestDefaultSteps || !bestDefaultSteps.length) {
+        const candKeys = Object.keys(lvlCandidates);
+        if (candKeys.length > 0) bestDefaultSteps = lvlCandidates[candKeys[0]];
       }
+      if (bestDefaultSteps && bestDefaultSteps.length) {
+        rotationPresets[dynKey] = bestDefaultSteps;
+        activeRotationPresetKey = dynKey;
+        currentRotation = JSON.parse(JSON.stringify(bestDefaultSteps));
+      }
+
       syncRotationPanelsForCurrentClassAndSpec();
       renderRotationPresetChipsForClass(activeCharacterClass);
       renderRotationUI();
+
+      // Immediately synchronize top telemetry labels for the active role
+      const activeRole = (typeof getActiveCharacterRoleMode === 'function') ? getActiveCharacterRoleMode() : 'dps';
+      const pLbl = document.getElementById('telemetry-primary-label');
+      const uPill = document.getElementById('res-unit-pill');
+      if (activeRole === 'tank') {
+        if (pLbl) pLbl.innerText = 'Tank Threat & Mitigation';
+        if (uPill) { uPill.innerText = 'TPS'; uPill.style.background = 'rgba(56, 189, 248, 0.16)'; uPill.style.borderColor = '#38bdf8'; uPill.style.color = '#38bdf8'; }
+      } else if (activeRole === 'healer') {
+        if (pLbl) pLbl.innerText = 'Healing Throughput';
+        if (uPill) { uPill.innerText = 'HPS'; uPill.style.background = 'rgba(52, 211, 153, 0.16)'; uPill.style.borderColor = '#34d399'; uPill.style.color = '#34d399'; }
+      } else {
+        if (pLbl) pLbl.innerText = 'Single-Target DPS';
+        if (uPill) { uPill.innerText = 'DPS'; uPill.style.background = 'rgba(245, 158, 11, 0.16)'; uPill.style.borderColor = '#f59e0b'; uPill.style.color = '#fbbf24'; }
+      }
+
+      if (typeof autoOptimizeRotationForCurrentGear === 'function') {
+        autoOptimizeRotationForCurrentGear(true);
+      }
 
       // Weapon style
       const styleSelect = document.getElementById('cfg-weapon-style');
@@ -12580,16 +12630,71 @@
       renderHealingStudio(data);
       const dps = data.dps;
       const dpsEl = document.getElementById('res-dps');
-      if (dpsEl) dpsEl.innerText = dps.avg.toFixed(1);
       const minEl = document.getElementById('res-min');
-      if (minEl) minEl.innerText = dps.min.toFixed(1);
       const maxEl = document.getElementById('res-max');
-      if (maxEl) maxEl.innerText = dps.max.toFixed(1);
       const sdEl = document.getElementById('res-stdev');
-      if (sdEl) sdEl.innerText = `±${dps.stdev.toFixed(1)}`;
       if (!data._clientTimeMs) {
         const metaEl = document.getElementById('sim-meta');
         if (metaEl) metaEl.innerText = `${data.iterations} iters • ${data.fight_duration}s • Done`;
+      }
+
+      // Role-Aware Primary Telemetry (Card 1)
+      const roleMode = (typeof getActiveCharacterRoleMode === 'function') ? getActiveCharacterRoleMode() : 'dps';
+      const primaryLbl = document.getElementById('telemetry-primary-label');
+      const unitPill = document.getElementById('res-unit-pill');
+      const subRow = document.getElementById('telemetry-primary-subrow');
+      const tankMiniBar = document.getElementById('telemetry-tank-mini-bar');
+
+      let currentPrimaryVal = dps.avg;
+      let primaryUnit = 'DPS';
+
+      if (roleMode === 'tank' && data.tank) {
+        const t = data.tank;
+        currentPrimaryVal = (typeof t.tps === 'number' && t.tps > 0) ? t.tps : dps.avg;
+        primaryUnit = 'TPS';
+        if (primaryLbl) primaryLbl.innerText = 'Tank Threat & Mitigation';
+        if (dpsEl) dpsEl.innerText = currentPrimaryVal.toFixed(1);
+        if (unitPill) {
+          unitPill.innerText = 'TPS';
+          unitPill.style.background = 'rgba(56, 189, 248, 0.16)';
+          unitPill.style.borderColor = '#38bdf8';
+          unitPill.style.color = '#38bdf8';
+        }
+        if (subRow) {
+          subRow.innerHTML = '<span>🛡️ EHP: <strong style="color:#38bdf8;">' + Math.round(t.ehp || 0).toLocaleString() + '</strong></span> <span>DR: <strong style="color:#34d399;">' + (t.armor_dr_pct || 0).toFixed(1) + '%</strong></span> <span style="color:#8b97ab;">(' + dps.avg.toFixed(1) + ' DPS)</span>';
+        }
+        if (tankMiniBar) tankMiniBar.style.display = 'none';
+      } else if (roleMode === 'healer' && data.healing) {
+        const h = data.healing;
+        currentPrimaryVal = (typeof h.primary_hps === 'number' && h.primary_hps > 0) ? h.primary_hps : dps.avg;
+        primaryUnit = 'HPS';
+        if (primaryLbl) primaryLbl.innerText = 'Healing Throughput';
+        if (dpsEl) dpsEl.innerText = currentPrimaryVal.toFixed(1);
+        if (unitPill) {
+          unitPill.innerText = 'HPS';
+          unitPill.style.background = 'rgba(52, 211, 153, 0.16)';
+          unitPill.style.borderColor = '#34d399';
+          unitPill.style.color = '#34d399';
+        }
+        if (subRow) {
+          subRow.innerHTML = '<span>Avg: <strong style="color:#34d399;">' + (h.avg_heal ? h.avg_heal.toFixed(0) : '--') + ' HP</strong></span> <span>HPM: <strong style="color:#60a5fa;">' + (h.primary_hpm ? h.primary_hpm.toFixed(2) : '--') + '</strong></span> <span style="color:#8b97ab;">(' + dps.avg.toFixed(1) + ' DPS)</span>';
+        }
+        if (tankMiniBar) tankMiniBar.style.display = 'none';
+      } else {
+        currentPrimaryVal = dps.avg;
+        primaryUnit = 'DPS';
+        if (primaryLbl) primaryLbl.innerText = 'Single-Target DPS';
+        if (dpsEl) dpsEl.innerText = dps.avg.toFixed(1);
+        if (unitPill) {
+          unitPill.innerText = 'DPS';
+          unitPill.style.background = 'rgba(245, 158, 11, 0.16)';
+          unitPill.style.borderColor = '#f59e0b';
+          unitPill.style.color = '#fbbf24';
+        }
+        if (subRow) {
+          subRow.innerHTML = '<span id="res-min-label">Min:</span> <span id="res-min">' + dps.min.toFixed(1) + '</span> <span id="res-max-label">Max:</span> <span id="res-max">' + dps.max.toFixed(1) + '</span> <span id="res-stdev">±' + dps.stdev.toFixed(1) + '</span>';
+        }
+        if (tankMiniBar) tankMiniBar.style.display = 'none';
       }
 
       // Populate Active Character Combat Attributes Bar
@@ -12617,27 +12722,45 @@
 
       // Delta comparison badge
       const diffBadge = document.getElementById('res-diff-badge');
-      if (previousDps !== null) {
-        const diff = dps.avg - previousDps;
-        const pct = (diff / previousDps) * 100;
+      if (previousPrimaryVal !== null && previousPrimaryRole === roleMode) {
+        const diff = currentPrimaryVal - previousPrimaryVal;
+        const pct = previousPrimaryVal > 0 ? (diff / previousPrimaryVal) * 100 : 0;
         if (Math.abs(diff) >= 0.05) {
           diffBadge.style.display = 'inline-block';
           if (diff > 0) {
             diffBadge.className = 'dps-diff diff-up';
-            diffBadge.innerText = `▲ +${diff.toFixed(1)} DPS (+${pct.toFixed(1)}%) vs prev`;
+            diffBadge.innerText = '▲ +' + diff.toFixed(1) + ' ' + primaryUnit + ' (+' + pct.toFixed(1) + '%) vs prev';
           } else {
             diffBadge.className = 'dps-diff diff-down';
-            diffBadge.innerText = `▼ ${diff.toFixed(1)} DPS (${pct.toFixed(1)}%) vs prev`;
+            diffBadge.innerText = '▼ ' + diff.toFixed(1) + ' ' + primaryUnit + ' (' + pct.toFixed(1) + '%) vs prev';
           }
         } else {
           diffBadge.style.display = 'none';
         }
+      } else {
+        if (diffBadge) diffBadge.style.display = 'none';
       }
+      previousPrimaryVal = currentPrimaryVal;
+      previousPrimaryRole = roleMode;
       previousDps = dps.avg;
+
+      // Update rotation preset score cache so active rotation badge is live
+      if (activeRotationPresetKey) {
+        const curLvl = getCurrentPlayerLevel();
+        if (!lastRotationScores || lastRotationScores.cls !== activeCharacterClass || lastRotationScores.spec !== currentCharacterSpec || lastRotationScores.lvl !== curLvl) {
+          lastRotationScores = { cls: activeCharacterClass, spec: currentCharacterSpec, lvl: curLvl, scores: {} };
+        }
+        lastRotationScores.scores[activeRotationPresetKey] = {
+          dps: dps.avg,
+          tps: data.tank ? (data.tank.tps || 0) : 0,
+          score: data.tank ? (data.tank.tank_score || 0) : (data.healing ? (data.healing.primary_hps || 0) : dps.avg),
+          hps: data.healing ? (data.healing.primary_hps || 0) : 0
+        };
+        renderRotationPresetChipsForClass(activeCharacterClass);
+      }
 
       // Tank Survivability, Mitigation & Threat Card
       const tankCard = document.getElementById('card-tank-metrics');
-      const tankMiniBar = document.getElementById('telemetry-tank-mini-bar');
       if (data.tank) {
         const t = data.tank;
         if (tankCard) {
