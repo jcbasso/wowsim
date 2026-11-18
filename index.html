@@ -3344,6 +3344,342 @@
   }
 </style>
 
+<style id="wow-paperdoll-styles">
+  .wow-pd-frame {
+    background: radial-gradient(circle at 50% 42%, rgba(255, 209, 0, 0.06) 0%, #10141e 60%, #0a0c12 100%);
+    border: 1.5px solid rgba(205, 155, 62, 0.55);
+    border-radius: 10px;
+    box-shadow: inset 0 0 36px rgba(0, 0, 0, 0.78), 0 8px 24px rgba(0, 0, 0, 0.55);
+    overflow: hidden;
+  }
+  .wow-pd-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    flex-wrap: wrap;
+    padding: 9px 14px;
+    background: linear-gradient(180deg, rgba(46, 35, 18, 0.75) 0%, rgba(19, 22, 31, 0.92) 100%);
+    border-bottom: 1px solid rgba(205, 155, 62, 0.4);
+  }
+  .wow-pd-title-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+  }
+  .wow-pd-crest {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    border: 2px solid #d4a13e;
+    object-fit: cover;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.8);
+    flex-shrink: 0;
+  }
+  .wow-pd-char-line {
+    font-size: 0.88rem;
+    font-weight: 800;
+    color: #fef3c7;
+    letter-spacing: 0.2px;
+  }
+  .wow-pd-sub-line {
+    font-size: 0.7rem;
+    color: #94a3b8;
+  }
+  .wow-pd-kpis {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+  .wow-pd-kpi-pill {
+    font-size: 0.69rem;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 999px;
+    background: rgba(15, 23, 42, 0.85);
+    border: 1px solid rgba(148, 163, 184, 0.28);
+    color: #cbd5e1;
+    white-space: nowrap;
+  }
+  .wow-pd-kpi-pill.gold {
+    border-color: rgba(251, 191, 36, 0.45);
+    color: #fbbf24;
+  }
+  .wow-pd-kpi-pill.green {
+    border-color: rgba(52, 211, 153, 0.45);
+    color: #34d399;
+  }
+  .wow-pd-body {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 210px minmax(0, 1fr);
+    gap: 10px;
+    padding: 12px;
+    align-items: stretch;
+  }
+  .wow-pd-col {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    min-width: 0;
+  }
+  .wow-pd-slot {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 8px;
+    background: rgba(14, 18, 28, 0.88);
+    border: 1px solid #262f42;
+    border-radius: 7px;
+    cursor: pointer;
+    transition: border-color 0.14s ease, background 0.14s ease, transform 0.12s ease;
+    min-width: 0;
+    position: relative;
+  }
+  .wow-pd-slot:hover, .wow-pd-slot.pd-inspected {
+    border-color: rgba(251, 191, 36, 0.65);
+    background: rgba(24, 30, 46, 0.96);
+  }
+  .wow-pd-slot.empty-slot {
+    border-style: dashed;
+    border-color: #262e3f;
+    opacity: 0.82;
+  }
+  .wow-pd-icon-wrap {
+    position: relative;
+    width: 40px;
+    height: 40px;
+    flex-shrink: 0;
+  }
+  .wow-pd-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 5px;
+    border: 2px solid #444;
+    background-size: cover;
+    background-position: center;
+    background-color: #0b0d13;
+    box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.7), 0 2px 6px rgba(0, 0, 0, 0.6);
+  }
+  .wow-pd-icon.poor { border-color: var(--quality-poor); }
+  .wow-pd-icon.common { border-color: var(--quality-common); }
+  .wow-pd-icon.uncommon { border-color: var(--quality-uncommon); box-shadow: 0 0 6px rgba(30, 255, 0, 0.35); }
+  .wow-pd-icon.rare { border-color: var(--quality-rare); box-shadow: 0 0 8px rgba(0, 112, 221, 0.45); }
+  .wow-pd-icon.epic { border-color: var(--quality-epic); box-shadow: 0 0 10px rgba(163, 53, 238, 0.55); }
+  .wow-pd-up-dot {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    background: #065f46;
+    border: 1px solid #34d399;
+    color: #6ee7b7;
+    font-size: 0.56rem;
+    font-weight: 900;
+    line-height: 1;
+    padding: 1px 3px;
+    border-radius: 4px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.8);
+  }
+  .wow-pd-slot-info {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .wow-pd-slot-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 4px;
+    min-width: 0;
+  }
+  .wow-pd-slot-lbl {
+    font-size: 0.58rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #64748b;
+    white-space: nowrap;
+  }
+  .wow-pd-slot-actions {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    flex-shrink: 0;
+  }
+  .wow-pd-mini-btn {
+    font-size: 0.64rem;
+    line-height: 1;
+    padding: 2px 5px;
+    border-radius: 3px;
+    border: 1px solid rgba(245, 158, 11, 0.35);
+    background: rgba(245, 158, 11, 0.1);
+    color: #fbbf24;
+    text-decoration: none;
+    cursor: pointer;
+  }
+  .wow-pd-mini-btn:hover {
+    background: rgba(245, 158, 11, 0.28);
+    color: #fff;
+  }
+  .wow-pd-mini-btn.clear {
+    border-color: rgba(248, 113, 113, 0.3);
+    background: rgba(248, 113, 113, 0.08);
+    color: #f87171;
+  }
+  .wow-pd-item-name {
+    font-size: 0.76rem;
+    font-weight: 700;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-decoration: none;
+  }
+  .wow-pd-item-name:hover {
+    text-decoration: underline;
+  }
+  .wow-pd-meta-row {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    flex-wrap: wrap;
+    font-size: 0.62rem;
+    line-height: 1.2;
+  }
+  .wow-pd-meta-row .source-badge, .wow-pd-meta-row .bind-badge {
+    font-size: 0.59rem !important;
+    padding: 1px 4px !important;
+    max-width: 120px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .wow-pd-enc-chip {
+    font-size: 0.6rem;
+    padding: 1px 5px;
+    border-radius: 3px;
+    border: 1px solid rgba(52, 211, 153, 0.35);
+    background: rgba(16, 185, 129, 0.12);
+    color: #4ade80;
+    font-weight: 700;
+    white-space: nowrap;
+    max-width: 115px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .wow-pd-enc-chip.empty {
+    border-style: dashed;
+    border-color: #475569;
+    background: transparent;
+    color: #94a3b8;
+  }
+  .wow-pd-enc-chip:hover {
+    border-color: #fbbf24;
+    color: #fff;
+  }
+  .wow-pd-up-chip {
+    display: block;
+    font-size: 0.61rem;
+    font-weight: 700;
+    color: #6ee7b7;
+    background: rgba(16, 185, 129, 0.12);
+    border: 1px solid rgba(16, 185, 129, 0.35);
+    border-radius: 4px;
+    padding: 1px 5px;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .wow-pd-up-chip:hover {
+    background: rgba(16, 185, 129, 0.24);
+    border-color: #34d399;
+  }
+  .wow-pd-center {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 10px;
+    background: radial-gradient(circle at 50% 34%, rgba(217, 160, 52, 0.13) 0%, rgba(12, 15, 24, 0.92) 72%);
+    border: 1px solid rgba(205, 155, 62, 0.32);
+    border-radius: 8px;
+    padding: 12px 10px;
+    min-width: 0;
+  }
+  .wow-pd-avatar-stage {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 6px;
+    padding: 10px 6px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  }
+  .wow-pd-avatar-ring {
+    width: 66px;
+    height: 66px;
+    border-radius: 50%;
+    border: 2.5px solid #d4a13e;
+    padding: 3px;
+    background: #0d111a;
+    box-shadow: 0 0 20px rgba(255, 209, 0, 0.2);
+  }
+  .wow-pd-avatar-ring img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    display: block;
+  }
+  .wow-pd-spotlight {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    font-size: 0.72rem;
+    flex: 1;
+  }
+  .wow-pd-spot-head {
+    font-size: 0.62rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    color: #94a3b8;
+  }
+  .wow-pd-weapons-row {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+    padding: 0 12px 12px;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    padding-top: 10px;
+  }
+  @media (max-width: 900px) {
+    .wow-pd-body {
+      grid-template-columns: 1fr 1fr;
+    }
+    .wow-pd-center {
+      grid-column: 1 / -1;
+      order: -1;
+    }
+    .wow-pd-weapons-row {
+      grid-template-columns: 1fr;
+    }
+  }
+  @media (max-width: 640px) {
+    .wow-pd-body {
+      grid-template-columns: 1fr;
+      padding: 8px;
+      gap: 6px;
+    }
+    .wow-pd-weapons-row {
+      padding: 8px;
+      gap: 6px;
+    }
+  }
+</style>
+
 </head>
 <body>
 
@@ -3568,9 +3904,12 @@
             </div>
 
             <div class="gear-toolbar-controls" style="margin-left: auto;">
-              <div class="gear-subview-switcher" title="Switch between equipped gear slots and upcoming level BiS upgrade planner">
-                <button type="button" class="gear-subview-btn active" id="btn-gear-subview-slots" onclick="switchGearSubView('slots')">
-                  <span>🛡️</span> Equipped Gear
+              <div class="gear-subview-switcher" title="Switch between WoW Character Sheet (PoC), Detailed List, and Upgrade Roadmap">
+                <button type="button" class="gear-subview-btn active" id="btn-gear-subview-paperdoll" onclick="switchGearSubView('paperdoll')">
+                  <span>🎭</span> Character Sheet
+                </button>
+                <button type="button" class="gear-subview-btn" id="btn-gear-subview-slots" onclick="switchGearSubView('slots')">
+                  <span>📋</span> List View
                 </button>
                 <button type="button" class="gear-subview-btn" id="btn-gear-subview-roadmap" onclick="switchGearSubView('roadmap')">
                   <span>📈</span> Upgrade Roadmap
@@ -3631,7 +3970,11 @@
             </div>
           </div>
 
-          <div class="gear-grid" id="gear-grid-container">
+          <div id="gear-paperdoll-container">
+            <!-- Rendered WoW Character Screen Paperdoll (PoC) -->
+          </div>
+
+          <div class="gear-grid" id="gear-grid-container" style="display: none;">
             <!-- Rendered 17 slot cards dynamically with authentic Wowhead links and icons -->
           </div>
 
@@ -9985,24 +10328,288 @@
         container.appendChild(card);
       }
 
+      renderGearPaperdoll();
       updateRoadmapBadgeAndView();
       setTimeout(refreshWowhead, 50);
     }
 
+    let pdInspectedSlot = null;
+
+    function getPaperdollSlotData(slot) {
+      const itemId = currentGear[slot] || 0;
+      const items = getCatalogForSlot(slot);
+      const item = items.find(i => i.id === itemId) || { id: 0, name: 'Empty Slot', quality: 'common', icon: slotDefaultIcons[slot], summary: 'Click to equip', slot };
+      const enchantableSlots = ['head', 'shoulders', 'back', 'chest', 'wrist', 'hands', 'legs', 'feet', 'mainhand', 'offhand'];
+      const isEnchantable = enchantableSlots.includes(slot) && item.id > 0;
+      const encId = currentEnchants[slot] || 0;
+      const enc = (isEnchantable && encId > 0 && enchantsCatalog && enchantsCatalog.length > 0)
+        ? enchantsCatalog.find(e => e.effectId === encId)
+        : null;
+
+      let nextUp = null;
+      const baseLvl = getCurrentPlayerLevel();
+      if (baseLvl < 60 && catalog) {
+        const horizonEl = document.getElementById('roadmap-horizon-select');
+        const lookaheadDelta = horizonEl ? parseInt(horizonEl.value) || 10 : 10;
+        const maxTargetLvl = lookaheadDelta >= 60 ? 60 : Math.min(60, baseLvl + lookaheadDelta);
+        const upChain = computeSlotUpgradeChain(slot, baseLvl, maxTargetLvl);
+        if (upChain && upChain.length > 0) nextUp = upChain[0];
+      }
+      const fallbackSlotLabel = slot === 'ranged' ? 'Ranged / Relic' : slot;
+      return { slot, labelText: slotLabels[slot] || fallbackSlotLabel, item, isEnchantable, encId, enc, nextUp };
+    }
+
+    function updatePaperdollSpotlight(slot) {
+      pdInspectedSlot = slot;
+      document.querySelectorAll('.wow-pd-slot.pd-inspected').forEach(el => el.classList.remove('pd-inspected'));
+      const slotEl = document.getElementById(`pd-slot-${slot}`);
+      if (slotEl) slotEl.classList.add('pd-inspected');
+
+      const box = document.getElementById('pd-spotlight-box');
+      if (!box) return;
+      const data = getPaperdollSlotData(slot);
+      const { item, labelText, isEnchantable, encId, enc, nextUp } = data;
+      const gainSign = nextUp && nextUp.deltaFromEquipped >= 0 ? '+' : '';
+
+      box.innerHTML = `
+        <div class="wow-pd-spot-head">Inspecting • ${labelText}</div>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <div class="wow-pd-icon ${item.quality}" style="width:36px;height:36px;background-image:url('${getIconUrl(item.icon, item)}');"></div>
+          <div style="min-width:0;flex:1;">
+            <div class="${item.quality}" style="font-weight:800;font-size:0.78rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${item.id > 0 ? item.name : 'Empty Slot'}</div>
+            <div style="font-size:0.66rem;color:#94a3b8;">${item.id > 0 ? (item.summary || `ilvl ${item.ilvl}`) : 'Click slot to choose an item'}</div>
+          </div>
+        </div>
+        ${item.id > 0 && item.sourceCategory && item.sourceCategory !== 'none' ? `<div class="wow-pd-meta-row">${getSourceBadgeHtml(item)}</div>` : ''}
+        ${isEnchantable ? `<div style="font-size:0.66rem;color:${enc ? '#4ade80' : '#94a3b8'};">${enc ? `✨ ${enc.name}` : 'No enchant applied'}</div>` : ''}
+        ${nextUp ? `<div class="wow-pd-up-chip" style="cursor:pointer;" onclick="jumpToSlotRoadmap('${slot}')" title="View in Upgrade Roadmap">🔼 Lvl ${nextUp.unlockLevel}: ${nextUp.item.name} (${gainSign}${nextUp.deltaFromEquipped})</div>` : ''}
+        <div style="display:flex;gap:5px;flex-wrap:wrap;margin-top:auto;padding-top:4px;">
+          <button type="button" class="btn btn-secondary btn-xs" onclick="openPickerModal('${slot}')">Change</button>
+          ${isEnchantable ? `<button type="button" class="btn btn-secondary btn-xs" onclick="openEnchantPickerModal('${slot}')">${encId > 0 ? 'Re-Enchant' : '+ Enchant'}</button>` : ''}
+          ${item.id > 0 ? `<a class="btn btn-secondary btn-xs" href="${getWowheadItemUrl(item)}" target="_blank" rel="noopener noreferrer" style="text-decoration:none;">🔗 Wowhead</a>` : ''}
+        </div>
+      `;
+    }
+
+    function createPaperdollSlotElement(slot) {
+      const data = getPaperdollSlotData(slot);
+      const { labelText, item, isEnchantable, encId, enc, nextUp } = data;
+
+      const el = document.createElement('div');
+      el.id = `pd-slot-${slot}`;
+      el.className = `wow-pd-slot${item.id === 0 ? ' empty-slot' : ''}${pdInspectedSlot === slot ? ' pd-inspected' : ''}`;
+      el.onclick = () => openPickerModal(slot);
+      el.onmouseenter = (e) => {
+        updatePaperdollSpotlight(slot);
+        if (item.id > 0) showItemTooltip(e, item);
+      };
+      el.onmousemove = (e) => { if (item.id > 0) moveUnifiedTooltip(e); };
+      el.onmouseleave = () => hideUnifiedTooltip();
+
+      const iconWrap = document.createElement('div');
+      iconWrap.className = 'wow-pd-icon-wrap';
+      const iconDiv = document.createElement('div');
+      iconDiv.className = `wow-pd-icon ${item.quality}`;
+      iconDiv.style.backgroundImage = `url('${getIconUrl(item.icon, item)}')`;
+      iconWrap.appendChild(iconDiv);
+      if (nextUp) {
+        const dot = document.createElement('span');
+        dot.className = 'wow-pd-up-dot';
+        dot.innerText = '▲';
+        dot.title = `Upgrade at Lvl ${nextUp.unlockLevel}: ${nextUp.item.name}`;
+        iconWrap.appendChild(dot);
+      }
+
+      const info = document.createElement('div');
+      info.className = 'wow-pd-slot-info';
+
+      const topRow = document.createElement('div');
+      topRow.className = 'wow-pd-slot-top';
+      const lbl = document.createElement('span');
+      lbl.className = 'wow-pd-slot-lbl';
+      lbl.innerText = labelText;
+      topRow.appendChild(lbl);
+
+      if (item.id > 0) {
+        const act = document.createElement('div');
+        act.className = 'wow-pd-slot-actions';
+        const wh = document.createElement('a');
+        wh.className = 'wow-pd-mini-btn';
+        wh.href = getWowheadItemUrl(item);
+        wh.target = '_blank';
+        wh.rel = 'noopener noreferrer';
+        wh.innerText = '🔗';
+        wh.title = `Open ${item.name} on Wowhead`;
+        wh.onclick = (e) => e.stopPropagation();
+        act.appendChild(wh);
+
+        const clr = document.createElement('button');
+        clr.type = 'button';
+        clr.className = 'wow-pd-mini-btn clear';
+        clr.innerText = '✕';
+        clr.title = 'Unequip';
+        clr.onclick = (e) => {
+          e.stopPropagation();
+          currentGear[slot] = 0;
+          renderGearSlots();
+          onSettingChanged();
+        };
+        act.appendChild(clr);
+        topRow.appendChild(act);
+      }
+      info.appendChild(topRow);
+
+      const nameEl = document.createElement(item.id > 0 ? 'a' : 'div');
+      nameEl.className = `wow-pd-item-name ${item.quality}`;
+      if (item.id > 0) {
+        nameEl.innerText = item.name;
+        nameEl.href = getWowheadItemUrl(item);
+        nameEl.target = '_blank';
+        nameEl.rel = 'noopener noreferrer';
+        nameEl.onclick = (e) => e.stopPropagation();
+      } else {
+        nameEl.innerText = 'Empty Slot';
+        nameEl.style.color = '#64748b';
+      }
+      info.appendChild(nameEl);
+
+      const metaRow = document.createElement('div');
+      metaRow.className = 'wow-pd-meta-row';
+      if (item.id > 0 && item.sourceCategory && item.sourceCategory !== 'none') {
+        metaRow.insertAdjacentHTML('beforeend', getSourceBadgeHtml(item));
+      }
+      if (isEnchantable) {
+        const encChip = document.createElement('span');
+        encChip.className = `wow-pd-enc-chip${enc ? '' : ' empty'}`;
+        encChip.innerText = enc ? `✨ ${enc.shortName}` : (encId > 0 ? `✨ #${encId}` : '+ Enc');
+        encChip.title = enc ? `${enc.name}: ${enc.summary}` : 'Click to add enchant';
+        encChip.onclick = (e) => {
+          e.stopPropagation();
+          openEnchantPickerModal(slot);
+        };
+        metaRow.appendChild(encChip);
+      }
+      if (metaRow.childNodes.length > 0) info.appendChild(metaRow);
+
+      if (nextUp) {
+        const gainSign = nextUp.deltaFromEquipped >= 0 ? '+' : '';
+        const upChip = document.createElement('div');
+        upChip.className = 'wow-pd-up-chip';
+        upChip.innerText = `▲ Lvl ${nextUp.unlockLevel}: ${nextUp.item.name} (${gainSign}${nextUp.deltaFromEquipped})`;
+        upChip.onclick = (e) => {
+          e.stopPropagation();
+          jumpToSlotRoadmap(slot);
+        };
+        upChip.onmouseenter = (e) => { e.stopPropagation(); showItemTooltip(e, nextUp.item); };
+        upChip.onmousemove = (e) => { e.stopPropagation(); moveUnifiedTooltip(e); };
+        upChip.onmouseleave = (e) => { e.stopPropagation(); hideUnifiedTooltip(); };
+        info.appendChild(upChip);
+      }
+
+      el.appendChild(iconWrap);
+      el.appendChild(info);
+      return el;
+    }
+
+    function renderGearPaperdoll() {
+      const container = document.getElementById('gear-paperdoll-container');
+      if (!container) return;
+
+      const leftSlots = ['head', 'neck', 'shoulders', 'back', 'chest', 'wrist'];
+      const rightSlots = ['hands', 'waist', 'legs', 'feet', 'ring1', 'ring2', 'trinket1', 'trinket2'];
+      const weaponSlots = ['mainhand', 'offhand', 'ranged'];
+
+      const allSlots = [...leftSlots, ...rightSlots, ...weaponSlots];
+      let equippedCount = 0, ilvlSum = 0, enchantedCount = 0, enchantableCount = 0, upgradesReady = 0, firstUpgradeSlot = null;
+      const enchantableSet = new Set(['head', 'shoulders', 'back', 'chest', 'wrist', 'hands', 'legs', 'feet', 'mainhand', 'offhand']);
+
+      allSlots.forEach(s => {
+        const d = getPaperdollSlotData(s);
+        if (d.item.id > 0) {
+          equippedCount++;
+          ilvlSum += (d.item.ilvl || 0);
+          if (enchantableSet.has(s)) {
+            enchantableCount++;
+            if (d.encId > 0) enchantedCount++;
+          }
+        }
+        if (d.nextUp) {
+          upgradesReady++;
+          if (!firstUpgradeSlot) firstUpgradeSlot = s;
+        }
+      });
+
+      const avgIlvl = equippedCount > 0 ? (ilvlSum / equippedCount).toFixed(1) : '0.0';
+      const clsKey = activeCharacterClass || 'shaman';
+      const cDef = WOW_CLASSES[clsKey] || WOW_CLASSES.shaman;
+      const rDef = (typeof WOW_RACES !== 'undefined' && WOW_RACES[activeCharacterRace]) ? WOW_RACES[activeCharacterRace] : { name: 'Tauren', icon: '🐂' };
+      const specDef = (cDef.specs || []).find(sp => sp.id === currentCharacterSpec) || { name: currentCharacterSpec || '' };
+      const lvl = getCurrentPlayerLevel();
+      const faction = getActiveCharacterFaction();
+
+      container.innerHTML = `
+        <div class="wow-pd-frame">
+          <div class="wow-pd-header">
+            <div class="wow-pd-title-group">
+              <img class="wow-pd-crest" src="https://wow.zamimg.com/images/wow/icons/large/classicon_${clsKey}.jpg" alt="${cDef.name}" style="border-color: ${cDef.color};" onerror="this.onerror=null; this.src='https://wow.zamimg.com/images/wow/icons/large/${cDef.icon || 'spell_nature_bloodlust'}.jpg';" />
+              <div>
+                <div class="wow-pd-char-line" style="color: ${cDef.color};">Level ${lvl} ${rDef.name} ${cDef.name}</div>
+                <div class="wow-pd-sub-line">${faction} • ${specDef.name} • ${equippedCount}/17 Slots Equipped</div>
+              </div>
+            </div>
+            <div class="wow-pd-kpis">
+              <span class="wow-pd-kpi-pill gold">Avg iLvl ${avgIlvl}</span>
+              <span class="wow-pd-kpi-pill">Enchants ${enchantedCount}/${enchantableCount}</span>
+              <span class="wow-pd-kpi-pill green">${upgradesReady} Upcoming Upgrade${upgradesReady === 1 ? '' : 's'}</span>
+            </div>
+          </div>
+          <div class="wow-pd-body">
+            <div class="wow-pd-col" id="pd-col-left"></div>
+            <div class="wow-pd-center">
+              <div class="wow-pd-avatar-stage">
+                <div class="wow-pd-avatar-ring" style="border-color: ${cDef.color};">
+                  <img src="https://wow.zamimg.com/images/wow/icons/large/classicon_${clsKey}.jpg" alt="${cDef.name}" onerror="this.onerror=null; this.src='https://wow.zamimg.com/images/wow/icons/large/${cDef.icon || 'spell_nature_bloodlust'}.jpg';" />
+                </div>
+                <div style="font-size:0.78rem;font-weight:800;color:${cDef.color};">${rDef.icon || ''} ${rDef.name} ${cDef.name}</div>
+                <div style="font-size:0.66rem;color:#94a3b8;">${specDef.name} • Lvl ${lvl}</div>
+              </div>
+              <div class="wow-pd-spotlight" id="pd-spotlight-box"></div>
+            </div>
+            <div class="wow-pd-col" id="pd-col-right"></div>
+          </div>
+          <div class="wow-pd-weapons-row" id="pd-weapons-row"></div>
+        </div>
+      `;
+
+      const colL = document.getElementById('pd-col-left');
+      const colR = document.getElementById('pd-col-right');
+      const wpnR = document.getElementById('pd-weapons-row');
+      leftSlots.forEach(s => colL.appendChild(createPaperdollSlotElement(s)));
+      rightSlots.forEach(s => colR.appendChild(createPaperdollSlotElement(s)));
+      weaponSlots.forEach(s => wpnR.appendChild(createPaperdollSlotElement(s)));
+
+      const targetSpot = (pdInspectedSlot && allSlots.includes(pdInspectedSlot)) ? pdInspectedSlot : (firstUpgradeSlot || 'mainhand');
+      updatePaperdollSpotlight(targetSpot);
+    }
+
     // --- NEXT-LEVEL BIS UPGRADE PLANNER & ROADMAP ENGINE ---
-    let activeGearSubView = 'slots';
+    let activeGearSubView = 'paperdoll';
     let activeRoadmapGroupMode = 'level';
 
     function switchGearSubView(viewMode) {
       activeGearSubView = viewMode;
+      const pdBtn = document.getElementById('btn-gear-subview-paperdoll');
       const slotsBtn = document.getElementById('btn-gear-subview-slots');
       const roadmapBtn = document.getElementById('btn-gear-subview-roadmap');
+      const pdContainer = document.getElementById('gear-paperdoll-container');
       const gridContainer = document.getElementById('gear-grid-container');
       const roadmapContainer = document.getElementById('gear-roadmap-container');
 
+      if (pdBtn) pdBtn.classList.toggle('active', viewMode === 'paperdoll');
       if (slotsBtn) slotsBtn.classList.toggle('active', viewMode === 'slots');
       if (roadmapBtn) roadmapBtn.classList.toggle('active', viewMode === 'roadmap');
 
+      if (pdContainer) pdContainer.style.display = (viewMode === 'paperdoll') ? 'block' : 'none';
       if (gridContainer) gridContainer.style.display = (viewMode === 'slots') ? 'grid' : 'none';
       if (roadmapContainer) {
         roadmapContainer.style.display = (viewMode === 'roadmap') ? 'block' : 'none';
