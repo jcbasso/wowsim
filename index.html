@@ -7661,12 +7661,53 @@
       return `https://www.wowhead.com/classic/item=${item.id}`;
     }
 
+    const KNOWN_ENCHANT_WOWHEAD = {
+      15: 'item=2304',    // Light Armor Kit
+      34: 'item=6043',    // Iron Counterweight
+      37: 'item=6041',    // Steel Weapon Chain
+      43: 'item=6042',    // Iron Shield Spike
+      463: 'item=7967',   // Mithril Shield Spike
+      464: 'item=7969',   // Mithril Spurs
+      803: 'spell=13898', // Fiery Weapon
+      852: 'spell=13935', // Greater Agility (+7)
+      856: 'spell=13939', // Greater Strength (+7)
+      911: 'spell=13890', // Minor Speed
+      1503: 'item=11732', // Lesser Arcanum of Voracity
+      1504: 'item=11642', // Lesser Arcanum of Constitution
+      1505: 'item=11643', // Lesser Arcanum of Resilience
+      1894: 'spell=20014', // Superior Strength (+9)
+      1898: 'spell=20032', // Lifestealing
+      1900: 'spell=20034', // Crusader
+      2443: 'item=18335', // Arcanum of Focus
+      2444: 'item=18333', // Arcanum of Rapidity
+      2445: 'item=18334', // Arcanum of Protection
+      2504: 'spell=20017', // Greater Intellect (+9)
+      2505: 'spell=20016', // Greater Spirit (+9)
+      2563: 'spell=22749', // Spell Power (+30)
+      2564: 'spell=22750', // Healing Power (+55)
+      2613: 'item=19782', // Zandalar Signet of Might
+      2614: 'item=19783', // Zandalar Signet of Mojo
+      2615: 'item=19784', // Zandalar Signet of Serenity
+      8481: 'item=2313',  // Medium Armor Kit
+      8484: 'item=4265',  // Heavy Armor Kit
+      8487: 'item=8173',  // Thick Armor Kit
+      8490: 'item=15407', // Rugged Armor Kit
+    };
+
     function getWowheadEnchantUrl(enchant) {
-      if (!enchant || !enchant.effectId) return '#';
+      if (!enchant) return '#';
+      if (enchant.effectId && KNOWN_ENCHANT_WOWHEAD[enchant.effectId]) {
+        return `https://www.wowhead.com/classic/${KNOWN_ENCHANT_WOWHEAD[enchant.effectId]}`;
+      }
       if (enchant.spellId) {
         return `https://www.wowhead.com/classic/spell=${enchant.spellId}`;
       }
-      return `https://www.wowhead.com/classic/search?q=${encodeURIComponent(enchant.name)}`;
+      if (enchant.itemId) {
+        return `https://www.wowhead.com/classic/item=${enchant.itemId}`;
+      }
+      const rawName = enchant.name || enchant.shortName || '';
+      const cleanName = rawName.replace(/^[✨\s]+/, '').replace(/\s*\(\+?\d+.*?\)$/, '').trim();
+      return `https://www.wowhead.com/classic/search?q=${encodeURIComponent(cleanName)}`;
     }
 
     // Refresh Wowhead tooltips whenever dynamic DOM is updated
@@ -10060,17 +10101,36 @@
         row.className = `picker-item-row ${isSelected ? 'selected' : ''} ${entry.isOverlevel ? 'overlevel' : ''}`;
         row.style.borderLeft = isSelected ? '3px solid #2ecc71' : '';
 
+        row.onmousedown = (e) => {
+          if (e.button === 1) {
+            e.preventDefault();
+            e.stopPropagation();
+            window.open(getWowheadEnchantUrl(enc), '_blank');
+          }
+        };
+        row.onauxclick = (e) => {
+          if (e.button === 1) {
+            e.preventDefault();
+            e.stopPropagation();
+          }
+        };
+
         row.innerHTML = `
           <div class="picker-left">
             <div class="picker-icon uncommon" style="background-image: url('${getIconUrl(enc.icon)}'); border-color: #2ecc71;"></div>
             <div class="picker-details">
-              <div class="picker-name ${isSelected ? 'tt-green' : 'uncommon'}">${enc.name} ${isSelected ? '✓ (Equipped)' : ''}</div>
+              <div class="picker-name ${isSelected ? 'tt-green' : 'uncommon'}">
+                ${enc.name} ${isSelected ? '✓ (Equipped)' : ''}
+              </div>
               <div class="picker-sub" style="color: #2ecc71;">${enc.summary}</div>
             </div>
           </div>
           <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 4px; flex-shrink: 0;">
             ${rankBadgeHtml}
-            <div style="font-size: 0.68rem; color: var(--text-muted);">${enc.reqLvl > 0 ? 'Req Lvl ' + enc.reqLvl : 'No Lvl Req'}</div>
+            <div style="display: flex; align-items: center; gap: 6px;">
+              <span style="font-size: 0.68rem; color: var(--text-muted);">${enc.reqLvl > 0 ? 'Req Lvl ' + enc.reqLvl : 'No Lvl Req'}</span>
+              <a href="${getWowheadEnchantUrl(enc)}" target="_blank" rel="noopener noreferrer" class="picker-wh-link" onclick="event.stopPropagation();" title="Inspect ${enc.name} on Wowhead">🔗 Wowhead</a>
+            </div>
           </div>
         `;
 
@@ -10329,7 +10389,10 @@
             const enc = enchantsCatalog.find(e => e.effectId === encId);
             const encName = enc ? enc.shortName : `Enchant #${encId}`;
             const encTooltip = enc ? `${enc.name}: ${enc.summary}` : '';
-            encRow.innerHTML = `<span class="enchant-badge active" title="${encTooltip}"><span class="sparkle">✨</span> ${encName}</span>`;
+            encRow.innerHTML = `
+              <span class="enchant-badge active" title="${encTooltip} (Click to change)"><span class="sparkle">✨</span> ${encName}</span>
+              ${enc ? `<a href="${getWowheadEnchantUrl(enc)}" target="_blank" rel="noopener noreferrer" class="btn-slot-wowhead" style="padding:1px 6px;font-size:0.62rem;height:auto;line-height:1.4;border-color:rgba(74,222,128,0.4);color:#4ade80;text-decoration:none;" onclick="event.stopPropagation();" title="Open ${enc.name} on Wowhead">✨ Wowhead</a>` : ''}
+            `;
           } else {
             encRow.innerHTML = `<span class="enchant-badge empty">+ Enchant</span>`;
           }
@@ -10507,12 +10570,13 @@
           </div>
         </div>
         ${item.id > 0 && item.sourceCategory && item.sourceCategory !== 'none' ? `<div class="wow-pd-meta-row" style="flex-wrap:wrap;">${getSourceBadgeHtml(item)}</div>` : ''}
-        ${isEnchantable ? `<div style="font-size:0.63rem;color:${enc ? '#4ade80' : '#94a3b8'};white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${enc ? `✨ ${enc.name}` : 'No enchant applied'}</div>` : ''}
+        ${isEnchantable ? `<div style="font-size:0.63rem;color:${enc ? '#4ade80' : '#94a3b8'};white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${enc ? `<a href="${getWowheadEnchantUrl(enc)}" target="_blank" rel="noopener noreferrer" style="color:#4ade80;text-decoration:none;" title="Open ${enc.name} on Wowhead">✨ ${enc.name} 🔗</a>` : 'No enchant applied'}</div>` : ''}
         ${nextUp ? `<div class="wow-pd-up-chip" style="cursor:pointer;" onclick="jumpToSlotRoadmap('${slot}')" title="Lvl ${nextUp.unlockLevel}: ${nextUp.item.name} (${gainSign}${nextUp.deltaFromEquipped} pts)">🔼 Lvl ${nextUp.unlockLevel}: ${nextUp.item.name} (${gainSign}${nextUp.deltaFromEquipped})</div>` : ''}
         <div style="display:flex;gap:4px;flex-wrap:wrap;padding-top:4px;border-top:1px solid rgba(255,255,255,0.06);">
           <button type="button" class="btn btn-secondary btn-xs" onclick="openPickerModal('${slot}')">Change</button>
           ${isEnchantable ? `<button type="button" class="btn btn-secondary btn-xs" onclick="openEnchantPickerModal('${slot}')">${encId > 0 ? 'Enchant' : '+ Enchant'}</button>` : ''}
-          ${item.id > 0 ? `<a class="btn btn-secondary btn-xs" href="${getWowheadItemUrl(item)}" target="_blank" rel="noopener noreferrer" style="text-decoration:none;">🔗 Wowhead</a>` : ''}
+          ${item.id > 0 ? `<a class="btn btn-secondary btn-xs" href="${getWowheadItemUrl(item)}" target="_blank" rel="noopener noreferrer" style="text-decoration:none;">🔗 Item Wowhead</a>` : ''}
+          ${(enc && encId > 0) ? `<a class="btn btn-secondary btn-xs" href="${getWowheadEnchantUrl(enc)}" target="_blank" rel="noopener noreferrer" style="text-decoration:none;border-color:rgba(74,222,128,0.4);color:#4ade80;" title="Open ${enc.name} on Wowhead">✨ Enchant Wowhead</a>` : ''}
         </div>
       `;
     }
@@ -10623,10 +10687,17 @@
         const encChip = document.createElement('span');
         encChip.className = `wow-pd-enc-chip${enc ? '' : ' empty'}`;
         encChip.innerText = enc ? `✨ ${enc.shortName}` : (encId > 0 ? `✨ #${encId}` : '+Enc');
-        encChip.title = enc ? `${enc.name}: ${enc.summary}` : 'Click to add enchant';
+        encChip.title = enc ? `${enc.name}: ${enc.summary} (Middle-click to open Wowhead)` : 'Click to add enchant';
         encChip.onclick = (e) => {
           e.stopPropagation();
           openEnchantPickerModal(slot);
+        };
+        encChip.onmousedown = (e) => {
+          if (e.button === 1 && enc) {
+            e.preventDefault();
+            e.stopPropagation();
+            window.open(getWowheadEnchantUrl(enc), '_blank');
+          }
         };
         metaRow.appendChild(encChip);
       }
