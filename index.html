@@ -5125,7 +5125,7 @@
       hands: "inventoryslot_hands", waist: "inventoryslot_waist", legs: "inventoryslot_legs",
       feet: "inventoryslot_feet", ring1: "inventoryslot_finger", ring2: "inventoryslot_finger",
       trinket1: "inventoryslot_trinket", trinket2: "inventoryslot_trinket", mainhand: "inventoryslot_mainhand",
-      offhand: "inventoryslot_offhand", relic: "inventoryslot_relic"
+      offhand: "inventoryslot_offhand", relic: "inventoryslot_relic", ranged: "inventoryslot_ranged"
     };
 
     const slotLabels = {
@@ -5133,8 +5133,32 @@
       chest: "Chest", wrist: "Wrist", hands: "Hands", waist: "Waist",
       legs: "Legs", feet: "Feet", ring1: "Finger 1", ring2: "Finger 2",
       trinket1: "Trinket 1", trinket2: "Trinket 2", mainhand: "Main Hand",
-      offhand: "Off Hand", relic: "Relic / Totem"
+      offhand: "Off Hand", relic: "Relic / Totem", ranged: "Ranged / Relic"
     };
+
+    function getSlotDisplayName(slot) {
+      if (slot === 'relic' || slot === 'ranged') {
+        const cls = activeCharacterClass || 'shaman';
+        if (cls === 'hunter') return 'Ranged';
+        if (cls === 'warrior' || cls === 'rogue') return 'Ranged / Thrown';
+        if (cls === 'priest' || cls === 'mage' || cls === 'warlock') return 'Wand';
+        if (cls === 'paladin') return 'Libram / Relic';
+        if (cls === 'druid') return 'Idol / Relic';
+        return 'Totem / Relic';
+      }
+      return slotLabels[slot] || slot;
+    }
+
+    function getSlotDefaultIcon(slot) {
+      if (slot === 'relic' || slot === 'ranged') {
+        const cls = activeCharacterClass || 'shaman';
+        if (cls === 'hunter' || cls === 'warrior' || cls === 'rogue' || cls === 'priest' || cls === 'mage' || cls === 'warlock') {
+          return 'inventoryslot_ranged';
+        }
+        return 'inventoryslot_relic';
+      }
+      return slotDefaultIcons[slot] || 'inv_misc_questionmark';
+    }
 
     // Default Starting Gear (Level 1 Starter Setup)
     let currentGear = {
@@ -9700,6 +9724,7 @@
     function getCatalogSlotName(slot) {
       if (slot === 'ring1' || slot === 'ring2') return 'finger';
       if (slot === 'trinket1' || slot === 'trinket2') return 'trinket';
+      if (slot === 'ranged' || slot === 'relic') return 'relic';
       return slot;
     }
 
@@ -9923,12 +9948,12 @@
     }
 
     function openEnchantPickerModal(slot) {
-      activeSlotEnchantPicking = slot;
+      activeSlotEnchantPicking = (slot === 'ranged') ? 'relic' : slot;
       const modal = document.getElementById('enchant-picker-modal');
       const title = document.getElementById('modal-enchant-slot-title');
       const searchInput = document.getElementById('modal-enchant-search-input');
 
-      title.innerHTML = `<span>✨</span> Select Enchant for ${slotLabels[slot] || slot}`;
+      title.innerHTML = `<span>✨</span> Select Enchant for ${getSlotDisplayName(activeSlotEnchantPicking)}`;
       searchInput.value = '';
       modal.classList.add('open');
       renderModalEnchants();
@@ -10224,9 +10249,10 @@
       container.innerHTML = '';
 
       for (const [slot, labelText] of Object.entries(slotLabels)) {
+        if (slot === 'ranged') continue;
         const itemId = currentGear[slot] || 0;
         const items = getCatalogForSlot(slot);
-        const item = items.find(i => i.id === itemId) || { id: 0, name: 'None', quality: 'common', icon: slotDefaultIcons[slot], summary: 'Empty Slot', slot: slot };
+        const item = items.find(i => i.id === itemId) || { id: 0, name: 'None', quality: 'common', icon: getSlotDefaultIcon(slot), summary: 'Empty Slot', slot: slot };
 
         const card = document.createElement('div');
         card.id = `slot-card-${slot}`;
@@ -10262,7 +10288,7 @@
 
         const label = document.createElement('div');
         label.className = 'slot-label';
-        label.innerText = labelText;
+        label.innerText = getSlotDisplayName(slot);
 
         const nameLink = document.createElement(item.id > 0 ? 'a' : 'div');
         nameLink.className = `slot-item-name ${item.quality}`;
@@ -10399,12 +10425,13 @@
     let pdInspectedSlot = null;
 
     function getPaperdollSlotData(slot) {
-      const itemId = currentGear[slot] || 0;
-      const items = getCatalogForSlot(slot);
-      const item = items.find(i => i.id === itemId) || { id: 0, name: 'Empty Slot', quality: 'common', icon: slotDefaultIcons[slot], summary: 'Click to equip', slot };
+      const actualSlot = (slot === 'ranged') ? 'relic' : slot;
+      const itemId = (currentGear[actualSlot] !== undefined) ? currentGear[actualSlot] : (currentGear[slot] || 0);
+      const items = getCatalogForSlot(actualSlot);
+      const item = items.find(i => i.id === itemId) || { id: 0, name: 'Empty Slot', quality: 'common', icon: getSlotDefaultIcon(actualSlot), summary: 'Click to equip', slot: actualSlot };
       const enchantableSlots = ['head', 'shoulders', 'back', 'chest', 'wrist', 'hands', 'legs', 'feet', 'mainhand', 'offhand'];
-      const isEnchantable = enchantableSlots.includes(slot) && item.id > 0;
-      const encId = currentEnchants[slot] || 0;
+      const isEnchantable = enchantableSlots.includes(actualSlot) && item.id > 0;
+      const encId = currentEnchants[actualSlot] || 0;
       const enc = (isEnchantable && encId > 0 && enchantsCatalog && enchantsCatalog.length > 0)
         ? enchantsCatalog.find(e => e.effectId === encId)
         : null;
@@ -10415,11 +10442,10 @@
         const horizonEl = document.getElementById('roadmap-horizon-select');
         const lookaheadDelta = horizonEl ? parseInt(horizonEl.value) || 10 : 10;
         const maxTargetLvl = lookaheadDelta >= 60 ? 60 : Math.min(60, baseLvl + lookaheadDelta);
-        const upChain = computeSlotUpgradeChain(slot, baseLvl, maxTargetLvl);
+        const upChain = computeSlotUpgradeChain(actualSlot, baseLvl, maxTargetLvl);
         if (upChain && upChain.length > 0) nextUp = upChain[0];
       }
-      const fallbackSlotLabel = slot === 'ranged' ? 'Ranged / Relic' : slot;
-      return { slot, labelText: slotLabels[slot] || fallbackSlotLabel, item, isEnchantable, encId, enc, nextUp };
+      return { slot: actualSlot, labelText: getSlotDisplayName(actualSlot), item, isEnchantable, encId, enc, nextUp };
     }
 
     function getCompactPaperdollSourceInfo(item) {
@@ -10633,7 +10659,7 @@
 
       const leftSlots = ['head', 'neck', 'shoulders', 'back', 'chest', 'wrist'];
       const rightSlots = ['hands', 'waist', 'legs', 'feet', 'ring1', 'ring2', 'trinket1', 'trinket2'];
-      const weaponSlots = ['mainhand', 'offhand', 'ranged'];
+      const weaponSlots = ['mainhand', 'offhand', 'relic'];
 
       const allSlots = [...leftSlots, ...rightSlots, ...weaponSlots];
       let equippedCount = 0, ilvlSum = 0, enchantedCount = 0, enchantableCount = 0, upgradesReady = 0, firstUpgradeSlot = null;
@@ -11214,17 +11240,18 @@
     function getCatalogForSlot(slot) {
       if (slot === 'ring1' || slot === 'ring2') return catalog['finger'] || [];
       if (slot === 'trinket1' || slot === 'trinket2') return catalog['trinket'] || [];
+      if (slot === 'ranged' || slot === 'relic') return catalog['relic'] || [];
       return catalog[slot] || [];
     }
 
     // --- INTERACTIVE ITEM PICKER MODAL ---
     function openPickerModal(slot) {
-      activeSlotPicking = slot;
+      activeSlotPicking = (slot === 'ranged') ? 'relic' : slot;
       const modal = document.getElementById('item-picker-modal');
       const title = document.getElementById('modal-slot-title');
       const searchInput = document.getElementById('modal-search-input');
       
-      title.innerText = `Select Equipment for ${slotLabels[slot]}`;
+      title.innerText = `Select Equipment for ${getSlotDisplayName(activeSlotPicking)}`;
       searchInput.value = '';
       modalStatFilter = 'all';
       modalSourceFilter = 'all';
