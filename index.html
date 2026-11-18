@@ -69,8 +69,13 @@
       height: 44px;
       border-radius: 6px;
       border: 2px solid var(--border-gold);
-      background: #0070dd url('https://wow.zamimg.com/images/wow/icons/large/classicon_shaman.jpg') center/cover no-repeat;
+      background-color: #111827;
       box-shadow: 0 0 10px rgba(0,0,0,0.7);
+      overflow: hidden;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .brand-title h1 {
@@ -3285,7 +3290,9 @@
     <!-- ROW 1: BRAND ON LEFT, SIMULATE BUTTON ON RIGHT -->
     <div class="topbar-row-header">
       <div class="brand">
-        <div class="shaman-icon"></div>
+        <div class="shaman-icon" id="brand-class-emblem" title="Active Class Emblem">
+          <img id="brand-class-icon-img" src="https://wow.zamimg.com/images/wow/icons/large/classicon_shaman.jpg" alt="Class Emblem" style="width: 100%; height: 100%; object-fit: cover; border-radius: 4px; display: block;" onerror="this.onerror=null; this.src='https://wow.zamimg.com/images/wow/icons/large/spell_nature_bloodlust.jpg';" />
+        </div>
         <div class="brand-title">
           <div style="display: flex; align-items: center; gap: 8px;">
             <h1 style="font-size: 1.02rem;">WoW Forever • WoW Sim</h1>
@@ -3316,7 +3323,8 @@
           </select>
         </div>
 
-        <div class="class-selector-pill">
+        <div class="class-selector-pill" style="display: flex; align-items: center; gap: 6px;">
+          <img id="class-select-icon-img" src="https://wow.zamimg.com/images/wow/icons/medium/classicon_shaman.jpg" alt="Class" style="width: 18px; height: 18px; border-radius: 3px; border: 1px solid rgba(245, 158, 11, 0.5); object-fit: cover; flex-shrink: 0;" onerror="this.onerror=null; this.src='https://wow.zamimg.com/images/wow/icons/medium/spell_nature_bloodlust.jpg';" />
           <span class="class-pill-label">Class:</span>
           <select id="cfg-active-class" class="class-dropdown-select" onchange="onClassSelected(this.value)">
             <option value="shaman" selected>⚡ Shaman</option>
@@ -3731,7 +3739,7 @@
               </div>
             </div>
           </div>
-        </div>
+        </details>
 
         <!-- APL ROTATION PANEL -->
         <div class="panel" id="apl-rotation-panel">
@@ -7320,6 +7328,7 @@
             classSelect.value = cfg.characterClass;
             classSelect.style.color = WOW_CLASSES[cfg.characterClass].color;
           }
+          if (typeof updateClassIconUI === 'function') updateClassIconUI(cfg.characterClass);
         }
         if (cfg.spec) {
           currentCharacterSpec = cfg.spec;
@@ -7459,11 +7468,7 @@
         try {
           const cDefInit = WOW_CLASSES[activeCharacterClass];
           if (cDefInit) {
-            const brandIcon = document.querySelector('.shaman-icon');
-            if (brandIcon) {
-              brandIcon.style.backgroundImage = "url('https://wow.zamimg.com/images/wow/icons/large/classicon_" + activeCharacterClass + ".jpg')";
-              brandIcon.style.borderColor = cDefInit.color;
-            }
+            updateClassIconUI(activeCharacterClass);
             const clsSel = document.getElementById('cfg-active-class');
             if (clsSel) { clsSel.value = activeCharacterClass; clsSel.style.color = cDefInit.color; }
             const tankLbl = document.getElementById('tank-card-title-lbl');
@@ -8432,6 +8437,43 @@
       });
     }
 
+    function updateClassIconUI(classKey) {
+      const cls = classKey || activeCharacterClass || 'shaman';
+      const cDef = WOW_CLASSES[cls] || WOW_CLASSES.shaman;
+      const iconUrl = `https://wow.zamimg.com/images/wow/icons/large/classicon_${cls}.jpg`;
+      const mediumIconUrl = `https://wow.zamimg.com/images/wow/icons/medium/classicon_${cls}.jpg`;
+      const fallbackUrl = cDef.icon ? `https://wow.zamimg.com/images/wow/icons/large/${cDef.icon}.jpg` : 'https://wow.zamimg.com/images/wow/icons/large/spell_nature_bloodlust.jpg';
+      const mediumFallbackUrl = cDef.icon ? `https://wow.zamimg.com/images/wow/icons/medium/${cDef.icon}.jpg` : 'https://wow.zamimg.com/images/wow/icons/medium/spell_nature_bloodlust.jpg';
+
+      // 1. Topbar Brand Class Emblem
+      const brandImg = document.getElementById('brand-class-icon-img');
+      if (brandImg) {
+        brandImg.src = iconUrl;
+        brandImg.alt = `${cDef.name} Emblem`;
+        brandImg.onerror = function() {
+          this.onerror = null;
+          this.src = fallbackUrl;
+        };
+      }
+      const brandEmblem = document.getElementById('brand-class-emblem') || document.querySelector('.shaman-icon');
+      if (brandEmblem) {
+        brandEmblem.style.borderColor = cDef.color;
+        brandEmblem.style.boxShadow = `0 0 12px ${cDef.color}55`;
+      }
+
+      // 2. Class Selector dropdown icon
+      const selectImg = document.getElementById('class-select-icon-img');
+      if (selectImg) {
+        selectImg.src = mediumIconUrl;
+        selectImg.alt = cDef.name;
+        selectImg.style.borderColor = cDef.color;
+        selectImg.onerror = function() {
+          this.onerror = null;
+          this.src = mediumFallbackUrl;
+        };
+      }
+    }
+
     function onClassSelected(classKey) {
       if (!WOW_CLASSES[classKey]) return;
       activeCharacterClass = classKey;
@@ -8456,11 +8498,7 @@
         classSelect.style.color = cDef.color;
         classSelect.value = classKey;
       }
-      const brandIcon = document.querySelector('.shaman-icon');
-      if (brandIcon) {
-        brandIcon.style.backgroundImage = "url('https://wow.zamimg.com/images/wow/icons/large/classicon_" + classKey + ".jpg')";
-        brandIcon.style.borderColor = cDef.color;
-      }
+      updateClassIconUI(classKey);
       const tankTitleLbl = document.getElementById('tank-card-title-lbl');
       if (tankTitleLbl) {
         tankTitleLbl.innerText = cDef.name + " Tank Survivability, Mitigation & Threat";
