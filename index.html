@@ -376,8 +376,6 @@
     }
     }
 
-    @media (max-width: 1280px) {
-  
     /* ONE-STOP COCKPIT UNIFIED LAYOUT & DRAWERS */
     .cockpit-right-tabs {
       display: flex;
@@ -493,8 +491,9 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
-    .app-layout { grid-template-columns: 1fr; }
-      .sim-panel-sticky { position: static !important; }
+    @media (max-width: 1200px) {
+      .app-layout { grid-template-columns: 1fr; padding: 12px 14px; gap: 14px; }
+      .sim-panel-sticky { position: static !important; max-height: none !important; overflow-y: visible !important; }
     }
 
     .workbench-area {
@@ -2378,16 +2377,16 @@
     header.studio-topbar {
       position: sticky;
       top: 0;
-      z-index: 200;
+      z-index: 300;
       background: linear-gradient(180deg, #161922 0%, #0e1017 100%);
       border-bottom: 1px solid var(--border-gold);
-      padding: 6px 12px;
+      padding: 6px 14px;
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 8px;
-      flex-wrap: nowrap;
-      overflow-x: auto;
+      flex-wrap: wrap;
+      overflow: visible;
       box-shadow: 0 4px 20px rgba(0, 0, 0, 0.75);
     }
     .studio-topbar > * {
@@ -2475,20 +2474,24 @@
       background: #151922;
       border: 1px solid var(--border-gold);
       border-radius: 8px;
-      padding: 12px 14px;
-      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.9);
-      z-index: 250;
+      padding: 14px 16px;
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.95);
+      z-index: 10000;
       min-width: 280px;
+      max-width: min(360px, 92vw);
     }
     .popover-card.sources-card {
       min-width: 480px;
+      max-width: min(600px, 94vw);
       right: 0;
     }
     @media (max-width: 768px) {
       .popover-card.sources-card {
-        min-width: 300px;
-        left: 0;
-        right: auto;
+        min-width: 280px;
+        width: 94vw;
+        left: 50% !important;
+        transform: translateX(-50%) !important;
+        right: auto !important;
       }
     }
 
@@ -2888,6 +2891,212 @@
   .sc-row .sc-actions{display:flex;gap:6px}
   .sc-list-head{display:flex;justify-content:space-between;font-size:.66rem;text-transform:uppercase;letter-spacing:.5px;color:#64748b;padding:0 12px 2px 46px;font-weight:700}
 </style>
+
+<style id="mobile-responsive-engine-styles">
+  /* MOBILE & TABLET COMPREHENSIVE RESPONSIVENESS */
+  html, body {
+    overflow-x: hidden !important;
+    max-width: 100vw;
+  }
+
+  .character-identity-bar {
+    max-width: 100%;
+    flex-wrap: wrap;
+  }
+
+  .spec-pills-group {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+    max-width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .spec-pills-group::-webkit-scrollbar { display: none; }
+
+  @media (max-width: 1280px) {
+    header.studio-topbar {
+      padding: 6px 10px;
+      gap: 6px;
+    }
+    .master-actions-bar {
+      margin-left: auto;
+    }
+  }
+
+  @media (max-width: 992px) {
+    .brand-title p {
+      display: none !important;
+    }
+    .brand-title h1 {
+      font-size: 0.92rem !important;
+    }
+    .character-identity-bar {
+      order: 3;
+      width: 100%;
+      background: rgba(10, 12, 18, 0.85);
+    }
+    .master-actions-bar {
+      order: 2;
+      margin-left: auto;
+    }
+    .telemetry-kpi-strip {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .app-layout {
+      grid-template-columns: 1fr !important;
+      padding: 8px !important;
+      gap: 10px !important;
+    }
+    .sim-panel-sticky {
+      position: static !important;
+      max-height: none !important;
+      overflow-y: visible !important;
+    }
+    .telemetry-kpi-strip {
+      grid-template-columns: 1fr !important;
+      gap: 8px !important;
+    }
+    .char-sheet-tabs {
+      grid-template-columns: repeat(2, 1fr) !important;
+      gap: 4px !important;
+      padding: 4px !important;
+    }
+    .char-sheet-tab {
+      padding: 7px 8px !important;
+      font-size: 0.74rem !important;
+      justify-content: center !important;
+    }
+    .gear-grid {
+      grid-template-columns: 1fr !important;
+    }
+    .gear-slot-card {
+      padding: 6px 8px !important;
+    }
+    .rot-featured {
+      flex-direction: column !important;
+      align-items: flex-start !important;
+      gap: 6px !important;
+      padding: 10px 12px !important;
+    }
+    .rot-featured .rf-score {
+      width: 100% !important;
+      text-align: left !important;
+      margin-top: 4px !important;
+      padding-top: 4px !important;
+      border-top: 1px solid rgba(255, 215, 0, 0.15) !important;
+    }
+    .rot-grid {
+      grid-template-columns: 1fr !important;
+    }
+    .sc-row > summary {
+      grid-template-columns: auto 1fr auto auto 12px !important;
+      gap: 6px !important;
+      padding: 6px 8px !important;
+    }
+    .sc-row .sc-name {
+      font-size: 0.78rem !important;
+    }
+    .sc-row .sc-sub {
+      font-size: 0.64rem !important;
+    }
+    .sc-row .sc-metric {
+      font-size: 0.8rem !important;
+    }
+    .grade-pill {
+      padding: 1px 7px !important;
+      font-size: 0.72rem !important;
+    }
+    .grade-pill.lg {
+      padding: 2px 12px !important;
+      font-size: 1.05rem !important;
+    }
+    .modal-box {
+      max-width: 96vw !important;
+      max-height: 90vh !important;
+      margin: 6px !important;
+    }
+    .sources-grid {
+      grid-template-columns: 1fr !important;
+    }
+  }
+
+  @media (max-width: 680px) {
+    header.studio-topbar {
+      padding: 6px 8px;
+      gap: 6px;
+    }
+    .brand-title h1 {
+      font-size: 0.86rem !important;
+    }
+    .patch-version-pill {
+      display: none !important;
+    }
+    .character-identity-bar {
+      order: 2;
+      padding: 3px 6px;
+      gap: 4px;
+    }
+    .master-actions-bar {
+      order: 3;
+      width: 100%;
+      margin-left: 0;
+      justify-content: space-between;
+      gap: 6px;
+    }
+    .spec-tab-pill {
+      padding: 3px 6px;
+      font-size: 0.72rem;
+    }
+    .spec-tab-pill .spec-wow-icon {
+      width: 16px;
+      height: 16px;
+    }
+    .unified-bis-group {
+      flex: 1;
+      min-width: 0;
+      padding: 2px 4px;
+    }
+    .unified-bis-select {
+      max-width: 110px;
+      font-size: 0.72rem;
+    }
+    .btn-bis-master {
+      padding: 4px 8px;
+      font-size: 0.72rem;
+    }
+    .popover-card {
+      right: 0 !important;
+      left: auto !important;
+      max-width: 94vw !important;
+      min-width: 260px !important;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .unified-bis-select {
+      max-width: 95px;
+      font-size: 0.68rem;
+    }
+    .btn-bis-master {
+      padding: 4px 6px;
+      font-size: 0.68rem;
+    }
+    .popover-card {
+      position: fixed !important;
+      top: 60px !important;
+      left: 10px !important;
+      right: 10px !important;
+      width: calc(100vw - 20px) !important;
+      max-width: none !important;
+    }
+  }
+</style>
+
 </head>
 <body>
 
@@ -3003,7 +3212,11 @@
               <select id="cfg-duration" class="filter-select" onchange="updateSimCfgSummaryLabel(); onSettingChanged();">
                 <option value="15">15s (Short Skirmish)</option>
                 <option value="30" selected>30s (Standard Combat)</option>
+                <option value="45">45s (Mid Encounter)</option>
                 <option value="60">60s (Extended Fight)</option>
+                <option value="90">90s (Raid / Boss Fight)</option>
+                <option value="120">120s (Long Encounter)</option>
+                <option value="300">300s (5-Minute Test)</option>
               </select>
             </div>
             <div style="display: flex; justify-content: space-between; align-items: center; gap: 10px;">
@@ -14385,6 +14598,16 @@
       });
     }
 
+
+    
+    // Auto-dismiss details.popover-details when clicking outside
+    document.addEventListener('click', (e) => {
+      document.querySelectorAll('details.popover-details[open]').forEach(d => {
+        if (!d.contains(e.target)) {
+          d.removeAttribute('open');
+        }
+      });
+    });
 
     window.addEventListener('DOMContentLoaded', init);
   </script>
