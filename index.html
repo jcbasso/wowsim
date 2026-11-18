@@ -3346,57 +3346,59 @@
 
 <style id="wow-paperdoll-styles">
   .wow-pd-frame {
-    background: radial-gradient(circle at 50% 42%, rgba(255, 209, 0, 0.06) 0%, #10141e 60%, #0a0c12 100%);
+    background: radial-gradient(circle at 50% 42%, rgba(255, 209, 0, 0.05) 0%, #10141e 60%, #0a0c12 100%);
     border: 1.5px solid rgba(205, 155, 62, 0.55);
     border-radius: 10px;
-    box-shadow: inset 0 0 36px rgba(0, 0, 0, 0.78), 0 8px 24px rgba(0, 0, 0, 0.55);
+    box-shadow: inset 0 0 28px rgba(0, 0, 0, 0.78), 0 6px 18px rgba(0, 0, 0, 0.55);
     overflow: hidden;
   }
   .wow-pd-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 10px;
+    gap: 8px;
     flex-wrap: wrap;
-    padding: 9px 14px;
-    background: linear-gradient(180deg, rgba(46, 35, 18, 0.75) 0%, rgba(19, 22, 31, 0.92) 100%);
-    border-bottom: 1px solid rgba(205, 155, 62, 0.4);
+    padding: 6px 12px;
+    background: linear-gradient(180deg, rgba(46, 35, 18, 0.75) 0%, rgba(19, 22, 31, 0.94) 100%);
+    border-bottom: 1px solid rgba(205, 155, 62, 0.38);
   }
   .wow-pd-title-group {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 8px;
     min-width: 0;
   }
   .wow-pd-crest {
-    width: 30px;
-    height: 30px;
+    width: 26px;
+    height: 26px;
     border-radius: 50%;
-    border: 2px solid #d4a13e;
+    border: 1.5px solid #d4a13e;
     object-fit: cover;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.8);
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.8);
     flex-shrink: 0;
   }
   .wow-pd-char-line {
-    font-size: 0.88rem;
+    font-size: 0.82rem;
     font-weight: 800;
     color: #fef3c7;
     letter-spacing: 0.2px;
+    line-height: 1.15;
   }
   .wow-pd-sub-line {
-    font-size: 0.7rem;
+    font-size: 0.65rem;
     color: #94a3b8;
+    line-height: 1.15;
   }
   .wow-pd-kpis {
     display: flex;
     align-items: center;
-    gap: 6px;
+    gap: 5px;
     flex-wrap: wrap;
   }
   .wow-pd-kpi-pill {
-    font-size: 0.69rem;
+    font-size: 0.65rem;
     font-weight: 700;
-    padding: 2px 8px;
+    padding: 2px 7px;
     border-radius: 999px;
     background: rgba(15, 23, 42, 0.85);
     border: 1px solid rgba(148, 163, 184, 0.28);
@@ -3413,79 +3415,81 @@
   }
   .wow-pd-body {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) 210px minmax(0, 1fr);
-    gap: 10px;
-    padding: 12px;
+    grid-template-columns: minmax(0, 1fr) 204px minmax(0, 1fr);
+    gap: 8px;
+    padding: 8px 10px;
     align-items: stretch;
   }
   .wow-pd-col {
     display: flex;
     flex-direction: column;
-    gap: 6px;
+    gap: 5px;
     min-width: 0;
   }
   .wow-pd-slot {
     display: flex;
     align-items: center;
-    gap: 8px;
-    padding: 6px 8px;
-    background: rgba(14, 18, 28, 0.88);
-    border: 1px solid #262f42;
-    border-radius: 7px;
+    gap: 7px;
+    height: 46px;
+    padding: 4px 7px;
+    background: rgba(14, 18, 28, 0.9);
+    border: 1px solid #252e40;
+    border-radius: 6px;
     cursor: pointer;
-    transition: border-color 0.14s ease, background 0.14s ease, transform 0.12s ease;
+    transition: border-color 0.14s ease, background 0.14s ease;
     min-width: 0;
     position: relative;
   }
   .wow-pd-slot:hover, .wow-pd-slot.pd-inspected {
-    border-color: rgba(251, 191, 36, 0.65);
-    background: rgba(24, 30, 46, 0.96);
+    border-color: rgba(251, 191, 36, 0.7);
+    background: rgba(24, 30, 46, 0.98);
   }
   .wow-pd-slot.empty-slot {
     border-style: dashed;
-    border-color: #262e3f;
-    opacity: 0.82;
+    border-color: #232b3b;
+    opacity: 0.78;
   }
   .wow-pd-icon-wrap {
     position: relative;
-    width: 40px;
-    height: 40px;
+    width: 34px;
+    height: 34px;
     flex-shrink: 0;
   }
   .wow-pd-icon {
-    width: 40px;
-    height: 40px;
-    border-radius: 5px;
-    border: 2px solid #444;
+    width: 34px;
+    height: 34px;
+    border-radius: 4px;
+    border: 1.5px solid #444;
     background-size: cover;
     background-position: center;
     background-color: #0b0d13;
-    box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.7), 0 2px 6px rgba(0, 0, 0, 0.6);
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.7), 0 1px 4px rgba(0, 0, 0, 0.6);
   }
   .wow-pd-icon.poor { border-color: var(--quality-poor); }
   .wow-pd-icon.common { border-color: var(--quality-common); }
-  .wow-pd-icon.uncommon { border-color: var(--quality-uncommon); box-shadow: 0 0 6px rgba(30, 255, 0, 0.35); }
-  .wow-pd-icon.rare { border-color: var(--quality-rare); box-shadow: 0 0 8px rgba(0, 112, 221, 0.45); }
-  .wow-pd-icon.epic { border-color: var(--quality-epic); box-shadow: 0 0 10px rgba(163, 53, 238, 0.55); }
+  .wow-pd-icon.uncommon { border-color: var(--quality-uncommon); box-shadow: 0 0 5px rgba(30, 255, 0, 0.3); }
+  .wow-pd-icon.rare { border-color: var(--quality-rare); box-shadow: 0 0 6px rgba(0, 112, 221, 0.4); }
+  .wow-pd-icon.epic { border-color: var(--quality-epic); box-shadow: 0 0 8px rgba(163, 53, 238, 0.5); }
   .wow-pd-up-dot {
     position: absolute;
-    top: -4px;
-    right: -4px;
+    top: -3px;
+    right: -3px;
     background: #065f46;
     border: 1px solid #34d399;
     color: #6ee7b7;
-    font-size: 0.56rem;
+    font-size: 0.5rem;
     font-weight: 900;
     line-height: 1;
-    padding: 1px 3px;
-    border-radius: 4px;
-    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.8);
+    padding: 1px 2.5px;
+    border-radius: 3px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.85);
   }
   .wow-pd-slot-info {
     flex: 1;
     min-width: 0;
     display: flex;
     flex-direction: column;
+    justify-content: center;
     gap: 2px;
   }
   .wow-pd-slot-top {
@@ -3495,79 +3499,107 @@
     gap: 4px;
     min-width: 0;
   }
-  .wow-pd-slot-lbl {
-    font-size: 0.58rem;
-    font-weight: 800;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    color: #64748b;
-    white-space: nowrap;
-  }
-  .wow-pd-slot-actions {
-    display: flex;
-    align-items: center;
-    gap: 3px;
-    flex-shrink: 0;
-  }
-  .wow-pd-mini-btn {
-    font-size: 0.64rem;
-    line-height: 1;
-    padding: 2px 5px;
-    border-radius: 3px;
-    border: 1px solid rgba(245, 158, 11, 0.35);
-    background: rgba(245, 158, 11, 0.1);
-    color: #fbbf24;
-    text-decoration: none;
-    cursor: pointer;
-  }
-  .wow-pd-mini-btn:hover {
-    background: rgba(245, 158, 11, 0.28);
-    color: #fff;
-  }
-  .wow-pd-mini-btn.clear {
-    border-color: rgba(248, 113, 113, 0.3);
-    background: rgba(248, 113, 113, 0.08);
-    color: #f87171;
-  }
   .wow-pd-item-name {
-    font-size: 0.76rem;
+    font-size: 0.73rem;
     font-weight: 700;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
     text-decoration: none;
+    line-height: 1.15;
+    min-width: 0;
+    flex: 1;
   }
   .wow-pd-item-name:hover {
     text-decoration: underline;
   }
+  .wow-pd-slot-lbl {
+    font-size: 0.53rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    color: #64748b;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .wow-pd-slot-actions {
+    display: none;
+    align-items: center;
+    gap: 2px;
+    flex-shrink: 0;
+  }
+  .wow-pd-slot:hover .wow-pd-slot-actions,
+  .wow-pd-slot.pd-inspected .wow-pd-slot-actions {
+    display: flex;
+  }
+  .wow-pd-slot:hover .wow-pd-slot-lbl,
+  .wow-pd-slot.pd-inspected .wow-pd-slot-lbl {
+    display: none;
+  }
+  @media (hover: none) {
+    .wow-pd-slot-actions { display: flex; }
+  }
+  .wow-pd-mini-btn {
+    font-size: 0.58rem;
+    line-height: 1;
+    padding: 1.5px 4px;
+    border-radius: 3px;
+    border: 1px solid rgba(245, 158, 11, 0.35);
+    background: rgba(245, 158, 11, 0.12);
+    color: #fbbf24;
+    text-decoration: none;
+    cursor: pointer;
+  }
+  .wow-pd-mini-btn:hover {
+    background: rgba(245, 158, 11, 0.3);
+    color: #fff;
+  }
+  .wow-pd-mini-btn.clear {
+    border-color: rgba(248, 113, 113, 0.35);
+    background: rgba(248, 113, 113, 0.1);
+    color: #f87171;
+  }
   .wow-pd-meta-row {
     display: flex;
     align-items: center;
-    gap: 4px;
-    flex-wrap: wrap;
-    font-size: 0.62rem;
-    line-height: 1.2;
+    gap: 3px;
+    flex-wrap: nowrap;
+    min-width: 0;
+    line-height: 1.1;
   }
-  .wow-pd-meta-row .source-badge, .wow-pd-meta-row .bind-badge {
-    font-size: 0.59rem !important;
-    padding: 1px 4px !important;
-    max-width: 120px;
+  .wow-pd-src-chip {
+    font-size: 0.57rem;
+    font-weight: 700;
+    padding: 1px 4px;
+    border-radius: 3px;
+    border: 1px solid rgba(148, 163, 184, 0.3);
+    background: rgba(30, 41, 59, 0.75);
+    color: #cbd5e1;
+    white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    white-space: nowrap;
+    max-width: 96px;
+    flex-shrink: 1;
   }
+  .wow-pd-src-chip.dungeon { border-color: rgba(96, 165, 250, 0.45); color: #93c5fd; background: rgba(30, 58, 138, 0.35); }
+  .wow-pd-src-chip.quest { border-color: rgba(251, 191, 36, 0.45); color: #fde68a; background: rgba(120, 53, 15, 0.35); }
+  .wow-pd-src-chip.crafted { border-color: rgba(251, 146, 60, 0.45); color: #fdba74; background: rgba(124, 45, 18, 0.35); }
+  .wow-pd-src-chip.world { border-color: rgba(74, 222, 128, 0.4); color: #86efac; background: rgba(20, 83, 45, 0.35); }
+  .wow-pd-src-chip.pvp { border-color: rgba(248, 113, 113, 0.45); color: #fca5a5; background: rgba(127, 29, 29, 0.35); }
+  .wow-pd-src-chip.vendor { border-color: rgba(192, 132, 252, 0.4); color: #d8b4fe; background: rgba(88, 28, 135, 0.35); }
   .wow-pd-enc-chip {
-    font-size: 0.6rem;
-    padding: 1px 5px;
+    font-size: 0.57rem;
+    padding: 1px 4px;
     border-radius: 3px;
     border: 1px solid rgba(52, 211, 153, 0.35);
     background: rgba(16, 185, 129, 0.12);
     color: #4ade80;
     font-weight: 700;
     white-space: nowrap;
-    max-width: 115px;
+    max-width: 68px;
     overflow: hidden;
     text-overflow: ellipsis;
+    flex-shrink: 0;
   }
   .wow-pd-enc-chip.empty {
     border-style: dashed;
@@ -3579,6 +3611,22 @@
     border-color: #fbbf24;
     color: #fff;
   }
+  .wow-pd-up-inline {
+    margin-left: auto;
+    font-size: 0.56rem;
+    font-weight: 800;
+    color: #6ee7b7;
+    background: rgba(16, 185, 129, 0.14);
+    border: 1px solid rgba(16, 185, 129, 0.4);
+    border-radius: 3px;
+    padding: 1px 4px;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .wow-pd-up-inline:hover {
+    background: rgba(16, 185, 129, 0.28);
+    border-color: #34d399;
+  }
   .wow-pd-up-chip {
     display: block;
     font-size: 0.61rem;
@@ -3587,7 +3635,7 @@
     background: rgba(16, 185, 129, 0.12);
     border: 1px solid rgba(16, 185, 129, 0.35);
     border-radius: 4px;
-    padding: 1px 5px;
+    padding: 2px 6px;
     max-width: 100%;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -3597,34 +3645,48 @@
     background: rgba(16, 185, 129, 0.24);
     border-color: #34d399;
   }
-  .wow-pd-center {
+  .wow-pd-sources-card {
+    margin-top: auto;
+    height: 97px;
+    background: rgba(12, 16, 25, 0.85);
+    border: 1px solid rgba(205, 155, 62, 0.28);
+    border-radius: 6px;
+    padding: 6px 8px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    gap: 10px;
-    background: radial-gradient(circle at 50% 34%, rgba(217, 160, 52, 0.13) 0%, rgba(12, 15, 24, 0.92) 72%);
+  }
+  .wow-pd-sources-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 3px;
+  }
+  .wow-pd-center {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    background: radial-gradient(circle at 50% 24%, rgba(217, 160, 52, 0.13) 0%, rgba(12, 15, 24, 0.94) 72%);
     border: 1px solid rgba(205, 155, 62, 0.32);
     border-radius: 8px;
-    padding: 12px 10px;
+    padding: 8px;
     min-width: 0;
   }
   .wow-pd-avatar-stage {
     display: flex;
-    flex-direction: column;
     align-items: center;
-    text-align: center;
-    gap: 6px;
-    padding: 10px 6px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    gap: 8px;
+    padding-bottom: 7px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.07);
   }
   .wow-pd-avatar-ring {
-    width: 66px;
-    height: 66px;
+    width: 38px;
+    height: 38px;
     border-radius: 50%;
-    border: 2.5px solid #d4a13e;
-    padding: 3px;
+    border: 2px solid #d4a13e;
+    padding: 2px;
     background: #0d111a;
-    box-shadow: 0 0 20px rgba(255, 209, 0, 0.2);
+    box-shadow: 0 0 12px rgba(255, 209, 0, 0.2);
+    flex-shrink: 0;
   }
   .wow-pd-avatar-ring img {
     width: 100%;
@@ -3636,24 +3698,25 @@
   .wow-pd-spotlight {
     display: flex;
     flex-direction: column;
-    gap: 6px;
-    font-size: 0.72rem;
+    gap: 5px;
+    font-size: 0.7rem;
     flex: 1;
+    min-width: 0;
   }
   .wow-pd-spot-head {
-    font-size: 0.62rem;
+    font-size: 0.58rem;
     font-weight: 800;
     text-transform: uppercase;
-    letter-spacing: 0.6px;
-    color: #94a3b8;
+    letter-spacing: 0.5px;
+    color: #fbbf24;
   }
   .wow-pd-weapons-row {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 8px;
-    padding: 0 12px 12px;
-    border-top: 1px solid rgba(255, 255, 255, 0.05);
-    padding-top: 10px;
+    padding: 8px 10px;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    background: rgba(10, 13, 20, 0.65);
   }
   @media (max-width: 900px) {
     .wow-pd-body {
@@ -3670,12 +3733,12 @@
   @media (max-width: 640px) {
     .wow-pd-body {
       grid-template-columns: 1fr;
-      padding: 8px;
-      gap: 6px;
+      padding: 6px;
+      gap: 5px;
     }
     .wow-pd-weapons-row {
-      padding: 8px;
-      gap: 6px;
+      padding: 6px;
+      gap: 5px;
     }
   }
 </style>
@@ -10359,6 +10422,43 @@
       return { slot, labelText: slotLabels[slot] || fallbackSlotLabel, item, isEnchantable, encId, enc, nextUp };
     }
 
+    function getCompactPaperdollSourceInfo(item) {
+      if (!item || !item.id || !item.sourceCategory || item.sourceCategory === 'none') return null;
+      const cat = item.sourceCategory;
+      const src = item.source || '';
+      const isBoE = item.bop === false || /boe/i.test(src) || cat === 'world';
+      const bindTag = isBoE ? 'BoE' : 'BoP';
+      let shortText = '';
+      if (cat === 'dungeon') {
+        const dMap = [
+          [/wailing|wc/i, 'WC'], [/deadmines|dm|vc/i, 'DM'], [/shadowfang|sfk/i, 'SFK'],
+          [/blackfathom|bfd/i, 'BFD'], [/stockade/i, 'Stocks'], [/gnomeregan|gnomer/i, 'Gnomer'],
+          [/razorfen kraul|rfk/i, 'RFK'], [/scarlet|sm/i, 'SM'], [/razorfen downs|rfd/i, 'RFD'],
+          [/uldaman|ulda/i, 'Ulda'], [/zul'farrak|zf/i, 'ZF'], [/maraudon|mara/i, 'Mara'],
+          [/sunken|st/i, 'ST'], [/blackrock|brd/i, 'BRD']
+        ];
+        let code = 'Dungeon';
+        for (const [rx, ab] of dMap) { if (rx.test(src)) { code = ab; break; } }
+        shortText = `🏰 ${code}·${bindTag}`;
+      } else if (cat === 'crafted') {
+        let prof = 'Craft';
+        if (/leather/i.test(src)) prof = 'LW';
+        else if (/engin/i.test(src)) prof = 'Engi';
+        else if (/blacksmith/i.test(src)) prof = 'BS';
+        else if (/tailor/i.test(src)) prof = 'Tailor';
+        shortText = `🔨 ${prof}·${bindTag}`;
+      } else if (cat === 'quest') {
+        shortText = `📜 Quest·${bindTag}`;
+      } else if (cat === 'pvp') {
+        shortText = `⚔️ Rep·${bindTag}`;
+      } else if (cat === 'vendor') {
+        shortText = `💰 Vendor·${bindTag}`;
+      } else {
+        shortText = `🌍 World·${bindTag}`;
+      }
+      return { cat, shortText, fullTitle: `${src || cat} (${bindTag})`, isBoE };
+    }
+
     function updatePaperdollSpotlight(slot) {
       pdInspectedSlot = slot;
       document.querySelectorAll('.wow-pd-slot.pd-inspected').forEach(el => el.classList.remove('pd-inspected'));
@@ -10373,19 +10473,19 @@
 
       box.innerHTML = `
         <div class="wow-pd-spot-head">Inspecting • ${labelText}</div>
-        <div style="display:flex;align-items:center;gap:8px;">
-          <div class="wow-pd-icon ${item.quality}" style="width:36px;height:36px;background-image:url('${getIconUrl(item.icon, item)}');"></div>
+        <div style="display:flex;align-items:center;gap:7px;">
+          <div class="wow-pd-icon ${item.quality}" style="width:34px;height:34px;background-image:url('${getIconUrl(item.icon, item)}');"></div>
           <div style="min-width:0;flex:1;">
-            <div class="${item.quality}" style="font-weight:800;font-size:0.78rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${item.id > 0 ? item.name : 'Empty Slot'}</div>
-            <div style="font-size:0.66rem;color:#94a3b8;">${item.id > 0 ? (item.summary || `ilvl ${item.ilvl}`) : 'Click slot to choose an item'}</div>
+            <div class="${item.quality}" style="font-weight:800;font-size:0.75rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${item.id > 0 ? item.name : 'Empty Slot'}</div>
+            <div style="font-size:0.63rem;color:#94a3b8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${item.id > 0 ? (item.summary || `ilvl ${item.ilvl}`) : 'Click slot to equip'}</div>
           </div>
         </div>
-        ${item.id > 0 && item.sourceCategory && item.sourceCategory !== 'none' ? `<div class="wow-pd-meta-row">${getSourceBadgeHtml(item)}</div>` : ''}
-        ${isEnchantable ? `<div style="font-size:0.66rem;color:${enc ? '#4ade80' : '#94a3b8'};">${enc ? `✨ ${enc.name}` : 'No enchant applied'}</div>` : ''}
-        ${nextUp ? `<div class="wow-pd-up-chip" style="cursor:pointer;" onclick="jumpToSlotRoadmap('${slot}')" title="View in Upgrade Roadmap">🔼 Lvl ${nextUp.unlockLevel}: ${nextUp.item.name} (${gainSign}${nextUp.deltaFromEquipped})</div>` : ''}
-        <div style="display:flex;gap:5px;flex-wrap:wrap;margin-top:auto;padding-top:4px;">
+        ${item.id > 0 && item.sourceCategory && item.sourceCategory !== 'none' ? `<div class="wow-pd-meta-row" style="flex-wrap:wrap;">${getSourceBadgeHtml(item)}</div>` : ''}
+        ${isEnchantable ? `<div style="font-size:0.63rem;color:${enc ? '#4ade80' : '#94a3b8'};white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${enc ? `✨ ${enc.name}` : 'No enchant applied'}</div>` : ''}
+        ${nextUp ? `<div class="wow-pd-up-chip" style="cursor:pointer;" onclick="jumpToSlotRoadmap('${slot}')" title="Lvl ${nextUp.unlockLevel}: ${nextUp.item.name} (${gainSign}${nextUp.deltaFromEquipped} pts)">🔼 Lvl ${nextUp.unlockLevel}: ${nextUp.item.name} (${gainSign}${nextUp.deltaFromEquipped})</div>` : ''}
+        <div style="display:flex;gap:4px;flex-wrap:wrap;padding-top:4px;border-top:1px solid rgba(255,255,255,0.06);">
           <button type="button" class="btn btn-secondary btn-xs" onclick="openPickerModal('${slot}')">Change</button>
-          ${isEnchantable ? `<button type="button" class="btn btn-secondary btn-xs" onclick="openEnchantPickerModal('${slot}')">${encId > 0 ? 'Re-Enchant' : '+ Enchant'}</button>` : ''}
+          ${isEnchantable ? `<button type="button" class="btn btn-secondary btn-xs" onclick="openEnchantPickerModal('${slot}')">${encId > 0 ? 'Enchant' : '+ Enchant'}</button>` : ''}
           ${item.id > 0 ? `<a class="btn btn-secondary btn-xs" href="${getWowheadItemUrl(item)}" target="_blank" rel="noopener noreferrer" style="text-decoration:none;">🔗 Wowhead</a>` : ''}
         </div>
       `;
@@ -10423,8 +10523,24 @@
       const info = document.createElement('div');
       info.className = 'wow-pd-slot-info';
 
+      // Line 1: Item Name on left + subtle Slot Label (or Hover Actions) on right
       const topRow = document.createElement('div');
       topRow.className = 'wow-pd-slot-top';
+
+      const nameEl = document.createElement(item.id > 0 ? 'a' : 'div');
+      nameEl.className = `wow-pd-item-name ${item.quality}`;
+      if (item.id > 0) {
+        nameEl.innerText = item.name;
+        nameEl.href = getWowheadItemUrl(item);
+        nameEl.target = '_blank';
+        nameEl.rel = 'noopener noreferrer';
+        nameEl.onclick = (e) => e.stopPropagation();
+      } else {
+        nameEl.innerText = 'Empty Slot';
+        nameEl.style.color = '#64748b';
+      }
+      topRow.appendChild(nameEl);
+
       const lbl = document.createElement('span');
       lbl.className = 'wow-pd-slot-lbl';
       lbl.innerText = labelText;
@@ -10459,29 +10575,28 @@
       }
       info.appendChild(topRow);
 
-      const nameEl = document.createElement(item.id > 0 ? 'a' : 'div');
-      nameEl.className = `wow-pd-item-name ${item.quality}`;
-      if (item.id > 0) {
-        nameEl.innerText = item.name;
-        nameEl.href = getWowheadItemUrl(item);
-        nameEl.target = '_blank';
-        nameEl.rel = 'noopener noreferrer';
-        nameEl.onclick = (e) => e.stopPropagation();
-      } else {
-        nameEl.innerText = 'Empty Slot';
-        nameEl.style.color = '#64748b';
-      }
-      info.appendChild(nameEl);
-
+      // Line 2: Compact Source Pill + Enchant Pill + Inline Upgrade Pill
       const metaRow = document.createElement('div');
       metaRow.className = 'wow-pd-meta-row';
-      if (item.id > 0 && item.sourceCategory && item.sourceCategory !== 'none') {
-        metaRow.insertAdjacentHTML('beforeend', getSourceBadgeHtml(item));
+
+      const srcInfo = getCompactPaperdollSourceInfo(item);
+      if (srcInfo) {
+        const srcChip = document.createElement('span');
+        srcChip.className = `wow-pd-src-chip ${srcInfo.cat}`;
+        srcChip.innerText = srcInfo.shortText;
+        srcChip.title = srcInfo.fullTitle;
+        metaRow.appendChild(srcChip);
+      } else if (item.id === 0) {
+        const emptyHint = document.createElement('span');
+        emptyHint.style.cssText = 'font-size:0.57rem;color:#475569;';
+        emptyHint.innerText = 'Click to equip';
+        metaRow.appendChild(emptyHint);
       }
+
       if (isEnchantable) {
         const encChip = document.createElement('span');
         encChip.className = `wow-pd-enc-chip${enc ? '' : ' empty'}`;
-        encChip.innerText = enc ? `✨ ${enc.shortName}` : (encId > 0 ? `✨ #${encId}` : '+ Enc');
+        encChip.innerText = enc ? `✨ ${enc.shortName}` : (encId > 0 ? `✨ #${encId}` : '+Enc');
         encChip.title = enc ? `${enc.name}: ${enc.summary}` : 'Click to add enchant';
         encChip.onclick = (e) => {
           e.stopPropagation();
@@ -10489,23 +10604,24 @@
         };
         metaRow.appendChild(encChip);
       }
-      if (metaRow.childNodes.length > 0) info.appendChild(metaRow);
 
       if (nextUp) {
         const gainSign = nextUp.deltaFromEquipped >= 0 ? '+' : '';
-        const upChip = document.createElement('div');
-        upChip.className = 'wow-pd-up-chip';
-        upChip.innerText = `▲ Lvl ${nextUp.unlockLevel}: ${nextUp.item.name} (${gainSign}${nextUp.deltaFromEquipped})`;
-        upChip.onclick = (e) => {
+        const upInline = document.createElement('span');
+        upInline.className = 'wow-pd-up-inline';
+        upInline.innerText = `▲L${nextUp.unlockLevel} ${gainSign}${nextUp.deltaFromEquipped}`;
+        upInline.title = `Lvl ${nextUp.unlockLevel}: ${nextUp.item.name} (${gainSign}${nextUp.deltaFromEquipped} pts) — Click for Roadmap`;
+        upInline.onclick = (e) => {
           e.stopPropagation();
           jumpToSlotRoadmap(slot);
         };
-        upChip.onmouseenter = (e) => { e.stopPropagation(); showItemTooltip(e, nextUp.item); };
-        upChip.onmousemove = (e) => { e.stopPropagation(); moveUnifiedTooltip(e); };
-        upChip.onmouseleave = (e) => { e.stopPropagation(); hideUnifiedTooltip(); };
-        info.appendChild(upChip);
+        upInline.onmouseenter = (e) => { e.stopPropagation(); updatePaperdollSpotlight(slot); showItemTooltip(e, nextUp.item); };
+        upInline.onmousemove = (e) => { e.stopPropagation(); moveUnifiedTooltip(e); };
+        upInline.onmouseleave = (e) => { e.stopPropagation(); hideUnifiedTooltip(); };
+        metaRow.appendChild(upInline);
       }
 
+      info.appendChild(metaRow);
       el.appendChild(iconWrap);
       el.appendChild(info);
       return el;
@@ -10522,6 +10638,7 @@
       const allSlots = [...leftSlots, ...rightSlots, ...weaponSlots];
       let equippedCount = 0, ilvlSum = 0, enchantedCount = 0, enchantableCount = 0, upgradesReady = 0, firstUpgradeSlot = null;
       const enchantableSet = new Set(['head', 'shoulders', 'back', 'chest', 'wrist', 'hands', 'legs', 'feet', 'mainhand', 'offhand']);
+      const srcCounts = { dungeon: 0, quest: 0, crafted: 0, world: 0, pvp: 0, vendor: 0, bop: 0, boe: 0 };
 
       allSlots.forEach(s => {
         const d = getPaperdollSlotData(s);
@@ -10531,6 +10648,11 @@
           if (enchantableSet.has(s)) {
             enchantableCount++;
             if (d.encId > 0) enchantedCount++;
+          }
+          const si = getCompactPaperdollSourceInfo(d.item);
+          if (si) {
+            if (srcCounts[si.cat] !== undefined) srcCounts[si.cat]++;
+            if (si.isBoE) srcCounts.boe++; else srcCounts.bop++;
           }
         }
         if (d.nextUp) {
@@ -10554,13 +10676,13 @@
               <img class="wow-pd-crest" src="https://wow.zamimg.com/images/wow/icons/large/classicon_${clsKey}.jpg" alt="${cDef.name}" style="border-color: ${cDef.color};" onerror="this.onerror=null; this.src='https://wow.zamimg.com/images/wow/icons/large/${cDef.icon || 'spell_nature_bloodlust'}.jpg';" />
               <div>
                 <div class="wow-pd-char-line" style="color: ${cDef.color};">Level ${lvl} ${rDef.name} ${cDef.name}</div>
-                <div class="wow-pd-sub-line">${faction} • ${specDef.name} • ${equippedCount}/17 Slots Equipped</div>
+                <div class="wow-pd-sub-line">${faction} • ${specDef.name} • ${equippedCount}/17 Equipped</div>
               </div>
             </div>
             <div class="wow-pd-kpis">
               <span class="wow-pd-kpi-pill gold">Avg iLvl ${avgIlvl}</span>
               <span class="wow-pd-kpi-pill">Enchants ${enchantedCount}/${enchantableCount}</span>
-              <span class="wow-pd-kpi-pill green">${upgradesReady} Upcoming Upgrade${upgradesReady === 1 ? '' : 's'}</span>
+              <span class="wow-pd-kpi-pill green" style="cursor:pointer;" onclick="switchGearSubView('roadmap')">▲ ${upgradesReady} Upgrade${upgradesReady === 1 ? '' : 's'}</span>
             </div>
           </div>
           <div class="wow-pd-body">
@@ -10570,8 +10692,10 @@
                 <div class="wow-pd-avatar-ring" style="border-color: ${cDef.color};">
                   <img src="https://wow.zamimg.com/images/wow/icons/large/classicon_${clsKey}.jpg" alt="${cDef.name}" onerror="this.onerror=null; this.src='https://wow.zamimg.com/images/wow/icons/large/${cDef.icon || 'spell_nature_bloodlust'}.jpg';" />
                 </div>
-                <div style="font-size:0.78rem;font-weight:800;color:${cDef.color};">${rDef.icon || ''} ${rDef.name} ${cDef.name}</div>
-                <div style="font-size:0.66rem;color:#94a3b8;">${specDef.name} • Lvl ${lvl}</div>
+                <div style="min-width:0;text-align:left;">
+                  <div style="font-size:0.75rem;font-weight:800;color:${cDef.color};white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${rDef.icon || ''} ${rDef.name} ${cDef.name}</div>
+                  <div style="font-size:0.62rem;color:#94a3b8;">${specDef.name} • Lvl ${lvl}</div>
+                </div>
               </div>
               <div class="wow-pd-spotlight" id="pd-spotlight-box"></div>
             </div>
@@ -10585,6 +10709,26 @@
       const colR = document.getElementById('pd-col-right');
       const wpnR = document.getElementById('pd-weapons-row');
       leftSlots.forEach(s => colL.appendChild(createPaperdollSlotElement(s)));
+
+      // Compact Equipped Source Categorization Summary (fills the 2-slot height below Wrist on Left Column)
+      const srcBox = document.createElement('div');
+      srcBox.className = 'wow-pd-sources-card';
+      srcBox.innerHTML = `
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <span style="font-size:0.56rem;font-weight:800;text-transform:uppercase;letter-spacing:0.4px;color:#94a3b8;">Equipped Gear Sources</span>
+          <span style="font-size:0.56rem;color:#cbd5e1;font-weight:700;">🔒 ${srcCounts.bop} BoP · 🔓 ${srcCounts.boe} BoE</span>
+        </div>
+        <div class="wow-pd-sources-grid">
+          <span class="wow-pd-src-chip dungeon">🏰 Dungeon ${srcCounts.dungeon}</span>
+          <span class="wow-pd-src-chip quest">📜 Quest ${srcCounts.quest}</span>
+          <span class="wow-pd-src-chip crafted">🔨 Craft ${srcCounts.crafted}</span>
+          <span class="wow-pd-src-chip world">🌍 BoE ${srcCounts.world}</span>
+          <span class="wow-pd-src-chip pvp">⚔️ Rep ${srcCounts.pvp}</span>
+          <span class="wow-pd-src-chip vendor">💰 Vendor ${srcCounts.vendor}</span>
+        </div>
+      `;
+      colL.appendChild(srcBox);
+
       rightSlots.forEach(s => colR.appendChild(createPaperdollSlotElement(s)));
       weaponSlots.forEach(s => wpnR.appendChild(createPaperdollSlotElement(s)));
 
