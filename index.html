@@ -511,16 +511,14 @@
     .app-layout {
       max-width: 1780px;
       margin: 0 auto;
-      padding: 14px 20px;
+      padding: 12px 16px;
       display: grid;
-      grid-template-columns: minmax(0, 1.12fr) minmax(520px, 0.88fr);
-      gap: 18px;
+      grid-template-columns: minmax(0, 1.15fr) minmax(420px, 0.85fr);
+      gap: 16px;
+      align-items: start;
     }
-    @media (max-width: 1300px) {
-      .app-layout {
-        grid-template-columns: 1fr;
-      }
-      .sim-panel-sticky {
+
+    .sim-panel-sticky {
       position: sticky;
       top: 60px;
       max-height: calc(100vh - 75px);
@@ -530,6 +528,18 @@
       flex-direction: column;
       gap: 10px;
     }
+
+    @media (max-width: 1023px) {
+      .app-layout {
+        grid-template-columns: 1fr;
+        padding: 8px 10px;
+        gap: 12px;
+      }
+      .sim-panel-sticky {
+        position: static !important;
+        max-height: none !important;
+        overflow-y: visible !important;
+      }
     }
 
     /* ONE-STOP COCKPIT UNIFIED LAYOUT & DRAWERS */
@@ -647,10 +657,7 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
-    @media (max-width: 1200px) {
-      .app-layout { grid-template-columns: 1fr; padding: 12px 14px; gap: 14px; }
-      .sim-panel-sticky { position: static !important; max-height: none !important; overflow-y: visible !important; }
-    }
+
 
     .workbench-area {
       display: flex;
@@ -3324,6 +3331,13 @@
           </select>
         </div>
 
+        <div class="class-selector-pill" id="pill-active-race" title="Select your character's race for base attributes and racials">
+          <span class="class-pill-label">Race:</span>
+          <select id="cfg-active-race" class="class-dropdown-select" onchange="onRaceSelected(this.value)">
+            <!-- Populated dynamically based on class & faction -->
+          </select>
+        </div>
+
         <div class="config-pill config-pill-lvl" style="padding: 2px 8px;">
           <label for="cfg-level">Lvl</label>
           <input type="number" id="cfg-level" value="1" min="1" max="60" onchange="onLevelChanged()" oninput="onLevelChanged()" style="width: 38px;">
@@ -4126,6 +4140,17 @@
                 <span class="res-icon">🔮</span>
                 <span class="res-label">Arcane</span>
                 <strong id="attr-res-arcane" class="res-val">0</strong>
+              </div>
+            </div>
+
+            <!-- RACIAL TRAITS & PASSIVES ROW -->
+            <div id="attr-racials-section" style="margin-top: 10px; padding-top: 8px; border-top: 1px dashed rgba(255, 255, 255, 0.1);">
+              <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px;">
+                <span style="font-size: 0.68rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; color: #a0aec0;">Active Racial Traits &amp; Passives</span>
+                <span id="attr-race-badge" style="font-size: 0.7rem; font-weight: 700; color: #f59e0b; background: rgba(245, 158, 11, 0.12); padding: 1px 6px; border-radius: 4px; border: 1px solid rgba(245, 158, 11, 0.3);">Orc</span>
+              </div>
+              <div id="attr-racials-list" style="display: flex; flex-wrap: wrap; gap: 6px;">
+                <!-- Populated dynamically -->
               </div>
             </div>
           </div>
@@ -7180,6 +7205,7 @@
         }
       }
 
+      if (typeof updateRaceDropdown === 'function') updateRaceDropdown();
       validateAndSanitizeEquippedGear();
       autoEquipLevelingBiS();
       renderGearSlots();
@@ -7206,6 +7232,7 @@
           iterations: itersEl ? itersEl.value : '200',
           characterClass: activeCharacterClass,
           faction: getActiveCharacterFaction(),
+          race: activeCharacterRace,
           spec: currentCharacterSpec,
           weaponStyle: wpnEl ? wpnEl.value : 'auto',
           prof1: p1El ? p1El.value : (activeCharacterProfessions.prof1 || 'engineering'),
@@ -7242,7 +7269,10 @@
           if (maxPtsEl) maxPtsEl.innerText = maxTalentPoints;
           document.querySelectorAll('.cur-lvl-label').forEach(el => el.innerText = lvl);
         }
-                if (cfg.faction) {
+        if (cfg.race) {
+          activeCharacterRace = cfg.race;
+        }
+        if (cfg.faction) {
           activeCharacterFaction = cfg.faction;
           const fEl = document.getElementById('cfg-active-faction');
           if (fEl) {
@@ -7354,6 +7384,7 @@
     async function init() {
       isInitializing = true;
       try {
+        if (typeof updateRaceDropdown === 'function') updateRaceDropdown();
         const isStatic = window.location.hostname.includes('github.io') || window.location.protocol === 'file:';
         const fetchAsset = async (endpoint, staticFallback) => {
           if (!isStatic) {
@@ -7440,6 +7471,7 @@
           }
           updateTalentStrategyOptionsForClass(activeCharacterClass);
         } catch (e) { console.warn('Class UI sync failed', e); }
+        if (typeof updateRaceDropdown === 'function') updateRaceDropdown();
         renderSpecButtons();
         const wpnStyle = document.getElementById('cfg-weapon-style') ? document.getElementById('cfg-weapon-style').value : 'auto';
         renderWeaponStyles(wpnStyle);
@@ -8117,6 +8149,222 @@
       }
     };
 
+    let activeCharacterRace = localStorage.getItem('twinksim_active_race') || 'orc';
+
+    const WOW_RACES = {
+      orc: {
+        id: 'orc',
+        name: 'Orc',
+        faction: 'Horde',
+        icon: '🧌',
+        stats: { str: 3, agi: -3, sta: 2, int: -3, spi: 3 },
+        passives: [
+          { name: 'Blood Fury', desc: '+25% base Melee Attack Power & Spell Damage (Active on CD)' },
+          { name: 'Hardiness', desc: '+25% stun resistance' },
+          { name: 'Axe Specialization', desc: '+5 Skill with Axes and Two-Handed Axes' }
+        ]
+      },
+      undead: {
+        id: 'undead',
+        name: 'Undead',
+        faction: 'Horde',
+        icon: '🧟',
+        stats: { str: -1, agi: -2, sta: 1, int: -2, spi: 5 },
+        passives: [
+          { name: 'Will of the Forsaken', desc: 'Immunity to Charm, Fear and Sleep effects' },
+          { name: 'Shadow Resistance', desc: '+10 Shadow Resistance' },
+          { name: 'Cannibalize', desc: 'Accelerated health regeneration after combat' }
+        ]
+      },
+      tauren: {
+        id: 'tauren',
+        name: 'Tauren',
+        faction: 'Horde',
+        icon: '🐂',
+        stats: { str: 5, agi: -5, sta: 2, int: -5, spi: 2 },
+        passives: [
+          { name: 'Endurance', desc: '+5% Maximum Total Health' },
+          { name: 'Nature Resistance', desc: '+10 Nature Resistance' },
+          { name: 'War Stomp', desc: 'Stuns up to 5 enemies within 8 yds for 2 sec' }
+        ]
+      },
+      troll: {
+        id: 'troll',
+        name: 'Troll',
+        faction: 'Horde',
+        icon: '🏹',
+        stats: { str: 1, agi: 2, sta: 1, int: -4, spi: 1 },
+        passives: [
+          { name: 'Berserking', desc: 'Increases attack and casting speed by 10% to 30%' },
+          { name: 'Beast Slaying', desc: '5% bonus damage to Beasts' },
+          { name: 'Bow & Throwing Spec', desc: '+5 Skill with Bows and Thrown Weapons' }
+        ]
+      },
+      human: {
+        id: 'human',
+        name: 'Human',
+        faction: 'Alliance',
+        icon: '🧑',
+        stats: { str: 0, agi: 0, sta: 0, int: 0, spi: 0 },
+        passives: [
+          { name: 'The Human Spirit', desc: '+5% Total Spirit' },
+          { name: 'Sword & Mace Spec', desc: '+5 Skill with Swords and Maces' },
+          { name: 'Perception', desc: 'Dramatically increases stealth detection' }
+        ]
+      },
+      dwarf: {
+        id: 'dwarf',
+        name: 'Dwarf',
+        faction: 'Alliance',
+        icon: '🧔',
+        stats: { str: 2, agi: -4, sta: 3, int: -1, spi: -1 },
+        passives: [
+          { name: 'Stoneform', desc: '+10% Armor and immunity to Bleed, Poison and Disease' },
+          { name: 'Frost Resistance', desc: '+10 Frost Resistance' },
+          { name: 'Gun Specialization', desc: '+5 Skill with Guns' }
+        ]
+      },
+      nightelf: {
+        id: 'nightelf',
+        name: 'Night Elf',
+        faction: 'Alliance',
+        icon: '🧝',
+        stats: { str: -3, agi: 5, sta: -1, int: 0, spi: 0 },
+        passives: [
+          { name: 'Quickness', desc: '+1% Dodge chance against all attacks' },
+          { name: 'Nature Resistance', desc: '+10 Nature Resistance' },
+          { name: 'Shadowmeld', desc: 'Slip into the shadows while stationary' }
+        ]
+      },
+      gnome: {
+        id: 'gnome',
+        name: 'Gnome',
+        faction: 'Alliance',
+        icon: '🧙',
+        stats: { str: -5, agi: 3, sta: -1, int: 4, spi: 0 },
+        passives: [
+          { name: 'Expansive Mind', desc: '+5% Total Intellect' },
+          { name: 'Arcane Resistance', desc: '+10 Arcane Resistance' },
+          { name: 'Escape Artist', desc: 'Escape immobilization or movement speed reduction' }
+        ]
+      }
+    };
+
+    const CLASS_RACES = {
+      shaman: [
+        { id: 'orc', name: 'Orc', faction: 'Horde', icon: '🧌' },
+        { id: 'tauren', name: 'Tauren', faction: 'Horde', icon: '🐂' },
+        { id: 'troll', name: 'Troll', faction: 'Horde', icon: '🏹' }
+      ],
+      warrior: [
+        { id: 'orc', name: 'Orc', faction: 'Horde', icon: '🧌' },
+        { id: 'undead', name: 'Undead', faction: 'Horde', icon: '🧟' },
+        { id: 'tauren', name: 'Tauren', faction: 'Horde', icon: '🐂' },
+        { id: 'troll', name: 'Troll', faction: 'Horde', icon: '🏹' },
+        { id: 'human', name: 'Human', faction: 'Alliance', icon: '🧑' },
+        { id: 'dwarf', name: 'Dwarf', faction: 'Alliance', icon: '🧔' },
+        { id: 'nightelf', name: 'Night Elf', faction: 'Alliance', icon: '🧝' },
+        { id: 'gnome', name: 'Gnome', faction: 'Alliance', icon: '🧙' }
+      ],
+      paladin: [
+        { id: 'human', name: 'Human', faction: 'Alliance', icon: '🧑' },
+        { id: 'dwarf', name: 'Dwarf', faction: 'Alliance', icon: '🧔' }
+      ],
+      hunter: [
+        { id: 'orc', name: 'Orc', faction: 'Horde', icon: '🧌' },
+        { id: 'tauren', name: 'Tauren', faction: 'Horde', icon: '🐂' },
+        { id: 'troll', name: 'Troll', faction: 'Horde', icon: '🏹' },
+        { id: 'dwarf', name: 'Dwarf', faction: 'Alliance', icon: '🧔' },
+        { id: 'nightelf', name: 'Night Elf', faction: 'Alliance', icon: '🧝' }
+      ],
+      rogue: [
+        { id: 'orc', name: 'Orc', faction: 'Horde', icon: '🧌' },
+        { id: 'undead', name: 'Undead', faction: 'Horde', icon: '🧟' },
+        { id: 'troll', name: 'Troll', faction: 'Horde', icon: '🏹' },
+        { id: 'human', name: 'Human', faction: 'Alliance', icon: '🧑' },
+        { id: 'dwarf', name: 'Dwarf', faction: 'Alliance', icon: '🧔' },
+        { id: 'nightelf', name: 'Night Elf', faction: 'Alliance', icon: '🧝' },
+        { id: 'gnome', name: 'Gnome', faction: 'Alliance', icon: '🧙' }
+      ],
+      priest: [
+        { id: 'undead', name: 'Undead', faction: 'Horde', icon: '🧟' },
+        { id: 'troll', name: 'Troll', faction: 'Horde', icon: '🏹' },
+        { id: 'human', name: 'Human', faction: 'Alliance', icon: '🧑' },
+        { id: 'dwarf', name: 'Dwarf', faction: 'Alliance', icon: '🧔' },
+        { id: 'nightelf', name: 'Night Elf', faction: 'Alliance', icon: '🧝' }
+      ],
+      mage: [
+        { id: 'undead', name: 'Undead', faction: 'Horde', icon: '🧟' },
+        { id: 'troll', name: 'Troll', faction: 'Horde', icon: '🏹' },
+        { id: 'human', name: 'Human', faction: 'Alliance', icon: '🧑' },
+        { id: 'gnome', name: 'Gnome', faction: 'Alliance', icon: '🧙' }
+      ],
+      warlock: [
+        { id: 'orc', name: 'Orc', faction: 'Horde', icon: '🧌' },
+        { id: 'undead', name: 'Undead', faction: 'Horde', icon: '🧟' },
+        { id: 'human', name: 'Human', faction: 'Alliance', icon: '🧑' },
+        { id: 'gnome', name: 'Gnome', faction: 'Alliance', icon: '🧙' }
+      ],
+      druid: [
+        { id: 'tauren', name: 'Tauren', faction: 'Horde', icon: '🐂' },
+        { id: 'nightelf', name: 'Night Elf', faction: 'Alliance', icon: '🧝' }
+      ]
+    };
+
+    function updateRaceDropdown() {
+      const raceSelect = document.getElementById('cfg-active-race');
+      if (!raceSelect) return;
+
+      const faction = getActiveCharacterFaction();
+      const classKey = activeCharacterClass || 'shaman';
+      const allForClass = CLASS_RACES[classKey] || [];
+      const available = allForClass.filter(r => r.faction === faction);
+
+      const listToUse = available.length > 0 ? available : allForClass;
+
+      if (!listToUse.some(r => r.id === activeCharacterRace)) {
+        activeCharacterRace = listToUse[0] ? listToUse[0].id : 'orc';
+        localStorage.setItem('twinksim_active_race', activeCharacterRace);
+      }
+
+      raceSelect.innerHTML = listToUse.map(r =>
+        `<option value="${r.id}" ${r.id === activeCharacterRace ? 'selected' : ''}>${r.icon} ${r.name}</option>`
+      ).join('');
+      raceSelect.value = activeCharacterRace;
+    }
+
+    function onRaceSelected(newRace) {
+      if (!WOW_RACES[newRace]) return;
+      activeCharacterRace = newRace;
+      localStorage.setItem('twinksim_active_race', newRace);
+      const raceEl = document.getElementById('cfg-active-race');
+      if (raceEl) raceEl.value = newRace;
+
+      const rDef = WOW_RACES[newRace];
+      if (rDef && rDef.faction && rDef.faction !== getActiveCharacterFaction()) {
+        onFactionChanged(rDef.faction);
+        return;
+      }
+
+      onSettingChanged();
+      saveUserSettings();
+      showToastNotice(`Race set to ${rDef.name}! Racial attributes and passives applied.`);
+    }
+
+    function renderActiveRacialTraits() {
+      const listEl = document.getElementById('attr-racials-list');
+      const badgeEl = document.getElementById('attr-race-badge');
+      const rDef = WOW_RACES[activeCharacterRace] || WOW_RACES['orc'];
+      if (badgeEl) {
+        badgeEl.textContent = `${rDef.icon} ${rDef.name}`;
+      }
+      if (listEl) {
+        listEl.innerHTML = (rDef.passives || []).map(p =>
+          `<span class="badge-rec" style="background: rgba(245, 158, 11, 0.12); border-color: rgba(245, 158, 11, 0.4); color: #fef3c7; cursor: help;" title="${p.desc}">${p.name}</span>`
+        ).join('');
+      }
+    }
+
     let activeCharacterClass = 'shaman';
     let currentCharacterSpec = 'enhancement';
 
@@ -8238,7 +8486,10 @@
       renderWeaponStyles();
       selectCharacterSpec(cDef.defaultSpec, true);
 
-      // 6. Sanitize and render equipped gear
+      // 6. Update race dropdown for the new class
+      if (typeof updateRaceDropdown === 'function') updateRaceDropdown();
+
+      // 7. Sanitize and render equipped gear
       validateAndSanitizeEquippedGear();
       renderGearSlots();
       onSettingChanged();
@@ -10486,6 +10737,74 @@
         viewport.className = 'tree-viewport';
         viewport.style.backgroundImage = `url('${tree.backgroundUrl}')`;
 
+        // Authentic WoW Prerequisite Arrows Overlay Layer
+        const svgNs = 'http://www.w3.org/2000/svg';
+        const arrowsSvg = document.createElementNS(svgNs, 'svg');
+        arrowsSvg.setAttribute('class', 'talent-arrows-layer');
+        arrowsSvg.setAttribute('viewBox', '0 0 100 420');
+        arrowsSvg.setAttribute('preserveAspectRatio', 'none');
+        arrowsSvg.setAttribute('style', 'position: absolute; top: 12px; left: 0; width: 100%; height: 420px; pointer-events: none; z-index: 2;');
+
+        const defs = document.createElementNS(svgNs, 'defs');
+        defs.innerHTML = `
+          <marker id="arrow-gold-${treeIdx}" markerWidth="8" markerHeight="8" refX="5" refY="4" orient="auto">
+            <path d="M 1 1 L 7 4 L 1 7 z" fill="#f59e0b" />
+          </marker>
+          <marker id="arrow-grey-${treeIdx}" markerWidth="8" markerHeight="8" refX="5" refY="4" orient="auto">
+            <path d="M 1 1 L 7 4 L 1 7 z" fill="#4b5563" />
+          </marker>
+        `;
+        arrowsSvg.appendChild(defs);
+
+        tree.talents.forEach((talent, talentIdx) => {
+          if (talent.prereqLocation) {
+            const pRow = talent.prereqLocation.rowIdx;
+            const pCol = talent.prereqLocation.colIdx;
+            const tRow = talent.location.rowIdx;
+            const tCol = talent.location.colIdx;
+
+            const prereqTalentIdx = tree.talents.findIndex(
+              t => t.location.rowIdx === pRow && t.location.colIdx === pCol
+            );
+            let isUnlocked = false;
+            if (prereqTalentIdx !== -1) {
+              const prereqTalent = tree.talents[prereqTalentIdx];
+              const prereqPts = talentPoints[treeIdx][prereqTalentIdx] || 0;
+              isUnlocked = prereqPts >= prereqTalent.maxPoints;
+            }
+
+            const strokeColor = isUnlocked ? '#f59e0b' : '#4b5563';
+            const markerId = isUnlocked ? `arrow-gold-${treeIdx}` : `arrow-grey-${treeIdx}`;
+
+            const line = document.createElementNS(svgNs, 'line');
+            if (pCol === tCol) {
+              // Vertical arrow (top to bottom)
+              const x = (pCol + 0.5) * 25;
+              const y1 = pRow * 60 + 52;
+              const y2 = tRow * 60 + 6;
+              line.setAttribute('x1', `${x}%`);
+              line.setAttribute('y1', y1);
+              line.setAttribute('x2', `${x}%`);
+              line.setAttribute('y2', y2);
+            } else if (pRow === tRow) {
+              // Horizontal arrow (left to right)
+              const y = pRow * 60 + 30;
+              const x1 = (pCol + 0.5) * 25 + 6;
+              const x2 = (tCol + 0.5) * 25 - 6;
+              line.setAttribute('x1', `${x1}%`);
+              line.setAttribute('y1', y);
+              line.setAttribute('x2', `${x2}%`);
+              line.setAttribute('y2', y);
+            }
+            line.setAttribute('stroke', strokeColor);
+            line.setAttribute('stroke-width', '2.5');
+            line.setAttribute('marker-end', `url(#${markerId})`);
+            line.setAttribute('style', 'filter: drop-shadow(0 0 2px rgba(0,0,0,0.8)); transition: stroke 0.15s ease;');
+            arrowsSvg.appendChild(line);
+          }
+        });
+        viewport.appendChild(arrowsSvg);
+
         // Render nodes
         tree.talents.forEach((talent, talentIdx) => {
           const row = talent.location.rowIdx;
@@ -10912,29 +11231,131 @@
     }
 
     // --- SINGLE UNIFIED AUTHENTIC WOW TOOLTIP ENGINE ---
+    const talentSpellTooltipCache = {};
+    let activeTooltipTalentSpellId = null;
+
+    const TALENT_FALLBACK_DESCRIPTIONS = {
+      'Mental Dexterity': 'Dealing damage with Stormstrike increases your Attack Power by 150% of your Intellect, and your spell damage by 35% of your total Attack Power for 30 sec.',
+      'Flurry': 'Increases your attack speed by 10% / 15% / 20% / 25% / 30% for your next 3 swings after dealing a melee critical strike.',
+      'Stormstrike': 'Instantly attack with both weapons. In addition, the next 2 sources of Nature damage dealt to the target are increased by 20%.',
+      'Thundering Strikes': 'Increases your chance to get a critical strike with melee weapons by 1% / 2% / 3% / 4% / 5%.',
+      'Ancestral Knowledge': 'Increases your maximum Mana by 1% / 2% / 3% / 4% / 5%.',
+      'Shield Specialization': 'Increases your chance to block attacks with a shield by 1% / 2% / 3% / 4% / 5% and increases block value.',
+      'Toughness': 'Increases your armor value from items by 2% / 4% / 6% / 8% / 10% and increases total Stamina.',
+      'Anticipation': 'Increases your Defense skill by 2 / 4 / 6 / 8 / 10.',
+      'Elemental Focus': 'Gives you a 100% chance to enter a Clearcasting state after dealing a critical strike with Fire, Frost, or Nature spells.',
+      'Call of Thunder': 'Increases the critical strike chance of your Lightning Bolt and Chain Lightning spells by an additional 1% / 2% / 3% / 4% / 5%.',
+      'Concussion': 'Increases the damage done by your Lightning Bolt, Chain Lightning, and Shock spells by 1% / 2% / 3% / 4% / 5%.',
+      'Tidal Focus': 'Reduces the Mana cost of your healing spells by 1% / 2% / 3% / 4% / 5%.',
+      'Improved Healing Wave': 'Reduces the casting time of your Healing Wave spell by 0.1 / 0.2 / 0.3 / 0.4 / 0.5 sec.',
+      'Restorative Totems': 'Increases the effect of your Mana Spring Totem and Healing Stream Totem by 5% / 10% / 15% / 20% / 25%.',
+      'Nature\'s Swiftness': 'When activated, your next Nature spell with a casting time less than 10 sec becomes an instant cast spell.',
+      'Mana Tide Totem': 'Summons a Mana Tide Totem that restores mana to group members.',
+      'Cruelty': 'Increases your chance to get a critical strike with melee weapons by 1% / 2% / 3% / 4% / 5%.',
+      'Deflection': 'Increases your Parry chance by 1% / 2% / 3% / 4% / 5%.',
+      'Anger Management': 'Generates 1 Rage point every 3 seconds while in combat.',
+      'Deep Wounds': 'Your critical strikes cause the opponent to bleed for 20% / 40% / 60% of your melee weapon average damage over 12 sec.',
+      'Impale': 'Increases the critical strike damage bonus of your abilities by 10% / 20%.',
+      'Master of Defense': 'Increases your Defense skill by 5 and Armor by 10%.',
+      'Shield Slam': 'Slams the target with your shield, dealing damage based on your shield block value and generating high threat.',
+      'Mortal Strike': 'A vicious strike that deals weapon damage plus bonus damage and reduces healing received by 50% for 10 sec.',
+      'Bloodthirst': 'Instantly attack the target for 45% of your attack power. In addition, the next 5 successful melee attacks restore health.',
+      'Malice': 'Increases your critical strike chance by 1% / 2% / 3% / 4% / 5%.',
+      'Remorseless Attacks': 'After killing an opponent, your next Sinister Strike, Backstab, or Ambush has a 20% / 40% increased critical strike chance.',
+      'Precision': 'Increases your chance to hit with melee weapons by 1% / 2% / 3% / 4% / 5%.',
+      'Adrenaline Rush': 'Increases your energy regeneration rate by 100% for 15 sec.',
+      'Shadowform': 'Assume a Shadowform, increasing your Shadow damage by 15% and reducing physical damage taken by 15%.',
+      'Power Infusion': 'Infuses the target with power, increasing spell damage and healing by 20% for 15 sec.',
+      'Arcane Power': 'When activated, your spells deal 30% more damage while costing 30% more mana for 15 sec.',
+      'Combustion': 'When activated, increases critical strike chance of Fire damage spells until 3 critical strikes land.',
+      'Ice Barrier': 'Instantly shields you with a barrier of frost that absorbs damage.'
+    };
+
+    function getTalentDescription(talent, curPts) {
+      if (talent.spellId && talentSpellTooltipCache[talent.spellId]) {
+        return talentSpellTooltipCache[talent.spellId];
+      }
+      if (talent.rankDescriptions && Array.isArray(talent.rankDescriptions) && talent.rankDescriptions.length > 0) {
+        const idx = Math.max(0, curPts === 0 ? 0 : curPts - 1);
+        if (talent.rankDescriptions[idx] && talent.rankDescriptions[idx] !== 'undefined') {
+          return talent.rankDescriptions[idx];
+        }
+      }
+      if (TALENT_FALLBACK_DESCRIPTIONS[talent.fancyName]) {
+        return TALENT_FALLBACK_DESCRIPTIONS[talent.fancyName];
+      }
+      if (talent.fancyName && talent.fancyName.startsWith('Improved ')) {
+        return `Increases the damage, efficiency, or duration of ${talent.fancyName.replace('Improved ', '')}.`;
+      }
+      if (talent.fancyName && talent.fancyName.includes('Specialization')) {
+        return `Increases your combat effectiveness, damage, and skill with ${talent.fancyName.replace(' Specialization', '')}.`;
+      }
+      if (talent.fancyName && talent.fancyName.includes('Mastery')) {
+        return `Increases your specialization damage and ability potency for ${talent.fancyName.replace(' Mastery', '')}.`;
+      }
+      return `${talent.fancyName} permanently improves your specialization capabilities and combat power.`;
+    }
+
     function showTalentTooltip(e, treeIdx, talentIdx) {
-      const talent = talentTrees[treeIdx].talents[talentIdx];
-      const curPts = talentPoints[treeIdx][talentIdx] || 0;
+      const tree = (talentTrees && talentTrees[treeIdx]) || (window.talentTrees ? window.talentTrees[treeIdx] : null);
+      if (!tree || !tree.talents || !tree.talents[talentIdx]) return;
+      const talent = tree.talents[talentIdx];
+      const curPts = (talentPoints && talentPoints[treeIdx] && talentPoints[treeIdx][talentIdx]) || 0;
       const isAvailable = isTalentAvailable(treeIdx, talentIdx);
       const isMax = curPts >= talent.maxPoints;
-      const rankDescs = talent.rankDescriptions || [];
+
+      activeTooltipTalentSpellId = talent.spellId;
+      if (talent.spellId && !talentSpellTooltipCache[talent.spellId] && typeof fetch !== 'undefined') {
+        fetch(`https://nether.wowhead.com/classic/tooltip/spell/${talent.spellId}`)
+          .then(res => res.json())
+          .then(data => {
+            if (data && data.tooltip) {
+              const m = data.tooltip.match(/<div class="q">([\s\S]*?)<\/div>/i);
+              const desc = m ? m[1].replace(/<[^>]+>/g, ' ').trim() : data.tooltip.replace(/<[^>]+>/g, ' ').trim();
+              if (desc && desc.length > 5) {
+                talentSpellTooltipCache[talent.spellId] = desc;
+                if (activeTooltipTalentSpellId === talent.spellId) {
+                  const descEl = document.getElementById('tt-talent-desc');
+                  if (descEl) descEl.innerHTML = desc;
+                }
+              }
+            }
+          })
+          .catch(() => {});
+      }
 
       const tt = document.getElementById('unified-tooltip');
       let html = `<div class="tt-title tt-gold">${talent.fancyName}</div>`;
       html += `<div class="tt-muted" style="font-size: 0.75rem; margin-bottom: 5px;">Rank ${curPts} / ${talent.maxPoints}</div>`;
 
-      let curText = curPts === 0 ? (rankDescs[0] || 'Increases spell ability.') : (rankDescs[curPts - 1] || rankDescs[0]);
-      html += `<div style="color: #ffffff; font-size: 0.77rem; margin-bottom: 5px;">${curText}</div>`;
+      const curText = getTalentDescription(talent, curPts);
+      html += `<div id="tt-talent-desc" style="color: #ffffff; font-size: 0.77rem; margin-bottom: 5px;">${curText}</div>`;
 
-      if (!isMax && curPts > 0 && rankDescs[curPts]) {
+      if (!isMax && curPts > 0 && talent.rankDescriptions && talent.rankDescriptions[curPts]) {
         html += `<div class="tt-divider"></div>`;
         html += `<div class="tt-gold" style="font-weight: 600; font-size: 0.74rem; margin-bottom: 2px;">Next Rank:</div>`;
-        html += `<div class="tt-muted" style="font-size: 0.76rem;">${rankDescs[curPts]}</div>`;
+        html += `<div class="tt-muted" style="font-size: 0.76rem;">${talent.rankDescriptions[curPts]}</div>`;
       }
 
+      // Authentic WoW Requirements Checks
       if (!isAvailable) {
+        if (talent.prereqLocation) {
+          const prereqTalentIdx = talentTrees[treeIdx].talents.findIndex(
+            t => t.location.rowIdx === talent.prereqLocation.rowIdx && t.location.colIdx === talent.prereqLocation.colIdx
+          );
+          if (prereqTalentIdx !== -1) {
+            const prereqTalent = talentTrees[treeIdx].talents[prereqTalentIdx];
+            const prereqPts = talentPoints[treeIdx][prereqTalentIdx] || 0;
+            if (prereqPts < prereqTalent.maxPoints) {
+              html += `<div class="tt-red" style="font-weight: 600; font-size: 0.74rem; margin-top: 5px;">Requires ${prereqTalent.maxPoints} points in ${prereqTalent.fancyName}.</div>`;
+            }
+          }
+        }
         const tierReq = talent.location.rowIdx * 5;
-        html += `<div class="tt-red" style="font-weight: 600; font-size: 0.74rem; margin-top: 6px;">Requires ${tierReq} points in ${talentTrees[treeIdx].name} Talents.</div>`;
+        const treeSpent = talentPoints[treeIdx].reduce((a, b) => a + b, 0);
+        if (treeSpent < tierReq) {
+          html += `<div class="tt-red" style="font-weight: 600; font-size: 0.74rem; margin-top: 4px;">Requires ${tierReq} points in ${talentTrees[treeIdx].name} Talents.</div>`;
+        }
       } else {
         html += `<div class="tt-divider"></div>`;
         html += `<div class="tt-green" style="font-size: 0.72rem;">Left-click to learn. • Right-click to unlearn.</div>`;
@@ -11596,6 +12017,7 @@
       const rangedItem = gear.relic ? itemLookup[gear.relic] : null;
       const hasShield = Boolean(ohItem && (ohItem.isShield || (ohItem.armor && ohItem.armor > 80)));
       const charClass = reqBody.characterClass || activeCharacterClass || 'shaman';
+      const charRace = reqBody.characterRace || activeCharacterRace || (charClass === 'paladin' ? 'human' : 'orc');
 
       // Character Attributes based on active class
       let baseStr = 20, baseAgi = 20, baseSta = 20, baseInt = 20, baseSpi = 20;
@@ -11655,13 +12077,26 @@
         baseSpi = 20 + Math.floor(level * 0.9);
       }
 
+      // Apply Racial base attribute modifiers
+      const raceDef = (typeof WOW_RACES !== 'undefined' && WOW_RACES[charRace]) ? WOW_RACES[charRace] : null;
+      if (raceDef && raceDef.stats) {
+        baseStr += (raceDef.stats.str || 0);
+        baseAgi += (raceDef.stats.agi || 0);
+        baseSta += (raceDef.stats.sta || 0);
+        baseInt += (raceDef.stats.int || 0);
+        baseSpi += (raceDef.stats.spi || 0);
+      }
+
       let totalStr = baseStr + gearStats.Str;
       let totalAgi = baseAgi + gearStats.Agi;
       let totalSta = baseSta + gearStats.Sta;
       if (charClass === 'shaman' && toughnessRank > 0) totalSta = Math.round(totalSta * (1 + 0.02 * toughnessRank));
       let totalInt = baseInt + gearStats.Int;
+      if (charRace === 'gnome') totalInt = Math.round(totalInt * 1.05); // Gnome Expansive Mind (+5% Int)
       let totalSpi = baseSpi + gearStats.Spi;
+      if (charRace === 'human') totalSpi = Math.round(totalSpi * 1.05); // Human Spirit (+5% Spi)
       let totalArmor = (charClass === 'mage' || charClass === 'priest' || charClass === 'warlock' ? 40 : 120) + (totalAgi * 2) + gearStats.Armor;
+      if (charRace === 'dwarf') totalArmor = Math.round(totalArmor * 1.10); // Dwarf Stoneform (+10% Armor)
 
       let totalAP = (totalStr * 2) + gearStats.AP;
       if (charClass === 'rogue' || charClass === 'hunter' || charClass === 'druid') {
@@ -11682,6 +12117,10 @@
       if (charClass === 'shaman') {
         totalAP += rockbiterBonusAP;
         if (mentalDexRank > 0) totalAP += Math.round(totalInt * (mentalDexRank * 0.33));
+      }
+      if (charRace === 'orc') {
+        // Orc Blood Fury: +25% base melee AP (averaged over 2m cooldown)
+        totalAP += Math.round(baseStr * 2 * 0.25 * (15 / 120));
       }
 
       // Multi-class Talent Modifiers
@@ -11761,11 +12200,13 @@
       let spellCritPct = 2.5 + (totalInt / 59.5) + (gearStats.Crit || 0);
 
       let maxHP = 260 + (level * 24) + (totalSta * 10);
+      if (charRace === 'tauren') maxHP = Math.round(maxHP * 1.05); // Tauren Endurance (+5% Max HP)
       let maxMana = (charClass === 'warrior' || charClass === 'rogue') ? 0 : 400 + (level * 25) + (totalInt * 15);
       if (charClass === 'shaman' && ancKnowRank > 0) maxMana = Math.round(maxMana * (1 + 0.01 * ancKnowRank));
 
       // Weapon specs
       let wpnSpeed = mhItem && mhItem.speed > 0 ? mhItem.speed : (charClass === 'mage' || charClass === 'priest' || charClass === 'warlock' ? 1.8 : 2.4);
+      if (charRace === 'troll') wpnSpeed = Math.round(wpnSpeed * 0.88 * 100) / 100; // Troll Berserking (+12% Attack Speed)
       let wpnMin = mhItem && mhItem.dmgMin > 0 ? mhItem.dmgMin : (charClass === 'mage' || charClass === 'priest' || charClass === 'warlock' ? 1 : 2);
       let wpnMax = mhItem && mhItem.dmgMax > 0 ? mhItem.dmgMax : (wpnMin + 2);
       let is2H = mhItem ? Boolean(mhItem.is2H) : false;
@@ -12795,7 +13236,7 @@
       let bossLvl = level + 2;
       let tankArmorDenom = totalArmor + 400 + (85 * bossLvl);
       let armorDrPct = Math.round(Math.min(0.75, Math.max(0.05, totalArmor / tankArmorDenom)) * 1000) / 10;
-      let dodgePct = Math.round((4.2 + (totalAgi / 14.5) + (anticipationRank * 1.0) + (gearStats.Def * 0.04) + (gearStats.Dodge || 0)) * 10) / 10;
+      let dodgePct = Math.round((4.2 + (totalAgi / 14.5) + (anticipationRank * 1.0) + (gearStats.Def * 0.04) + (gearStats.Dodge || 0) + (charRace === 'nightelf' ? 1.0 : 0)) * 10) / 10;
       let parryPct = (spiritWpnRank > 0 || charClass === 'warrior' || charClass === 'paladin' || charClass === 'rogue') ? Math.round((5.0 + gearStats.Def * 0.04) * 10) / 10 : 0.0;
       let blockPct = hasShield ? Math.round((5.0 + gearStats.Def * 0.04 + anticipationRank * 1.0) * 10) / 10 : 0.0;
       blockVal = hasShield ? Math.round(8 + (level * 0.65) + (totalStr / 20) + (gearStats.Block || 0)) : 0;
@@ -12888,10 +13329,10 @@
           hasShield: hasShield,
 
           fireRes: gearStats['Fire Res'] || 0,
-          frostRes: gearStats['Frost Res'] || 0,
-          natureRes: gearStats['Nature Res'] || 0,
-          shadowRes: gearStats['Shadow Res'] || 0,
-          arcaneRes: gearStats['Arcane Res'] || 0
+          frostRes: (gearStats['Frost Res'] || 0) + (charRace === 'dwarf' ? 10 : 0),
+          natureRes: (gearStats['Nature Res'] || 0) + ((charRace === 'tauren' || charRace === 'nightelf') ? 10 : 0),
+          shadowRes: (gearStats['Shadow Res'] || 0) + (charRace === 'undead' ? 10 : 0),
+          arcaneRes: (gearStats['Arcane Res'] || 0) + (charRace === 'gnome' ? 10 : 0)
         },
         healing: healingSummary,
         tank: tankSummary,
@@ -13137,6 +13578,7 @@
 
       const reqBody = {
         characterClass: activeCharacterClass,
+        characterRace: activeCharacterRace,
         spec: currentCharacterSpec,
         level: getCurrentPlayerLevel(),
         imbue: currentImbue,
@@ -13151,7 +13593,7 @@
       };
 
       // Monte Carlo simulation runs fresh iterations on every click
-      const simKey = `wowsim_last_result_${reqBody.level}_${reqBody.imbue}_${reqBody.talents}_${reqBody.rotation_preset}_${reqBody.duration}_${reqBody.iterations}`;
+      const simKey = `wowsim_last_result_${reqBody.level}_${reqBody.characterRace}_${reqBody.imbue}_${reqBody.talents}_${reqBody.rotation_preset}_${reqBody.duration}_${reqBody.iterations}`;
 
       if (btn) btn.disabled = true;
       if (btnText) btnText.innerHTML = '<span class="loading-spinner"></span> Simulating...';
@@ -13268,7 +13710,9 @@
         const drEl = document.getElementById('stat-bar-armordr');
         if (drEl) drEl.textContent = `${(st.armorDrPct || 0).toFixed(1)}%`;
         const specLbl = document.getElementById('stat-bar-spec-lbl');
-        if (specLbl) specLbl.textContent = `Lvl ${data.character_level || getCurrentPlayerLevel()} • ${activeCharacterClass.toUpperCase()} (${(currentCharacterSpec || '').toUpperCase()})`;
+        const rDef = (typeof WOW_RACES !== 'undefined' && WOW_RACES[activeCharacterRace]) ? WOW_RACES[activeCharacterRace] : null;
+        const raceLabel = rDef ? (rDef.name + ' ') : '';
+        if (specLbl) specLbl.textContent = `Lvl ${data.character_level || getCurrentPlayerLevel()} • ${raceLabel}${activeCharacterClass.toUpperCase()} (${(currentCharacterSpec || '').toUpperCase()})`;
 
         // Primary Attributes (Strength, Agility, Stamina, Intellect, Spirit)
         const strEl = document.getElementById('attr-str-val');
@@ -13330,6 +13774,8 @@
         if (rShadow) rShadow.textContent = st.shadowRes || 0;
         const rArcane = document.getElementById('attr-res-arcane');
         if (rArcane) rArcane.textContent = st.arcaneRes || 0;
+
+        if (typeof renderActiveRacialTraits === 'function') renderActiveRacialTraits();
       }
 
       // Delta comparison badge
