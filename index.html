@@ -3092,37 +3092,59 @@
     text-decoration: underline;
   }
 
-  /* TOPBAR DESKTOP LAYOUT (>= 1024px) */
+  /* TOPBAR DESKTOP LAYOUT (>= 1024px) — CLEAN 2-ROW COMMAND BAR */
   @media (min-width: 1024px) {
     header.studio-topbar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px 14px;
+      padding: 8px 16px;
+    }
+    .topbar-row-header {
+      display: contents;
+    }
+    .brand {
+      order: 1;
+      margin-right: auto;
+      flex-shrink: 0;
+    }
+    .master-actions-bar {
+      order: 2;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-left: 0;
+      flex-shrink: 0;
+    }
+    #btn-simulate {
+      order: 3;
+      flex-shrink: 0;
+      white-space: nowrap;
+    }
+    .character-identity-bar {
+      order: 4;
+      flex-basis: 100%;
+      width: 100%;
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 10px;
-      flex-wrap: nowrap;
-    }
-    .topbar-row-header {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      flex-shrink: 0;
-    }
-    .character-identity-bar {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      flex-wrap: nowrap;
+      flex-wrap: wrap;
+      padding: 5px 10px;
     }
     .char-id-row {
       display: flex;
       align-items: center;
       gap: 6px;
+      flex-wrap: wrap;
     }
-    .master-actions-bar {
+    .spec-pills-group {
       display: flex;
       align-items: center;
-      gap: 8px;
-      margin-left: auto;
+      gap: 5px;
+      flex-wrap: wrap;
     }
   }
 
@@ -3160,6 +3182,7 @@
       justify-content: space-between;
       gap: 6px;
       width: 100%;
+      flex-wrap: wrap;
     }
     .class-selector-pill {
       flex: 1;
@@ -3190,11 +3213,12 @@
     .master-actions-bar {
       display: flex;
       align-items: center;
+      flex-wrap: wrap;
       width: 100%;
       gap: 6px;
     }
     .unified-bis-group {
-      flex: 1;
+      flex: 1 1 230px;
       min-width: 0;
       display: flex;
       align-items: center;
@@ -3207,6 +3231,8 @@
       min-width: 0;
       max-width: none;
       font-size: 0.72rem;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
     .btn-bis-master {
       flex-shrink: 0;
@@ -3232,12 +3258,48 @@
       padding: 6px 14px !important;
       font-size: 0.8rem !important;
     }
+    .char-id-row {
+      display: grid !important;
+      grid-template-columns: 1fr 1fr;
+      align-items: stretch;
+      gap: 6px !important;
+      width: 100%;
+    }
+    .char-id-row .config-pill-lvl {
+      width: 100%;
+      justify-content: space-between;
+    }
     .class-selector-pill {
-      padding: 2px 4px;
-      font-size: 0.7rem;
+      padding: 4px 6px;
+      font-size: 0.74rem;
+      width: 100%;
+      min-width: 0;
+      overflow: hidden;
+      gap: 4px !important;
     }
     .class-dropdown-select {
-      font-size: 0.7rem;
+      font-size: 0.74rem;
+      min-width: 0;
+      flex: 1;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+    .unified-bis-group {
+      flex: 1 1 100% !important;
+    }
+    .char-sheet-tabs {
+      grid-template-columns: repeat(2, 1fr) !important;
+      gap: 4px !important;
+    }
+    .char-sheet-tab {
+      font-size: 0.72rem !important;
+      padding: 6px 6px !important;
+    }
+    .gear-slot-card {
+      min-width: 0 !important;
+      max-width: 100% !important;
+      flex-wrap: wrap !important;
+      gap: 8px !important;
     }
     .toolbar-group {
       flex-wrap: wrap !important;
@@ -3401,10 +3463,10 @@
       </div>
 
       <!-- COMPACT SIM CONFIG POPOVER -->
-      <details class="popover-details">
-        <summary class="config-pill" style="cursor: pointer; padding: 5px 10px;" title="Configure combat duration and Monte Carlo iterations">
+      <details class="popover-details" style="flex-shrink: 0;">
+        <summary class="config-pill" style="cursor: pointer; padding: 5px 10px; white-space: nowrap;" title="Configure combat duration and Monte Carlo iterations">
           <span>⚙️</span>
-          <span id="sim-cfg-summary-lbl" style="font-size: 0.74rem; font-weight: 700; color: #cbd5e1;">30s • 200</span>
+          <span id="sim-cfg-summary-lbl" style="font-size: 0.74rem; font-weight: 700; color: #cbd5e1; white-space: nowrap;">30s • 200</span>
           <span style="font-size: 0.65rem; color: #94a3b8;">▾</span>
         </summary>
         <div class="popover-card">
