@@ -2893,198 +2893,207 @@
 </style>
 
 <style id="mobile-responsive-engine-styles">
-  /* MOBILE & TABLET COMPREHENSIVE RESPONSIVENESS */
-  html, body {
-    overflow-x: hidden !important;
-    max-width: 100vw;
-  }
-
-  .character-identity-bar {
-    max-width: 100%;
-    flex-wrap: wrap;
-  }
-
-  .spec-pills-group {
-    display: flex;
-    gap: 4px;
+  /* WOWHEAD LINK BUTTONS & HOVER STYLES */
+  .btn-slot-wowhead, .picker-wh-link {
+    display: inline-flex;
     align-items: center;
-    max-width: 100%;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
+    gap: 3px;
+    background: rgba(245, 158, 11, 0.12);
+    border: 1px solid rgba(245, 158, 11, 0.45);
+    color: #fbbf24;
+    text-decoration: none;
+    font-size: 0.7rem;
+    font-weight: 700;
+    padding: 3px 7px;
+    border-radius: 4px;
+    transition: all 0.15s ease;
+    white-space: nowrap;
+    user-select: none;
   }
-  .spec-pills-group::-webkit-scrollbar { display: none; }
+  .btn-slot-wowhead:hover, .picker-wh-link:hover {
+    background: rgba(245, 158, 11, 0.28);
+    border-color: #ffd100;
+    color: #fff;
+    box-shadow: 0 0 8px rgba(245, 158, 11, 0.35);
+  }
+  .slot-item-name {
+    text-decoration: none;
+    cursor: pointer;
+  }
+  .slot-item-name:hover {
+    text-decoration: underline;
+  }
 
-  @media (max-width: 1280px) {
+  /* TOPBAR DESKTOP LAYOUT (>= 1024px) */
+  @media (min-width: 1024px) {
     header.studio-topbar {
-      padding: 6px 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: nowrap;
+    }
+    .topbar-row-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-shrink: 0;
+    }
+    .character-identity-bar {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: nowrap;
+    }
+    .char-id-row {
+      display: flex;
+      align-items: center;
       gap: 6px;
     }
     .master-actions-bar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
       margin-left: auto;
     }
   }
 
-  @media (max-width: 992px) {
+  /* TOPBAR TABLET & MOBILE (< 1024px) */
+  @media (max-width: 1023px) {
+    header.studio-topbar {
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      gap: 8px;
+      padding: 8px 10px;
+    }
+    .topbar-row-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+    }
     .brand-title p {
       display: none !important;
     }
-    .brand-title h1 {
-      font-size: 0.92rem !important;
-    }
     .character-identity-bar {
-      order: 3;
+      display: flex;
+      flex-direction: column;
       width: 100%;
+      gap: 6px;
       background: rgba(10, 12, 18, 0.85);
+      border: 1px solid #283040;
+      padding: 6px 8px;
+      border-radius: 8px;
+    }
+    .char-id-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+      width: 100%;
+    }
+    .class-selector-pill {
+      flex: 1;
+      min-width: 0;
+    }
+    .class-dropdown-select {
+      width: 100%;
+    }
+    .spec-pills-group {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      width: 100%;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      padding-bottom: 2px;
+    }
+    .spec-pills-group::-webkit-scrollbar { display: none; }
+    .spec-tab-pill {
+      flex: 1;
+      min-width: fit-content;
+      padding: 4px 8px;
+      font-size: 0.72rem;
+      white-space: nowrap;
+      justify-content: center;
     }
     .master-actions-bar {
-      order: 2;
-      margin-left: auto;
+      display: flex;
+      align-items: center;
+      width: 100%;
+      gap: 6px;
     }
-    .telemetry-kpi-strip {
-      grid-template-columns: 1fr 1fr;
+    .unified-bis-group {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 3px 6px;
+      gap: 4px;
     }
-  }
-
-  @media (max-width: 768px) {
-    .app-layout {
-      grid-template-columns: 1fr !important;
-      padding: 8px !important;
-      gap: 10px !important;
+    .unified-bis-select {
+      flex: 1;
+      min-width: 0;
+      max-width: none;
+      font-size: 0.72rem;
     }
-    .sim-panel-sticky {
-      position: static !important;
-      max-height: none !important;
-      overflow-y: visible !important;
-    }
-    .telemetry-kpi-strip {
-      grid-template-columns: 1fr !important;
-      gap: 8px !important;
-    }
-    .char-sheet-tabs {
-      grid-template-columns: repeat(2, 1fr) !important;
-      gap: 4px !important;
-      padding: 4px !important;
-    }
-    .char-sheet-tab {
-      padding: 7px 8px !important;
-      font-size: 0.74rem !important;
-      justify-content: center !important;
-    }
-    .gear-grid {
-      grid-template-columns: 1fr !important;
-    }
-    .gear-slot-card {
-      padding: 6px 8px !important;
-    }
-    .rot-featured {
-      flex-direction: column !important;
-      align-items: flex-start !important;
-      gap: 6px !important;
-      padding: 10px 12px !important;
-    }
-    .rot-featured .rf-score {
-      width: 100% !important;
-      text-align: left !important;
-      margin-top: 4px !important;
-      padding-top: 4px !important;
-      border-top: 1px solid rgba(255, 215, 0, 0.15) !important;
-    }
-    .rot-grid {
-      grid-template-columns: 1fr !important;
-    }
-    .sc-row > summary {
-      grid-template-columns: auto 1fr auto auto 12px !important;
-      gap: 6px !important;
-      padding: 6px 8px !important;
-    }
-    .sc-row .sc-name {
-      font-size: 0.78rem !important;
-    }
-    .sc-row .sc-sub {
-      font-size: 0.64rem !important;
-    }
-    .sc-row .sc-metric {
-      font-size: 0.8rem !important;
-    }
-    .grade-pill {
-      padding: 1px 7px !important;
-      font-size: 0.72rem !important;
-    }
-    .grade-pill.lg {
-      padding: 2px 12px !important;
-      font-size: 1.05rem !important;
-    }
-    .modal-box {
-      max-width: 96vw !important;
-      max-height: 90vh !important;
-      margin: 6px !important;
-    }
-    .sources-grid {
-      grid-template-columns: 1fr !important;
+    .btn-bis-master {
+      flex-shrink: 0;
+      padding: 5px 9px;
+      font-size: 0.72rem;
+      white-space: nowrap;
     }
   }
 
-  @media (max-width: 680px) {
+  /* PHONE-SPECIFIC REFINEMENTS (< 640px) */
+  @media (max-width: 640px) {
     header.studio-topbar {
       padding: 6px 8px;
       gap: 6px;
     }
     .brand-title h1 {
-      font-size: 0.86rem !important;
+      font-size: 0.88rem !important;
     }
     .patch-version-pill {
       display: none !important;
     }
-    .character-identity-bar {
-      order: 2;
-      padding: 3px 6px;
-      gap: 4px;
+    #btn-simulate {
+      padding: 6px 14px !important;
+      font-size: 0.8rem !important;
     }
-    .master-actions-bar {
-      order: 3;
-      width: 100%;
-      margin-left: 0;
-      justify-content: space-between;
-      gap: 6px;
-    }
-    .spec-tab-pill {
-      padding: 3px 6px;
-      font-size: 0.72rem;
-    }
-    .spec-tab-pill .spec-wow-icon {
-      width: 16px;
-      height: 16px;
-    }
-    .unified-bis-group {
-      flex: 1;
-      min-width: 0;
+    .class-selector-pill {
       padding: 2px 4px;
+      font-size: 0.7rem;
     }
-    .unified-bis-select {
-      max-width: 110px;
-      font-size: 0.72rem;
+    .class-dropdown-select {
+      font-size: 0.7rem;
     }
-    .btn-bis-master {
-      padding: 4px 8px;
-      font-size: 0.72rem;
+    .toolbar-group {
+      flex-wrap: wrap !important;
+      width: 100% !important;
+      gap: 4px !important;
     }
-    .popover-card {
-      right: 0 !important;
-      left: auto !important;
-      max-width: 94vw !important;
-      min-width: 260px !important;
+    .toolbar-select, .toolbar-group .filter-select {
+      flex: 1 !important;
+      min-width: 120px !important;
     }
-  }
-
-  @media (max-width: 480px) {
-    .unified-bis-select {
-      max-width: 95px;
-      font-size: 0.68rem;
+    .gear-toolbar-controls {
+      width: 100% !important;
+      margin-left: 0 !important;
     }
-    .btn-bis-master {
-      padding: 4px 6px;
-      font-size: 0.68rem;
+    .gear-subview-switcher {
+      width: 100% !important;
+      display: flex !important;
+    }
+    .gear-subview-btn {
+      flex: 1 !important;
+      justify-content: center !important;
+    }
+    .gear-grid {
+      grid-template-columns: 1fr !important;
     }
     .popover-card {
       position: fixed !important;
@@ -3094,6 +3103,14 @@
       width: calc(100vw - 20px) !important;
       max-width: none !important;
     }
+    .app-layout {
+      padding: 6px !important;
+    }
+    .slot-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+    }
   }
 </style>
 
@@ -3102,44 +3119,59 @@
 
   <!-- UNIFIED STUDIO TOP COMMAND BAR -->
   <header class="studio-topbar">
-    <!-- 1. BRAND & SERVER PATCH PILL -->
-    <div class="brand">
-      <div class="shaman-icon"></div>
-      <div class="brand-title">
-        <div style="display: flex; align-items: center; gap: 8px;">
-          <h1 style="font-size: 1.02rem;">WoW Forever • WoW Sim</h1>
-          <div class="patch-version-pill" onclick="openPatchNotesModal()" title="Click to view WoW Forever Patch Notes & Server Version">
-            <span style="color: #4ade80; font-size: 0.65rem;">●</span>
-            <span id="patch-pill-text">v1.4.2-Live</span>
+    <!-- ROW 1: BRAND ON LEFT, SIMULATE BUTTON ON RIGHT -->
+    <div class="topbar-row-header">
+      <div class="brand">
+        <div class="shaman-icon"></div>
+        <div class="brand-title">
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <h1 style="font-size: 1.02rem;">WoW Forever • WoW Sim</h1>
+            <div class="patch-version-pill" onclick="openPatchNotesModal()" title="Click to view WoW Forever Patch Notes & Server Version">
+              <span style="color: #4ade80; font-size: 0.65rem;">●</span>
+              <span id="patch-pill-text">v1.4.2-Live</span>
+            </div>
           </div>
+          <p style="font-size: 0.7rem;">Level <span class="cur-lvl-label">1</span> Theorycrafting &amp; Simulation Engine</p>
         </div>
-        <p style="font-size: 0.7rem;">Level <span class="cur-lvl-label">1</span> Theorycrafting &amp; Simulation Engine</p>
       </div>
+
+      <!-- SINGLE MASTER SIMULATE BUTTON (ACCESSIBLE AT TOP RIGHT ON MOBILE & DESKTOP) -->
+      <button id="btn-simulate" class="btn-sim" onclick="runOneStopSimulate()" style="position: relative; overflow: hidden;" title="Run Single-Target Simulation and 12-Scenario Benchmark Suite">
+        <span id="btn-text">▶ SIMULATE</span>
+        <div id="btn-sim-progress" style="position: absolute; bottom: 0; left: 0; height: 3px; background: #ffffff; width: 0%; display: none; transition: width 0.06s ease; box-shadow: 0 0 8px #ffffff;"></div>
+      </button>
     </div>
 
-    <!-- 2. CHARACTER IDENTITY CONTROLS (FACTION, CLASS, SPEC, LEVEL) -->
+    <!-- ROW 2: CHARACTER IDENTITY CONTROLS (FACTION, CLASS, SPEC, LEVEL) -->
     <div class="character-identity-bar">
-      <div class="class-selector-pill" style="border-color: rgba(239, 68, 68, 0.45);" title="Select your character's faction side to filter dungeon drops, quest rewards, and vendor items">
-        <span class="class-pill-label">Side:</span>
-        <select id="cfg-active-faction" class="class-dropdown-select" onchange="onFactionChanged(this.value)" style="font-weight: 700;">
-          <option value="Horde" selected>🔴 Horde</option>
-          <option value="Alliance">🔵 Alliance</option>
-        </select>
-      </div>
+      <div class="char-id-row">
+        <div class="class-selector-pill" style="border-color: rgba(239, 68, 68, 0.45);" title="Select your character's faction side to filter dungeon drops, quest rewards, and vendor items">
+          <span class="class-pill-label">Side:</span>
+          <select id="cfg-active-faction" class="class-dropdown-select" onchange="onFactionChanged(this.value)" style="font-weight: 700;">
+            <option value="Horde" selected>🔴 Horde</option>
+            <option value="Alliance">🔵 Alliance</option>
+          </select>
+        </div>
 
-      <div class="class-selector-pill">
-        <span class="class-pill-label">Class:</span>
-        <select id="cfg-active-class" class="class-dropdown-select" onchange="onClassSelected(this.value)">
-          <option value="shaman" selected>⚡ Shaman</option>
-          <option value="warrior">⚔️ Warrior</option>
-          <option value="rogue">🗡️ Rogue</option>
-          <option value="hunter">🏹 Hunter</option>
-          <option value="druid">🐾 Druid</option>
-          <option value="priest">✨ Priest</option>
-          <option value="mage">🔮 Mage</option>
-          <option value="warlock">🔥 Warlock</option>
-          <option value="paladin">🛡️ Paladin</option>
-        </select>
+        <div class="class-selector-pill">
+          <span class="class-pill-label">Class:</span>
+          <select id="cfg-active-class" class="class-dropdown-select" onchange="onClassSelected(this.value)">
+            <option value="shaman" selected>⚡ Shaman</option>
+            <option value="warrior">⚔️ Warrior</option>
+            <option value="rogue">🗡️ Rogue</option>
+            <option value="hunter">🏹 Hunter</option>
+            <option value="druid">🐾 Druid</option>
+            <option value="priest">✨ Priest</option>
+            <option value="mage">🔮 Mage</option>
+            <option value="warlock">🔥 Warlock</option>
+            <option value="paladin">🛡️ Paladin</option>
+          </select>
+        </div>
+
+        <div class="config-pill config-pill-lvl" style="padding: 2px 8px;">
+          <label for="cfg-level">Lvl</label>
+          <input type="number" id="cfg-level" value="1" min="1" max="60" onchange="onLevelChanged()" oninput="onLevelChanged()" style="width: 38px;">
+        </div>
       </div>
 
       <div class="spec-pills-group" id="class-specs-list">
@@ -3164,17 +3196,12 @@
           <span class="spec-role-tag">CAST</span>
         </button>
       </div>
-
-      <div class="config-pill" style="padding: 2px 8px;">
-        <label for="cfg-level">Lvl</label>
-        <input type="number" id="cfg-level" value="1" min="1" max="60" onchange="onLevelChanged()" oninput="onLevelChanged()" style="width: 42px;">
-      </div>
     </div>
 
-    <!-- 3. MASTER ACTIONS (SINGLE AUTO-BIS BUILDER + SINGLE SIMULATE BUTTON) -->
+    <!-- ROW 3: MASTER ACTIONS (BIS TARGET & CONFIG POPOVER) -->
     <div class="master-actions-bar">
       <div class="unified-bis-group" title="Choose an optimization target and auto-equip the mathematically best Gear, Enchants, Talents, Imbue, and Food/Consumables">
-        <span style="font-size: 0.68rem; font-weight: 800; color: #f59e0b; text-transform: uppercase;">BiS Target:</span>
+        <span style="font-size: 0.68rem; font-weight: 800; color: #f59e0b; text-transform: uppercase;">BiS:</span>
         <select id="cfg-bis-target" class="unified-bis-select" onchange="runUnifiedAutoBiS()">
           <option value="all" selected>⭐ All-Around Active Spec BiS</option>
           <option value="pve_dungeon_tank">🛡️ Tank: Dungeon Boss (Main Tank)</option>
@@ -3230,12 +3257,6 @@
           </div>
         </div>
       </details>
-
-      <!-- SINGLE MASTER SIMULATE BUTTON WITH PROGRESS BAR -->
-      <button id="btn-simulate" class="btn-sim" onclick="runOneStopSimulate()" style="position: relative; overflow: hidden;" title="Run Single-Target Simulation and 12-Scenario Benchmark Suite">
-        <span id="btn-text">▶ SIMULATE</span>
-        <div id="btn-sim-progress" style="position: absolute; bottom: 0; left: 0; height: 3px; background: #ffffff; width: 0%; display: none; transition: width 0.06s ease; box-shadow: 0 0 8px #ffffff;"></div>
-      </button>
     </div>
   </header>
 
@@ -3482,13 +3503,13 @@
 
       <!-- CHARACTER TAB 3: ROTATION, IMBUES & HEALING -->
       <div id="view-rotation" class="build-subpanel" style="display: none;">
-        <!-- WEAPON IMBUES PANEL (SHAMAN ONLY) -->
-        <div class="panel" id="weapon-imbues-panel" style="margin-bottom: 16px;">
-          <div class="panel-header">
-            <h2><span>🔥</span> Weapon Imbues</h2>
-          </div>
+        <!-- WEAPON IMBUES PANEL (SHAMAN ONLY - COMPACT ACCORDION TO MATCH ALL CLASSES) -->
+        <details class="rot-details panel" id="weapon-imbues-panel" style="margin-bottom: 12px; padding: 8px 12px; background: #121620; border: 1px solid rgba(245, 158, 11, 0.35); border-radius: 8px;">
+          <summary style="cursor: pointer; font-size: 0.8rem; font-weight: 700; color: #ffd100; display: flex; align-items: center; gap: 6px;">
+            <span>🔥</span> Active Weapon Imbue: <strong id="current-imbue-summary-lbl" style="color: #fff;">Flametongue Weapon</strong> <span style="font-size: 0.7rem; color: #94a3b8; margin-left: auto;">(Click to change) ▾</span>
+          </summary>
 
-          <div style="display: flex; flex-direction: column; gap: 10px;">
+          <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 10px;">
             <div class="imbue-card" id="card-imbue-WindfuryWeapon" onclick="setImbue('WindfuryWeapon')" style="display: none;">
               <div class="imbue-icon" style="background-image: url('https://wow.zamimg.com/images/wow/icons/medium/spell_nature_cyclone.jpg');"></div>
               <div style="flex: 1;">
@@ -6073,16 +6094,10 @@
         healPanel.style.display = (isHealerRole && isHealerClass) ? 'block' : 'none';
       }
 
-      // 3. Update Rotation Tab Header label
+      // 3. Update Rotation Tab Header label (Unified across all classes)
       const rotTabBtn = document.getElementById('btn-build-rotation');
       if (rotTabBtn) {
-        if (cls === 'shaman') {
-          rotTabBtn.innerHTML = '<span>⚡</span> Rotation & Imbues';
-        } else if (['priest', 'paladin', 'druid'].includes(cls) && roleMode === 'healer') {
-          rotTabBtn.innerHTML = '<span>💚</span> Rotation & Healing';
-        } else {
-          rotTabBtn.innerHTML = '<span>⚡</span> Rotation & Spells';
-        }
+        rotTabBtn.innerHTML = '<span>⚡</span> Rotation & Spells';
       }
     }
 
@@ -6437,7 +6452,7 @@
         }
       });
 
-      const autoAtkLabel = (activeCharacterClass === 'shaman') ? '↻ Auto-Attacks & Imbues' : '↻ Auto-Attacks';
+      const autoAtkLabel = '↻ Auto-Attacks';
       banner.innerHTML += `
         <span class="flow-step-pill" style="border-color: #2ecc71; color: #2ecc71;">
           ${autoAtkLabel}
@@ -6852,15 +6867,15 @@
     // --- WOWHEAD DATABASE LINK ENGINE ---
     function getWowheadItemUrl(item) {
       if (!item || !item.id || item.id === 0) return '#';
-      return `https://www.wowhead.com/forever/item=${item.id}`;
+      return `https://www.wowhead.com/classic/item=${item.id}`;
     }
 
     function getWowheadEnchantUrl(enchant) {
       if (!enchant || !enchant.effectId) return '#';
       if (enchant.spellId) {
-        return `https://www.wowhead.com/forever/spell=${enchant.spellId}`;
+        return `https://www.wowhead.com/classic/spell=${enchant.spellId}`;
       }
-      return `https://www.wowhead.com/forever/search?q=${encodeURIComponent(enchant.name)}`;
+      return `https://www.wowhead.com/classic/search?q=${encodeURIComponent(enchant.name)}`;
     }
 
     // Refresh Wowhead tooltips whenever dynamic DOM is updated
@@ -9185,6 +9200,7 @@
         const item = items.find(i => i.id === itemId) || { id: 0, name: 'None', quality: 'common', icon: slotDefaultIcons[slot], summary: 'Empty Slot', slot: slot };
 
         const card = document.createElement('div');
+        card.id = `slot-card-${slot}`;
         card.className = 'gear-slot-card';
         if (item.id > 0) {
           card.onmouseenter = (e) => showItemTooltip(e, item);
@@ -9219,11 +9235,15 @@
         label.className = 'slot-label';
         label.innerText = labelText;
 
-        const nameLink = document.createElement('div');
+        const nameLink = document.createElement(item.id > 0 ? 'a' : 'div');
         nameLink.className = `slot-item-name ${item.quality}`;
         if (item.id > 0) {
           nameLink.innerText = item.name;
-          nameLink.onclick = () => openPickerModal(slot);
+          nameLink.href = getWowheadItemUrl(item);
+          nameLink.target = '_blank';
+          nameLink.rel = 'noopener noreferrer';
+          nameLink.title = 'Click to open on Wowhead (or click Change to equip another)';
+          nameLink.onclick = (e) => e.stopPropagation();
         } else {
           nameLink.innerText = 'Empty Slot';
           nameLink.onclick = () => openPickerModal(slot);
@@ -9314,6 +9334,16 @@
         actions.appendChild(changeBtn);
 
         if (item.id > 0) {
+          const whBtn = document.createElement('a');
+          whBtn.href = getWowheadItemUrl(item);
+          whBtn.target = '_blank';
+          whBtn.rel = 'noopener noreferrer';
+          whBtn.className = 'btn-slot-wowhead';
+          whBtn.innerHTML = '🔗 Wowhead';
+          whBtn.title = 'Open ' + item.name + ' on Wowhead (new tab)';
+          whBtn.onclick = (e) => e.stopPropagation();
+          actions.appendChild(whBtn);
+
           const clearBtn = document.createElement('button');
           clearBtn.className = 'btn-slot-clear';
           clearBtn.title = 'Unequip';
@@ -10070,7 +10100,10 @@
           </div>
           <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 4px; flex-shrink: 0;">
             ${rankBadgeHtml}
-            <div style="font-size: 0.68rem; color: var(--text-muted);">ilvl ${item.ilvl}</div>
+            <div style="display: flex; align-items: center; gap: 6px;">
+              <span style="font-size: 0.68rem; color: var(--text-muted);">ilvl ${item.ilvl}</span>
+              <a href="${getWowheadItemUrl(item)}" target="_blank" rel="noopener noreferrer" class="picker-wh-link" onclick="event.stopPropagation();" title="Inspect on Wowhead">🔗 Wowhead</a>
+            </div>
           </div>
         `;
 
@@ -10768,7 +10801,7 @@
       } else {
         tt.innerHTML = buildItemTooltipHtml(item);
         if (item.id > 0) {
-          fetch(`https://nether.wowhead.com/forever/tooltip/item/${item.id}`)
+          fetch(`https://nether.wowhead.com/classic/tooltip/item/${item.id}`)
             .then(res => res.json())
             .then(data => {
               if (data && data.tooltip) {
@@ -12972,9 +13005,9 @@
         renderRotationPresetChipsForClass(activeCharacterClass);
       }
 
-      // Tank Survivability, Mitigation & Threat Card
+      // Tank Survivability, Mitigation & Threat Card (ONLY for Tank Specs!)
       const tankCard = document.getElementById('card-tank-metrics');
-      if (data.tank) {
+      if (data.tank && roleMode === 'tank') {
         const t = data.tank;
         if (tankCard) {
           tankCard.style.display = 'block';
@@ -13027,9 +13060,13 @@
         }
       }
 
-      // Healing & Sustain Card
+      if (tankCard && roleMode !== 'tank') {
+        tankCard.style.display = 'none';
+      }
+
+      // Healing & Sustain Card (ONLY for Healer Specs!)
       const healCard = document.getElementById('card-healing-metrics');
-      if (data.healing && data.healing.active) {
+      if (data.healing && data.healing.active && roleMode === 'healer') {
         healCard.style.display = 'block';
         const h = data.healing;
         document.getElementById('heal-primary-badge').innerText = h.primary_spell.toUpperCase();
