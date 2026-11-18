@@ -238,16 +238,172 @@
     /* MAIN APP LAYOUT (WORKBENCH + PERSISTENT SIMULATION PANEL) */
 
     /* ONE-STOP COCKPIT UNIFIED LAYOUT & DRAWERS */
+    /* COCKPIT 3-TAB BAR */
+  .cockpit-right-tabs {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    background: #0a0d14;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 4px;
+    margin-bottom: 8px;
+  }
+  .cockpit-tab-btn {
+    flex: 1;
+    background: transparent;
+    border: 1px solid transparent;
+    color: var(--text-muted);
+    font-size: 0.76rem;
+    font-weight: 700;
+    padding: 7px 8px;
+    border-radius: 6px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    transition: all 0.15s ease;
+    white-space: nowrap;
+    user-select: none;
+  }
+  .cockpit-tab-btn:hover {
+    color: var(--text-main);
+    background: rgba(255, 255, 255, 0.04);
+  }
+  .cockpit-tab-btn.active {
+    background: #1a2233;
+    border-color: #38455e;
+    color: var(--gold-bright);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.35);
+  }
+  @media (max-width: 640px) {
     .cockpit-right-tabs {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      background: #0a0d14;
-      border: 1px solid var(--border-color);
-      border-radius: 8px;
-      padding: 4px;
-      margin-bottom: 6px;
+      flex-wrap: wrap;
     }
+    .cockpit-tab-btn {
+      flex: 1 1 30%;
+      font-size: 0.72rem;
+      padding: 6px 4px;
+    }
+  }
+
+  /* WOW AUTHENTIC ATTRIBUTES SHEET */
+  .stat-sheet-primary-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 8px;
+  }
+  @media (max-width: 768px) {
+    .stat-sheet-primary-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+  @media (max-width: 420px) {
+    .stat-sheet-primary-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  .attr-pill {
+    background: rgba(255, 255, 255, 0.025);
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    border-radius: 6px;
+    padding: 8px 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    transition: all 0.15s ease;
+  }
+  .attr-pill:hover {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 215, 0, 0.3);
+  }
+  .attr-label {
+    font-size: 0.66rem;
+    font-weight: 700;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .attr-val {
+    font-size: 1.15rem;
+    font-weight: 900;
+    line-height: 1.2;
+    margin: 3px 0 2px 0;
+  }
+  .attr-sub {
+    font-size: 0.65rem;
+    color: #94a3b8;
+    white-space: nowrap;
+  }
+
+  .stat-sheet-sections-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+  }
+  @media (max-width: 860px) {
+    .stat-sheet-sections-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+  .stat-sub-section {
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 6px;
+    padding: 10px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    font-size: 0.74rem;
+  }
+  .stat-sec-header {
+    font-size: 0.72rem;
+    font-weight: 800;
+    color: var(--gold-bright);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-bottom: 4px;
+    padding-bottom: 4px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  }
+  .stat-line {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: #cbd5e1;
+  }
+
+  .resistances-strip {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 6px;
+  }
+  @media (max-width: 540px) {
+    .resistances-strip {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+  .res-pill {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 5px 8px;
+    border-radius: 5px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    border: 1px solid transparent;
+  }
+  .res-fire { background: rgba(239, 68, 68, 0.12); border-color: rgba(239, 68, 68, 0.35); color: #fca5a5; }
+  .res-frost { background: rgba(56, 189, 248, 0.12); border-color: rgba(56, 189, 248, 0.35); color: #7dd3fc; }
+  .res-nature { background: rgba(34, 197, 94, 0.12); border-color: rgba(34, 197, 94, 0.35); color: #86efac; }
+  .res-shadow { background: rgba(168, 85, 247, 0.12); border-color: rgba(168, 85, 247, 0.35); color: #d8b4fe; }
+  .res-arcane { background: rgba(244, 114, 182, 0.12); border-color: rgba(244, 114, 182, 0.35); color: #fbcfe8; }
+  .res-val { font-size: 0.82rem; font-weight: 800; }
 
     .cockpit-tab-btn {
       flex: 1;
@@ -3786,13 +3942,16 @@
         </div>
       </div>
 
-      <!-- RIGHT ANALYSIS VIEW TABS -->
+      <!-- RIGHT ANALYSIS VIEW TABS (3-TAB SUITE) -->
       <div class="cockpit-right-tabs">
-        <button id="btn-cockpit-tab-single" class="cockpit-tab-btn active" onclick="switchCockpitRightTab('single')">
-          <span>📊</span> Combat & Spell Breakdown (Live)
+        <button id="btn-cockpit-tab-attributes" class="cockpit-tab-btn active" onclick="switchCockpitRightTab('attributes')">
+          <span>👤</span> Attributes &amp; Stats
+        </button>
+        <button id="btn-cockpit-tab-breakdown" class="cockpit-tab-btn" onclick="switchCockpitRightTab('breakdown')">
+          <span>📊</span> Damage Breakdown
         </button>
         <button id="btn-cockpit-tab-scenarios" class="cockpit-tab-btn" onclick="switchCockpitRightTab('scenarios')">
-          <span>🌐</span> 12-Scenario Suite & Config
+          <span>🌐</span> 12-Scenario Suite &amp; Config
         </button>
       </div>
 
@@ -3851,32 +4010,132 @@
         </div>
       </div>
 
-      <!-- ANALYSIS PANE 2: COMBAT, TANK & SPELL BREAKDOWN -->
-      <div id="cockpit-pane-single" class="cockpit-pane" style="display: flex; flex-direction: column; gap: 10px;">
-        <!-- ACTIVE CHARACTER COMBAT ATTRIBUTES & STATS BAR -->
-        <div class="panel" style="padding: 12px 16px; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.08); background: linear-gradient(180deg, rgba(20, 26, 38, 0.95) 0%, rgba(13, 17, 23, 0.98) 100%);">
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; border-bottom: 1px solid rgba(255, 255, 255, 0.06); padding-bottom: 6px;">
-            <div style="font-size: 0.76rem; font-weight: 800; color: var(--gold-bright); text-transform: uppercase; letter-spacing: 0.5px; display: flex; align-items: center; gap: 6px;">
-              <span>⚔️</span> Active Character Combat Attributes
+      <!-- ANALYSIS PANE 1: AUTHENTIC WOW CHARACTER ATTRIBUTES & STATS SHEET -->
+      <div id="cockpit-pane-attributes" class="cockpit-pane" style="display: flex; flex-direction: column; gap: 10px;">
+        <!-- AUTHENTIC WOW CHARACTER SHEET & ATTRIBUTES CARD -->
+        <div class="panel" style="padding: 14px 18px; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.1); background: linear-gradient(180deg, rgba(20, 26, 38, 0.98) 0%, rgba(13, 17, 23, 0.98) 100%);">
+          <!-- CARD HEADER -->
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; border-bottom: 1px solid rgba(255, 255, 255, 0.08); padding-bottom: 8px;">
+            <div style="font-size: 0.8rem; font-weight: 800; color: var(--gold-bright); text-transform: uppercase; letter-spacing: 0.6px; display: flex; align-items: center; gap: 6px;">
+              <span>👤</span> Active Character Attributes
             </div>
-            <span id="stat-bar-spec-lbl" style="font-size: 0.7rem; color: #94a3b8; font-weight: 600;">Lvl 29 • Active Spec</span>
+            <span id="stat-bar-spec-lbl" style="font-size: 0.72rem; color: #94a3b8; font-weight: 600;">Lvl 29 • Active Spec</span>
           </div>
-          <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px 12px; font-size: 0.74rem;">
-            <div>Attack Power: <strong id="stat-bar-ap" style="color: #fbbf24;">--</strong></div>
-            <div>Melee Crit: <strong id="stat-bar-crit" style="color: #fbbf24;">--%</strong></div>
-            <div>Melee Hit: <strong id="stat-bar-hit" style="color: #fbbf24;">+--%</strong></div>
-            <div>Max Health: <strong id="stat-bar-hp" style="color: #4ade80;">-- HP</strong></div>
-            <div>Spell Power: <strong id="stat-bar-sp" style="color: #a78bfa;">+--</strong></div>
-            <div>Spell Crit: <strong id="stat-bar-spcrit" style="color: #a78bfa;">--%</strong></div>
-            <div>Max Mana: <strong id="stat-bar-mana" style="color: #60a5fa;">--</strong></div>
-            <div>Armor DR: <strong id="stat-bar-armordr" style="color: #38bdf8;">--%</strong></div>
+
+          <!-- 1. PRIMARY ATTRIBUTES (STR, AGI, STA, INT, SPI) -->
+          <div style="margin-bottom: 14px;">
+            <div style="font-size: 0.68rem; font-weight: 800; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px;">
+              Primary Attributes
+            </div>
+            <div class="stat-sheet-primary-grid">
+              <div class="attr-pill" title="Strength increases Attack Power and Shield Block Value">
+                <span class="attr-label">Strength</span>
+                <strong id="attr-str-val" class="attr-val" style="color: #fbbf24;">--</strong>
+                <span id="attr-str-sub" class="attr-sub">Base --</span>
+              </div>
+              <div class="attr-pill" title="Agility increases Melee Crit Chance, Armor, and Dodge">
+                <span class="attr-label">Agility</span>
+                <strong id="attr-agi-val" class="attr-val" style="color: #4ade80;">--</strong>
+                <span id="attr-agi-sub" class="attr-sub">Base --</span>
+              </div>
+              <div class="attr-pill" title="Stamina increases Health Pool (1 Sta = 10 HP)">
+                <span class="attr-label">Stamina</span>
+                <strong id="attr-sta-val" class="attr-val" style="color: #f87171;">--</strong>
+                <span id="attr-sta-sub" class="attr-sub">+-- HP</span>
+              </div>
+              <div class="attr-pill" title="Intellect increases Mana Pool (1 Int = 15 Mana) and Spell Crit">
+                <span class="attr-label">Intellect</span>
+                <strong id="attr-int-val" class="attr-val" style="color: #60a5fa;">--</strong>
+                <span id="attr-int-sub" class="attr-sub">+-- Mana</span>
+              </div>
+              <div class="attr-pill" title="Spirit increases Health &amp; Mana regeneration">
+                <span class="attr-label">Spirit</span>
+                <strong id="attr-spi-val" class="attr-val" style="color: #c084fc;">--</strong>
+                <span id="attr-spi-sub" class="attr-sub">Regen</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 2. COMBAT & DEFENSE STATS (3-COLUMN SECTION) -->
+          <div class="stat-sheet-sections-grid">
+            <!-- MELEE & PHYSICAL COMBAT -->
+            <div class="stat-sub-section">
+              <div class="stat-sec-header">
+                <span>⚔️</span> Melee Combat
+              </div>
+              <div class="stat-line"><span>Attack Power:</span> <strong id="stat-bar-ap" style="color: #fbbf24;">--</strong></div>
+              <div class="stat-line"><span>Melee Crit:</span> <strong id="stat-bar-crit" style="color: #fbbf24;">--%</strong></div>
+              <div class="stat-line"><span>Melee Hit:</span> <strong id="stat-bar-hit" style="color: #fbbf24;">+--%</strong></div>
+              <div class="stat-line"><span>Weapon Dmg:</span> <strong id="stat-bar-weapondmg" style="color: #e2e8f0;">-- - --</strong></div>
+              <div class="stat-line"><span>Weapon Speed:</span> <strong id="stat-bar-weaponspeed" style="color: #94a3b8;">--s</strong></div>
+            </div>
+
+            <!-- SPELL & HEALING COMBAT -->
+            <div class="stat-sub-section">
+              <div class="stat-sec-header">
+                <span>✨</span> Spell &amp; Healing
+              </div>
+              <div class="stat-line"><span>Spell Power:</span> <strong id="stat-bar-sp" style="color: #a78bfa;">+--</strong></div>
+              <div class="stat-line"><span>Healing Power:</span> <strong id="stat-bar-heal" style="color: #34d399;">+--</strong></div>
+              <div class="stat-line"><span>Spell Crit:</span> <strong id="stat-bar-spcrit" style="color: #a78bfa;">--%</strong></div>
+              <div class="stat-line"><span>Spell Hit:</span> <strong id="stat-bar-sphit" style="color: #a78bfa;">+--%</strong></div>
+              <div class="stat-line"><span>Max Mana:</span> <strong id="stat-bar-mana" style="color: #60a5fa;">--</strong></div>
+              <div class="stat-line"><span>MP5 (Combat):</span> <strong id="stat-bar-mp5" style="color: #60a5fa;">--</strong></div>
+            </div>
+
+            <!-- DEFENSE & MITIGATION -->
+            <div class="stat-sub-section">
+              <div class="stat-sec-header">
+                <span>🛡️</span> Defense &amp; Health
+              </div>
+              <div class="stat-line"><span>Max Health:</span> <strong id="stat-bar-hp" style="color: #4ade80;">-- HP</strong></div>
+              <div class="stat-line"><span>Armor:</span> <span><strong id="stat-bar-armor" style="color: #38bdf8;">--</strong> <span id="stat-bar-armordr-sub" style="color: #94a3b8; font-size: 0.68rem;">(<strong id="stat-bar-armordr" style="color: #38bdf8;">--%</strong> DR)</span></span></div>
+              <div class="stat-line"><span>Defense Skill:</span> <strong id="stat-bar-def" style="color: #e2e8f0;">--</strong></div>
+              <div class="stat-line"><span>Dodge / Parry:</span> <strong id="stat-bar-dodge-parry" style="color: #e2e8f0;">--% / --%</strong></div>
+              <div class="stat-line"><span>Shield Block:</span> <strong id="stat-bar-block" style="color: #bae6fd;">--</strong></div>
+            </div>
+          </div>
+
+          <!-- 3. MAGIC & ELEMENTAL RESISTANCES BAR -->
+          <div style="margin-top: 14px; padding-top: 10px; border-top: 1px solid rgba(255, 255, 255, 0.06);">
+            <div style="font-size: 0.68rem; font-weight: 800; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px;">
+              Magic &amp; Elemental Resistances
+            </div>
+            <div class="resistances-strip">
+              <div class="res-pill res-fire" title="Fire Resistance">
+                <span class="res-icon">🔥</span>
+                <span class="res-label">Fire</span>
+                <strong id="attr-res-fire" class="res-val">0</strong>
+              </div>
+              <div class="res-pill res-frost" title="Frost Resistance">
+                <span class="res-icon">❄️</span>
+                <span class="res-label">Frost</span>
+                <strong id="attr-res-frost" class="res-val">0</strong>
+              </div>
+              <div class="res-pill res-nature" title="Nature Resistance">
+                <span class="res-icon">🌿</span>
+                <span class="res-label">Nature</span>
+                <strong id="attr-res-nature" class="res-val">0</strong>
+              </div>
+              <div class="res-pill res-shadow" title="Shadow Resistance">
+                <span class="res-icon">💀</span>
+                <span class="res-label">Shadow</span>
+                <strong id="attr-res-shadow" class="res-val">0</strong>
+              </div>
+              <div class="res-pill res-arcane" title="Arcane Resistance">
+                <span class="res-icon">🔮</span>
+                <span class="res-label">Arcane</span>
+                <strong id="attr-res-arcane" class="res-val">0</strong>
+              </div>
+            </div>
           </div>
         </div>
-        <!-- TANK SURVIVABILITY, MITIGATION & THREAT CARD -->
-        <div class="panel" id="card-tank-metrics" style="border: 1px solid rgba(56, 189, 248, 0.65); background: linear-gradient(180deg, rgba(56, 189, 248, 0.14) 0%, rgba(13, 17, 23, 0.96) 100%); padding: 14px 18px; border-radius: 8px;">
+
+        <!-- TANK SURVIVABILITY, MITIGATION & THREAT CARD (ONLY FOR TANK SPECS) -->
+        <div class="panel" id="card-tank-metrics" style="display: none; border: 1px solid rgba(56, 189, 248, 0.65); background: linear-gradient(180deg, rgba(56, 189, 248, 0.14) 0%, rgba(13, 17, 23, 0.96) 100%); padding: 14px 18px; border-radius: 8px;">
           <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
             <div style="font-size: 0.78rem; font-weight: 800; color: #38bdf8; text-transform: uppercase; letter-spacing: 0.6px; display: flex; align-items: center; gap: 6px;">
-              <span>🛡️</span> <span id="tank-card-title-lbl">Tank Survivability, Mitigation & Threat</span>
+              <span>🛡️</span> <span id="tank-card-title-lbl">Tank Survivability, Mitigation &amp; Threat</span>
             </div>
             <div style="display: flex; gap: 6px; align-items: center;">
               <span class="badge-rec" id="tank-shield-badge" style="background: rgba(56, 189, 248, 0.2); border-color: #38bdf8; color: #bae6fd;">1H + SHIELD</span>
@@ -3912,7 +4171,7 @@
         <div class="panel" id="card-healing-metrics" style="display: none; border: 1px solid #2ecc71; background: linear-gradient(180deg, rgba(46, 204, 113, 0.12) 0%, rgba(13, 17, 23, 0.95) 100%); padding: 14px 18px; border-radius: 8px;">
           <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px;">
             <div style="font-size: 0.76rem; font-weight: 700; color: #2ecc71; text-transform: uppercase; letter-spacing: 0.5px;">
-              <span>💚</span> Healing & Sustain Analysis
+              <span>💚</span> Healing &amp; Sustain Analysis
             </div>
             <span class="badge-rec" id="heal-primary-badge" style="background: rgba(46, 204, 113, 0.2); border-color: #2ecc71; color: #2ecc71;">HEALING WAVE R4</span>
           </div>
@@ -3934,11 +4193,18 @@
             <span>Max Capacity: <strong id="heal-capacity" style="color: #2ecc71;">-- HP</strong></span>
           </div>
         </div>
+      </div>
 
+      <!-- ANALYSIS PANE 2: DAMAGE & SPELL BREAKDOWN (DEDICATED VIEW) -->
+      <div id="cockpit-pane-breakdown" class="cockpit-pane" style="display: none; flex-direction: column; gap: 10px;">
         <!-- DAMAGE BREAKDOWN TABLE (WITH WOWHEAD SPELL TOOLTIPS) -->
         <div class="panel">
-          <div class="panel-header">
-            <h2><span>📊</span> Ability & Spell Breakdown</h2>
+          <div class="panel-header" style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 8px; border-bottom: 1px solid rgba(255, 255, 255, 0.08); margin-bottom: 10px;">
+            <div style="display: flex; align-items: center; gap: 6px;">
+              <span style="font-size: 1.1rem;">📊</span>
+              <h2 style="font-size: 0.85rem; font-weight: 800; color: var(--gold-bright); text-transform: uppercase; margin: 0;">Ability &amp; Spell Breakdown</h2>
+            </div>
+            <span id="breakdown-total-summary" style="font-size: 0.72rem; color: #94a3b8; font-weight: 600;">Live Combat Telemetry</span>
           </div>
 
           <table class="breakdown-table">
@@ -7199,22 +7465,28 @@
     // ONE-STOP COCKPIT NAVIGATION & WORKFLOW HELPERS
     // =========================================================================
     function switchCockpitRightTab(tab) {
+      const pAttrs = document.getElementById('cockpit-pane-attributes') || document.getElementById('cockpit-pane-single');
+      const pBreakdown = document.getElementById('cockpit-pane-breakdown');
       const pScenarios = document.getElementById('view-scenarios');
-      const pSingle = document.getElementById('cockpit-pane-single');
-      const btnScenarios = document.getElementById('btn-cockpit-tab-scenarios');
-      const btnSingle = document.getElementById('btn-cockpit-tab-single');
 
-      if (tab === 'scenarios') {
-        if (pScenarios) pScenarios.style.display = 'block';
-        if (pSingle) pSingle.style.display = 'none';
-        if (btnScenarios) btnScenarios.classList.add('active');
-        if (btnSingle) btnSingle.classList.remove('active');
+      const btnAttrs = document.getElementById('btn-cockpit-tab-attributes') || document.getElementById('btn-cockpit-tab-single');
+      const btnBreakdown = document.getElementById('btn-cockpit-tab-breakdown');
+      const btnScenarios = document.getElementById('btn-cockpit-tab-scenarios');
+
+      const isAttrs = (tab === 'attributes' || tab === 'single' || !tab);
+      const isBreakdown = (tab === 'breakdown');
+      const isScenarios = (tab === 'scenarios');
+
+      if (pAttrs) pAttrs.style.display = isAttrs ? 'flex' : 'none';
+      if (pBreakdown) pBreakdown.style.display = isBreakdown ? 'flex' : 'none';
+      if (pScenarios) pScenarios.style.display = isScenarios ? 'block' : 'none';
+
+      if (btnAttrs) btnAttrs.classList.toggle('active', isAttrs);
+      if (btnBreakdown) btnBreakdown.classList.toggle('active', isBreakdown);
+      if (btnScenarios) btnScenarios.classList.toggle('active', isScenarios);
+
+      if (isScenarios && typeof renderScenariosView === 'function') {
         renderScenariosView();
-      } else {
-        if (pScenarios) pScenarios.style.display = 'none';
-        if (pSingle) pSingle.style.display = 'flex';
-        if (btnScenarios) btnScenarios.classList.remove('active');
-        if (btnSingle) btnSingle.classList.add('active');
       }
     }
 
@@ -12571,22 +12843,55 @@
           stdev: Math.round(stdevDps * 100) / 100
         },
         stats: {
+          str: totalStr,
+          baseStr: baseStr,
+          gearStr: gearStats.Str || 0,
+          agi: totalAgi,
+          baseAgi: baseAgi,
+          gearAgi: gearStats.Agi || 0,
+          sta: totalSta,
+          baseSta: baseSta,
+          gearSta: gearStats.Sta || 0,
+          int: totalInt,
+          baseInt: baseInt,
+          gearInt: gearStats.Int || 0,
+          spi: totalSpi,
+          baseSpi: baseSpi,
+          gearSpi: gearStats.Spi || 0,
+
           ap: (charClass === 'hunter' ? rangedAP : totalAP),
+          meleeAP: totalAP,
+          rangedAP: rangedAP,
           critPct: Math.round(meleeCritPct * 10) / 10,
           hitPct: Math.round(meleeHitPct * 10) / 10,
+          mhSpeed: mhItem ? (mhItem.speed || 2.0) : 2.0,
+          mhDmgMin: mhItem ? (mhItem.dmgMin || Math.round((mhItem.dps || 15) * (mhItem.speed || 2.0) * 0.8)) : 10,
+          mhDmgMax: mhItem ? (mhItem.dmgMax || Math.round((mhItem.dps || 15) * (mhItem.speed || 2.0) * 1.2)) : 20,
+          mhDps: mhItem ? (mhItem.dps || 15) : 10,
+
           sp: spellPower,
+          healing: (gearStats.Healing || 0) + spellPower,
           spellCritPct: Math.round(spellCritPct * 10) / 10,
-          spellHitPct: (gearStats.Hit || 0),
+          spellHitPct: (gearStats.Hit || 0) + (talentHitBonus || 0),
+          mp5: (gearStats.MP5 || 0),
+
           armor: totalArmor,
           armorDrPct: armorDrPct,
           ehp: ehp,
           maxHP: maxHP,
           maxMana: maxMana,
-          str: totalStr,
-          agi: totalAgi,
-          sta: totalSta,
-          int: totalInt,
-          spi: totalSpi
+          defense: (level * 5) + (gearStats.Def || 0) + (talentDefBonus || 0),
+          dodgePct: Math.round(dodgePct * 10) / 10,
+          parryPct: Math.round(parryPct * 10) / 10,
+          blockPct: Math.round(blockPct * 10) / 10,
+          blockValue: blockVal || 0,
+          hasShield: hasShield,
+
+          fireRes: gearStats['Fire Res'] || 0,
+          frostRes: gearStats['Frost Res'] || 0,
+          natureRes: gearStats['Nature Res'] || 0,
+          shadowRes: gearStats['Shadow Res'] || 0,
+          arcaneRes: gearStats['Arcane Res'] || 0
         },
         healing: healingSummary,
         tank: tankSummary,
@@ -12943,27 +13248,88 @@
         if (tankMiniBar) tankMiniBar.style.display = 'none';
       }
 
-      // Populate Active Character Combat Attributes Bar
+      // Populate Active Character Combat Attributes Bar & WoW Character Sheet
       if (data.stats) {
         const st = data.stats;
         const apEl = document.getElementById('stat-bar-ap');
-        if (apEl) apEl.innerText = st.ap !== undefined ? st.ap : '--';
+        if (apEl) apEl.textContent = st.ap !== undefined ? st.ap : '--';
         const critEl = document.getElementById('stat-bar-crit');
-        if (critEl) critEl.innerText = `${st.critPct || 0}%`;
+        if (critEl) critEl.textContent = `${st.critPct || 0}%`;
         const hitEl = document.getElementById('stat-bar-hit');
-        if (hitEl) hitEl.innerText = `+${st.hitPct || 0}%`;
+        if (hitEl) hitEl.textContent = `+${st.hitPct || 0}%`;
         const hpEl = document.getElementById('stat-bar-hp');
-        if (hpEl) hpEl.innerText = `${Math.round(st.maxHP || 0)} HP`;
+        if (hpEl) hpEl.textContent = `${Math.round(st.maxHP || 0)} HP`;
         const spEl = document.getElementById('stat-bar-sp');
-        if (spEl) spEl.innerText = `+${st.sp || 0}`;
+        if (spEl) spEl.textContent = `+${st.sp || 0}`;
         const spCritEl = document.getElementById('stat-bar-spcrit');
-        if (spCritEl) spCritEl.innerText = `${st.spellCritPct || 0}%`;
+        if (spCritEl) spCritEl.textContent = `${st.spellCritPct || 0}%`;
         const manaEl = document.getElementById('stat-bar-mana');
-        if (manaEl) manaEl.innerText = (st.maxMana > 0) ? `${Math.round(st.maxMana)}` : 'None (Rage/Energy)';
+        if (manaEl) manaEl.textContent = (st.maxMana > 0) ? `${Math.round(st.maxMana)}` : 'None (Rage/Energy)';
         const drEl = document.getElementById('stat-bar-armordr');
-        if (drEl) drEl.innerText = `${(st.armorDrPct || 0).toFixed(1)}%`;
+        if (drEl) drEl.textContent = `${(st.armorDrPct || 0).toFixed(1)}%`;
         const specLbl = document.getElementById('stat-bar-spec-lbl');
-        if (specLbl) specLbl.innerText = `Lvl ${data.character_level || getCurrentPlayerLevel()} • ${activeCharacterClass.toUpperCase()} (${(currentCharacterSpec || '').toUpperCase()})`;
+        if (specLbl) specLbl.textContent = `Lvl ${data.character_level || getCurrentPlayerLevel()} • ${activeCharacterClass.toUpperCase()} (${(currentCharacterSpec || '').toUpperCase()})`;
+
+        // Primary Attributes (Strength, Agility, Stamina, Intellect, Spirit)
+        const strEl = document.getElementById('attr-str-val');
+        if (strEl) strEl.textContent = st.str || '--';
+        const strSub = document.getElementById('attr-str-sub');
+        if (strSub) strSub.textContent = st.baseStr ? `Base ${st.baseStr} (+${st.gearStr || 0})` : `+${(st.str || 0) * 2} AP`;
+
+        const agiEl = document.getElementById('attr-agi-val');
+        if (agiEl) agiEl.textContent = st.agi || '--';
+        const agiSub = document.getElementById('attr-agi-sub');
+        if (agiSub) agiSub.textContent = st.baseAgi ? `Base ${st.baseAgi} (+${st.gearAgi || 0})` : `+${Math.round((st.agi || 0) * 2)} Armor`;
+
+        const staEl = document.getElementById('attr-sta-val');
+        if (staEl) staEl.textContent = st.sta || '--';
+        const staSub = document.getElementById('attr-sta-sub');
+        if (staSub) staSub.textContent = `+${(st.sta || 0) * 10} HP`;
+
+        const intEl = document.getElementById('attr-int-val');
+        if (intEl) intEl.textContent = st.int || '--';
+        const intSub = document.getElementById('attr-int-sub');
+        if (intSub) intSub.textContent = st.maxMana > 0 ? `+${(st.int || 0) * 15} Mana` : ('Base ' + (st.baseInt || '--'));
+
+        const spiEl = document.getElementById('attr-spi-val');
+        if (spiEl) spiEl.textContent = st.spi || '--';
+        const spiSub = document.getElementById('attr-spi-sub');
+        if (spiSub) spiSub.textContent = st.baseSpi ? `Base ${st.baseSpi} (+${st.gearSpi || 0})` : 'Regen';
+
+        // Secondary / Combat Details
+        const wDmgEl = document.getElementById('stat-bar-weapondmg');
+        if (wDmgEl) wDmgEl.textContent = `${st.mhDmgMin || 0} - ${st.mhDmgMax || 0}`;
+        const wSpdEl = document.getElementById('stat-bar-weaponspeed');
+        if (wSpdEl) wSpdEl.textContent = `${(st.mhSpeed || 2.0).toFixed(2)}s (${(st.mhDps || 0).toFixed(1)} DPS)`;
+
+        const healEl = document.getElementById('stat-bar-heal');
+        if (healEl) healEl.textContent = `+${st.healing || st.sp || 0}`;
+        const spHitEl = document.getElementById('stat-bar-sphit');
+        if (spHitEl) spHitEl.textContent = `+${st.spellHitPct || 0}%`;
+        const mp5El = document.getElementById('stat-bar-mp5');
+        if (mp5El) mp5El.textContent = `${st.mp5 || 0} /5s`;
+
+        const armorEl = document.getElementById('stat-bar-armor');
+        if (armorEl) armorEl.textContent = (st.armor || 0).toLocaleString();
+
+        const defEl = document.getElementById('stat-bar-def');
+        if (defEl) defEl.textContent = `${st.defense || (getCurrentPlayerLevel() * 5)} / ${getCurrentPlayerLevel() * 5}`;
+        const dpEl = document.getElementById('stat-bar-dodge-parry');
+        if (dpEl) dpEl.textContent = `${(st.dodgePct || 0).toFixed(1)}% / ${(st.parryPct || 0).toFixed(1)}%`;
+        const blkEl = document.getElementById('stat-bar-block');
+        if (blkEl) blkEl.textContent = st.hasShield ? `${(st.blockPct || 0).toFixed(1)}% (${st.blockValue || 0} BV)` : 'No Shield (2H)';
+
+        // Resistances
+        const rFire = document.getElementById('attr-res-fire');
+        if (rFire) rFire.textContent = st.fireRes || 0;
+        const rFrost = document.getElementById('attr-res-frost');
+        if (rFrost) rFrost.textContent = st.frostRes || 0;
+        const rNature = document.getElementById('attr-res-nature');
+        if (rNature) rNature.textContent = st.natureRes || 0;
+        const rShadow = document.getElementById('attr-res-shadow');
+        if (rShadow) rShadow.textContent = st.shadowRes || 0;
+        const rArcane = document.getElementById('attr-res-arcane');
+        if (rArcane) rArcane.textContent = st.arcaneRes || 0;
       }
 
       // Delta comparison badge
@@ -13090,7 +13456,7 @@
       const tbody = document.getElementById('breakdown-body');
       tbody.innerHTML = '';
 
-      const actionList = data.actions || data.breakdown || [];
+      const actionList = data.actions || data.breakdown || data.spells || [];
       if (actionList.length === 0) {
         tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: var(--text-muted); padding: 15px;">No action damage recorded.</td></tr>`;
         return;
@@ -13504,6 +13870,7 @@
       const canvas = document.getElementById('scenarios-radar-canvas');
       if (!canvas) return;
       const ctx = canvas.getContext('2d');
+      if (!ctx) return;
       const w = canvas.width;
       const h = canvas.height;
       ctx.clearRect(0, 0, w, h);
@@ -13562,6 +13929,7 @@
       const canvas = document.getElementById('scenarios-radar-canvas');
       if (!canvas) return;
       const ctx = canvas.getContext('2d');
+      if (!ctx) return;
       const w = canvas.width;
       const h = canvas.height;
       ctx.clearRect(0, 0, w, h);
