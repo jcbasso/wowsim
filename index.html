@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="color-scheme" content="dark">
   <title>WoW Forever - WoW Sim</title>
+  <link rel="icon" type="image/png" href="https://wow.zamimg.com/images/logos/favicon-classicplus.png">
   
 
   <style>
@@ -4453,21 +4454,6 @@
           </div>
         </details>
 
-        <!-- SHAMAN TOTEM LOADOUT PANEL (4 Elements) -->
-        <details class="rot-details panel" id="totems-panel" style="margin-bottom: 12px; padding: 10px 14px; background: #121620; border: 1px solid rgba(59, 130, 246, 0.4); border-radius: 8px;">
-          <summary style="cursor: pointer; font-size: 0.82rem; font-weight: 700; color: #60a5fa; display: flex; align-items: center; gap: 6px;">
-            <span>🌀</span> Active Totem Loadout (4 Elements): <strong id="current-totems-summary-lbl" style="color: #fff; margin-left: 4px;">Loading totems...</strong> <span style="font-size: 0.7rem; color: #94a3b8; margin-left: auto;">(Click to change) ▾</span>
-          </summary>
-
-          <div style="font-size: 0.73rem; color: #94a3b8; margin: 8px 0 12px 0; line-height: 1.45;">
-            Synced directly with your <strong>Rotation</strong> below! Placing totems consumes 1.5s GCD &amp; Mana, and the Auto-Optimizer tests combinations of totems + spells + imbues for max DPS.
-          </div>
-
-          <div id="totems-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 10px;">
-            <!-- Element cards rendered dynamically by renderTotemsPanel() -->
-          </div>
-        </details>
-
         <!-- APL ROTATION PANEL -->
         <div class="panel" id="apl-rotation-panel">
           <div class="panel-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
@@ -4484,9 +4470,20 @@
           </div>
 
           <div class="rot-section-title"><span class="num">2</span> Active rotation <span id="rot-active-name" style="color:#ffd700; text-transform:none; letter-spacing:0;"></span><span class="hint">Top = highest priority • tweak freely, DPS updates live</span></div>
-          <div id="rotation-flow-banner" style="background: rgba(16, 22, 34, 0.85); border: 1px solid #2b3548; border-radius: 6px; padding: 10px 14px; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;">
+          <div id="rotation-flow-banner" style="background: rgba(16, 22, 34, 0.85); border: 1px solid #2b3548; border-radius: 6px; padding: 10px 14px; margin-bottom: 10px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;">
             <div style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap;" id="rotation-flow-steps"></div>
             <div style="font-size: 0.72rem; color: var(--text-muted);" id="rotation-mana-estimate"></div>
+          </div>
+
+          <!-- UNIFIED SHAMAN 4-ELEMENT TOTEM BAR (100% synced with Rotation Steps below) -->
+          <div id="totems-panel" style="display: none; margin-bottom: 12px; padding: 10px 12px; background: rgba(15, 21, 33, 0.85); border: 1px solid rgba(59, 130, 246, 0.35); border-radius: 6px;">
+            <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 6px; margin-bottom: 8px;">
+              <div style="font-size: 0.74rem; font-weight: 700; color: #60a5fa; display: flex; align-items: center; gap: 6px;">
+                <span>🌀</span> Active Totems in Rotation: <strong id="current-totems-summary-lbl" style="color: #f8fafc;">None</strong>
+              </div>
+              <span style="font-size: 0.68rem; color: #94a3b8;">1 totem per element • Swapping updates the rotation below</span>
+            </div>
+            <div id="totems-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(195px, 1fr)); gap: 8px;"></div>
           </div>
 
           <div class="rot-list" id="rotation-list-container"></div>
@@ -6754,13 +6751,13 @@
         8052: { name: "Flame Shock", icon: "spell_fire_flameshock", school: "Fire", defaultCondition: "dot_not_active", conditions: [{ id: "dot_not_active", label: "Maintain Flame Shock DoT" }, { id: "on_cd", label: "Cast on cooldown" }] },
         8056: { name: "Frost Shock", icon: "spell_frost_frostshock", school: "Frost", defaultCondition: "on_cd", conditions: [{ id: "on_cd", label: "Cast on cooldown" }] },
         1535: { name: "Fire Nova Totem", icon: "spell_fire_sealoffire", school: "Fire", defaultCondition: "on_cd", conditions: [{ id: "on_cd", label: "Detonate on 15s Cooldown" }] },
-        8190: { name: "Magma Totem", icon: "spell_fire_selfdestruct", school: "Fire", defaultCondition: "totem_le_1s", conditions: [{ id: "totem_le_1s", label: "Maintain pulsing Fire Totem" }] },
-        3599: { name: "Searing Totem", icon: "spell_fire_searingtotem", school: "Fire", defaultCondition: "totem_le_1s", conditions: [{ id: "totem_le_1s", label: "Recast if remaining <= 1s" }, { id: "on_cd", label: "Always keep active" }] },
-        8512: { name: "Windfury Totem", icon: "spell_nature_windfury", school: "Nature", defaultCondition: "totem_le_1s", conditions: [{ id: "totem_le_1s", label: "Maintain Air Totem (Stacks w/ WF Imbue)" }] },
-        8835: { name: "Grace of Air Totem", icon: "spell_nature_invisibilitytotem", school: "Nature", defaultCondition: "totem_le_1s", conditions: [{ id: "totem_le_1s", label: "Maintain Air Totem (+Agility)" }] },
-        8075: { name: "Strength of Earth Totem", icon: "spell_nature_earthbindtotem", school: "Nature", defaultCondition: "totem_le_1s", conditions: [{ id: "totem_le_1s", label: "Maintain Earth Totem (+Strength)" }] },
-        8071: { name: "Stoneskin Totem", icon: "spell_nature_stoneskintotem", school: "Nature", defaultCondition: "totem_le_1s", conditions: [{ id: "totem_le_1s", label: "Maintain Earth Totem (+Armor)" }] },
-        5675: { name: "Mana Spring Totem", icon: "spell_nature_manaregentotem", school: "Nature", defaultCondition: "totem_le_1s", conditions: [{ id: "totem_le_1s", label: "Maintain Water Totem (+MP5)" }] },
+        8190: { name: "Magma Totem", icon: "spell_fire_selfdestruct", school: "Fire", defaultCondition: "totem_le_1s", conditions: [{ id: "totem_le_1s", label: "Drop on pull & refresh when expiring (≤1s)" }] },
+        3599: { name: "Searing Totem", icon: "spell_fire_searingtotem", school: "Fire", defaultCondition: "totem_le_1s", conditions: [{ id: "totem_le_1s", label: "Drop on pull & refresh when expiring (≤1s)" }, { id: "on_cd", label: "Always keep active" }] },
+        8512: { name: "Windfury Totem", icon: "spell_nature_windfury", school: "Nature", defaultCondition: "totem_le_1s", conditions: [{ id: "totem_le_1s", label: "Drop on pull & refresh when expiring (≤1s)" }] },
+        8835: { name: "Grace of Air Totem", icon: "spell_nature_invisibilitytotem", school: "Nature", defaultCondition: "totem_le_1s", conditions: [{ id: "totem_le_1s", label: "Drop on pull & refresh when expiring (≤1s)" }] },
+        8075: { name: "Strength of Earth Totem", icon: "spell_nature_earthbindtotem", school: "Nature", defaultCondition: "totem_le_1s", conditions: [{ id: "totem_le_1s", label: "Drop on pull & refresh when expiring (≤1s)" }] },
+        8071: { name: "Stoneskin Totem", icon: "spell_nature_stoneskintotem", school: "Nature", defaultCondition: "totem_le_1s", conditions: [{ id: "totem_le_1s", label: "Drop on pull & refresh when expiring (≤1s)" }] },
+        5675: { name: "Mana Spring Totem", icon: "spell_nature_manaregentotem", school: "Nature", defaultCondition: "totem_le_1s", conditions: [{ id: "totem_le_1s", label: "Drop on pull & refresh when expiring (≤1s)" }] },
         324: { name: "Lightning Shield", icon: "spell_nature_lightningshield", school: "Nature", defaultCondition: "buff_not_active", conditions: [{ id: "buff_not_active", label: "Maintain 3 Reactive Orb Charges" }] },
         403: { name: "Lightning Bolt", icon: "spell_nature_lightning", school: "Nature", defaultCondition: "continuous", conditions: [{ id: "continuous", label: "Continuous Nature Nuke" }, { id: "on_cd", label: "Cast on cooldown" }] },
         913: { name: "Healing Wave", icon: "spell_nature_magicimmunity", school: "Nature (Heal)", defaultCondition: "continuous_heal", conditions: [{ id: "continuous_heal", label: "Continuous Throughput Spam (Max HPS)" }, { id: "self_heal_hp50", label: "Emergency Heal (HP < 50%)" }] }
@@ -6842,18 +6839,22 @@
 
     const ALL_CLASS_ROTATIONS = {
       shaman: {
-        burst: [
+        shock_totem: [
+          { spellId: 8075, condition: "totem_le_1s", enabled: true },
           { spellId: 8052, condition: "dot_not_active", enabled: true },
           { spellId: 8045, condition: "on_cd", enabled: true },
           { spellId: 3599, condition: "totem_le_1s", enabled: true }
         ],
-        twink29_burst: [
+        stormstrike_burst: [
+          { spellId: 8075, condition: "totem_le_1s", enabled: true },
           { spellId: 17364, condition: "on_cd", enabled: true },
           { spellId: 8052, condition: "dot_not_active", enabled: true },
           { spellId: 8045, condition: "on_cd", enabled: true },
           { spellId: 3599, condition: "totem_le_1s", enabled: true }
         ],
         endgame_chain_synergy: [
+          { spellId: 8512, condition: "totem_le_1s", enabled: true },
+          { spellId: 8075, condition: "totem_le_1s", enabled: true },
           { spellId: 17364, condition: "on_cd", enabled: true },
           { spellId: 421, condition: "on_cd", enabled: true },
           { spellId: 8045, condition: "on_cd", enabled: true },
@@ -6863,10 +6864,12 @@
         tank_threat: [
           { spellId: 8045, condition: "on_cd", enabled: true },
           { spellId: 324, condition: "buff_not_active", enabled: true },
+          { spellId: 8075, condition: "totem_le_1s", enabled: true },
           { spellId: 8052, condition: "dot_not_active", enabled: true },
           { spellId: 3599, condition: "totem_le_1s", enabled: true }
         ],
         resto_burst: [
+          { spellId: 5675, condition: "totem_le_1s", enabled: true },
           { spellId: 913, condition: "continuous_heal", enabled: true }
         ],
         melee: []
@@ -7200,7 +7203,7 @@
       const totemsPanel = document.getElementById('totems-panel');
       if (totemsPanel) {
         totemsPanel.style.display = (cls === 'shaman') ? 'block' : 'none';
-        if (cls === 'shaman' && typeof renderTotemsPanel === 'function') renderTotemsPanel();
+        if (cls === 'shaman' && typeof syncTotemsFromRotation === 'function') syncTotemsFromRotation();
       }
 
       // 2. Healing Analysis panel (ONLY for active healer spec on healer classes)
@@ -7251,6 +7254,8 @@
     function prettyRotationName(key) {
       if (!key) return '';
       if (key === 'custom') return 'Custom (edited)';
+      if (key === 'shock_totem') return 'Shock & Totem';
+      if (key === 'stormstrike_burst') return 'Stormstrike Burst';
       const dm = /^dynamic_lvl_(\d+)$/.exec(key);
       if (dm) return 'Auto-Optimized (Lvl ' + dm[1] + ')';
       const special = { pve: 'PvE', pvp: 'PvP', aoe: 'AoE', dps: 'DPS', hw: 'HW', enh: 'Enh.', prot: 'Prot.', resto: 'Resto', ele: 'Ele.' };
@@ -7510,9 +7515,39 @@
           <div class="prio-info">
             <div class="prio-title">
               <span style="color: ${isLocked ? '#f87171' : 'var(--gold-bright)'}; font-weight: 700;">${spell.name}</span>
-              <span style="font-size: 0.68rem; padding: 1px 5px; border-radius: 3px; background: rgba(255,255,255,0.08); color: var(--text-muted);">${spell.school}</span>
+              ${(() => {
+                const sidNum = Number(step.spellId);
+                const totemMeta = {
+                  8512: { badge: '🌪️ Air Totem', color: '#67e8f9', tip: 'Drop on pull (2m) • 20% extra attack (+AP) — stacks with Windfury Weapon!' },
+                  8835: { badge: '🌪️ Air Totem', color: '#67e8f9', tip: 'Drop on pull (2m) • +Agility for Melee Crit & Dodge (use if not running Windfury Totem)' },
+                  8075: { badge: '🪨 Earth Totem', color: '#fbbf24', tip: 'Drop on pull (2m) • +Strength (+2 AP per Str) for sustained melee DPS' },
+                  8071: { badge: '🪨 Earth Totem', color: '#fbbf24', tip: 'Drop on pull (2m) • +Armor for Tank mitigation' },
+                  5675: { badge: '💧 Water Totem', color: '#60a5fa', tip: 'Drop on pull (1m) • Restores Mana every 2s — best in longer fights if running OOM' },
+                  3599: { badge: '🔥 Fire Totem', color: '#f87171', tip: 'Single-target Fire bolts (35s) • Best single-target & mana efficiency' },
+                  8190: { badge: '🔥 Fire Totem', color: '#f87171', tip: 'AoE Fire pulse every 2s (20s) • Best for AoE/cleave or high-mana endgame' },
+                  1535: { badge: '🔥 Fire Totem', color: '#f87171', tip: '4s delayed AoE Fire blast (15s CD) • Best for short burst or AoE pulls' }
+                }[sidNum];
+                if (totemMeta) {
+                  return `<span style="font-size: 0.66rem; padding: 1px 6px; border-radius: 3px; background: rgba(255,255,255,0.06); border: 1px solid ${totemMeta.color}55; color: ${totemMeta.color}; font-weight: 700;">${totemMeta.badge}</span>`;
+                }
+                return `<span style="font-size: 0.68rem; padding: 1px 5px; border-radius: 3px; background: rgba(255,255,255,0.08); color: var(--text-muted);">${spell.school}</span>`;
+              })()}
               ${lockBadgeHtml}
             </div>
+            ${(() => {
+              const sidNum = Number(step.spellId);
+              const tipMap = {
+                8512: 'Drop on pull (2m) • 20% extra attack (+AP) — stacks with Windfury Weapon!',
+                8835: 'Drop on pull (2m) • +Agility for Melee Crit & Dodge (alternative to Windfury Totem)',
+                8075: 'Drop on pull (2m) • +Strength (+2 AP per Str) for sustained melee DPS',
+                8071: 'Drop on pull (2m) • +Armor for Tank mitigation',
+                5675: 'Drop on pull (1m) • Restores Mana every 2s — best in longer fights if running OOM',
+                3599: 'Single-target Fire bolts (35s) • Best single-target DPS per mana',
+                8190: 'AoE Fire pulse every 2s (20s) • Best for AoE/cleave or high-mana endgame',
+                1535: '4s delayed AoE Fire blast (15s CD) • Best for short burst or AoE pulls'
+              };
+              return tipMap[sidNum] ? `<div style="font-size: 0.69rem; color: #94a3b8; margin-top: 1px;">${tipMap[sidNum]}</div>` : '';
+            })()}
             <div style="display: flex; align-items: center; gap: 8px; margin-top: 2px;">
               <span style="font-size: 0.73rem; color: var(--text-muted);">Condition:</span>
               <select class="prio-cond-select" onchange="changeRotationStepCondition(${idx}, this.value)" ${isLocked ? 'disabled style="opacity:0.5;"' : ''}>
@@ -7530,6 +7565,9 @@
       });
 
       renderRotationFlowSummary();
+      if (activeCharacterClass === 'shaman' && typeof syncTotemsFromRotation === 'function') {
+        syncTotemsFromRotation();
+      }
     }
 
     function renderRotationFlowSummary() {
@@ -7633,6 +7671,16 @@
     function addNewActionToRotation() {
       const sid = parseInt(document.getElementById('add-spell-select').value);
       const cond = document.getElementById('add-condition-select').value;
+      // Enforce 1 totem per element when adding a Shaman totem
+      if (activeCharacterClass === 'shaman' && typeof TOTEM_ELEMENT_SPELL_MAP !== 'undefined') {
+        for (const keyToSpell of Object.values(TOTEM_ELEMENT_SPELL_MAP)) {
+          const elemIds = Object.values(keyToSpell);
+          if (elemIds.includes(sid)) {
+            currentRotation = currentRotation.filter(s => !elemIds.includes(Number(s.spellId)));
+            break;
+          }
+        }
+      }
       currentRotation.push({
         spellId: sid,
         condition: cond,
@@ -7652,6 +7700,8 @@
     }
 
     function loadRotationPreset(presetKey) {
+      if (presetKey === 'twink29_burst' && !rotationPresets[presetKey] && rotationPresets['stormstrike_burst']) presetKey = 'stormstrike_burst';
+      if (presetKey === 'burst' && !rotationPresets[presetKey] && rotationPresets['shock_totem']) presetKey = 'shock_totem';
       if (!rotationPresets[presetKey]) return;
       activeRotationPresetKey = presetKey;
       currentRotation = JSON.parse(JSON.stringify(rotationPresets[presetKey]));
@@ -8278,9 +8328,8 @@
           const activeCard = document.getElementById(`card-imbue-${cfg.imbue}`);
           if (activeCard) activeCard.classList.add('active');
         }
-        if (cfg.totems && typeof cfg.totems === 'object') {
-          currentTotems = Object.assign(currentTotems || {}, cfg.totems);
-          if (typeof renderTotemsPanel === 'function') renderTotemsPanel();
+        if (typeof syncTotemsFromRotation === 'function') {
+          syncTotemsFromRotation();
         }
         if (cfg.rotationPreset) {
           activeRotationPresetKey = cfg.rotationPreset;
@@ -9712,7 +9761,7 @@
 
       // Dynamically upgrade spell ranks, talents, gear, and APL rotation for the new level
       syncSpellRanksForLevel(lvl);
-      if (typeof renderTotemsPanel === 'function') renderTotemsPanel();
+      if (typeof syncTotemsFromRotation === 'function') syncTotemsFromRotation();
       if (!isInitializing) {
         if (typeof autoOptimizeTalentsForLevel === 'function') autoOptimizeTalentsForLevel(true);
         if (typeof autoEquipLevelingBiS === 'function') autoEquipLevelingBiS();
