@@ -4453,6 +4453,21 @@
           </div>
         </details>
 
+        <!-- SHAMAN TOTEM LOADOUT PANEL (4 Elements) -->
+        <details class="rot-details panel" id="totems-panel" style="margin-bottom: 12px; padding: 10px 14px; background: #121620; border: 1px solid rgba(59, 130, 246, 0.4); border-radius: 8px;">
+          <summary style="cursor: pointer; font-size: 0.82rem; font-weight: 700; color: #60a5fa; display: flex; align-items: center; gap: 6px;">
+            <span>🌀</span> Active Totem Loadout (4 Elements): <strong id="current-totems-summary-lbl" style="color: #fff; margin-left: 4px;">Loading totems...</strong> <span style="font-size: 0.7rem; color: #94a3b8; margin-left: auto;">(Click to change) ▾</span>
+          </summary>
+
+          <div style="font-size: 0.73rem; color: #94a3b8; margin: 8px 0 12px 0; line-height: 1.45;">
+            Configure your active 4-element totem loadout. In <strong>WoW Forever</strong>, <strong>Windfury Totem</strong> (Air) and <strong>Windfury Weapon</strong> imbue stack together and proc independently on swings!
+          </div>
+
+          <div id="totems-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 10px;">
+            <!-- Element cards rendered dynamically by renderTotemsPanel() -->
+          </div>
+        </details>
+
         <!-- APL ROTATION PANEL -->
         <div class="panel" id="apl-rotation-panel">
           <div class="panel-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
@@ -7121,6 +7136,13 @@
         imbuesPanel.style.display = (cls === 'shaman') ? 'block' : 'none';
       }
 
+      // Shaman Totems panel (4-element loadout)
+      const totemsPanel = document.getElementById('totems-panel');
+      if (totemsPanel) {
+        totemsPanel.style.display = (cls === 'shaman') ? 'block' : 'none';
+        if (cls === 'shaman' && typeof renderTotemsPanel === 'function') renderTotemsPanel();
+      }
+
       // 2. Healing Analysis panel (ONLY for active healer spec on healer classes)
       const healPanel = document.getElementById('healing-analysis-panel');
       if (healPanel) {
@@ -7900,9 +7922,12 @@
     }
 
     // --- WOWHEAD DATABASE LINK ENGINE ---
+    const WOWHEAD_BASE_URL = 'https://www.wowhead.com/forever';
+    const WOWHEAD_NETHER_URL = 'https://nether.wowhead.com/forever';
+
     function getWowheadItemUrl(item) {
       if (!item || !item.id || item.id === 0) return '#';
-      return `https://www.wowhead.com/classic/item=${item.id}`;
+      return `${WOWHEAD_BASE_URL}/item=${item.id}`;
     }
 
     const KNOWN_ENCHANT_WOWHEAD = {
@@ -7941,17 +7966,17 @@
     function getWowheadEnchantUrl(enchant) {
       if (!enchant) return '#';
       if (enchant.effectId && KNOWN_ENCHANT_WOWHEAD[enchant.effectId]) {
-        return `https://www.wowhead.com/classic/${KNOWN_ENCHANT_WOWHEAD[enchant.effectId]}`;
+        return `${WOWHEAD_BASE_URL}/${KNOWN_ENCHANT_WOWHEAD[enchant.effectId]}`;
       }
       if (enchant.spellId) {
-        return `https://www.wowhead.com/classic/spell=${enchant.spellId}`;
+        return `${WOWHEAD_BASE_URL}/spell=${enchant.spellId}`;
       }
       if (enchant.itemId) {
-        return `https://www.wowhead.com/classic/item=${enchant.itemId}`;
+        return `${WOWHEAD_BASE_URL}/item=${enchant.itemId}`;
       }
       const rawName = enchant.name || enchant.shortName || '';
       const cleanName = rawName.replace(/^[✨\s]+/, '').replace(/\s*\(\+?\d+.*?\)$/, '').trim();
-      return `https://www.wowhead.com/classic/search?q=${encodeURIComponent(cleanName)}`;
+      return `${WOWHEAD_BASE_URL}/search?q=${encodeURIComponent(cleanName)}`;
     }
 
     // Refresh Wowhead tooltips whenever dynamic DOM is updated
@@ -8027,6 +8052,7 @@
           enchants: currentEnchants,
           talents: talentPoints,
           imbue: currentImbue,
+          totems: currentTotems,
           rotationPreset: activeRotationPresetKey,
           customRotation: currentRotation,
           statWeights: currentStatWeights,
@@ -8130,6 +8156,10 @@
           document.querySelectorAll('.imbue-card').forEach(c => c.classList.remove('active'));
           const activeCard = document.getElementById(`card-imbue-${cfg.imbue}`);
           if (activeCard) activeCard.classList.add('active');
+        }
+        if (cfg.totems && typeof cfg.totems === 'object') {
+          currentTotems = Object.assign(currentTotems || {}, cfg.totems);
+          if (typeof renderTotemsPanel === 'function') renderTotemsPanel();
         }
         if (cfg.rotationPreset) {
           activeRotationPresetKey = cfg.rotationPreset;
@@ -9561,6 +9591,7 @@
 
       // Dynamically upgrade spell ranks, talents, gear, and APL rotation for the new level
       syncSpellRanksForLevel(lvl);
+      if (typeof renderTotemsPanel === 'function') renderTotemsPanel();
       if (!isInitializing) {
         if (typeof autoOptimizeTalentsForLevel === 'function') autoOptimizeTalentsForLevel(true);
         if (typeof autoEquipLevelingBiS === 'function') autoEquipLevelingBiS();
@@ -9595,7 +9626,7 @@
           AP: 1.0,
           Crit: 12.0,
           Hit: 10.0,
-          Int: 1.0,
+          Int: 1.85, // WoW Forever: 1 Int = 1 AP (Mental Dexterity 3/3) + 15 Mana + Spell Crit
           Sta: 0.4,
           SP: 0.4,
           FireSP: 0.4,
@@ -10793,6 +10824,14 @@
       return { cat, shortText, fullTitle: `${src || cat} (${bindTag})`, isBoE };
     }
 
+    let pdSpotlightPinned = false;
+    let pdHoverTimer = null;
+
+    function selectAndPinPaperdollSpotlight(slot) {
+      pdSpotlightPinned = true;
+      updatePaperdollSpotlight(slot);
+    }
+
     function updatePaperdollSpotlight(slot) {
       pdInspectedSlot = slot;
       document.querySelectorAll('.wow-pd-slot.pd-inspected').forEach(el => el.classList.remove('pd-inspected'));
@@ -10806,9 +10845,12 @@
       const gainSign = nextUp && nextUp.deltaFromEquipped >= 0 ? '+' : '';
 
       box.innerHTML = `
-        <div class="wow-pd-spot-head">Inspecting • ${labelText}</div>
+        <div class="wow-pd-spot-head" style="display:flex;justify-content:space-between;align-items:center;">
+          <span>Inspecting • ${labelText}</span>
+          <span style="font-size:0.6rem;color:${pdSpotlightPinned ? '#60a5fa' : '#94a3b8'};font-weight:600;">${pdSpotlightPinned ? '📌 Selected' : 'Click slot to lock'}</span>
+        </div>
         <div style="display:flex;align-items:center;gap:7px;">
-          <div class="wow-pd-icon ${item.quality}" style="width:34px;height:34px;background-image:url('${getIconUrl(item.icon, item)}');"></div>
+          <div class="wow-pd-icon ${item.quality}" style="width:34px;height:34px;background-image:url('${getIconUrl(item.icon, item)}');cursor:pointer;" onclick="openPickerModal('${slot}')" title="Click to change ${labelText}"></div>
           <div style="min-width:0;flex:1;">
             <div class="${item.quality}" style="font-weight:800;font-size:0.75rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${item.id > 0 ? item.name : 'Empty Slot'}</div>
             <div style="font-size:0.63rem;color:#94a3b8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${item.id > 0 ? (item.summary || `ilvl ${item.ilvl}`) : 'Click slot to equip'}</div>
@@ -10833,16 +10875,33 @@
       const el = document.createElement('div');
       el.id = `pd-slot-${slot}`;
       el.className = `wow-pd-slot${item.id === 0 ? ' empty-slot' : ''}${pdInspectedSlot === slot ? ' pd-inspected' : ''}`;
-      el.onclick = () => openPickerModal(slot);
+      
+      // Single click selects & pins this slot in center spotlight so mouse movement never overwrites it
+      el.onclick = () => selectAndPinPaperdollSpotlight(slot);
+      el.ondblclick = () => openPickerModal(slot);
+
       el.onmouseenter = (e) => {
-        updatePaperdollSpotlight(slot);
         if (item.id > 0) showItemTooltip(e, item);
+        if (!pdSpotlightPinned) {
+          clearTimeout(pdHoverTimer);
+          pdHoverTimer = setTimeout(() => {
+            updatePaperdollSpotlight(slot);
+          }, 250);
+        }
       };
       el.onmousemove = (e) => { if (item.id > 0) moveUnifiedTooltip(e); };
-      el.onmouseleave = () => hideUnifiedTooltip();
+      el.onmouseleave = () => {
+        clearTimeout(pdHoverTimer);
+        hideUnifiedTooltip();
+      };
 
       const iconWrap = document.createElement('div');
       iconWrap.className = 'wow-pd-icon-wrap';
+      iconWrap.style.cursor = 'pointer';
+      iconWrap.onclick = (e) => {
+        e.stopPropagation();
+        openPickerModal(slot);
+      };
       const iconDiv = document.createElement('div');
       iconDiv.className = `wow-pd-icon ${item.quality}`;
       iconDiv.style.backgroundImage = `url('${getIconUrl(item.icon, item)}')`;
@@ -12218,7 +12277,12 @@
         [1, 14, 2, "Mental Quickness 2/2"],
         [1, 15, 2, "Improved Stormstrike 2/2"],
         [1, 16, 5, "Maelstrom Weapon 5/5"],
-        [1, 17, 1, "Rage of the Farseer 1/1"]
+        [1, 17, 1, "Rage of the Farseer 1/1"],     // Cap 33 pts in Enhancement!
+        // Full Lvl 60 Endgame Synergy: 18 points in Elemental for spell crit, shock CDR, and mana efficiency
+        [0, 1, 5, "Concussion 5/5"],              // +5% Shock & Lightning damage
+        [0, 0, 5, "Convection 5/5"],              // -10% Shock & Lightning mana cost
+        [0, 2, 3, "Elemental Devastation 3/3"],   // +9% melee crit on spell crit!
+        [0, 3, 5, "Reverberation 5/5"]            // -1.0s Shock cooldown (Cap 51 pts @ Lvl 60!)
       ],
       enhancement_pvp: [
         [1, 1, 5, "Thundering Strikes 5/5"],
@@ -12234,7 +12298,12 @@
         [1, 9, 5, "Toughness 5/5"],
         [1, 13, 1, "Spirit Weapons 1/1"],
         [1, 14, 2, "Mental Quickness 2/2"],
-        [1, 15, 2, "Improved Stormstrike 2/2"]
+        [1, 15, 2, "Improved Stormstrike 2/2"],
+        [1, 16, 5, "Maelstrom Weapon 5/5"],
+        [1, 17, 1, "Rage of the Farseer 1/1"],
+        [0, 1, 5, "Concussion 5/5"],
+        [0, 0, 5, "Convection 5/5"],
+        [0, 3, 4, "Reverberation 4/5"]
       ],
       resto: [
         [2, 0, 5, "Improved Healing Wave 5/5"],
@@ -12247,7 +12316,12 @@
         [2, 7, 3, "Healing Focus 3/3"],
         [2, 8, 1, "Water Shield 1/1"],
         [2, 12, 3, "Healing Way 3/3"],
-        [2, 13, 1, "Nature's Swiftness 1/1"]
+        [2, 13, 1, "Nature's Swiftness 1/1"],
+        [2, 2, 3, "Mindfulness 3/3"],
+        [2, 10, 5, "Restorative Totems 5/5"],
+        [2, 14, 5, "Purification 5/5"],
+        [0, 1, 5, "Concussion 5/5"],
+        [0, 0, 3, "Convection 3/5"]
       ],
       elemental: [
         [0, 1, 5, "Concussion 5/5"],
@@ -12257,7 +12331,15 @@
         [0, 5, 3, "Call of Flame 3/3"],
         [0, 2, 1, "Elemental Devastation 1/3"],   // Cap 20 pts
         [0, 14, 5, "Elemental Fury 5/5"],
-        [0, 15, 1, "Lightning Mastery 1/1"]
+        [0, 15, 1, "Lightning Mastery 1/1"],
+        [0, 4, 3, "Elemental Alacrity 3/3"],
+        [0, 7, 3, "Elemental Warding 3/3"],
+        [0, 11, 2, "Elemental Reach 2/2"],
+        [0, 12, 1, "Call of Thunder 1/1"],
+        [0, 13, 3, "Lightning Overload 3/3"],
+        [2, 1, 5, "Tidal Focus 5/5"],
+        [2, 4, 5, "Totemic Focus 5/5"],
+        [2, 2, 3, "Mindfulness 3/3"]
       ],
       shaman_tank: [
         [1, 0, 2, "Earth's Grasp 2/2"],           // Tier 1: Stoneclaw HP & Earthbind radius
@@ -12269,7 +12351,16 @@
         [1, 9, 5, "Toughness 5/5"],               // Tier 3/4: +10% Armor from items & slow reduction (Cap 20 pts @ Lvl 29!)
         [1, 13, 1, "Spirit Weapons 1/1"],         // Tier 5: Enables Parry!
         [1, 11, 1, "Stormstrike 1/1"],
-        [1, 10, 5, "Flurry 5/5"]
+        [1, 10, 5, "Flurry 5/5"],
+        [1, 1, 5, "Thundering Strikes 5/5"],
+        [1, 6, 3, "Elemental Weapons 3/3"],
+        [1, 4, 3, "Mental Dexterity 3/3"],
+        [1, 14, 2, "Mental Quickness 2/2"],
+        [1, 15, 2, "Improved Stormstrike 2/2"],
+        [2, 1, 5, "Tidal Focus 5/5"],
+        [2, 4, 5, "Totemic Focus 5/5"],
+        [2, 6, 3, "Ancestral Healing 3/3"],
+        [2, 5, 2, "Improved Reincarnation 2/2"]
       ]
     };
 
@@ -12318,6 +12409,30 @@
               const add = Math.min(pointsLeft, maxPts);
               talentPoints[targetTreeIdx][idx] = add;
               pointsLeft -= add;
+            }
+          }
+        }
+      }
+
+      // Fail-safe greedy pass: ensure ALL available talent points are spent at any level (10 - 60)
+      if (pointsLeft > 0 && talentTrees && talentTrees.length > 0) {
+        for (let tIdx = 0; tIdx < talentTrees.length && pointsLeft > 0; tIdx++) {
+          const tree = talentTrees[tIdx];
+          if (!tree || !Array.isArray(tree.talents)) continue;
+          for (let r = 0; r < 7 && pointsLeft > 0; r++) {
+            const tierTalents = tree.talents
+              .map((tal, idx) => ({ tal, idx }))
+              .filter(item => item.tal.location && item.tal.location.rowIdx === r);
+            for (const { tal, idx } of tierTalents) {
+              if (pointsLeft <= 0) break;
+              if (!isTalentAvailable(tIdx, idx)) continue;
+              const cur = talentPoints[tIdx][idx] || 0;
+              const maxPts = tal.maxPoints || 5;
+              const canAdd = Math.min(pointsLeft, maxPts - cur);
+              if (canAdd > 0) {
+                talentPoints[tIdx][idx] = cur + canAdd;
+                pointsLeft -= canAdd;
+              }
             }
           }
         }
@@ -12709,7 +12824,7 @@
       } else {
         tt.innerHTML = buildItemTooltipHtml(item);
         if (item.id > 0) {
-          fetch(`https://nether.wowhead.com/classic/tooltip/item/${item.id}`)
+          fetch(`${WOWHEAD_NETHER_URL}/tooltip/item/${item.id}`)
             .then(res => res.json())
             .then(data => {
               if (data && data.tooltip) {
@@ -12954,6 +13069,281 @@
     }
 
     // --- WEAPON IMBUES & SETTINGS ---
+    
+    // --- SHAMAN TOTEM LOADOUT STATE & ENGINE ---
+    let currentTotems = {
+      air: 'windfury_totem',
+      earth: 'strength_of_earth_totem',
+      water: 'mana_spring_totem',
+      fire: 'magma_totem'
+    };
+
+    const TOTEM_DEFINITIONS = {
+      air: {
+        name: "Air Totem",
+        icon: "spell_nature_cyclone",
+        color: "#67e8f9",
+        options: [
+          {
+            key: "windfury_totem",
+            name: "Windfury Totem",
+            icon: "spell_nature_windfury",
+            minLvl: 32,
+            getRanks: (lvl) => {
+              if (lvl < 32) return { rank: 0, available: false, desc: "Requires Level 32" };
+              if (lvl >= 52) return { rank: 3, available: true, apBonus: 315, desc: "20% extra attack chance with +315 AP (Stacks with WF Imbue!)" };
+              if (lvl >= 42) return { rank: 2, available: true, apBonus: 229, desc: "20% extra attack chance with +229 AP (Stacks with WF Imbue!)" };
+              return { rank: 1, available: true, apBonus: 122, desc: "20% extra attack chance with +122 AP (Stacks with WF Imbue!)" };
+            }
+          },
+          {
+            key: "grace_of_air_totem",
+            name: "Grace of Air Totem",
+            icon: "spell_nature_invisibilitytotem",
+            minLvl: 42,
+            getRanks: (lvl) => {
+              if (lvl < 42) return { rank: 0, available: false, desc: "Requires Level 42" };
+              if (lvl >= 60) return { rank: 3, available: true, agiBonus: 77, desc: "+77 Agility to party (+3.95% Melee Crit & Armor)" };
+              if (lvl >= 54) return { rank: 2, available: true, agiBonus: 67, desc: "+67 Agility to party (+3.44% Melee Crit & Armor)" };
+              return { rank: 1, available: true, agiBonus: 43, desc: "+43 Agility to party (+2.21% Melee Crit & Armor)" };
+            }
+          },
+          {
+            key: "nature_resist_totem",
+            name: "Nature Resistance Totem",
+            icon: "spell_nature_natureresistancetotem",
+            minLvl: 30,
+            getRanks: (lvl) => {
+              if (lvl < 30) return { rank: 0, available: false, desc: "Requires Level 30" };
+              const r = lvl >= 60 ? 3 : (lvl >= 40 ? 2 : 1);
+              const nr = lvl >= 60 ? 60 : (lvl >= 40 ? 45 : 30);
+              return { rank: r, available: true, desc: `+${nr} Nature Resistance to party` };
+            }
+          },
+          {
+            key: "none",
+            name: "None",
+            icon: "spell_chargepositive",
+            minLvl: 1,
+            getRanks: () => ({ rank: 0, available: true, desc: "No Air Totem placed" })
+          }
+        ]
+      },
+      earth: {
+        name: "Earth Totem",
+        icon: "spell_nature_earthbindtotem",
+        color: "#fbbf24",
+        options: [
+          {
+            key: "strength_of_earth_totem",
+            name: "Strength of Earth Totem",
+            icon: "spell_nature_earthbindtotem",
+            minLvl: 10,
+            getRanks: (lvl) => {
+              if (lvl < 10) return { rank: 0, available: false, desc: "Requires Level 10" };
+              if (lvl >= 60) return { rank: 5, available: true, strBonus: 77, desc: "+77 Strength to party (+154 AP!)" };
+              if (lvl >= 52) return { rank: 4, available: true, strBonus: 61, desc: "+61 Strength to party (+122 AP!)" };
+              if (lvl >= 38) return { rank: 3, available: true, strBonus: 36, desc: "+36 Strength to party (+72 AP!)" };
+              if (lvl >= 24) return { rank: 2, available: true, strBonus: 20, desc: "+20 Strength to party (+40 AP!)" };
+              return { rank: 1, available: true, strBonus: 10, desc: "+10 Strength to party (+20 AP!)" };
+            }
+          },
+          {
+            key: "stoneskin_totem",
+            name: "Stoneskin Totem",
+            icon: "spell_nature_stoneskintotem",
+            minLvl: 4,
+            getRanks: (lvl) => {
+              if (lvl < 4) return { rank: 0, available: false, desc: "Requires Level 4" };
+              const r = lvl >= 58 ? 6 : (lvl >= 48 ? 5 : (lvl >= 38 ? 4 : (lvl >= 28 ? 3 : (lvl >= 14 ? 2 : 1))));
+              const arm = lvl >= 58 ? 315 : (lvl >= 48 ? 240 : (lvl >= 38 ? 170 : (lvl >= 28 ? 115 : (lvl >= 14 ? 60 : 30))));
+              return { rank: r, available: true, desc: `+${arm} Armor to party` };
+            }
+          },
+          {
+            key: "tremor_totem",
+            name: "Tremor Totem",
+            icon: "spell_nature_tremortotem",
+            minLvl: 18,
+            getRanks: (lvl) => {
+              if (lvl < 18) return { rank: 0, available: false, desc: "Requires Level 18" };
+              return { rank: 1, available: true, desc: "Periodically pulses to remove Fear, Charm, and Sleep" };
+            }
+          },
+          {
+            key: "none",
+            name: "None",
+            icon: "spell_chargepositive",
+            minLvl: 1,
+            getRanks: () => ({ rank: 0, available: true, desc: "No Earth Totem placed" })
+          }
+        ]
+      },
+      water: {
+        name: "Water Totem",
+        icon: "spell_nature_manaregentotem",
+        color: "#60a5fa",
+        options: [
+          {
+            key: "mana_spring_totem",
+            name: "Mana Spring Totem",
+            icon: "spell_nature_manaregentotem",
+            minLvl: 26,
+            getRanks: (lvl) => {
+              if (lvl < 26) return { rank: 0, available: false, desc: "Requires Level 26" };
+              if (lvl >= 58) return { rank: 5, available: true, mp2Gain: 25, desc: "Restores 25 Mana every 2 sec (+62.5 MP5 to party)" };
+              if (lvl >= 56) return { rank: 4, available: true, mp2Gain: 20, desc: "Restores 20 Mana every 2 sec (+50 MP5 to party)" };
+              if (lvl >= 46) return { rank: 3, available: true, mp2Gain: 15, desc: "Restores 15 Mana every 2 sec (+37.5 MP5 to party)" };
+              if (lvl >= 36) return { rank: 2, available: true, mp2Gain: 10, desc: "Restores 10 Mana every 2 sec (+25 MP5 to party)" };
+              return { rank: 1, available: true, mp2Gain: 4, desc: "Restores 4 Mana every 2 sec (+10 MP5 to party)" };
+            }
+          },
+          {
+            key: "healing_stream_totem",
+            name: "Healing Stream Totem",
+            icon: "inv_spear_04",
+            minLvl: 20,
+            getRanks: (lvl) => {
+              if (lvl < 20) return { rank: 0, available: false, desc: "Requires Level 20" };
+              const r = lvl >= 60 ? 5 : (lvl >= 50 ? 4 : (lvl >= 40 ? 3 : (lvl >= 30 ? 2 : 1)));
+              const hp = lvl >= 60 ? 14 : (lvl >= 50 ? 12 : (lvl >= 40 ? 10 : (lvl >= 30 ? 8 : 6)));
+              return { rank: r, available: true, desc: `Restores ${hp} Health every 2 sec to party` };
+            }
+          },
+          {
+            key: "none",
+            name: "None",
+            icon: "spell_chargepositive",
+            minLvl: 1,
+            getRanks: () => ({ rank: 0, available: true, desc: "No Water Totem placed" })
+          }
+        ]
+      },
+      fire: {
+        name: "Fire Totem",
+        icon: "spell_fire_selfdestruct",
+        color: "#f87171",
+        options: [
+          {
+            key: "magma_totem",
+            name: "Magma Totem",
+            icon: "spell_fire_selfdestruct",
+            minLvl: 26,
+            getRanks: (lvl) => {
+              if (lvl < 26) return { rank: 0, available: false, desc: "Requires Level 26" };
+              const r = lvl >= 56 ? 4 : (lvl >= 46 ? 3 : (lvl >= 36 ? 2 : 1));
+              const d = lvl >= 56 ? 74 : (lvl >= 46 ? 54 : (lvl >= 36 ? 37 : 22));
+              return { rank: r, available: true, desc: `Pulses ${d} AoE Fire damage every 2 sec (Rank ${r})` };
+            }
+          },
+          {
+            key: "searing_totem",
+            name: "Searing Totem",
+            icon: "spell_fire_searingtotem",
+            minLvl: 10,
+            getRanks: (lvl) => {
+              if (lvl < 10) return { rank: 0, available: false, desc: "Requires Level 10" };
+              const r = lvl >= 60 ? 6 : (lvl >= 50 ? 5 : (lvl >= 40 ? 4 : (lvl >= 30 ? 3 : (lvl >= 20 ? 2 : 1))));
+              const d = lvl >= 60 ? 45 : (lvl >= 50 ? 40 : (lvl >= 40 ? 33 : (lvl >= 30 ? 23 : (lvl >= 20 ? 16 : 10))));
+              return { rank: r, available: true, desc: `Shoots Fire bolts for ~${d} damage (Rank ${r})` };
+            }
+          },
+          {
+            key: "fire_nova_totem",
+            name: "Fire Nova Totem",
+            icon: "spell_fire_sealoffire",
+            minLvl: 12,
+            getRanks: (lvl) => {
+              if (lvl < 12) return { rank: 0, available: false, desc: "Requires Level 12" };
+              const r = lvl >= 52 ? 5 : (lvl >= 42 ? 4 : (lvl >= 32 ? 3 : (lvl >= 22 ? 2 : 1)));
+              return { rank: r, available: true, desc: `Explodes for high burst AoE Fire damage after 4s (Rank ${r})` };
+            }
+          },
+          {
+            key: "none",
+            name: "None",
+            icon: "spell_chargepositive",
+            minLvl: 1,
+            getRanks: () => ({ rank: 0, available: true, desc: "No Fire Totem placed" })
+          }
+        ]
+      }
+    };
+
+    function setTotem(element, totemKey) {
+      if (!currentTotems) currentTotems = {};
+      currentTotems[element] = totemKey;
+      renderTotemsPanel();
+      saveUserSettings();
+      if (!isInitializing && typeof autoSimulateIfConfigured === 'function') {
+        autoSimulateIfConfigured();
+      }
+    }
+
+    function renderTotemsPanel() {
+      const container = document.getElementById('totems-grid');
+      const summaryLbl = document.getElementById('current-totems-summary-lbl');
+      if (!container) return;
+
+      const lvl = getCurrentPlayerLevel();
+      const summaryParts = [];
+
+      let html = '';
+      for (const [elemKey, elemDef] of Object.entries(TOTEM_DEFINITIONS)) {
+        let activeKey = currentTotems[elemKey] || 'none';
+        
+        // Auto-fallback if active totem is not available at current level
+        let selectedOpt = elemDef.options.find(o => o.key === activeKey);
+        if (!selectedOpt || selectedOpt.minLvl > lvl) {
+          // Find first available option
+          const fallback = elemDef.options.find(o => o.minLvl <= lvl && o.key !== 'none') || elemDef.options.find(o => o.key === 'none');
+          if (fallback) {
+            activeKey = fallback.key;
+            currentTotems[elemKey] = activeKey;
+            selectedOpt = fallback;
+          }
+        }
+
+        const rankInfo = selectedOpt.getRanks(lvl);
+        if (activeKey !== 'none' && rankInfo.available) {
+          summaryParts.push(`${selectedOpt.name.replace(' Totem', '')}${rankInfo.rank > 0 ? ' R' + rankInfo.rank : ''}`);
+        }
+
+        html += `
+          <div style="background: #0b0e14; border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 6px; padding: 10px; display: flex; flex-direction: column; gap: 8px;">
+            <div style="display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid rgba(255, 255, 255, 0.05); padding-bottom: 6px;">
+              <span style="font-weight: 700; font-size: 0.78rem; color: ${elemDef.color}; text-transform: uppercase; letter-spacing: 0.5px;">${elemDef.name}</span>
+              ${activeKey === 'windfury_totem' ? '<span style="font-size:0.62rem;background:rgba(245,158,11,0.2);color:#fbbf24;border:1px solid #f59e0b;padding:1px 5px;border-radius:3px;font-weight:700;">PROCS WITH WF IMBUE!</span>' : ''}
+            </div>
+
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <div style="width: 32px; height: 32px; border-radius: 4px; border: 1px solid ${elemDef.color}; background-image: url('${getIconUrl(selectedOpt.icon)}'); background-size: cover; background-position: center; flex-shrink: 0;"></div>
+              <div style="flex: 1; min-width: 0;">
+                <select style="width: 100%; background: #151922; border: 1px solid #374151; color: #f8fafc; font-size: 0.76rem; border-radius: 4px; padding: 4px 6px; outline: none;" onchange="setTotem('${elemKey}', this.value)">
+                  ${elemDef.options.map(opt => {
+                    const oRank = opt.getRanks(lvl);
+                    const disabled = !oRank.available && opt.key !== 'none';
+                    const label = opt.key === 'none' ? 'None (Off)' : `${opt.name}${oRank.rank > 0 ? ' (Rank ' + oRank.rank + ')' : ''}${disabled ? ' [Req Lvl ' + opt.minLvl + ']' : ''}`;
+                    return `<option value="${opt.key}" ${opt.key === activeKey ? 'selected' : ''} ${disabled ? 'disabled style="color:#6b7280;"' : ''}>${label}</option>`;
+                  }).join('')}
+                </select>
+              </div>
+            </div>
+
+            <div style="font-size: 0.7rem; color: #94a3b8; line-height: 1.35; min-height: 28px;">
+              ${rankInfo.desc}
+            </div>
+          </div>
+        `;
+      }
+
+      container.innerHTML = html;
+      if (summaryLbl) {
+        summaryLbl.textContent = summaryParts.length > 0 ? summaryParts.join(' • ') : 'No Totems Active';
+      }
+    }
+
+
     function setImbue(imbue) {
       currentImbue = imbue;
       document.querySelectorAll('.imbue-card').forEach(c => c.classList.remove('active'));
@@ -13303,15 +13693,59 @@
         baseSpi += (raceDef.stats.spi || 0);
       }
 
-      let totalStr = baseStr + gearStats.Str;
-      let totalAgi = baseAgi + gearStats.Agi;
+      // Shaman Active 4-Element Totem Bonuses
+      const activeTotems = reqBody.totems || (charClass === 'shaman' ? (typeof currentTotems !== 'undefined' ? currentTotems : {}) : {}) || {};
+      let totemStrBonus = 0;
+      let totemArmorBonus = 0;
+      let totemAgiBonus = 0;
+      let totemMp2Gain = 0;
+      let hasWindfuryTotem = false;
+
+      if (charClass === 'shaman') {
+        // Earth Totem
+        if (activeTotems.earth === 'strength_of_earth_totem' && level >= 10) {
+          if (level >= 60) totemStrBonus = 77;
+          else if (level >= 52) totemStrBonus = 61;
+          else if (level >= 38) totemStrBonus = 36;
+          else if (level >= 24) totemStrBonus = 20;
+          else if (level >= 10) totemStrBonus = 10;
+        } else if (activeTotems.earth === 'stoneskin_totem' && level >= 4) {
+          if (level >= 58) totemArmorBonus = 315;
+          else if (level >= 48) totemArmorBonus = 240;
+          else if (level >= 38) totemArmorBonus = 170;
+          else if (level >= 28) totemArmorBonus = 115;
+          else if (level >= 14) totemArmorBonus = 60;
+          else if (level >= 4) totemArmorBonus = 30;
+        }
+
+        // Air Totem
+        if (activeTotems.air === 'windfury_totem' && level >= 32) {
+          hasWindfuryTotem = true;
+        } else if (activeTotems.air === 'grace_of_air_totem' && level >= 42) {
+          if (level >= 60) totemAgiBonus = 77;
+          else if (level >= 54) totemAgiBonus = 67;
+          else if (level >= 42) totemAgiBonus = 43;
+        }
+
+        // Water Totem
+        if (activeTotems.water === 'mana_spring_totem' && level >= 26) {
+          if (level >= 58) totemMp2Gain = 25;
+          else if (level >= 56) totemMp2Gain = 20;
+          else if (level >= 46) totemMp2Gain = 15;
+          else if (level >= 36) totemMp2Gain = 10;
+          else if (level >= 26) totemMp2Gain = 4;
+        }
+      }
+
+      let totalStr = baseStr + gearStats.Str + totemStrBonus;
+      let totalAgi = baseAgi + gearStats.Agi + totemAgiBonus;
       let totalSta = baseSta + gearStats.Sta;
       if (charClass === 'shaman' && toughnessRank > 0) totalSta = Math.round(totalSta * (1 + 0.02 * toughnessRank));
       let totalInt = baseInt + gearStats.Int;
       if (charRace === 'gnome') totalInt = Math.round(totalInt * 1.05); // Gnome Expansive Mind (+5% Int)
       let totalSpi = baseSpi + gearStats.Spi;
       if (charRace === 'human') totalSpi = Math.round(totalSpi * 1.05); // Human Spirit (+5% Spi)
-      let totalArmor = (charClass === 'mage' || charClass === 'priest' || charClass === 'warlock' ? 40 : 120) + (totalAgi * 2) + gearStats.Armor;
+      let totalArmor = (charClass === 'mage' || charClass === 'priest' || charClass === 'warlock' ? 40 : 120) + (totalAgi * 2) + gearStats.Armor + totemArmorBonus;
       if (charRace === 'dwarf') totalArmor = Math.round(totalArmor * 1.10); // Dwarf Stoneform (+10% Armor)
 
       let totalAP = (totalStr * 2) + gearStats.AP;
@@ -13332,7 +13766,7 @@
       }
       if (charClass === 'shaman') {
         totalAP += rockbiterBonusAP;
-        if (mentalDexRank > 0) totalAP += Math.round(totalInt * (mentalDexRank * 0.33));
+        if (mentalDexRank > 0) totalAP += (mentalDexRank === 3 ? totalInt : Math.round(totalInt * (mentalDexRank * 0.33)));
       }
       if (charRace === 'orc') {
         // Orc Blood Fury: +25% base melee AP (averaged over 2m cooldown)
@@ -13617,7 +14051,8 @@
             if (maxMana > 0) {
               let mp5Gain = (gearStats.MP5 || 0) * 0.4;
               let spiGain = (t - lastManaCastTime >= 5.0) ? (totalSpi * 0.22 + 5) : 0;
-              curMana = Math.min(maxMana, curMana + mp5Gain + spiGain);
+              let manaSpringTick = totemMp2Gain || 0; // Mana Spring Totem restores mana every 2s
+              curMana = Math.min(maxMana, curMana + mp5Gain + spiGain + manaSpringTick);
             }
             if (charClass === 'warrior') {
               // Periodic incoming/dodge rage & procs
@@ -13750,6 +14185,19 @@
                 recordAction(socInfo.name, 'Holy', 'ability_warrior_innerrage', socDmg, false, true, socCrit, false);
               }
 
+              // Shaman Windfury Totem proc (Air Totem - stacks & procs independently from Windfury Weapon imbue in WoW Forever!)
+              if (hasWindfuryTotem && charClass === 'shaman') {
+                if (Math.random() < 0.20) {
+                  let wfTotemBonusAP = level >= 52 ? 315 : (level >= 42 ? 229 : 122);
+                  let wfTotemRank = level >= 52 ? 3 : (level >= 42 ? 2 : 1);
+                  let wfTotemSwingDmg = (minD + Math.random() * (maxD - minD) + ((curAP + wfTotemBonusAP) / 14.0) * wpnSpeed) * (1.0 - curArmorDR) * talentDmgBonus;
+                  let wfTotemCrit = Math.random() < critChance;
+                  if (wfTotemCrit) wfTotemSwingDmg *= 2.0;
+                  iterDamage += wfTotemSwingDmg;
+                  recordAction(`Windfury Totem (Rank ${wfTotemRank})`, 'Physical', 'spell_nature_windfury', wfTotemSwingDmg, false, true, wfTotemCrit, false);
+                }
+              }
+
               // Shaman Weapon Imbue procs (Windfury, Flametongue, Frostbrand)
               if (charClass === 'shaman' && imbue === 'WindfuryWeapon' && level >= 30) {
                 if (Math.random() < 0.20) {
@@ -13873,6 +14321,29 @@
                 if (impSsRank > 0) curMana = Math.min(maxMana, curMana + Math.round(maxMana * 0.08 * impSsRank));
                 cdUntil[sid] = t + (impSsRank > 0 ? 10.0 - impSsRank : 10.0);
                 recordAction(sInfo.name, 'Physical', sInfo.icon, ssDmg, true, true, isCrit, false);
+
+                // Stormstrike weapon hit can independently proc Windfury Weapon Imbue
+                if (charClass === 'shaman' && imbue === 'WindfuryWeapon' && level >= 30 && Math.random() < 0.20) {
+                  let wfBonusAP = level >= 60 ? 445 : (level >= 50 ? 333 : (level >= 40 ? 229 : 106));
+                  let elemWpnMult = 1.0 + (elemWpnRank === 3 ? 0.20 : (elemWpnRank === 2 ? 0.14 : (elemWpnRank === 1 ? 0.07 : 0.0)));
+                  let wfSwingDmg = (wpnMin + Math.random() * (wpnMax - wpnMin) + ((curAP + wfBonusAP * elemWpnMult) / 14.0) * wpnSpeed) * (1.0 - curArmorDR) * 2.0;
+                  let wfCrit = Math.random() < critChance;
+                  if (wfCrit) wfSwingDmg *= 1.5;
+                  iterDamage += wfSwingDmg;
+                  const wfRank = level >= 60 ? 4 : (level >= 50 ? 3 : (level >= 40 ? 2 : 1));
+                  recordAction('Windfury Weapon (Rank ' + wfRank + ')', 'Physical', 'spell_nature_cyclone', wfSwingDmg, false, true, wfCrit, false);
+                }
+
+                // Stormstrike weapon hit can ALSO independently proc Windfury Totem!
+                if (hasWindfuryTotem && charClass === 'shaman' && Math.random() < 0.20) {
+                  let wfTotemBonusAP = level >= 52 ? 315 : (level >= 42 ? 229 : 122);
+                  let wfTotemRank = level >= 52 ? 3 : (level >= 42 ? 2 : 1);
+                  let wfTotemSwingDmg = (wpnMin + Math.random() * (wpnMax - wpnMin) + ((curAP + wfTotemBonusAP) / 14.0) * wpnSpeed) * (1.0 - curArmorDR) * talentDmgBonus;
+                  let wfTotemCrit = Math.random() < critChance;
+                  if (wfTotemCrit) wfTotemSwingDmg *= 2.0;
+                  iterDamage += wfTotemSwingDmg;
+                  recordAction(`Windfury Totem (Rank ${wfTotemRank})`, 'Physical', 'spell_nature_windfury', wfTotemSwingDmg, false, true, wfTotemCrit, false);
+                }
               } else if (sid === 421) { // Chain Lightning (Scales with Maelstrom Weapon & Stormstrike debuff!)
                 let clBase = (rData.minD || 196) + Math.random() * ((rData.maxD || 222) - (rData.minD || 196));
                 let maelstromMult = (maelstromRank > 0) ? (1.0 + 0.05 * maelstromRank) : 1.0;
@@ -14798,6 +15269,7 @@
         spec: currentCharacterSpec,
         level: getCurrentPlayerLevel(),
         imbue: currentImbue,
+        totems: (typeof currentTotems !== 'undefined' ? currentTotems : {}),
         talents: getSerializedTalents(),
         rotation_preset: activeRotationPresetKey,
         custom_rotation: currentRotation,
@@ -14949,7 +15421,21 @@
         const intEl = document.getElementById('attr-int-val');
         if (intEl) intEl.textContent = st.int || '--';
         const intSub = document.getElementById('attr-int-sub');
-        if (intSub) intSub.textContent = st.maxMana > 0 ? `+${(st.int || 0) * 15} Mana` : ('Base ' + (st.baseInt || '--'));
+        if (intSub) {
+          const mentalDexRank = (activeCharacterClass === 'shaman' && talentPoints && talentPoints[1]) ? (talentPoints[1][4] || 0) : 0;
+          if (mentalDexRank > 0 && st.int) {
+            const mdAP = (mentalDexRank === 3) ? st.int : Math.round(st.int * (mentalDexRank * 0.33));
+            intSub.innerHTML = `<span style="color:#60a5fa;">+${st.int * 15} Mana</span> • <span style="color:#fbbf24;font-weight:700;">+${mdAP} AP</span>`;
+            if (intSub.parentElement) {
+              intSub.parentElement.title = `Intellect grants +${st.int * 15} Mana, +${(st.int / 59.5).toFixed(1)}% Spell Crit, and +${mdAP} Attack Power (Mental Dexterity ${mentalDexRank}/3: ${(mentalDexRank === 3 ? 100 : Math.round(mentalDexRank * 33.3))}% Int -> AP)!`;
+            }
+          } else {
+            intSub.textContent = st.maxMana > 0 ? `+${(st.int || 0) * 15} Mana` : ('Base ' + (st.baseInt || '--'));
+            if (intSub.parentElement) {
+              intSub.parentElement.title = `Intellect increases Maximum Mana (+15 Mana per point) and Spell Critical Strike chance.`;
+            }
+          }
+        }
 
         const spiEl = document.getElementById('attr-spi-val');
         if (spiEl) spiEl.textContent = st.spi || '--';
