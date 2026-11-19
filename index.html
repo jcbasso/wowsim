@@ -925,6 +925,35 @@
       user-select: none;
     }
 
+    .ctc-tree-talent-arrow {
+      position: absolute;
+      pointer-events: none;
+      z-index: 5;
+      transition: filter 0.15s ease;
+    }
+
+    .ctc-tree-talent-arrow-down {
+      width: 15px;
+      background-image: url('https://wow.zamimg.com/images/TalentCalc/arrows/down.png');
+      background-position: bottom center;
+      background-repeat: no-repeat;
+    }
+
+    .ctc-tree-talent-arrow-down.active {
+      background-image: url('https://wow.zamimg.com/images/TalentCalc/arrows/down2.png');
+    }
+
+    .ctc-tree-talent-arrow-right {
+      height: 15px;
+      background-image: url('https://wow.zamimg.com/images/TalentCalc/arrows/right.png');
+      background-position: right center;
+      background-repeat: no-repeat;
+    }
+
+    .ctc-tree-talent-arrow-right.active {
+      background-image: url('https://wow.zamimg.com/images/TalentCalc/arrows/right2.png');
+    }
+
     .talent-node {
       position: relative;
       width: 44px;
@@ -3741,6 +3770,215 @@
       gap: 5px;
     }
   }
+  /* === WOWSIMLAB VALIDATOR DIALOG === */
+  .btn-simlab-open {
+    background: linear-gradient(180deg, rgba(14, 116, 144, 0.32) 0%, rgba(15, 23, 42, 0.85) 100%);
+    border: 1px solid rgba(34, 211, 238, 0.5);
+    color: #67e8f9;
+    font-size: 0.78rem;
+    font-weight: 700;
+    padding: 8px 13px;
+    border-radius: 7px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.15s ease;
+    white-space: nowrap;
+  }
+  .btn-simlab-open:hover {
+    background: linear-gradient(180deg, rgba(6, 182, 212, 0.35) 0%, rgba(14, 116, 144, 0.55) 100%);
+    border-color: #22d3ee;
+    color: #ffffff;
+    box-shadow: 0 0 12px rgba(34, 211, 238, 0.25);
+  }
+
+  dialog.simlab-dialog {
+    margin: auto;
+    padding: 0;
+    border: 1px solid var(--border-gold);
+    border-radius: 12px;
+    background: var(--bg-panel);
+    color: var(--text-main);
+    width: min(920px, calc(100vw - 24px));
+    max-height: calc(100vh - 32px);
+    box-shadow: 0 24px 64px rgba(0, 0, 0, 0.85);
+    overflow: hidden;
+  }
+  dialog.simlab-dialog[open] {
+    display: flex;
+    flex-direction: column;
+  }
+  dialog.simlab-dialog:modal {
+    overscroll-behavior: contain;
+  }
+  dialog.simlab-dialog::backdrop {
+    background: rgba(5, 7, 11, 0.78);
+    backdrop-filter: blur(4px);
+    overflow: hidden;
+    overscroll-behavior: contain;
+  }
+  .simlab-dlg-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 20px;
+    background: linear-gradient(180deg, #1b1f2a 0%, #12151c 100%);
+    border-bottom: 1px solid var(--border-color);
+    gap: 12px;
+  }
+  .simlab-dlg-tabs {
+    display: flex;
+    gap: 6px;
+    padding: 10px 20px 0;
+    border-bottom: 1px solid var(--border-color);
+    background: rgba(15, 23, 42, 0.5);
+  }
+  .simlab-tab-btn {
+    background: transparent;
+    border: none;
+    border-bottom: 2px solid transparent;
+    color: var(--text-muted);
+    font-size: 0.82rem;
+    font-weight: 700;
+    padding: 8px 14px;
+    cursor: pointer;
+    transition: color 0.15s ease, border-color 0.15s ease;
+  }
+  .simlab-tab-btn.active {
+    color: #22d3ee;
+    border-bottom-color: #22d3ee;
+  }
+  .simlab-dlg-body {
+    padding: 16px 20px;
+    overflow-y: auto;
+    flex: 1;
+    min-height: 0;
+  }
+  .simlab-dlg-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 20px;
+    border-top: 1px solid var(--border-color);
+    background: rgba(10, 12, 16, 0.6);
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .simlab-grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+  @media (max-width: 720px) {
+    .simlab-grid-2 { grid-template-columns: 1fr; }
+  }
+  .simlab-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 12px 14px;
+  }
+  .simlab-card h4 {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--gold-bright);
+    margin-bottom: 8px;
+  }
+  .simlab-textarea {
+    width: 100%;
+    min-height: 112px;
+    background: #0b0e14;
+    color: #e2e8f0;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    padding: 8px 10px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.72rem;
+    resize: vertical;
+  }
+  .simlab-dropzone {
+    border: 1px dashed rgba(34, 211, 238, 0.45);
+    border-radius: 8px;
+    background: rgba(8, 47, 73, 0.18);
+    padding: 14px;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color 0.15s ease, background 0.15s ease;
+  }
+  .simlab-dropzone:hover, .simlab-dropzone.dragover {
+    border-color: #22d3ee;
+    background: rgba(8, 47, 73, 0.35);
+  }
+  .simlab-metric-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+  .simlab-stat-box {
+    background: #0d1118;
+    border: 1px solid var(--border-color);
+    border-radius: 7px;
+    padding: 10px 12px;
+  }
+  .simlab-stat-label {
+    font-size: 0.68rem;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    font-weight: 600;
+  }
+  .simlab-stat-val {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #f8fafc;
+    margin-top: 2px;
+  }
+  .simlab-stat-sub {
+    font-size: 0.7rem;
+    color: #94a3b8;
+    margin-top: 2px;
+  }
+  .simlab-badge-pass { color: #4ade80; font-weight: 700; }
+  .simlab-badge-warn { color: #fbbf24; font-weight: 700; }
+  .simlab-badge-fail { color: #f87171; font-weight: 700; }
+  .simlab-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.76rem;
+  }
+  .simlab-table th, .simlab-table td {
+    text-align: left;
+    padding: 6px 8px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  }
+  .simlab-table th {
+    color: var(--text-muted);
+    font-size: 0.7rem;
+    text-transform: uppercase;
+  }
+  .simlab-check-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 10px 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    background: #0d1118;
+    margin-bottom: 8px;
+  }
+  .simlab-check-item.done {
+    border-color: rgba(74, 222, 128, 0.4);
+    background: rgba(20, 83, 45, 0.14);
+  }
+  .simlab-check-item input[type="checkbox"] {
+    margin-top: 3px;
+    width: 16px;
+    height: 16px;
+    accent-color: #22d3ee;
+    cursor: pointer;
+  }
 </style>
 
 </head>
@@ -3766,11 +4004,17 @@
         </div>
       </div>
 
-      <!-- SINGLE MASTER SIMULATE BUTTON (ACCESSIBLE AT TOP RIGHT ON MOBILE & DESKTOP) -->
-      <button id="btn-simulate" class="btn-sim" onclick="runOneStopSimulate()" style="position: relative; overflow: hidden;" title="Run Single-Target Simulation and 12-Scenario Benchmark Suite">
-        <span id="btn-text">▶ SIMULATE</span>
-        <div id="btn-sim-progress" style="position: absolute; bottom: 0; left: 0; height: 3px; background: #ffffff; width: 0%; display: none; transition: width 0.06s ease; box-shadow: 0 0 8px #ffffff;"></div>
-      </button>
+      <!-- TOP RIGHT ACTION BUTTONS: SIMLAB VALIDATOR + MASTER SIMULATE -->
+      <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+        <button id="btn-open-simlab" type="button" class="btn-simlab-open" onclick="openSimLabDialog()" title="Import WoWSimLab In-Game Export & Combat Log to validate simulator math">
+          <span>🧪</span>
+          <span>SimLab Validator</span>
+        </button>
+        <button id="btn-simulate" class="btn-sim" onclick="runOneStopSimulate()" style="position: relative; overflow: hidden;" title="Run Single-Target Simulation and 12-Scenario Benchmark Suite">
+          <span id="btn-text">▶ SIMULATE</span>
+          <div id="btn-sim-progress" style="position: absolute; bottom: 0; left: 0; height: 3px; background: #ffffff; width: 0%; display: none; transition: width 0.06s ease; box-shadow: 0 0 8px #ffffff;"></div>
+        </button>
+      </div>
     </div>
 
     <!-- ROW 2: CHARACTER IDENTITY CONTROLS (FACTION, CLASS, SPEC, LEVEL) -->
@@ -11686,25 +11930,7 @@
         viewport.className = 'tree-viewport';
         viewport.style.backgroundImage = `url('${tree.backgroundUrl}')`;
 
-        // Authentic WoW Prerequisite Arrows Overlay Layer
-        const svgNs = 'http://www.w3.org/2000/svg';
-        const arrowsSvg = document.createElementNS(svgNs, 'svg');
-        arrowsSvg.setAttribute('class', 'talent-arrows-layer');
-        arrowsSvg.setAttribute('viewBox', '0 0 100 420');
-        arrowsSvg.setAttribute('preserveAspectRatio', 'none');
-        arrowsSvg.setAttribute('style', 'position: absolute; top: 12px; left: 0; width: 100%; height: 420px; pointer-events: none; z-index: 2;');
-
-        const defs = document.createElementNS(svgNs, 'defs');
-        defs.innerHTML = `
-          <marker id="arrow-gold-${treeIdx}" markerWidth="8" markerHeight="8" refX="5" refY="4" orient="auto">
-            <path d="M 1 1 L 7 4 L 1 7 z" fill="#f59e0b" />
-          </marker>
-          <marker id="arrow-grey-${treeIdx}" markerWidth="8" markerHeight="8" refX="5" refY="4" orient="auto">
-            <path d="M 1 1 L 7 4 L 1 7 z" fill="#4b5563" />
-          </marker>
-        `;
-        arrowsSvg.appendChild(defs);
-
+        // Authentic WoW Prerequisite Arrows (Wowhead Classic Sprite Engine)
         tree.talents.forEach((talent, talentIdx) => {
           if (talent.prereqLocation) {
             const pRow = talent.prereqLocation.rowIdx;
@@ -11722,37 +11948,27 @@
               isUnlocked = prereqPts >= prereqTalent.maxPoints;
             }
 
-            const strokeColor = isUnlocked ? '#f59e0b' : '#4b5563';
-            const markerId = isUnlocked ? `arrow-gold-${treeIdx}` : `arrow-grey-${treeIdx}`;
-
-            const line = document.createElementNS(svgNs, 'line');
             if (pCol === tCol) {
-              // Vertical arrow (top to bottom)
-              const x = (pCol + 0.5) * 25;
-              const y1 = pRow * 60 + 52;
-              const y2 = tRow * 60 + 6;
-              line.setAttribute('x1', `${x}%`);
-              line.setAttribute('y1', y1);
-              line.setAttribute('x2', `${x}%`);
-              line.setAttribute('y2', y2);
+              // Vertical arrow (down)
+              const arrow = document.createElement('div');
+              arrow.className = `ctc-tree-talent-arrow ctc-tree-talent-arrow-down${isUnlocked ? ' active' : ''}`;
+              const colRatio = (pCol + 0.5) / 4;
+              arrow.style.left = `calc(12px + (100% - 24px) * ${colRatio} - 7.5px)`;
+              arrow.style.top = `${pRow * 60 + 60}px`;
+              arrow.style.height = `${(tRow - pRow) * 60 - 40}px`;
+              viewport.appendChild(arrow);
             } else if (pRow === tRow) {
-              // Horizontal arrow (left to right)
-              const y = pRow * 60 + 30;
-              const x1 = (pCol + 0.5) * 25 + 6;
-              const x2 = (tCol + 0.5) * 25 - 6;
-              line.setAttribute('x1', `${x1}%`);
-              line.setAttribute('y1', y);
-              line.setAttribute('x2', `${x2}%`);
-              line.setAttribute('y2', y);
+              // Horizontal arrow (right)
+              const arrow = document.createElement('div');
+              arrow.className = `ctc-tree-talent-arrow ctc-tree-talent-arrow-right${isUnlocked ? ' active' : ''}`;
+              const colRatio = (pCol + 0.5) / 4;
+              arrow.style.left = `calc(12px + (100% - 24px) * ${colRatio} + 18px)`;
+              arrow.style.top = `${pRow * 60 + 34.5}px`;
+              arrow.style.width = `calc((100% - 24px) * 0.25 - 40px)`;
+              viewport.appendChild(arrow);
             }
-            line.setAttribute('stroke', strokeColor);
-            line.setAttribute('stroke-width', '2.5');
-            line.setAttribute('marker-end', `url(#${markerId})`);
-            line.setAttribute('style', 'filter: drop-shadow(0 0 2px rgba(0,0,0,0.8)); transition: stroke 0.15s ease;');
-            arrowsSvg.appendChild(line);
           }
         });
-        viewport.appendChild(arrowsSvg);
 
         // Render nodes
         tree.talents.forEach((talent, talentIdx) => {
@@ -16456,6 +16672,639 @@
       </div>
     </div>
   </div>
+
+  <!-- WOWSIMLAB EMPIRICAL VALIDATOR & CALIBRATION DIALOG -->
+  <dialog id="simlab-validator-dialog" class="simlab-dialog" closedby="any" aria-labelledby="simlab-dialog-title">
+    <div class="simlab-dlg-header">
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <span style="font-size: 1.35rem;">🧪</span>
+        <div>
+          <h2 id="simlab-dialog-title" style="margin: 0; font-size: 1.05rem; color: #67e8f9;">WoWSimLab • Live Server Calibration &amp; Validator</h2>
+          <div style="font-size: 0.72rem; color: var(--text-muted);">Compare in-game WoW Forever combat logs &amp; snapshots against simulator formulas (100% client-side)</div>
+        </div>
+      </div>
+      <form method="dialog">
+        <button type="submit" class="modal-close" aria-label="Close SimLab Validator">&times;</button>
+      </form>
+    </div>
+
+    <div class="simlab-dlg-tabs" role="tablist" aria-label="SimLab Validator Sections">
+      <button type="button" class="simlab-tab-btn active" id="simlab-tab-validate" role="tab" aria-selected="true" onclick="switchSimLabTab('validate')">1. Validate Run</button>
+      <button type="button" class="simlab-tab-btn" id="simlab-tab-sheet" role="tab" aria-selected="false" onclick="switchSimLabTab('sheet')">2. Calibration Test Sheet <span id="simlab-sheet-progress-pill" style="margin-left: 6px; font-size: 0.7rem; padding: 1px 6px; border-radius: 99px; background: rgba(34,211,238,0.16); color: #67e8f9;">0/14</span></button>
+    </div>
+
+    <div class="simlab-dlg-body">
+      <!-- PANEL 1: VALIDATE RUN -->
+      <div id="simlab-panel-validate">
+        <div class="simlab-grid-2" style="margin-bottom: 14px;">
+          <!-- Step 1: JSON Snapshot -->
+          <div class="simlab-card">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+              <h4 style="margin: 0;">Step 1 • Paste Addon Snapshot JSON (Optional)</h4>
+              <button type="button" class="btn btn-secondary btn-sm" style="padding: 2px 8px; font-size: 0.68rem;" onclick="clearSimLabSnapshot()">Clear</button>
+            </div>
+            <textarea id="simlab-json-input" class="simlab-textarea" autofocus placeholder='Paste the Ctrl+C JSON exported from /simlab in-game (contains AP, Crit %, Weapon Min/Max, Speed, Gear, Talents)...' oninput="onSimLabJsonChanged()"></textarea>
+            <div id="simlab-json-status" style="font-size: 0.7rem; color: var(--text-muted); margin-top: 5px;">Optional — even without JSON, you can upload a combat log below to inspect hits &amp; mob armor.</div>
+          </div>
+
+          <!-- Step 2: Combat Log File -->
+          <div class="simlab-card" style="display: flex; flex-direction: column; justify-content: space-between;">
+            <div>
+              <h4>Step 2 • Upload WoWCombatLog-*.txt</h4>
+              <div id="simlab-dropzone" class="simlab-dropzone" onclick="document.getElementById('simlab-file-input').click()">
+                <div style="font-size: 1.2rem; margin-bottom: 4px;">📄</div>
+                <div style="font-size: 0.8rem; font-weight: 700; color: #e2e8f0;" id="simlab-file-label">Click or Drop WoWCombatLog-*.txt here</div>
+                <div style="font-size: 0.68rem; color: var(--text-muted); margin-top: 3px;">Found in <code>_forever_\Logs\WoWCombatLog-*.txt</code> • Parsed locally in browser</div>
+                <input type="file" id="simlab-file-input" accept=".txt,.log" style="display: none;" onchange="handleSimLabFileSelect(this.files[0])" />
+              </div>
+            </div>
+
+            <div id="simlab-filter-row" style="display: none; margin-top: 10px; gap: 8px; flex-wrap: wrap; align-items: center;">
+              <label style="font-size: 0.7rem; color: var(--text-muted);">Player:
+                <select id="simlab-player-select" style="background: #0b0e14; color: #f8fafc; border: 1px solid var(--border-color); border-radius: 5px; padding: 3px 6px; font-size: 0.74rem; margin-left: 4px;"></select>
+              </label>
+              <label style="font-size: 0.7rem; color: var(--text-muted);">Target:
+                <select id="simlab-target-select" style="background: #0b0e14; color: #f8fafc; border: 1px solid var(--border-color); border-radius: 5px; padding: 3px 6px; font-size: 0.74rem; margin-left: 4px;"></select>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 14px;">
+          <button type="button" class="btn-sim" style="padding: 8px 16px; font-size: 0.8rem;" onclick="runSimLabValidation()">▶ Run Differential Validation</button>
+          <button type="button" id="simlab-btn-apply" class="btn btn-secondary btn-sm" style="display: none;" onclick="applySimLabSnapshotToMainSim()">⚡ Apply Snapshot to Main Sim</button>
+          <button type="button" id="simlab-btn-copy-md" class="btn btn-secondary btn-sm" style="display: none;" onclick="copySimLabMarkdownReport()">📋 Copy Calibration Report (MD)</button>
+        </div>
+
+        <!-- RESULTS CONTAINER -->
+        <div id="simlab-results-area" style="display: none;">
+          <div class="simlab-metric-row" id="simlab-summary-cards"></div>
+
+          <div class="simlab-grid-2" style="margin-bottom: 14px;">
+            <div class="simlab-card">
+              <h4>Hit Table Breakdown</h4>
+              <table class="simlab-table" id="simlab-hittable-table"></table>
+            </div>
+            <div class="simlab-card">
+              <h4>White Swing Damage Distribution (Raw vs Actual)</h4>
+              <div id="simlab-histogram-container" style="min-height: 140px; display: flex; align-items: center; justify-content: center;"></div>
+            </div>
+          </div>
+
+          <div class="simlab-card" style="margin-bottom: 14px;">
+            <h4>Formula Calibration Checks (Live Server vs wowsim)</h4>
+            <table class="simlab-table" id="simlab-calibration-table"></table>
+          </div>
+
+          <div class="simlab-card" id="simlab-abilities-card" style="display: none;">
+            <h4>Ability &amp; Proc Breakdown</h4>
+            <table class="simlab-table" id="simlab-abilities-table"></table>
+          </div>
+        </div>
+      </div>
+
+      <!-- PANEL 2: CALIBRATION TEST SHEET -->
+      <div id="simlab-panel-sheet" style="display: none;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; gap: 10px; flex-wrap: wrap;">
+          <div style="font-size: 0.78rem; color: #cbd5e1;">
+            Work through these prioritized tests in-game using <code>/simlab</code> to lock down every core formula in <strong>WoW Forever</strong>. Progress is saved in your browser.
+          </div>
+          <button type="button" class="btn btn-secondary btn-sm" onclick="resetSimLabChecklist()">Reset Checklist</button>
+        </div>
+        <div id="simlab-checklist-container"></div>
+      </div>
+    </div>
+
+    <div class="simlab-dlg-footer">
+      <span style="font-size: 0.72rem; color: var(--text-muted);">Addon files live in <code>addon/WoWSimLab</code> • Reference sheet in <code>addon/SIMLAB_TEST_PLAN.md</code></span>
+      <form method="dialog">
+        <button type="submit" class="btn btn-secondary btn-sm">Close</button>
+      </form>
+    </div>
+  </dialog>
+
+  <script>
+    // =========================================================================
+    // WOWSIMLAB IN-PAGE VALIDATOR & CALIBRATION ENGINE (100% CLIENT-SIDE)
+    // =========================================================================
+    const SIMLAB_TEST_SHEET = [
+      { id: 'T1-1', tier: 'Tier 1 • Core Physical & Stats', title: 'Baseline White Swing Roll', formula: 'WeaponMin..Max + (AP / 14) * Speed', setup: 'Phase 1: Strip Armor, equip 1 weapon, 0 buffs. Auto-attack naked duel partner (from behind) or mob for 50+ swings.', criteria: 'Raw logged [Min, Max] matches formula within ±1 dmg.' },
+      { id: 'T1-2', tier: 'Tier 1 • Core Physical & Stats', title: 'Attack Power Scaling', formula: 'AP / 14 divisor & Str/Agi -> AP per class', setup: 'Phase 2: Same weapon as T1-1 + pure +Str/+Agi/+AP gear (no procs). 50+ swings.', criteria: 'Avg Raw Damage delta matches (ΔAP / 14) * Speed within ±1%.' },
+      { id: 'T1-3', tier: 'Tier 1 • Core Physical & Stats', title: 'Dual-Wield Off-Hand Penalty', formula: 'Off-hand 0.50x base damage (and DW Spec talent)', setup: 'Equip MH + OH weapons, strip armor, auto-attack only for 100+ swings.', criteria: 'OH raw rolls match 0.50x (or talent-adjusted multiplier).' },
+      { id: 'T1-4', tier: 'Tier 1 • Core Physical & Stats', title: 'Agility -> Melee Crit Conversion', formula: 'Currently 4.0 + Agi / 19.5 (needs per-class/lvl table)', setup: 'Snapshot only: Export Character Sheet Crit% naked vs +Agi gear at levels 19, 29, 40, 60.', criteria: 'Exact Agi-per-1%-Crit divisor per class & level.' },
+      { id: 'T1-5', tier: 'Tier 1 • Core Physical & Stats', title: 'Intellect -> Spell Crit Conversion', formula: 'Currently 2.5 + Int / 59.5 (needs per-class/lvl table)', setup: 'Snapshot only: Export Spell Crit% naked vs +Int gear at levels 19, 29, 40, 60.', criteria: 'Exact Int-per-1%-Spell-Crit divisor per class & level.' },
+      { id: 'T2-1', tier: 'Tier 2 • Hit Table & Mitigation', title: 'Armor Damage Reduction Formula', formula: 'DR = Armor / (Armor + 400 + 85 * AttackerLvl)', setup: 'Duel partner wears 0 Armor, then known Armor (e.g. 1000, 2500). 30 white swings each from behind.', criteria: 'Observed 1 - (Actual / Raw) matches formula within ±0.3%.' },
+      { id: 'T2-2', tier: 'Tier 2 • Hit Table & Mitigation', title: 'Open-World & Boss Mob Armor Curve', formula: 'Currently 200 + lvl * 65 (Ghostmaw Lvl 38 measured ~1,690 vs 2,670!)', setup: 'Log 20+ hits against standard mobs & dungeon bosses across Lvl 19, 29, 38, 50, 60.', criteria: 'Calibrate exact targetArmor(lvl, mobType) curve.' },
+      { id: 'T2-3', tier: 'Tier 2 • Hit Table & Mitigation', title: 'Miss Rate (1H/2H vs Dual-Wield)', formula: 'Currently max(1%, 5% - Hit%) — check DW +19% & lvl delta', setup: 'Auto-attack equal-level mob vs +3 level mob with 0% Hit (200+ swings).', criteria: 'Verify 1H/2H (~5%), +3 lvl (~8–9%), and DW (~24%) miss rates.' },
+      { id: 'T2-4', tier: 'Tier 2 • Hit Table & Mitigation', title: 'Glancing Blows (+1 / +2 / +3 Lvl)', formula: 'Glancing chance (~40%) & damage penalty vs higher-lvl mobs', setup: 'Auto-attack a mob 3 levels higher than you with white swings only (100+ swings).', criteria: 'Confirm Glancing % and average glancing damage penalty.' },
+      { id: 'T3-1', tier: 'Tier 3 • Spells & Forever Custom', title: 'Spell Base Damage & SP Coefficient', formula: 'BaseDmg + SP * (CastTime / 3.5) & Crit multiplier', setup: 'Phase 3: Cast 1 spell naked (0 SP), then with +SP gear (25+ casts each).', criteria: '(Avg_Geared - Avg_Naked) / AddedSP matches coefficient.' },
+      { id: 'T3-2', tier: 'Tier 3 • Spells & Forever Custom', title: 'Shaman Imbues (Forever Custom)', formula: 'Rockbiter AP, Flametongue scaling, Windfury sub-40 AP & proc %', setup: 'Auto-attack duel partner with each imbue active, no procs/armor (100+ swings).', criteria: 'Verify WF proc rate (~20%) and custom sub-40 AP bonus.' },
+      { id: 'T3-3', tier: 'Tier 3 • Spells & Forever Custom', title: 'Warrior Tank & Custom Procs', formula: 'Shield Slam BV scaling, Revenge, Scarlet Retribution, Impaled', setup: 'Fight high-HP mob in Defensive Stance with 2 different Block Value / AP sets (20+ casts).', criteria: 'Exact BV/AP coefficients for Shield Slam & custom Forever spells.' },
+      { id: 'T3-4', tier: 'Tier 3 • Spells & Forever Custom', title: 'Sunder Armor / Armor Debuffs', formula: 'curTargetArmor = max(0, targetArmor - stacks * val)', setup: 'Apply 1->5 stacks of Sunder Armor on high-armor mob, log 5 hits per stack.', criteria: 'Observed DR% drop per stack matches exact armor reduction.' },
+      { id: 'T4-1', tier: 'Tier 4 • End-to-End Rotation', title: 'Full APL Rotation Sustained DPS', formula: 'Composite DPS, GCD cadence & resource regen', setup: 'Phase 4: Full gear, full rotation for 60–180s on Boss / Elite / Healing Duel Partner.', criteria: 'Simulated DPS within ±5% of Empirical DPS; ability share ±3%.' }
+    ];
+
+    const SIMLAB_CHECKLIST_STORAGE_KEY = 'wowsim_simlab_checklist_v1';
+    let simlabState = {
+      snapshot: null,
+      rawLogText: '',
+      fileName: '',
+      lastReportMd: ''
+    };
+
+    function openSimLabDialog() {
+      const dlg = document.getElementById('simlab-validator-dialog');
+      if (!dlg) return;
+      renderSimLabChecklist();
+      if (!dlg.open) dlg.showModal();
+    }
+
+    function switchSimLabTab(tab) {
+      const isVal = tab === 'validate';
+      document.getElementById('simlab-panel-validate').style.display = isVal ? 'block' : 'none';
+      document.getElementById('simlab-panel-sheet').style.display = isVal ? 'none' : 'block';
+      document.getElementById('simlab-tab-validate').classList.toggle('active', isVal);
+      document.getElementById('simlab-tab-sheet').classList.toggle('active', !isVal);
+      document.getElementById('simlab-tab-validate').setAttribute('aria-selected', String(isVal));
+      document.getElementById('simlab-tab-sheet').setAttribute('aria-selected', String(!isVal));
+    }
+
+    function clearSimLabSnapshot() {
+      document.getElementById('simlab-json-input').value = '';
+      simlabState.snapshot = null;
+      document.getElementById('simlab-json-status').textContent = 'Cleared. Paste /simlab export JSON or validate using a combat log alone.';
+      document.getElementById('simlab-btn-apply').style.display = 'none';
+    }
+
+    function onSimLabJsonChanged() {
+      const raw = document.getElementById('simlab-json-input').value.trim();
+      const statusEl = document.getElementById('simlab-json-status');
+      const applyBtn = document.getElementById('simlab-btn-apply');
+      if (!raw) {
+        simlabState.snapshot = null;
+        statusEl.textContent = 'Optional — even without JSON, you can upload a combat log below to inspect hits & mob armor.';
+        statusEl.style.color = 'var(--text-muted)';
+        applyBtn.style.display = 'none';
+        return;
+      }
+      try {
+        const parsed = JSON.parse(raw);
+        simlabState.snapshot = parsed;
+        const c = parsed.character || {};
+        const s = parsed.empirical_stats || {};
+        statusEl.textContent = `Loaded: Lvl ${c.level || '?'} ${c.race || ''} ${c.class || ''} • AP ${s.melee_ap || 0} • Crit ${s.melee_crit_pct || 0}% • Wpn ${s.weapon_min || 0}-${s.weapon_max || 0} (${s.weapon_speed || 0}s)`;
+        statusEl.style.color = '#4ade80';
+        applyBtn.style.display = 'inline-flex';
+      } catch (e) {
+        simlabState.snapshot = null;
+        statusEl.textContent = 'Invalid JSON: ' + e.message;
+        statusEl.style.color = '#f87171';
+        applyBtn.style.display = 'none';
+      }
+    }
+
+    function handleSimLabFileSelect(file) {
+      if (!file) return;
+      simlabState.fileName = file.name;
+      document.getElementById('simlab-file-label').textContent = `Loaded: ${file.name} (${(file.size / 1024).toFixed(1)} KB)`;
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        simlabState.rawLogText = ev.target.result || '';
+        populateSimLabEntities(simlabState.rawLogText);
+      };
+      reader.readAsText(file);
+    }
+
+    function populateSimLabEntities(logText) {
+      const players = new Map();
+      const targets = new Map();
+      const lines = logText.split(/\r?\n/);
+      for (let i = 0; i < lines.length; i++) {
+        const line = lines[i];
+        if (!line.includes('SWING_DAMAGE') && !line.includes('SPELL_DAMAGE') && !line.includes('SWING_MISSED')) continue;
+        if (line.includes('SWING_DAMAGE_LANDED')) continue;
+        const parts = line.split(',');
+        if (parts.length < 7) continue;
+        const srcGuid = parts[1] || '';
+        const srcName = (parts[2] || '').replace(/^"|"$/g, '');
+        const dstName = (parts[6] || '').replace(/^"|"$/g, '');
+        if (srcGuid.startsWith('Player-') && srcName) {
+          players.set(srcName, (players.get(srcName) || 0) + 1);
+          if (dstName && dstName !== 'nil' && dstName !== srcName) {
+            targets.set(dstName, (targets.get(dstName) || 0) + 1);
+          }
+        }
+      }
+
+      const pSel = document.getElementById('simlab-player-select');
+      const tSel = document.getElementById('simlab-target-select');
+      pSel.innerHTML = '';
+      tSel.innerHTML = '';
+
+      const sortedPlayers = [...players.entries()].sort((a, b) => b[1] - a[1]);
+      const sortedTargets = [...targets.entries()].sort((a, b) => b[1] - a[1]);
+
+      if (sortedPlayers.length === 0) {
+        pSel.innerHTML = '<option value="">(All Sources)</option>';
+      } else {
+        sortedPlayers.forEach(([name, cnt]) => {
+          const opt = document.createElement('option');
+          opt.value = name;
+          opt.textContent = `${name} (${cnt} events)`;
+          pSel.appendChild(opt);
+        });
+      }
+
+      const allTargetOpt = document.createElement('option');
+      allTargetOpt.value = '';
+      allTargetOpt.textContent = '(All Targets)';
+      tSel.appendChild(allTargetOpt);
+      sortedTargets.forEach(([name, cnt]) => {
+        const opt = document.createElement('option');
+        opt.value = name;
+        opt.textContent = `${name} (${cnt} events)`;
+        tSel.appendChild(opt);
+      });
+
+      // Auto-select top target if available
+      if (sortedTargets.length > 0) {
+        const snapTarget = simlabState.snapshot?.test_meta?.target;
+        const match = sortedTargets.find(([n]) => snapTarget && n.toLowerCase().includes(snapTarget.toLowerCase()));
+        tSel.value = match ? match[0] : sortedTargets[0][0];
+      }
+
+      document.getElementById('simlab-filter-row').style.display = 'flex';
+    }
+
+    function parseSimLabCombatLog(logText, playerName, targetName) {
+      const lines = logText.split(/\r?\n/);
+      const swings = { total: 0, hits: 0, crits: 0, glances: 0, misses: 0, dodges: 0, parries: 0, blocks: 0, actuals: [], raws: [], critActuals: [] };
+      const abilities = {};
+      let firstTs = null;
+      let lastTs = null;
+
+      for (let i = 0; i < lines.length; i++) {
+        const line = lines[i];
+        if (!line || line.includes('SWING_DAMAGE_LANDED')) continue;
+        if (!line.includes('SWING_DAMAGE') && !line.includes('SWING_MISSED') && !line.includes('SPELL_DAMAGE') && !line.includes('SPELL_MISSED')) continue;
+
+        const parts = line.split(',');
+        if (parts.length < 10) continue;
+
+        const srcName = (parts[2] || '').replace(/^"|"$/g, '');
+        const dstName = (parts[6] || '').replace(/^"|"$/g, '');
+        if (playerName && srcName !== playerName) continue;
+        if (targetName && dstName !== targetName) continue;
+
+        const headerTokens = parts[0].trim().split(/\s+/);
+        const eventType = headerTokens[headerTokens.length - 1];
+        const tsStr = headerTokens.slice(0, 2).join(' ');
+        if (!firstTs) firstTs = tsStr;
+        lastTs = tsStr;
+
+        if (eventType === 'SWING_DAMAGE') {
+          swings.total++;
+          let actualDmg = 0, rawDmg = 0, isCrit = false, isGlance = false;
+          const overkillIdx = parts.findIndex((p, idx) => idx > 15 && (p === '-1' || (idx >= 25 && /^-?\d+$/.test(p) && parts[idx + 1] === '1')));
+          if (parts.length >= 28 && overkillIdx !== -1) {
+            actualDmg = parseInt(parts[overkillIdx - 2], 10) || 0;
+            rawDmg = parseInt(parts[overkillIdx - 1], 10) || actualDmg;
+            isCrit = parts[overkillIdx + 5] === '1';
+            isGlance = parts[overkillIdx + 6] === '1';
+          } else {
+            actualDmg = parseInt(parts[9], 10) || 0;
+            rawDmg = actualDmg;
+            isCrit = parts[17] === '1' || parts[17] === 'true';
+            isGlance = parts[18] === '1' || parts[18] === 'true';
+          }
+          if (actualDmg > 0) {
+            swings.actuals.push(actualDmg);
+            swings.raws.push(rawDmg);
+            if (isCrit) { swings.crits++; swings.critActuals.push(actualDmg); }
+            else if (isGlance) { swings.glances++; }
+            else { swings.hits++; }
+          }
+        } else if (eventType === 'SWING_MISSED') {
+          swings.total++;
+          const missType = (parts[9] || parts[parts.length - 2] || 'MISS').toUpperCase();
+          if (missType.includes('DODGE')) swings.dodges++;
+          else if (missType.includes('PARRY')) swings.parries++;
+          else if (missType.includes('BLOCK')) swings.blocks++;
+          else swings.misses++;
+        } else if (eventType === 'SPELL_DAMAGE') {
+          const spellName = (parts[10] || 'Unknown').replace(/^"|"$/g, '');
+          if (!abilities[spellName]) abilities[spellName] = { casts: 0, crits: 0, actuals: [], raws: [] };
+          const ab = abilities[spellName];
+          ab.casts++;
+          const overkillIdx = parts.findIndex((p, idx) => idx > 18 && p === '-1');
+          let actualDmg = 0, rawDmg = 0, isCrit = false;
+          if (parts.length >= 30 && overkillIdx !== -1) {
+            actualDmg = parseInt(parts[overkillIdx - 2], 10) || 0;
+            rawDmg = parseInt(parts[overkillIdx - 1], 10) || actualDmg;
+            isCrit = parts[overkillIdx + 5] === '1';
+          } else {
+            actualDmg = parseInt(parts[12], 10) || 0;
+            rawDmg = actualDmg;
+            isCrit = parts[20] === '1' || parts[20] === 'true';
+          }
+          if (actualDmg > 0) { ab.actuals.push(actualDmg); ab.raws.push(rawDmg); }
+          if (isCrit) ab.crits++;
+        }
+      }
+      return { swings, abilities, firstTs, lastTs };
+    }
+
+    function runSimLabValidation() {
+      const snap = simlabState.snapshot;
+      const logText = simlabState.rawLogText;
+      if (!snap && !logText) {
+        alert('Please paste a WoWSimLab JSON snapshot and/or upload a WoWCombatLog-*.txt file first.');
+        return;
+      }
+
+      const playerName = document.getElementById('simlab-player-select')?.value || '';
+      const targetName = document.getElementById('simlab-target-select')?.value || '';
+      const parsed = logText ? parseSimLabCombatLog(logText, playerName, targetName) : null;
+
+      const resultsArea = document.getElementById('simlab-results-area');
+      resultsArea.style.display = 'block';
+
+      const sw = parsed ? parsed.swings : { total: 0, hits: 0, crits: 0, glances: 0, misses: 0, dodges: 0, parries: 0, blocks: 0, actuals: [], raws: [], critActuals: [] };
+      const avg = (arr) => arr.length ? arr.reduce((a, b) => a + b, 0) / arr.length : 0;
+      const actualAvg = avg(sw.actuals);
+      const rawAvg = avg(sw.raws);
+      const actualMin = sw.actuals.length ? Math.min(...sw.actuals) : 0;
+      const actualMax = sw.actuals.length ? Math.max(...sw.actuals) : 0;
+      const rawMin = sw.raws.length ? Math.min(...sw.raws) : 0;
+      const rawMax = sw.raws.length ? Math.max(...sw.raws) : 0;
+
+      // Observed Armor DR & Reverse-engineered Armor
+      const hasRawSplit = rawAvg > 0 && actualAvg > 0 && Math.abs(rawAvg - actualAvg) > 0.5;
+      const observedDR = hasRawSplit ? (1 - actualAvg / rawAvg) : 0;
+      const attackerLvl = snap?.character?.level || parseInt(document.getElementById('cfg-level')?.value, 10) || 60;
+      const targetLvl = snap?.test_meta?.targetLevel || attackerLvl;
+      const armorConst = 400 + 85 * attackerLvl;
+      const estTargetArmor = (observedDR > 0 && observedDR < 0.75) ? Math.round((observedDR * armorConst) / (1 - observedDR)) : 0;
+      const simAssumedArmor = 200 + targetLvl * 65;
+
+      // Summary Cards
+      document.getElementById('simlab-summary-cards').innerHTML = `
+        <div class="simlab-stat-box">
+          <div class="simlab-stat-label">Swings Analyzed</div>
+          <div class="simlab-stat-val">${sw.total}</div>
+          <div class="simlab-stat-sub">${targetName || snap?.test_meta?.target || 'All Targets'}</div>
+        </div>
+        <div class="simlab-stat-box">
+          <div class="simlab-stat-label">Raw White Roll</div>
+          <div class="simlab-stat-val">${rawMin} – ${rawMax}</div>
+          <div class="simlab-stat-sub">Avg: ${rawAvg.toFixed(1)} dmg (pre-armor)</div>
+        </div>
+        <div class="simlab-stat-box">
+          <div class="simlab-stat-label">Actual White Hit</div>
+          <div class="simlab-stat-val">${actualMin} – ${actualMax}</div>
+          <div class="simlab-stat-sub">Avg: ${actualAvg.toFixed(1)} dmg (post-armor)</div>
+        </div>
+        <div class="simlab-stat-box">
+          <div class="simlab-stat-label">Observed Target DR</div>
+          <div class="simlab-stat-val">${hasRawSplit ? (observedDR * 100).toFixed(1) + '%' : 'N/A'}</div>
+          <div class="simlab-stat-sub">${estTargetArmor ? `Est. Armor: ~${estTargetArmor.toLocaleString()}` : 'Raw == Actual (0 Armor)'}</div>
+        </div>
+      `;
+
+      // Hit Table
+      const pct = (n) => sw.total ? ((n / sw.total) * 100).toFixed(1) + '%' : '0.0%';
+      document.getElementById('simlab-hittable-table').innerHTML = `
+        <thead><tr><th>Outcome</th><th>Count</th><th>Rate</th></tr></thead>
+        <tbody>
+          <tr><td>Normal Hits</td><td>${sw.hits}</td><td>${pct(sw.hits)}</td></tr>
+          <tr><td>Criticals</td><td>${sw.crits}</td><td>${pct(sw.crits)}</td></tr>
+          <tr><td>Glancing Blows</td><td>${sw.glances}</td><td>${pct(sw.glances)}</td></tr>
+          <tr><td>Misses</td><td>${sw.misses}</td><td>${pct(sw.misses)}</td></tr>
+          <tr><td>Dodges</td><td>${sw.dodges}</td><td>${pct(sw.dodges)}</td></tr>
+          <tr><td>Parries / Blocks</td><td>${sw.parries + sw.blocks}</td><td>${pct(sw.parries + sw.blocks)}</td></tr>
+        </tbody>
+      `;
+
+      // Histogram SVG
+      renderSimLabHistogram(sw.actuals);
+
+      // Calibration Checks
+      const checks = [];
+      if (snap?.empirical_stats) {
+        const es = snap.empirical_stats;
+        const wMin = Number(es.weapon_min) || 0;
+        const wMax = Number(es.weapon_max) || 0;
+        const expectedAvg = (wMin + wMax) / 2;
+        if (wMax > 0 && rawAvg > 0) {
+          const diffPct = ((rawAvg - expectedAvg) / expectedAvg) * 100;
+          const badge = Math.abs(diffPct) <= 3 ? 'simlab-badge-pass' : (Math.abs(diffPct) <= 8 ? 'simlab-badge-warn' : 'simlab-badge-fail');
+          checks.push(`<tr><td>White Swing Raw Avg</td><td>${rawAvg.toFixed(1)}</td><td>${expectedAvg.toFixed(1)} (Sheet ${wMin}-${wMax})</td><td class="${badge}">${diffPct >= 0 ? '+' : ''}${diffPct.toFixed(1)}%</td></tr>`);
+        }
+        if (es.melee_crit_pct !== undefined && sw.total >= 20) {
+          const obsCrit = (sw.crits / sw.total) * 100;
+          const expCrit = Number(es.melee_crit_pct) || 0;
+          const delta = obsCrit - expCrit;
+          const badge = Math.abs(delta) <= 4 ? 'simlab-badge-pass' : 'simlab-badge-warn';
+          checks.push(`<tr><td>Melee Crit Rate</td><td>${obsCrit.toFixed(1)}%</td><td>${expCrit.toFixed(1)}% (Sheet)</td><td class="${badge}">${delta >= 0 ? '+' : ''}${delta.toFixed(1)}%</td></tr>`);
+        }
+      }
+      if (estTargetArmor > 0) {
+        const armorDiff = estTargetArmor - simAssumedArmor;
+        const badge = Math.abs(armorDiff) <= 250 ? 'simlab-badge-pass' : 'simlab-badge-warn';
+        checks.push(`<tr><td>Target Mob Armor (Lvl ${targetLvl})</td><td>~${estTargetArmor.toLocaleString()} (${(observedDR * 100).toFixed(1)}% DR)</td><td>${simAssumedArmor.toLocaleString()} (<code>200 + lvl*65</code>)</td><td class="${badge}">${armorDiff >= 0 ? '+' : ''}${armorDiff} armor</td></tr>`);
+      }
+      if (checks.length === 0) {
+        checks.push('<tr><td colspan="4" style="color: var(--text-muted);">Paste a /simlab JSON snapshot alongside the combat log to run automated formula delta checks.</td></tr>');
+      }
+      document.getElementById('simlab-calibration-table').innerHTML = `
+        <thead><tr><th>Metric</th><th>Live Server</th><th>Simulator / Expected</th><th>Delta</th></tr></thead>
+        <tbody>${checks.join('')}</tbody>
+      `;
+
+      // Abilities Breakdown
+      const abEntries = parsed ? Object.entries(parsed.abilities).sort((a, b) => b[1].casts - a[1].casts) : [];
+      const abCard = document.getElementById('simlab-abilities-card');
+      if (abEntries.length > 0) {
+        abCard.style.display = 'block';
+        document.getElementById('simlab-abilities-table').innerHTML = `
+          <thead><tr><th>Ability / Proc</th><th>Hits</th><th>Raw Avg</th><th>Actual Avg</th><th>Crit %</th></tr></thead>
+          <tbody>
+            ${abEntries.map(([name, d]) => `
+              <tr>
+                <td style="font-weight: 600; color: #f8fafc;">${name}</td>
+                <td>${d.casts}</td>
+                <td>${avg(d.raws).toFixed(1)}</td>
+                <td>${avg(d.actuals).toFixed(1)}</td>
+                <td>${d.casts ? ((d.crits / d.casts) * 100).toFixed(1) + '%' : '0%'}</td>
+              </tr>
+            `).join('')}
+          </tbody>
+        `;
+      } else {
+        abCard.style.display = 'none';
+      }
+
+      // Build Markdown Report for Clipboard
+      simlabState.lastReportMd = [
+        `### WoWSimLab Calibration Report`,
+        `- **Player:** ${playerName || snap?.character?.class || 'Unknown'} (Lvl ${attackerLvl})`,
+        `- **Target:** ${targetName || snap?.test_meta?.target || 'All'} (Lvl ${targetLvl})`,
+        `- **Swings Analyzed:** ${sw.total} (Hits: ${sw.hits}, Crits: ${sw.crits}, Glances: ${sw.glances}, Miss: ${sw.misses}, Dodge: ${sw.dodges}, Parry: ${sw.parries})`,
+        `- **Raw White Roll:** ${rawMin}–${rawMax} (Avg ${rawAvg.toFixed(1)})`,
+        `- **Actual White Hit:** ${actualMin}–${actualMax} (Avg ${actualAvg.toFixed(1)})`,
+        hasRawSplit ? `- **Observed Target Armor:** ~${estTargetArmor} (${(observedDR * 100).toFixed(1)}% DR vs sim's ${simAssumedArmor})` : `- **Observed Target Armor:** 0 / Unmitigated`,
+        abEntries.length ? `- **Abilities:** ${abEntries.map(([n, d]) => `${n} (${d.casts}x, avg ${avg(d.actuals).toFixed(0)})`).join(', ')}` : ''
+      ].filter(Boolean).join('\n');
+
+      document.getElementById('simlab-btn-copy-md').style.display = 'inline-flex';
+    }
+
+    function renderSimLabHistogram(values) {
+      const container = document.getElementById('simlab-histogram-container');
+      if (!values || values.length === 0) {
+        container.innerHTML = '<span style="font-size: 0.74rem; color: var(--text-muted);">No white swing damage samples in selection.</span>';
+        return;
+      }
+      const minV = Math.min(...values);
+      const maxV = Math.max(...values);
+      const bucketCount = Math.min(10, Math.max(4, Math.ceil(Math.sqrt(values.length))));
+      const span = Math.max(1, maxV - minV + 1);
+      const step = span / bucketCount;
+      const buckets = new Array(bucketCount).fill(0);
+      values.forEach(v => {
+        const idx = Math.min(bucketCount - 1, Math.floor((v - minV) / step));
+        buckets[idx]++;
+      });
+      const maxBucket = Math.max(1, ...buckets);
+      const w = 360, h = 126, padB = 22, barGap = 4;
+      const barW = (w - barGap * (bucketCount + 1)) / bucketCount;
+      const bars = buckets.map((cnt, i) => {
+        const bh = Math.round((cnt / maxBucket) * (h - padB - 14));
+        const x = barGap + i * (barW + barGap);
+        const y = h - padB - bh;
+        const label = Math.round(minV + i * step);
+        return `
+          <rect x="${x.toFixed(1)}" y="${y}" width="${barW.toFixed(1)}" height="${bh}" rx="3" fill="#22d3ee" fill-opacity="0.78">
+            <title>${label}–${Math.round(label + step)} dmg: ${cnt} hits</title>
+          </rect>
+          ${cnt > 0 ? `<text x="${(x + barW / 2).toFixed(1)}" y="${Math.max(10, y - 3)}" text-anchor="middle" fill="#cbd5e1" font-size="9">${cnt}</text>` : ''}
+          <text x="${(x + barW / 2).toFixed(1)}" y="${h - 6}" text-anchor="middle" fill="#94a3b8" font-size="9">${label}</text>
+        `;
+      }).join('');
+      container.innerHTML = `<svg viewBox="0 0 ${w} ${h}" style="width: 100%; max-width: 380px; height: auto;">${bars}</svg>`;
+    }
+
+    function applySimLabSnapshotToMainSim() {
+      const snap = simlabState.snapshot;
+      if (!snap || !snap.character) return;
+      const c = snap.character;
+      const cls = (c.class || '').toLowerCase();
+      const clsSelect = document.getElementById('cfg-active-class');
+      if (clsSelect && [...clsSelect.options].some(o => o.value === cls)) {
+        clsSelect.value = cls;
+        if (typeof onClassSelected === 'function') onClassSelected(cls);
+      }
+      const lvlInput = document.getElementById('cfg-level');
+      if (lvlInput && c.level) {
+        lvlInput.value = c.level;
+        if (typeof onLevelChanged === 'function') onLevelChanged();
+      }
+      document.getElementById('simlab-validator-dialog').close('applied');
+    }
+
+    function copySimLabMarkdownReport() {
+      if (!simlabState.lastReportMd) return;
+      navigator.clipboard.writeText(simlabState.lastReportMd).then(() => {
+        const btn = document.getElementById('simlab-btn-copy-md');
+        const orig = btn.textContent;
+        btn.textContent = '✅ Copied!';
+        setTimeout(() => { btn.textContent = orig; }, 1600);
+      });
+    }
+
+    // Checklist Persistence
+    function getSimLabChecklistState() {
+      try { return JSON.parse(localStorage.getItem(SIMLAB_CHECKLIST_STORAGE_KEY) || '{}'); }
+      catch { return {}; }
+    }
+    function toggleSimLabTestItem(id, checked) {
+      const st = getSimLabChecklistState();
+      st[id] = checked;
+      localStorage.setItem(SIMLAB_CHECKLIST_STORAGE_KEY, JSON.stringify(st));
+      renderSimLabChecklist();
+    }
+    function resetSimLabChecklist() {
+      localStorage.removeItem(SIMLAB_CHECKLIST_STORAGE_KEY);
+      renderSimLabChecklist();
+    }
+    function renderSimLabChecklist() {
+      const st = getSimLabChecklistState();
+      const doneCount = SIMLAB_TEST_SHEET.filter(t => st[t.id]).length;
+      const pill = document.getElementById('simlab-sheet-progress-pill');
+      if (pill) pill.textContent = `${doneCount}/${SIMLAB_TEST_SHEET.length}`;
+
+      const container = document.getElementById('simlab-checklist-container');
+      if (!container) return;
+
+      let curTier = '';
+      let html = '';
+      SIMLAB_TEST_SHEET.forEach(item => {
+        if (item.tier !== curTier) {
+          curTier = item.tier;
+          html += `<h4 style="font-size: 0.78rem; text-transform: uppercase; color: var(--gold-bright); margin: 14px 0 8px; letter-spacing: 0.04em;">${curTier}</h4>`;
+        }
+        const checked = !!st[item.id];
+        html += `
+          <label class="simlab-check-item ${checked ? 'done' : ''}" style="cursor: pointer;">
+            <input type="checkbox" ${checked ? 'checked' : ''} onchange="toggleSimLabTestItem('${item.id}', this.checked)" />
+            <div style="flex: 1;">
+              <div style="display: flex; justify-content: space-between; gap: 8px; flex-wrap: wrap;">
+                <span style="font-weight: 700; font-size: 0.82rem; color: ${checked ? '#4ade80' : '#f8fafc'};">
+                  <code style="color: #67e8f9; margin-right: 4px;">${item.id}</code> ${item.title}
+                </span>
+                <span style="font-size: 0.68rem; color: #fbbf24;">${item.formula}</span>
+              </div>
+              <div style="font-size: 0.72rem; color: #cbd5e1; margin-top: 3px;"><strong>Setup:</strong> ${item.setup}</div>
+              <div style="font-size: 0.7rem; color: #94a3b8; margin-top: 2px;"><strong>Pass Criteria:</strong> ${item.criteria}</div>
+            </div>
+          </label>
+        `;
+      });
+      container.innerHTML = html;
+    }
+
+    // Wire Drag & Drop + Dialog closedby fallback (Safari) + returnValue reset
+    (function initSimLabDialog() {
+      const dlg = document.getElementById('simlab-validator-dialog');
+      if (!dlg) return;
+
+      dlg.addEventListener('close', () => { dlg.returnValue = ''; });
+
+      if (!('closedBy' in HTMLDialogElement.prototype)) {
+        const outside = (e, d) => {
+          const r = d.getBoundingClientRect();
+          return e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom;
+        };
+        let pressedOutside = false;
+        dlg.addEventListener('pointerdown', (e) => { pressedOutside = outside(e, dlg); });
+        dlg.addEventListener('pointerup', (e) => { if (pressedOutside && outside(e, dlg)) dlg.close(); });
+      }
+
+      const dz = document.getElementById('simlab-dropzone');
+      if (dz) {
+        dz.addEventListener('dragover', (e) => { e.preventDefault(); dz.classList.add('dragover'); });
+        dz.addEventListener('dragleave', () => dz.classList.remove('dragover'));
+        dz.addEventListener('drop', (e) => {
+          e.preventDefault();
+          dz.classList.remove('dragover');
+          if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+            handleSimLabFileSelect(e.dataTransfer.files[0]);
+          }
+        });
+      }
+      renderSimLabChecklist();
+    })();
+  </script>
 
 </body>
 </html>
