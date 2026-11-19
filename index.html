@@ -8180,7 +8180,8 @@
             } catch (e) {}
           }
           try {
-            const fallbackResp = await fetch(staticFallback);
+            const url = window.location.protocol === 'file:' ? staticFallback.split('?')[0] : staticFallback;
+            const fallbackResp = await fetch(url);
             if (fallbackResp.ok) return await fallbackResp.json();
           } catch (e) {}
           return null;
@@ -8188,7 +8189,7 @@
 
         const [catData, talData, encData, scData, buffData] = await Promise.all([
           fetchAsset('/api/catalog?v=bop_fix_v2', './catalog_full.json'),
-          fetchAsset('/api/talents?v=bop_fix_v2', './talents_data.json'),
+          fetchAsset('/api/talents?v=talents_ranks_v3', './talents_data.json?v=talents_ranks_v3'),
           fetchAsset('/api/enchants?v=bop_fix_v2', './enchants_data.json'),
           fetchAsset('/api/scenarios', './scenarios_data.json'),
           fetchAsset('/api/buffs', './buffs_data.json')
@@ -11984,27 +11985,35 @@
           node.style.gridRow = row + 1;
           node.style.gridColumn = col + 1;
 
-          // Left Click = Add point
+          // Left Click = Add point (Shift-click = Max rank)
           node.onclick = (e) => {
             e.preventDefault();
-            addTalentPoint(treeIdx, talentIdx);
+            if (e.shiftKey) {
+              addMaxTalentPoints(treeIdx, talentIdx);
+            } else {
+              addTalentPoint(treeIdx, talentIdx);
+            }
           };
 
-          // Right Click = Refund point
+          // Right Click = Refund point (Shift-click = Refund all)
           node.oncontextmenu = (e) => {
             e.preventDefault();
-            removeTalentPoint(treeIdx, talentIdx);
+            if (e.shiftKey) {
+              removeMaxTalentPoints(treeIdx, talentIdx);
+            } else {
+              removeTalentPoint(treeIdx, talentIdx);
+            }
           };
 
-          // Single authentic dynamic WoW talent tooltip (prevents duplicate Wowhead tooltips)
+          // Tooltip on node hover
+          node.onmouseenter = (e) => showTalentTooltip(e, treeIdx, talentIdx);
+          node.onmousemove = (e) => moveUnifiedTooltip(e);
+          node.onmouseleave = () => hideUnifiedTooltip();
+
+          // Single authentic dynamic WoW talent icon
           const iconLink = document.createElement('div');
           iconLink.className = 'talent-icon-link';
           iconLink.style.backgroundImage = `url('${getIconUrl(talent.icon)}')`;
-
-          // Unified authentic WoW talent tooltip
-          iconLink.onmouseenter = (e) => showTalentTooltip(e, treeIdx, talentIdx);
-          iconLink.onmousemove = (e) => moveUnifiedTooltip(e);
-          iconLink.onmouseleave = () => hideUnifiedTooltip();
 
           const badge = document.createElement('div');
           badge.className = 'talent-badge';
@@ -12054,6 +12063,9 @@
         renderTalentTrees();
         updateTalentHeader();
         onSettingChanged();
+        if (activeHoveredTalent && activeHoveredTalent.treeIdx === treeIdx && activeHoveredTalent.talentIdx === talentIdx) {
+          showTalentTooltip(activeHoveredTalent.e, treeIdx, talentIdx);
+        }
       }
     }
 
@@ -12069,6 +12081,46 @@
       renderTalentTrees();
       updateTalentHeader();
       onSettingChanged();
+      if (activeHoveredTalent && activeHoveredTalent.treeIdx === treeIdx && activeHoveredTalent.talentIdx === talentIdx) {
+        showTalentTooltip(activeHoveredTalent.e, treeIdx, talentIdx);
+      }
+    }
+
+    function addMaxTalentPoints(treeIdx, talentIdx) {
+      const talent = talentTrees[treeIdx].talents[talentIdx];
+      let changed = false;
+      while (talentPoints[treeIdx][talentIdx] < talent.maxPoints && getTotalSpentPoints() < maxTalentPoints && isTalentAvailable(treeIdx, talentIdx)) {
+        talentPoints[treeIdx][talentIdx]++;
+        changed = true;
+      }
+      if (changed) {
+        renderTalentTrees();
+        updateTalentHeader();
+        onSettingChanged();
+        if (activeHoveredTalent && activeHoveredTalent.treeIdx === treeIdx && activeHoveredTalent.talentIdx === talentIdx) {
+          showTalentTooltip(activeHoveredTalent.e, treeIdx, talentIdx);
+        }
+      }
+    }
+
+    function removeMaxTalentPoints(treeIdx, talentIdx) {
+      let changed = false;
+      while (talentPoints[treeIdx][talentIdx] > 0) {
+        talentPoints[treeIdx][talentIdx]--;
+        if (!canPointsExist(treeIdx)) {
+          talentPoints[treeIdx][talentIdx]++;
+          break;
+        }
+        changed = true;
+      }
+      if (changed) {
+        renderTalentTrees();
+        updateTalentHeader();
+        onSettingChanged();
+        if (activeHoveredTalent && activeHoveredTalent.treeIdx === treeIdx && activeHoveredTalent.talentIdx === talentIdx) {
+          showTalentTooltip(activeHoveredTalent.e, treeIdx, talentIdx);
+        }
+      }
     }
 
     function canPointsExist(treeIdx) {
@@ -12436,15 +12488,14 @@
       'Ice Barrier': 'Instantly shields you with a barrier of frost that absorbs damage.'
     };
 
-    function getTalentDescription(talent, curPts) {
-      if (talent.spellId && talentSpellTooltipCache[talent.spellId]) {
-        return talentSpellTooltipCache[talent.spellId];
-      }
-      if (talent.rankDescriptions && Array.isArray(talent.rankDescriptions) && talent.rankDescriptions.length > 0) {
-        const idx = Math.max(0, curPts === 0 ? 0 : curPts - 1);
-        if (talent.rankDescriptions[idx] && talent.rankDescriptions[idx] !== 'undefined') {
-          return talent.rankDescriptions[idx];
-        }
+    let activeHoveredTalent = null;
+
+    function getTalentRankDescription(talent, rank) {
+      if (!talent) return '';
+      const r = Math.max(1, rank);
+      if (talent.rankDescriptions && Array.isArray(talent.rankDescriptions) && talent.rankDescriptions[r - 1]) {
+        const d = talent.rankDescriptions[r - 1];
+        if (d && d !== 'undefined') return d;
       }
       if (TALENT_FALLBACK_DESCRIPTIONS[talent.fancyName]) {
         return TALENT_FALLBACK_DESCRIPTIONS[talent.fancyName];
@@ -12468,41 +12519,31 @@
       const curPts = (talentPoints && talentPoints[treeIdx] && talentPoints[treeIdx][talentIdx]) || 0;
       const isAvailable = isTalentAvailable(treeIdx, talentIdx);
       const isMax = curPts >= talent.maxPoints;
+      const totalSpent = getTotalSpentPoints();
+      const pointsLeft = maxTalentPoints - totalSpent;
+      const rawClass = activeCharacterClass || (typeof currentClass !== 'undefined' ? currentClass : 'shaman');
+      const className = rawClass.charAt(0).toUpperCase() + rawClass.slice(1);
 
-      activeTooltipTalentSpellId = talent.spellId;
-      if (talent.spellId && !talentSpellTooltipCache[talent.spellId] && typeof fetch !== 'undefined') {
-        fetch(`https://nether.wowhead.com/classic/tooltip/spell/${talent.spellId}`)
-          .then(res => res.json())
-          .then(data => {
-            if (data && data.tooltip) {
-              const m = data.tooltip.match(/<div class="q">([\s\S]*?)<\/div>/i);
-              const desc = m ? m[1].replace(/<[^>]+>/g, ' ').trim() : data.tooltip.replace(/<[^>]+>/g, ' ').trim();
-              if (desc && desc.length > 5) {
-                talentSpellTooltipCache[talent.spellId] = desc;
-                if (activeTooltipTalentSpellId === talent.spellId) {
-                  const descEl = document.getElementById('tt-talent-desc');
-                  if (descEl) descEl.innerHTML = desc;
-                }
-              }
-            }
-          })
-          .catch(() => {});
-      }
+      activeHoveredTalent = { treeIdx, talentIdx, e };
 
       const tt = document.getElementById('unified-tooltip');
-      let html = `<div class="tt-title tt-gold">${talent.fancyName}</div>`;
-      html += `<div class="tt-muted" style="font-size: 0.75rem; margin-bottom: 5px;">Rank ${curPts} / ${talent.maxPoints}</div>`;
+      let html = `<div class="tt-title tt-gold" style="font-size: 0.95rem; font-weight: 700; margin-bottom: 2px;">${talent.fancyName}</div>`;
+      html += `<div class="tt-muted" style="font-size: 0.74rem;">Talent</div>`;
+      html += `<div class="tt-muted" style="font-size: 0.74rem; margin-bottom: 6px;">Requires ${className}</div>`;
 
-      const curText = getTalentDescription(talent, curPts);
-      html += `<div id="tt-talent-desc" style="color: #ffffff; font-size: 0.77rem; margin-bottom: 5px;">${curText}</div>`;
-
-      if (!isMax && curPts > 0 && talent.rankDescriptions && talent.rankDescriptions[curPts]) {
-        html += `<div class="tt-divider"></div>`;
-        html += `<div class="tt-gold" style="font-weight: 600; font-size: 0.74rem; margin-bottom: 2px;">Next Rank:</div>`;
-        html += `<div class="tt-muted" style="font-size: 0.76rem;">${talent.rankDescriptions[curPts]}</div>`;
+      // Current rank header and description (if any points allocated)
+      if (curPts > 0) {
+        html += `<div class="tt-muted" style="font-size: 0.75rem; margin-bottom: 3px;">Rank ${curPts}/${talent.maxPoints}</div>`;
+        html += `<div id="tt-talent-desc" style="color: #ffd100; font-size: 0.78rem; line-height: 1.35; margin-bottom: 4px;">${getTalentRankDescription(talent, curPts)}</div>`;
       }
 
-      // Authentic WoW Requirements Checks
+      // Next rank header and preview (if not max rank)
+      if (!isMax) {
+        html += `<div style="color: #ffffff; font-weight: 700; font-size: 0.78rem; margin-top: ${curPts > 0 ? '8px' : '4px'}; margin-bottom: 3px;">Next rank:</div>`;
+        html += `<div style="color: #ffd100; font-size: 0.78rem; line-height: 1.35; margin-bottom: 4px;">${getTalentRankDescription(talent, curPts + 1)}</div>`;
+      }
+
+      // Requirements / Availability Warnings
       if (!isAvailable) {
         if (talent.prereqLocation) {
           const prereqTalentIdx = talentTrees[treeIdx].talents.findIndex(
@@ -12512,7 +12553,7 @@
             const prereqTalent = talentTrees[treeIdx].talents[prereqTalentIdx];
             const prereqPts = talentPoints[treeIdx][prereqTalentIdx] || 0;
             if (prereqPts < prereqTalent.maxPoints) {
-              html += `<div class="tt-red" style="font-weight: 600; font-size: 0.74rem; margin-top: 5px;">Requires ${prereqTalent.maxPoints} points in ${prereqTalent.fancyName}.</div>`;
+              html += `<div class="tt-red" style="font-weight: 600; font-size: 0.74rem; margin-top: 6px;">Requires ${prereqTalent.maxPoints} points in ${prereqTalent.fancyName}.</div>`;
             }
           }
         }
@@ -12522,8 +12563,17 @@
           html += `<div class="tt-red" style="font-weight: 600; font-size: 0.74rem; margin-top: 4px;">Requires ${tierReq} points in ${talentTrees[treeIdx].name} Talents.</div>`;
         }
       } else {
-        html += `<div class="tt-divider"></div>`;
-        html += `<div class="tt-green" style="font-size: 0.72rem;">Left-click to learn. • Right-click to unlearn.</div>`;
+        if (!isMax && pointsLeft > 0) {
+          if (curPts > 0) {
+            html += `<div class="tt-green" style="font-size: 0.72rem; margin-top: 8px;">Left-click to learn. • Right-click to unlearn.</div>`;
+          } else {
+            html += `<div class="tt-green" style="font-size: 0.72rem; margin-top: 8px;">Click to learn · Shift-click to learn all ranks</div>`;
+          }
+        } else if (isMax) {
+          html += `<div class="tt-green" style="font-size: 0.72rem; margin-top: 8px;">Right-click to unlearn.</div>`;
+        } else if (pointsLeft <= 0) {
+          html += `<div class="tt-muted" style="font-size: 0.72rem; margin-top: 8px;">No talent points available.</div>`;
+        }
       }
 
       tt.innerHTML = html;
@@ -12897,6 +12947,7 @@
     }
 
     function hideUnifiedTooltip() {
+      activeHoveredTalent = null;
       activeTooltipItemId = null;
       const tt = document.getElementById('unified-tooltip');
       if (tt) tt.style.display = 'none';
