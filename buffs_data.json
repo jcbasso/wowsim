@@ -449,7 +449,10 @@
     },
     "desc": "Campfire (Alchemy): +6 MP5 for 1 hr. Parallel to Blessing of Wisdom (does not stack).",
     "searchQuery": "Mana Well",
-    "spellId": 1230564
+    "spellId": 1230564,
+    "conflictsWith": [
+      "buff_wisdom"
+    ]
   },
   "camp_enchanted_lute": {
     "id": "camp_enchanted_lute",
@@ -535,7 +538,10 @@
     },
     "desc": "Campfire (Fishing): +3 All Stats for 1 hr. Parallel to Blessing of Kings (does not stack).",
     "searchQuery": "Fish Bowl",
-    "spellId": 1229745
+    "spellId": 1229745,
+    "conflictsWith": [
+      "buff_kings"
+    ]
   },
   "camp_sharpening_wheel": {
     "id": "camp_sharpening_wheel",
@@ -561,7 +567,11 @@
     },
     "desc": "Campfire (Skinning): +2% Critical Strike for 1 hr. Parallel to Moonkin / Crit Aura.",
     "searchQuery": "Camp Chair",
-    "spellId": 1229517
+    "spellId": 1229517,
+    "conflictsWith": [
+      "buff_lotp",
+      "buff_moonkin"
+    ]
   },
   "camp_faction_banner": {
     "id": "camp_faction_banner",
@@ -574,6 +584,107 @@
     },
     "desc": "Campfire (Tailoring): +10 Spirit for 1 hr. Parallel to Divine Spirit.",
     "searchQuery": "Faction Banner",
-    "spellId": 1229504
+    "spellId": 1229504,
+    "conflictsWith": [
+      "buff_divine_spirit"
+    ]
+  },
+  "buff_wisdom": {
+    "id": "buff_wisdom",
+    "name": "Blessing of Wisdom",
+    "category": "class",
+    "level": 14,
+    "spellId": 19742,
+    "icon": "spell_holy_sealofwisdom",
+    "stats": {
+      "MP5": 15
+    },
+    "conflictsWith": [
+      "camp_mana_well"
+    ],
+    "desc": "Paladin Blessing: Restores 15 Mana every 5 sec for 5 min."
+  },
+  "buff_kings": {
+    "id": "buff_kings",
+    "name": "Blessing of Kings",
+    "category": "class",
+    "level": 20,
+    "spellId": 20217,
+    "icon": "spell_magic_magearmor",
+    "stats": {},
+    "pctAllStats": 10,
+    "conflictsWith": [
+      "camp_fish_bowl"
+    ],
+    "desc": "Paladin Blessing: Increases total stats (Str, Agi, Sta, Int, Spi) by 10%."
+  },
+  "buff_divine_spirit": {
+    "id": "buff_divine_spirit",
+    "name": "Divine Spirit",
+    "category": "class",
+    "level": 30,
+    "spellId": 14752,
+    "icon": "spell_holy_divinespirit",
+    "stats": {
+      "Spi": 23
+    },
+    "conflictsWith": [
+      "camp_faction_banner"
+    ],
+    "desc": "Priest Buff: Increases Spirit by 23 for 30 min."
+  },
+  "buff_lotp": {
+    "id": "buff_lotp",
+    "name": "Leader of the Pack",
+    "category": "class",
+    "level": 40,
+    "spellId": 17007,
+    "icon": "spell_nature_unyeildingstamina",
+    "stats": {
+      "Crit": 3
+    },
+    "conflictsWith": [
+      "camp_chair"
+    ],
+    "desc": "Druid Aura: Increases melee & ranged critical strike chance of party by 3%."
+  },
+  "buff_moonkin": {
+    "id": "buff_moonkin",
+    "name": "Moonkin Aura",
+    "category": "class",
+    "level": 40,
+    "spellId": 24907,
+    "icon": "spell_nature_moonglow",
+    "stats": {
+      "Crit": 3
+    },
+    "conflictsWith": [
+      "camp_chair"
+    ],
+    "desc": "Druid Aura: Increases spell critical strike chance of party by 3%."
+  },
+  "buff_trueshot": {
+    "id": "buff_trueshot",
+    "name": "Trueshot Aura",
+    "category": "class",
+    "level": 40,
+    "spellId": 19506,
+    "icon": "ability_trueshot",
+    "stats": {
+      "AP": 50
+    },
+    "desc": "Hunter Aura: Increases melee & ranged Attack Power of party by 50."
+  },
+  "buff_blood_pact": {
+    "id": "buff_blood_pact",
+    "name": "Blood Pact",
+    "category": "class",
+    "level": 14,
+    "spellId": 6307,
+    "icon": "spell_shadow_bloodboil",
+    "stats": {
+      "Sta": 16
+    },
+    "desc": "Warlock Imp Buff: Increases party Stamina by 16."
   }
 }

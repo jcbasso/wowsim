@@ -4657,7 +4657,7 @@
                 <span style="font-size: 1.1rem;">✨</span>
                 <div>
                   <div style="font-weight: 700; color: var(--gold-bright); font-size: 0.85rem;">Class & Raid Buffs</div>
-                  <div style="font-size: 0.7rem; color: #a0aec0;">Priest, Mage, Druid, Warrior & Paladin</div>
+                  <div style="font-size: 0.7rem; color: #a0aec0;">Priest, Mage, Druid, Warrior, Paladin, Hunter &amp; Warlock</div>
                 </div>
               </div>
               <div id="buffs-list-class" class="buffs-list-items"></div>
@@ -14351,6 +14351,13 @@
       if (charRace === 'gnome') totalInt = Math.round(totalInt * 1.05); // Gnome Expansive Mind (+5% Int)
       let totalSpi = baseSpi + gearStats.Spi;
       if (charRace === 'human') totalSpi = Math.round(totalSpi * 1.05); // Human Spirit (+5% Spi)
+      if (buffs && buffs['buff_kings']) {
+        totalStr = Math.round(totalStr * 1.10);
+        totalAgi = Math.round(totalAgi * 1.10);
+        totalSta = Math.round(totalSta * 1.10);
+        totalInt = Math.round(totalInt * 1.10);
+        totalSpi = Math.round(totalSpi * 1.10);
+      }
       let totalArmor = (charClass === 'mage' || charClass === 'priest' || charClass === 'warlock' ? 40 : 120) + (totalAgi * 2) + gearStats.Armor;
       if (charRace === 'dwarf') totalArmor = Math.round(totalArmor * 1.10); // Dwarf Stoneform (+10% Armor)
 
@@ -17954,7 +17961,9 @@
 
         itemsByCategory[catKey].forEach(buff => {
           const isActive = !!activeBuffs[buff.id];
-          const statStrs = Object.entries(buff.stats || {}).map(([k, v]) => `+${v} ${k}`).join(', ');
+          const statStrs = buff.pctAllStats
+            ? `+${buff.pctAllStats}% All Stats`
+            : Object.entries(buff.stats || {}).map(([k, v]) => `+${v} ${k}`).join(', ');
           const reqLvl = buff.level || 1;
           const isOver = reqLvl > currentLvl;
           
