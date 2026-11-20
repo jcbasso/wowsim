@@ -8553,6 +8553,10 @@
       if (typeof computeDynamicStatWeights === 'function') {
         await computeDynamicStatWeights(roleMode);
       }
+      // Re-optimize consumables for the new fight duration & updated stat weights (e.g. Hot Lion Chops @ 15s vs Sagefish + Wisdom + Int Scroll @ 300s)
+      if (typeof autoOptimizeBiSConsumables === 'function') {
+        autoOptimizeBiSConsumables();
+      }
       if (typeof renderEquipmentSlots === 'function') renderEquipmentSlots();
       if (typeof runOneStopSimulate === 'function') {
         await runOneStopSimulate();
@@ -14447,7 +14451,7 @@
                 }
               } else if (charClass === 'shaman' && imbue === 'FlametongueWeapon' && level >= 10) {
                 let elemWpnMult = 1.0 + (elemWpnRank === 3 ? 0.20 : (elemWpnRank === 2 ? 0.14 : (elemWpnRank === 1 ? 0.07 : 0.0)));
-                let ftBase = (12 + level * 1.6) * (wpnSpeed / 2.0) + (fireSP * (wpnSpeed / 3.5));
+                let ftBase = (12 + level * 1.6) * (wpnSpeed / 2.0) + (fireSP * 0.10 * (wpnSpeed / 2.6));
                 let ftDmg = ftBase * elemWpnMult;
                 let ftCrit = Math.random() < spellCritChance;
                 if (ftCrit) ftDmg *= 1.5;
@@ -17071,20 +17075,27 @@
       const w = weights || currentStatWeights || {};
       let score = 0;
       
-      // Calculate weighted value based on active profile weights
+      const roleMode = (typeof getActiveCharacterRoleMode === 'function') ? getActiveCharacterRoleMode() : 'dps';
+      const dur = (typeof getCurrentFightDuration === 'function') ? getCurrentFightDuration() : 30;
+      const isLongFight = dur >= 60;
+
+      // Calculate weighted value based on active profile weights (respecting role & fight duration!)
       for (const [stat, val] of Object.entries(food.stats)) {
+        if (stat === 'Healing' && roleMode !== 'healer') {
+          continue; // Healing Power gives 0 DPS for melee/caster DPS specs
+        }
         if (w[stat] !== undefined) {
           score += val * w[stat];
         } else if (stat === 'FireSP' && w['SP'] !== undefined) {
-          score += val * (w['SP'] * 0.85);
-        } else if (stat === 'Healing' && w['SP'] !== undefined) {
-          score += val * (w['SP'] * 0.7);
+          score += val * (w['SP'] * 0.65);
+        } else if (stat === 'Healing' && roleMode === 'healer' && w['SP'] !== undefined) {
+          score += val * (w['SP'] * 0.8);
         } else if (stat === 'MP5') {
-          // If profile does not have explicit MP5 weight, assign sensible heuristic
-          const mp5Weight = w['MP5'] || (w['Int'] ? w['Int'] * 1.5 : (w['SP'] ? w['SP'] * 1.2 : 0.8));
+          // Only value MP5 when explicitly weighted or on sustained fights (>=60s) / healers
+          const mp5Weight = (roleMode === 'healer' || isLongFight) ? (w['Int'] ? w['Int'] * 1.2 : 1.0) : 0.05;
           score += val * mp5Weight;
         } else if (stat === 'HP5') {
-          score += val * (w['Sta'] ? w['Sta'] * 0.6 : 0.5);
+          score += val * (roleMode === 'tank' ? (w['Sta'] ? w['Sta'] * 0.6 : 0.5) : 0.05);
         }
       }
       return Math.round(score * 10) / 10;
@@ -17106,16 +17117,21 @@
         role = 'healer';
       }
 
-      // Clear existing active food buffs
+      const fightDur = (typeof getCurrentFightDuration === 'function') ? getCurrentFightDuration() : 30;
+      const isLongFight = fightDur >= 60;
+      const usesMana = ['shaman', 'paladin', 'druid', 'mage', 'priest', 'warlock', 'hunter'].includes(activeCharacterClass);
+
+      // Clear existing personal consumables (food, potion/elixir/alcohol, scroll, oil) before re-optimizing
       if (buffsCatalog) {
         Object.keys(buffsCatalog).forEach(k => {
-          if (buffsCatalog[k].category === 'food') {
+          const cat = buffsCatalog[k].category;
+          if (cat === 'food' || cat === 'potion' || cat === 'scroll' || cat === 'oil') {
             delete activeBuffs[k];
           }
         });
       }
 
-      // 1. Food selection based on weighted BiS score & level requirement
+      // 1. Food selection based on weighted BiS score, role & fight duration
       let bestFood = null;
       let bestScore = -9999;
 
@@ -17128,22 +17144,19 @@
         }
       });
 
-      // Fallback if scoring yielded no clear winner
       if (!bestFood || bestScore <= 0) {
-        if (role === 'healer' || cSpec === 'resto') {
+        if (role === 'healer' || cSpec === 'resto' || (usesMana && isLongFight)) {
           if (currentLvl >= 25 && buffsCatalog['food_sagefish_delight']) bestFood = 'food_sagefish_delight';
           else if (currentLvl >= 10 && buffsCatalog['food_sagefish']) bestFood = 'food_sagefish';
           else bestFood = 'food_eggs';
         } else if (role === 'caster' || cSpec === 'elemental') {
-          if (currentLvl >= 25 && buffsCatalog['food_sagefish_delight']) bestFood = 'food_sagefish_delight';
-          else if (currentLvl >= 10 && buffsCatalog['food_sagefish']) bestFood = 'food_sagefish';
+          if (currentLvl >= 25 && buffsCatalog['food_dragonbreath']) bestFood = 'food_dragonbreath';
+          else if (currentLvl >= 25 && buffsCatalog['food_sagefish_delight']) bestFood = 'food_sagefish_delight';
           else bestFood = 'food_eggs';
         } else {
-          if (currentLvl >= 25 && buffsCatalog['food_heavy_croc']) bestFood = 'food_heavy_croc';
-          else if (currentLvl >= 15 && buffsCatalog['food_raptor']) bestFood = 'food_raptor';
-          else if (currentLvl >= 15 && buffsCatalog['food_lion']) bestFood = 'food_lion';
+          if (currentLvl >= 15 && buffsCatalog['food_lion']) bestFood = 'food_lion';
           else if (currentLvl >= 15 && buffsCatalog['food_digrat']) bestFood = 'food_digrat';
-          else if (currentLvl >= 10 && buffsCatalog['food_crispy_bat']) bestFood = 'food_crispy_bat';
+          else if (currentLvl >= 25 && buffsCatalog['food_heavy_croc']) bestFood = 'food_heavy_croc';
           else bestFood = 'food_eggs';
         }
       }
@@ -17152,25 +17165,73 @@
         activeBuffs[bestFood] = true;
       }
 
-      // 2. Spec/Scenario-aligned Elixirs and Scrolls
+      // 2. Alcohol (pick best 1 of Rumsey Rum / Gordok Green Grog / Kreeg's Stout Beatdown using weights!)
+      const alcoholIds = ['consum_rumsey_black', 'consum_gordok_grog', 'consum_kreeg_stout'].filter(id => buffsCatalog && buffsCatalog[id] && (buffsCatalog[id].level || 1) <= currentLvl);
+      let bestAlc = null;
+      let bestAlcScore = 0;
+      alcoholIds.forEach(id => {
+        const sc = calculateFoodItemScore(buffsCatalog[id], currentLvl, currentStatWeights);
+        if (sc > bestAlcScore) {
+          bestAlcScore = sc;
+          bestAlc = id;
+        }
+      });
+      if (bestAlc) activeBuffs[bestAlc] = true;
+
+      // 3. Elixirs (Role + Fight Duration / Mana Sustain aware!)
       if (role === 'tank' || cSpec === 'tank') {
-        if (buffsCatalog['elixir_defense']) activeBuffs['elixir_defense'] = true;
-        if (currentLvl >= 20 && buffsCatalog['elixir_fortitude']) activeBuffs['elixir_fortitude'] = true;
-        else if (buffsCatalog['elixir_troll_blood']) activeBuffs['elixir_troll_blood'] = true;
-        if (buffsCatalog['scroll_prot_2']) activeBuffs['scroll_prot_2'] = true;
-        if (buffsCatalog['scroll_sta_2']) activeBuffs['scroll_sta_2'] = true;
+        if (currentLvl >= 16 && buffsCatalog['elixir_defense']) activeBuffs['elixir_defense'] = true;
+        if (currentLvl >= 25 && buffsCatalog['elixir_fortitude']) activeBuffs['elixir_fortitude'] = true;
+        if (currentLvl >= 15 && buffsCatalog['elixir_troll_blood']) activeBuffs['elixir_troll_blood'] = true;
+        if (usesMana && isLongFight && currentLvl >= 17 && buffsCatalog['elixir_wisdom']) activeBuffs['elixir_wisdom'] = true;
       } else if (role === 'healer' || cSpec === 'resto') {
         if (currentLvl >= 17 && buffsCatalog['elixir_wisdom']) activeBuffs['elixir_wisdom'] = true;
-        if (currentLvl >= 20 && buffsCatalog['scroll_int_2']) activeBuffs['scroll_int_2'] = true;
-        else if (buffsCatalog['scroll_intellect_ii']) activeBuffs['scroll_intellect_ii'] = true;
-        else if (buffsCatalog['scroll_intellect_i']) activeBuffs['scroll_intellect_i'] = true;
-      } else if (role === 'melee' || cSpec === 'enhancement') {
-        if (currentLvl >= 8 && buffsCatalog['elixir_giant_growth']) activeBuffs['elixir_giant_growth'] = true;
+        if (currentLvl >= 25 && buffsCatalog['elixir_fortitude']) activeBuffs['elixir_fortitude'] = true;
+      } else if (role === 'caster' || cSpec === 'elemental') {
+        if (currentLvl >= 17 && buffsCatalog['elixir_wisdom']) activeBuffs['elixir_wisdom'] = true;
+        if (currentLvl >= 25 && buffsCatalog['elixir_fortitude']) activeBuffs['elixir_fortitude'] = true;
+      } else {
+        // Melee & Hybrid DPS (Enhancement, Ret, Feral, Warrior, Rogue, Hunter)
+        if (currentLvl >= 20 && buffsCatalog['elixir_ogre_strength']) activeBuffs['elixir_ogre_strength'] = true;
+        else if (currentLvl >= 8 && buffsCatalog['elixir_giant_growth']) activeBuffs['elixir_giant_growth'] = true;
+
         if (currentLvl >= 18 && buffsCatalog['elixir_lesser_agility']) activeBuffs['elixir_lesser_agility'] = true;
         else if (currentLvl >= 2 && buffsCatalog['elixir_minor_agility']) activeBuffs['elixir_minor_agility'] = true;
-        if (buffsCatalog['scroll_str_2']) activeBuffs['scroll_str_2'] = true;
-        else if (currentLvl >= 20 && buffsCatalog['scroll_strength_ii']) activeBuffs['scroll_strength_ii'] = true;
-        else if (buffsCatalog['scroll_strength_i']) activeBuffs['scroll_strength_i'] = true;
+
+        // On sustained fights (>= 60s) or when Intellect has high weight, also equip Elixir of Wisdom (+6 Int)!
+        if (usesMana && (isLongFight || (currentStatWeights.Int || 0) >= 1.2) && currentLvl >= 17 && buffsCatalog['elixir_wisdom']) {
+          activeBuffs['elixir_wisdom'] = true;
+        }
+      }
+
+      // 4. Scrolls (pick best scoring scroll for current stat weights + fight duration!)
+      const scrollItems = Object.values(buffsCatalog || {}).filter(b => b.category === 'scroll' && (b.level || 1) <= currentLvl);
+      let bestScroll = null;
+      let bestScrollScore = -9999;
+      scrollItems.forEach(scr => {
+        const sc = calculateFoodItemScore(scr, currentLvl, currentStatWeights);
+        if (sc > bestScrollScore) {
+          bestScrollScore = sc;
+          bestScroll = scr.id;
+        }
+      });
+      if (bestScroll && bestScrollScore > 0) {
+        activeBuffs[bestScroll] = true;
+      }
+
+      // 5. Weapon Oils (for non-Shaman classes, since Shaman uses Weapon Imbues!)
+      if (activeCharacterClass !== 'shaman') {
+        const oilItems = Object.values(buffsCatalog || {}).filter(b => b.category === 'oil' && (b.level || 1) <= currentLvl);
+        let bestOil = null;
+        let bestOilScore = -9999;
+        oilItems.forEach(oil => {
+          const sc = calculateFoodItemScore(oil, currentLvl, currentStatWeights);
+          if (sc > bestOilScore) {
+            bestOilScore = sc;
+            bestOil = oil.id;
+          }
+        });
+        if (bestOil && bestOilScore > 0) activeBuffs[bestOil] = true;
       }
 
       saveActiveBuffs();
