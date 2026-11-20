@@ -18680,15 +18680,32 @@
         if (!slotKey || !obj || typeof obj !== 'object') return;
         const itemId = (obj.item && obj.item.id) || obj.itemId || (typeof obj.id === 'number' ? obj.id : 0);
         const itemName = obj.name || (obj.item && obj.item.name) || '';
+        const quality = (obj.quality && (obj.quality.type || obj.quality.name || obj.quality)) || '';
         if (itemId || itemName) {
-          gear[slotKey] = itemId ? Number(itemId) : String(itemName);
+          // Include itemName + stats if available so unknown Forever items can be synthesized cleanly
+          const statsObj = {};
+          const rawStats = obj.stats || (obj.item && obj.item.stats);
+          if (Array.isArray(rawStats)) {
+            rawStats.forEach(s => {
+              const st = (s.type && (s.type.type || s.type.name)) || s.name || '';
+              const v = s.value ?? s.amount;
+              if (st && typeof v === 'number') statsObj[st] = v;
+            });
+          }
+          if (Object.keys(statsObj).length > 0 && itemName) {
+            gear[slotKey] = { id: Number(itemId) || 0, name: String(itemName), quality: String(quality).toLowerCase(), stats: statsObj };
+          } else {
+            gear[slotKey] = itemId ? Number(itemId) : String(itemName);
+          }
           const enc = Array.isArray(obj.enchantments) ? obj.enchantments[0] : (obj.enchant || null);
           if (enc && (enc.enchantment_id || enc.id)) enchants[slotKey] = Number(enc.enchantment_id || enc.id);
         }
       };
 
+      const visited = new Set();
       const walk = (obj, depth = 0, parentKey = '') => {
-        if (!obj || typeof obj !== 'object' || depth > 14) return;
+        if (!obj || typeof obj !== 'object' || depth > 14 || visited.has(obj)) return;
+        visited.add(obj);
         if (Array.isArray(obj)) {
           for (const el of obj) {
             if (el && typeof el === 'object') {
@@ -18736,44 +18753,74 @@
           pvpRank = obj.rank;
         }
 
-        for (const [k, v] of Object.entries(obj)) walk(v, depth + 1, k);
+        for (const [k, v] of Object.entries(obj)) {
+          if (k === 'children' || k === 'return' || k === '_owner' || k === 'stateNode') continue;
+          walk(v, depth + 1, k);
+        }
       };
       walk(nd);
 
+      // Also scan React __reactProps$ / __reactFiber$ on hydrated Armory DOM elements (captures client-fetched equipment!)
+      if (Object.keys(gear).length === 0) {
+        document.querySelectorAll('[class*="Slot" i], [class*="slot" i], [class*="Equipment" i], a[href*="item"]').forEach(el => {
+          for (const key of Object.keys(el)) {
+            if (key.startsWith('__reactProps$') || key.startsWith('__reactFiber$')) {
+              try { walk(el[key], 0, 'react'); } catch (e) {}
+            }
+          }
+        });
+      }
+
       for (const p of PROF_NAMES) {
         if (!profMap[p] || !profMap[p].skill) {
-          const m = txt.match(new RegExp('\\b' + p + '[\\s\\S]{0,40}?(\\d{1,3})\\s*/\\s*(\\d{1,3})', 'i'));
+          const m = txt.match(new RegExp('\b' + p + '[\s\S]{0,40}?(\d{1,3})\s*/\s*(\d{1,3})', 'i'));
           if (m) profMap[p] = { id: p, skill: parseInt(m[1]), max: parseInt(m[2]) };
         }
       }
 
       if (!pvpRank) {
-        const pvpSec = txt.match(/PLAYER\s+VS\s+PLAYER[\s\S]{0,250}?\bRank\s+(\d{1,2})\b/i) || txt.match(/Honorable\s+Kills[\s\S]{0,120}?\bRank\s+(\d{1,2})\b/i);
+        const pvpSec = txt.match(/PLAYER\s+VS\s+PLAYER[\s\S]{0,250}?Rank\s+(\d{1,2})/i) || txt.match(/Honorable\s+Kills[\s\S]{0,120}?Rank\s+(\d{1,2})/i);
         if (pvpSec) {
           pvpRank = parseInt(pvpSec[1]);
         } else {
           const headerTxt = txt.slice(0, 300).toLowerCase();
           for (const [title, r] of PVP_TITLES) {
-            if (new RegExp('\\b' + title + '\\b').test(headerTxt)) { pvpRank = r; break; }
+            if (new RegExp('\b' + title + '\b').test(headerTxt)) { pvpRank = r; break; }
           }
         }
       }
 
+      // Extract displayed Armory attributes for reference verification
+      const statGrab = (label) => {
+        const m = txt.match(new RegExp('(\d[\d,]*)\s*' + label + '\b', 'i'));
+        return m ? parseInt(m[1].replace(/,/g, '')) : undefined;
+      };
+      const armoryStats = {
+        health: statGrab('HEALTH'),
+        mana: statGrab('MANA'),
+        str: statGrab('STRENGTH'),
+        agi: statGrab('AGILITY'),
+        sta: statGrab('STAMINA'),
+        int: statGrab('INTELLECT'),
+        spi: statGrab('SPIRIT')
+      };
+
       const out = {
         name: slug,
         armoryUrl: url,
-        level: level || parseInt(txt.match(/\b(\d{1,2})\s+(?:Tauren|Orc|Troll|Undead|Human|Dwarf|Night Elf|Gnome)\b/i)?.[1] || txt.match(/Level\s+(\d+)/i)?.[1] || '30'),
-        class: cls || (txt.match(/\b(Shaman|Warrior|Rogue|Hunter|Druid|Priest|Mage|Warlock|Paladin)\b/i)?.[1] || 'shaman').toLowerCase(),
-        race: race || (txt.match(/\b(Tauren|Orc|Troll|Undead|Human|Dwarf|Night Elf|Gnome)\b/i)?.[1] || 'tauren').toLowerCase().replace(/\s+/g,'_'),
-        faction: faction || (/\b(Human|Dwarf|Night Elf|Gnome|Alliance)\b/i.test(txt.slice(0, 400)) ? 'Alliance' : 'Horde'),
+        level: level || parseInt(txt.match(/(\d{1,2})\s+(?:Tauren|Orc|Troll|Undead|Human|Dwarf|Night Elf|Gnome)/i)?.[1] || txt.match(/Level\s+(\d+)/i)?.[1] || '30'),
+        class: cls || (txt.match(/(Shaman|Warrior|Rogue|Hunter|Druid|Priest|Mage|Warlock|Paladin)/i)?.[1] || 'shaman').toLowerCase(),
+        race: race || (txt.match(/(Tauren|Orc|Troll|Undead|Human|Dwarf|Night Elf|Gnome)/i)?.[1] || 'tauren').toLowerCase().replace(/\s+/g,'_'),
+        faction: faction || (/(Human|Dwarf|Night Elf|Gnome|Alliance)/i.test(txt.slice(0, 400)) ? 'Alliance' : 'Horde'),
         pvpRank,
         professions: Object.values(profMap),
         reputations,
         gear,
-        enchants
+        enchants,
+        armoryStats
       };
       copy(JSON.stringify(out, null, 2));
-      console.log('✅ Copied WoW Forever JSON!', { slots: Object.keys(gear).length, profs: out.professions, pvpRank, reps: Object.keys(reputations).length });
+      console.log('✅ Copied WoW Forever JSON!', { slots: Object.keys(gear).length, profs: out.professions, pvpRank, reps: Object.keys(reputations).length, armoryStats });
       if (Object.keys(gear).length === 0 && nd?.props?.pageProps) {
         console.log('ℹ️ pageProps keys:', Object.keys(nd.props.pageProps));
       }
@@ -18860,7 +18907,15 @@
           reqLvl: val.reqLvl || 1,
           slotName: slot,
           icon: val.icon || 'inv_misc_questionmark',
-          parsedStats: val.stats || val.parsedStats || {},
+          parsedStats: (() => {
+            const rawS = val.stats || val.parsedStats || {};
+            const outS = {};
+            const mapK = { STRENGTH:'Str', AGILITY:'Agi', STAMINA:'Sta', INTELLECT:'Int', SPIRIT:'Spi', ATTACK_POWER:'AP', SPELL_POWER:'SP', CRIT_RATING:'Crit', HIT_RATING:'Hit', ARMOR:'Armor' };
+            for (const [k, v] of Object.entries(rawS)) {
+              outS[mapK[k.toUpperCase()] || k] = v;
+            }
+            return outS;
+          })(),
           dps: val.dps || 0,
           speed: val.speed || 0,
           armor: val.armor || 0,
@@ -18974,20 +19029,33 @@
         if (p1El && profs[0]) { p1El.value = profs[0].id; activeCharacterProfessions.prof1 = profs[0].id; }
         if (p2El && profs[1]) { p2El.value = profs[1].id; activeCharacterProfessions.prof2 = profs[1].id; }
 
-        // Resolve & equip baseline gear
-        const resolvedGear = Object.assign({}, currentGear);
+        // Reset ALL gear slots to 0 (empty stays empty!) and clear old BiS enchants before applying Armory gear
+        const resolvedGear = {};
+        for (const slot of Object.keys(currentGear)) {
+          resolvedGear[slot] = 0;
+        }
         if (data.gear && typeof data.gear === 'object') {
-          for (const slot of Object.keys(currentGear)) {
-            if (data.gear[slot] !== undefined) {
-              const id = resolveItemIdFromCatalog(slot, data.gear[slot]);
+          for (const slot of Object.keys(resolvedGear)) {
+            const rawSlotVal = data.gear[slot];
+            if (rawSlotVal !== undefined && rawSlotVal !== null && rawSlotVal !== 0 && rawSlotVal !== '') {
+              const id = resolveItemIdFromCatalog(slot, rawSlotVal);
               if (id > 0) resolvedGear[slot] = id;
             }
           }
-          currentGear = Object.assign({}, resolvedGear);
+        }
+        currentGear = Object.assign({}, resolvedGear);
+
+        // Reset enchants so unenchanted Armory items don't inherit old BiS enchants!
+        const resetEnchants = {};
+        for (const slot of Object.keys(currentEnchants)) {
+          resetEnchants[slot] = 0;
         }
         if (data.enchants && typeof data.enchants === 'object') {
-          currentEnchants = Object.assign(currentEnchants, data.enchants);
+          for (const [slot, encVal] of Object.entries(data.enchants)) {
+            if (encVal) resetEnchants[slot] = encVal;
+          }
         }
+        currentEnchants = resetEnchants;
       } finally {
         isInitializing = false;
       }
