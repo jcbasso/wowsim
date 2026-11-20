@@ -8208,7 +8208,6 @@
 
       // 5. Accessories
       if (slot === 'finger' || slot.startsWith('ring') || ['ring', 'band', 'loop', 'signet', 'seal'].some(w => name.includes(w))) {
-        if (name.includes('silverlaine')) return 'inv_jewelry_ring_05';
         return 'inv_jewelry_ring_03';
       }
       if (slot === 'trinket' || slot.startsWith('trinket') || ['talisman', 'charm', 'badge'].some(w => name.includes(w))) return 'inv_jewelry_talisman_07';
@@ -8217,7 +8216,8 @@
 
       // 6. Armor by material
       if (slot.includes('head') || ['helm', 'cap', 'coif', 'hood'].some(w => name.includes(w))) {
-        if (name.includes('totemic leather hood') || name.includes('totemic leather helm')) return 'inv_helmet_30';
+        if (name.includes('totemic leather hood')) return 'inv_helmet_15';
+        if (name.includes('totemic leather helm')) return 'inv_helmet_24';
         return armorType === 'mail' ? 'inv_helmet_03' : armorType === 'leather' ? 'inv_helmet_14' : 'inv_helmet_08';
       }
       if (slot.includes('shoulder') || ['spaulders', 'mantle', 'epaulets', 'pauldrons'].some(w => name.includes(w))) {
@@ -8236,6 +8236,7 @@
         return armorType === 'mail' ? 'inv_belt_15' : armorType === 'leather' ? 'inv_belt_03' : 'inv_belt_12';
       }
       if (slot.includes('legs') || ['pants', 'leggings', 'breeches', 'trousers', 'kilt'].some(w => name.includes(w))) {
+        if (name.includes('totemic leather pants') || name.includes('totemic leather leggings')) return 'inv_pants_01';
         return armorType === 'mail' ? 'inv_pants_03' : armorType === 'leather' ? 'inv_pants_02' : 'inv_pants_08';
       }
       if (slot.includes('feet') || ['boots', 'shoes', 'footpads', 'greaves', 'walkers'].some(w => name.includes(w))) {
@@ -8250,8 +8251,7 @@
       if (item && iconName) {
         const sl = (item.slotName || item.slot || '').toLowerCase();
         const isRelicSlot = sl === 'relic' || sl === 'totem';
-        const isRingSlot = sl === 'finger' || sl.startsWith('ring');
-        if ((iconName === 'inv_stone_04' && !isRelicSlot) || (iconName.startsWith('inv_belt_') && isRingSlot)) {
+        if (iconName === 'inv_stone_04' && !isRelicSlot) {
           iconName = getSmartFallbackIcon(item);
         }
       }
