@@ -8176,8 +8176,8 @@
       if (name.includes('circlet') || name.includes('crown') || name.includes('tiara')) return 'inv_helmet_44';
       if (name.includes('bandana') || name.includes('eyepatch')) return 'inv_helmet_22';
 
-      // 2. Relics & Totems
-      if (slot === 'relic' || slot === 'totem' || name.includes('totem')) {
+      // 2. Relics & Totems (match whole word \btotem\b so "Totemic Leather" isn't treated as a totem!)
+      if (slot === 'relic' || slot === 'totem' || /\btotem\b/.test(name)) {
         if (name.includes('wind') || name.includes('air')) return 'spell_nature_windfury';
         if (name.includes('fire') || name.includes('flame')) return 'spell_nature_guardianward';
         if (name.includes('earth') || name.includes('stone')) return 'spell_nature_stoneskintotem';
@@ -8207,13 +8207,17 @@
       }
 
       // 5. Accessories
-      if (slot === 'finger' || slot.startsWith('ring') || ['ring', 'band', 'loop', 'signet'].some(w => name.includes(w))) return 'inv_jewelry_ring_03';
+      if (slot === 'finger' || slot.startsWith('ring') || ['ring', 'band', 'loop', 'signet', 'seal'].some(w => name.includes(w))) {
+        if (name.includes('silverlaine')) return 'inv_jewelry_ring_05';
+        return 'inv_jewelry_ring_03';
+      }
       if (slot === 'trinket' || slot.startsWith('trinket') || ['talisman', 'charm', 'badge'].some(w => name.includes(w))) return 'inv_jewelry_talisman_07';
       if (slot === 'neck' || ['necklace', 'choker', 'pendant', 'amulet', 'medallion'].some(w => name.includes(w))) return 'inv_jewelry_necklace_07';
       if (slot === 'back' || ['cloak', 'cape', 'drape', 'shroud'].some(w => name.includes(w))) return 'inv_misc_cape_18';
 
       // 6. Armor by material
-      if (slot.includes('head') || ['helm', 'cap', 'coif'].some(w => name.includes(w))) {
+      if (slot.includes('head') || ['helm', 'cap', 'coif', 'hood'].some(w => name.includes(w))) {
+        if (name.includes('totemic leather hood') || name.includes('totemic leather helm')) return 'inv_helmet_30';
         return armorType === 'mail' ? 'inv_helmet_03' : armorType === 'leather' ? 'inv_helmet_14' : 'inv_helmet_08';
       }
       if (slot.includes('shoulder') || ['spaulders', 'mantle', 'epaulets', 'pauldrons'].some(w => name.includes(w))) {
@@ -8243,6 +8247,14 @@
     }
 
     function getIconUrl(iconName, item = null) {
+      if (item && iconName) {
+        const sl = (item.slotName || item.slot || '').toLowerCase();
+        const isRelicSlot = sl === 'relic' || sl === 'totem';
+        const isRingSlot = sl === 'finger' || sl.startsWith('ring');
+        if ((iconName === 'inv_stone_04' && !isRelicSlot) || (iconName.startsWith('inv_belt_') && isRingSlot)) {
+          iconName = getSmartFallbackIcon(item);
+        }
+      }
       if (!iconName || iconName === 'inv_misc_questionmark') {
         if (item) {
           iconName = getSmartFallbackIcon(item);
@@ -18659,14 +18671,16 @@
       const txt = document.body.innerText || '';
       const SLOT_MAP = {
         HEAD:'head', NECK:'neck', SHOULDER:'shoulders', SHOULDERS:'shoulders', BACK:'back', CLOAK:'back',
-        CHEST:'chest', WRIST:'wrist', WRISTS:'wrist', HAND:'hands', HANDS:'hands', GLOVES:'hands',
+        CHEST:'chest', ROBE:'chest', WRIST:'wrist', WRISTS:'wrist', HAND:'hands', HANDS:'hands', GLOVES:'hands',
         WAIST:'waist', BELT:'waist', LEG:'legs', LEGS:'legs', PANTS:'legs', FOOT:'feet', FEET:'feet', BOOTS:'feet',
+        FINGER:'ring', RING:'ring', FINGERS:'ring', RINGS:'ring',
         FINGER_1:'ring1', FINGER1:'ring1', RING_1:'ring1', RING1:'ring1',
         FINGER_2:'ring2', FINGER2:'ring2', RING_2:'ring2', RING2:'ring2',
+        TRINKET:'trinket', TRINKETS:'trinket',
         TRINKET_1:'trinket1', TRINKET1:'trinket1', TRINKET_2:'trinket2', TRINKET2:'trinket2',
-        MAIN_HAND:'mainhand', MAINHAND:'mainhand', TWO_HAND:'mainhand', TWOHAND:'mainhand', WEAPON:'mainhand',
-        OFF_HAND:'offhand', OFFHAND:'offhand', SHIELD:'offhand',
-        RANGED:'relic', RELIC:'relic', TOTEM:'relic', LIBRAM:'relic', IDOL:'relic', RANGED_RIGHT:'relic'
+        ONE_HAND:'onehand', MAIN_HAND:'mainhand', MAINHAND:'mainhand', TWO_HAND:'mainhand', TWOHAND:'mainhand', WEAPON:'mainhand',
+        OFF_HAND:'offhand', OFFHAND:'offhand', SHIELD:'offhand', HOLDABLE:'offhand',
+        RANGED:'relic', RELIC:'relic', TOTEM:'relic', LIBRAM:'relic', IDOL:'relic', THROWN:'relic', RANGED_RIGHT:'relic'
       };
       const normSlot = (k) => SLOT_MAP[String(k || '').toUpperCase().replace(/[^A-Z0-9]+/g, '_').replace(/^_|_$/g, '')] || SLOT_MAP[String(k || '').toUpperCase().replace(/[^A-Z0-9]/g, '')] || null;
       const PVP_TITLES = [
@@ -18680,30 +18694,58 @@
       const gear = {}, enchants = {}, reputations = {}, profMap = {};
       let level = 0, cls = '', race = '', faction = '', pvpRank = 0;
 
+      const isSameGearEntry = (existing, idNum, nameStr) => {
+        if (!existing) return false;
+        if (typeof existing === 'number') return idNum > 0 && existing === idNum;
+        if (typeof existing === 'string') return Boolean(nameStr) && existing.toLowerCase() === String(nameStr).toLowerCase();
+        if (typeof existing === 'object') {
+          if (idNum > 0 && existing.id === idNum) return true;
+          if (nameStr && existing.name && existing.name.toLowerCase() === String(nameStr).toLowerCase()) return true;
+        }
+        return false;
+      };
+
+      const parseIconName = (obj) => {
+        const rawIcon = obj.icon || (obj.item && obj.item.icon) || (Array.isArray(obj.media?.assets) && obj.media.assets[0]?.value) || (typeof obj.media === 'string' ? obj.media : '');
+        if (!rawIcon || typeof rawIcon !== 'string') return '';
+        return rawIcon.split('/').pop().split('?')[0].replace(/\.(jpg|jpeg|png|webp)$/i, '').toLowerCase();
+      };
+
       const extractItem = (slotKey, obj) => {
         if (!slotKey || !obj || typeof obj !== 'object') return;
-        const itemId = (obj.item && obj.item.id) || obj.itemId || (typeof obj.id === 'number' ? obj.id : 0);
+        const itemId = Number((obj.item && obj.item.id) || obj.itemId || (typeof obj.id === 'number' ? obj.id : 0)) || 0;
         const itemName = obj.name || (obj.item && obj.item.name) || '';
         const quality = (obj.quality && (obj.quality.type || obj.quality.name || obj.quality)) || '';
-        if (itemId || itemName) {
-          // Include itemName + stats if available so unknown Forever items can be synthesized cleanly
-          const statsObj = {};
-          const rawStats = obj.stats || (obj.item && obj.item.stats);
-          if (Array.isArray(rawStats)) {
-            rawStats.forEach(s => {
-              const st = (s.type && (s.type.type || s.type.name)) || s.name || '';
-              const v = s.value ?? s.amount;
-              if (st && typeof v === 'number') statsObj[st] = v;
-            });
-          }
-          if (Object.keys(statsObj).length > 0 && itemName) {
-            gear[slotKey] = { id: Number(itemId) || 0, name: String(itemName), quality: String(quality).toLowerCase(), stats: statsObj };
-          } else {
-            gear[slotKey] = itemId ? Number(itemId) : String(itemName);
-          }
-          const enc = Array.isArray(obj.enchantments) ? obj.enchantments[0] : (obj.enchant || null);
-          if (enc && (enc.enchantment_id || enc.id)) enchants[slotKey] = Number(enc.enchantment_id || enc.id);
+        if (!itemId && !itemName) return;
+
+        let targetSlot = slotKey;
+        if (slotKey === 'ring') {
+          targetSlot = (!gear.ring1 || isSameGearEntry(gear.ring1, itemId, itemName)) ? 'ring1' : 'ring2';
+        } else if (slotKey === 'trinket') {
+          targetSlot = (!gear.trinket1 || isSameGearEntry(gear.trinket1, itemId, itemName)) ? 'trinket1' : 'trinket2';
+        } else if (slotKey === 'onehand') {
+          targetSlot = (!gear.mainhand || isSameGearEntry(gear.mainhand, itemId, itemName)) ? 'mainhand' : 'offhand';
         }
+
+        const iconStr = parseIconName(obj);
+        const statsObj = {};
+        const rawStats = obj.stats || (obj.item && obj.item.stats);
+        if (Array.isArray(rawStats)) {
+          rawStats.forEach(s => {
+            const st = (s.type && (s.type.type || s.type.name)) || s.name || '';
+            const v = s.value ?? s.amount;
+            if (st && typeof v === 'number') statsObj[st] = v;
+          });
+        }
+        if ((Object.keys(statsObj).length > 0 || iconStr) && itemName) {
+          const itemObj = { id: itemId, name: String(itemName), quality: String(quality).toLowerCase(), stats: statsObj };
+          if (iconStr) itemObj.icon = iconStr;
+          gear[targetSlot] = itemObj;
+        } else {
+          gear[targetSlot] = itemId ? itemId : String(itemName);
+        }
+        const enc = Array.isArray(obj.enchantments) ? obj.enchantments[0] : (obj.enchant || null);
+        if (enc && (enc.enchantment_id || enc.id)) enchants[targetSlot] = Number(enc.enchantment_id || enc.id);
       };
 
       const unmappedSlots = new Set();
@@ -18714,10 +18756,15 @@
         if (Array.isArray(obj)) {
           for (const el of obj) {
             if (el && typeof el === 'object') {
-              const slotRaw = (el.slot && (el.slot.type || el.slot.name || el.slot)) || el.slotType || el.inventoryType;
-              const slotKey = normSlot(slotRaw);
+              const slotRaw = (el.slot && (el.slot.type || el.slot.name || el.slot)) || el.slotType || el.inventoryType || (el.inventory_type && (el.inventory_type.type || el.inventory_type.name || el.inventory_type));
+              let slotKey = normSlot(slotRaw);
+              if (!slotKey && typeof slotRaw === 'string' && slotRaw) unmappedSlots.add(slotRaw);
+              if (!slotKey && (el.id || el.itemId) && el.name && (el.quality || el.stats)) {
+                const nm = String(el.name);
+                if (/\b(ring|band|seal|signet|loop)\b/i.test(nm)) slotKey = 'ring';
+                else if (/\b(insignia|talisman|trinket|charm|mark of|rune of)\b/i.test(nm)) slotKey = 'trinket';
+              }
               if (slotKey) extractItem(slotKey, el);
-              else if (typeof slotRaw === 'string' && slotRaw) unmappedSlots.add(slotRaw);
 
               const pName = ((el.profession && el.profession.name) || el.name || '').toLowerCase();
               if (PROF_NAMES.includes(pName)) {
@@ -18739,9 +18786,20 @@
 
         for (const [k, v] of Object.entries(obj)) {
           const sk = normSlot(k);
-          if (sk && v && typeof v === 'object' && !Array.isArray(v) && (v.id || v.itemId || v.name || (v.item && v.item.id))) {
+          if ((sk === 'ring' || sk === 'trinket') && Array.isArray(v)) {
+            for (const el of v) {
+              if (el && typeof el === 'object') extractItem(sk, el);
+            }
+          } else if (sk && v && typeof v === 'object' && !Array.isArray(v) && (v.id || v.itemId || v.name || (v.item && v.item.id))) {
             extractItem(sk, v);
           }
+        }
+
+        // Name-based fallback for standalone item objects (no parent array & no explicit slot)
+        if (!normSlot(parentKey) && (obj.id || obj.itemId) && obj.name && (obj.quality || obj.stats)) {
+          const nm = String(obj.name);
+          if (/\b(ring|band|seal|signet|loop)\b/i.test(nm)) extractItem('ring', obj);
+          else if (/\b(insignia|talisman|trinket|charm|mark of|rune of)\b/i.test(nm)) extractItem('trinket', obj);
         }
 
         if (!level && typeof obj.level === 'number' && obj.level >= 1 && obj.level <= 60) level = obj.level;
@@ -18901,10 +18959,15 @@
         const partial = list.find(i => (i.name || '').toLowerCase().includes(lower));
         if (partial) return partial.id;
       }
-      // Custom object with stats fallback -> dynamically inject into catalog!
+      // Custom object with stats fallback -> match existing or dynamically inject into catalog!
       if (typeof val === 'object' && val.name) {
-        const existing = list.find(i => i.id === val.id || (i.name || '').toLowerCase() === val.name.toLowerCase());
-        if (existing) return existing.id;
+        const existing = list.find(i => (val.id && i.id === val.id) || (i.name || '').toLowerCase() === val.name.toLowerCase());
+        if (existing) {
+          if (val.icon && typeof val.icon === 'string' && val.icon !== 'inv_stone_04' && val.icon !== 'inv_misc_questionmark') {
+            existing.icon = val.icon;
+          }
+          return existing.id;
+        }
         const syntheticId = val.id || (900000 + Math.floor(Math.random() * 90000));
         list.push({
           id: syntheticId,
@@ -18917,7 +18980,11 @@
           parsedStats: (() => {
             const rawS = val.stats || val.parsedStats || {};
             const outS = {};
-            const mapK = { STRENGTH:'Str', AGILITY:'Agi', STAMINA:'Sta', INTELLECT:'Int', SPIRIT:'Spi', ATTACK_POWER:'AP', SPELL_POWER:'SP', CRIT_RATING:'Crit', HIT_RATING:'Hit', ARMOR:'Armor' };
+            const mapK = {
+              STRENGTH:'Str', AGILITY:'Agi', STAMINA:'Sta', INTELLECT:'Int', SPIRIT:'Spi',
+              ATTACK_POWER:'AP', SPELL_POWER:'SP', SPELL_DAMAGE_DONE:'SP', SPELL_HEALING_DONE:'Healing',
+              CRIT_RATING:'Crit', HIT_RATING:'Hit', ARMOR:'Armor'
+            };
             for (const [k, v] of Object.entries(rawS)) {
               outS[mapK[k.toUpperCase()] || k] = v;
             }
