@@ -18659,10 +18659,14 @@
       const txt = document.body.innerText || '';
       const SLOT_MAP = {
         HEAD:'head', NECK:'neck', SHOULDER:'shoulders', SHOULDERS:'shoulders', BACK:'back', CLOAK:'back',
-        CHEST:'chest', WRIST:'wrist', WRISTS:'wrist', HANDS:'hands', WAIST:'waist', LEGS:'legs', FEET:'feet',
-        FINGER_1:'ring1', FINGER1:'ring1', RING1:'ring1', FINGER_2:'ring2', FINGER2:'ring2', RING2:'ring2',
+        CHEST:'chest', WRIST:'wrist', WRISTS:'wrist', HAND:'hands', HANDS:'hands', GLOVES:'hands',
+        WAIST:'waist', BELT:'waist', LEG:'legs', LEGS:'legs', PANTS:'legs', FOOT:'feet', FEET:'feet', BOOTS:'feet',
+        FINGER_1:'ring1', FINGER1:'ring1', RING_1:'ring1', RING1:'ring1',
+        FINGER_2:'ring2', FINGER2:'ring2', RING_2:'ring2', RING2:'ring2',
         TRINKET_1:'trinket1', TRINKET1:'trinket1', TRINKET_2:'trinket2', TRINKET2:'trinket2',
-        MAIN_HAND:'mainhand', MAINHAND:'mainhand', OFF_HAND:'offhand', OFFHAND:'offhand', RANGED:'ranged', RELIC:'ranged'
+        MAIN_HAND:'mainhand', MAINHAND:'mainhand', TWO_HAND:'mainhand', TWOHAND:'mainhand', WEAPON:'mainhand',
+        OFF_HAND:'offhand', OFFHAND:'offhand', SHIELD:'offhand',
+        RANGED:'relic', RELIC:'relic', TOTEM:'relic', LIBRAM:'relic', IDOL:'relic', RANGED_RIGHT:'relic'
       };
       const normSlot = (k) => SLOT_MAP[String(k || '').toUpperCase().replace(/[^A-Z0-9]+/g, '_').replace(/^_|_$/g, '')] || SLOT_MAP[String(k || '').toUpperCase().replace(/[^A-Z0-9]/g, '')] || null;
       const PVP_TITLES = [
@@ -18702,9 +18706,10 @@
         }
       };
 
+      const unmappedSlots = new Set();
       const visited = new Set();
       const walk = (obj, depth = 0, parentKey = '') => {
-        if (!obj || typeof obj !== 'object' || depth > 14 || visited.has(obj)) return;
+        if (!obj || typeof obj !== 'object' || depth > 24 || visited.has(obj)) return;
         visited.add(obj);
         if (Array.isArray(obj)) {
           for (const el of obj) {
@@ -18712,6 +18717,7 @@
               const slotRaw = (el.slot && (el.slot.type || el.slot.name || el.slot)) || el.slotType || el.inventoryType;
               const slotKey = normSlot(slotRaw);
               if (slotKey) extractItem(slotKey, el);
+              else if (typeof slotRaw === 'string' && slotRaw) unmappedSlots.add(slotRaw);
 
               const pName = ((el.profession && el.profession.name) || el.name || '').toLowerCase();
               if (PROF_NAMES.includes(pName)) {
@@ -18754,14 +18760,14 @@
         }
 
         for (const [k, v] of Object.entries(obj)) {
-          if (k === 'children' || k === 'return' || k === '_owner' || k === 'stateNode') continue;
+          if (k === 'return' || k === '_owner' || k === 'stateNode' || k === '_debugOwner') continue;
           walk(v, depth + 1, k);
         }
       };
       walk(nd);
 
-      // Also scan React __reactProps$ / __reactFiber$ on hydrated Armory DOM elements (captures client-fetched equipment!)
-      if (Object.keys(gear).length === 0) {
+      // Also scan React __reactProps$ / __reactFiber$ on hydrated Armory DOM elements (captures right-column & client-fetched slots!)
+      if (Object.keys(gear).length < 15) {
         document.querySelectorAll('[class*="Slot" i], [class*="slot" i], [class*="Equipment" i], a[href*="item"]').forEach(el => {
           for (const key of Object.keys(el)) {
             if (key.startsWith('__reactProps$') || key.startsWith('__reactFiber$')) {
@@ -18773,26 +18779,26 @@
 
       for (const p of PROF_NAMES) {
         if (!profMap[p] || !profMap[p].skill) {
-          const m = txt.match(new RegExp('\b' + p + '[\s\S]{0,40}?(\d{1,3})\s*/\s*(\d{1,3})', 'i'));
+          const m = txt.match(new RegExp('\\b' + p + '[\\s\\S]{0,60}?(\\d{1,3})\\s*/\\s*(\\d{1,3})', 'i'));
           if (m) profMap[p] = { id: p, skill: parseInt(m[1]), max: parseInt(m[2]) };
         }
       }
 
       if (!pvpRank) {
-        const pvpSec = txt.match(/PLAYER\s+VS\s+PLAYER[\s\S]{0,250}?Rank\s+(\d{1,2})/i) || txt.match(/Honorable\s+Kills[\s\S]{0,120}?Rank\s+(\d{1,2})/i);
+        const pvpSec = txt.match(/PLAYER\s+VS\s+PLAYER[\s\S]{0,250}?\bRank\s+(\d{1,2})\b/i) || txt.match(/Honorable\s+Kills[\s\S]{0,120}?\bRank\s+(\d{1,2})\b/i);
         if (pvpSec) {
           pvpRank = parseInt(pvpSec[1]);
         } else {
           const headerTxt = txt.slice(0, 300).toLowerCase();
           for (const [title, r] of PVP_TITLES) {
-            if (new RegExp('\b' + title + '\b').test(headerTxt)) { pvpRank = r; break; }
+            if (new RegExp('\\b' + title + '\\b').test(headerTxt)) { pvpRank = r; break; }
           }
         }
       }
 
       // Extract displayed Armory attributes for reference verification
       const statGrab = (label) => {
-        const m = txt.match(new RegExp('(\d[\d,]*)\s*' + label + '\b', 'i'));
+        const m = txt.match(new RegExp('(\\d[\\d,]*)\\s*' + label + '\\b', 'i'));
         return m ? parseInt(m[1].replace(/,/g, '')) : undefined;
       };
       const armoryStats = {
@@ -18808,10 +18814,10 @@
       const out = {
         name: slug,
         armoryUrl: url,
-        level: level || parseInt(txt.match(/(\d{1,2})\s+(?:Tauren|Orc|Troll|Undead|Human|Dwarf|Night Elf|Gnome)/i)?.[1] || txt.match(/Level\s+(\d+)/i)?.[1] || '30'),
-        class: cls || (txt.match(/(Shaman|Warrior|Rogue|Hunter|Druid|Priest|Mage|Warlock|Paladin)/i)?.[1] || 'shaman').toLowerCase(),
-        race: race || (txt.match(/(Tauren|Orc|Troll|Undead|Human|Dwarf|Night Elf|Gnome)/i)?.[1] || 'tauren').toLowerCase().replace(/\s+/g,'_'),
-        faction: faction || (/(Human|Dwarf|Night Elf|Gnome|Alliance)/i.test(txt.slice(0, 400)) ? 'Alliance' : 'Horde'),
+        level: level || parseInt(txt.match(/\b(\d{1,2})\s+(?:Tauren|Orc|Troll|Undead|Human|Dwarf|Night Elf|Gnome)\b/i)?.[1] || txt.match(/Level\s+(\d+)/i)?.[1] || '30'),
+        class: cls || (txt.match(/\b(Shaman|Warrior|Rogue|Hunter|Druid|Priest|Mage|Warlock|Paladin)\b/i)?.[1] || 'shaman').toLowerCase(),
+        race: race || (txt.match(/\b(Tauren|Orc|Troll|Undead|Human|Dwarf|Night Elf|Gnome)\b/i)?.[1] || 'tauren').toLowerCase().replace(/\s+/g,'_'),
+        faction: faction || (/\b(Human|Dwarf|Night Elf|Gnome|Alliance)\b/i.test(txt.slice(0, 400)) ? 'Alliance' : 'Horde'),
         pvpRank,
         professions: Object.values(profMap),
         reputations,
@@ -18821,6 +18827,7 @@
       };
       copy(JSON.stringify(out, null, 2));
       console.log('✅ Copied WoW Forever JSON!', { slots: Object.keys(gear).length, profs: out.professions, pvpRank, reps: Object.keys(reputations).length, armoryStats });
+      if (unmappedSlots.size > 0) console.log('ℹ️ Unmapped slot keys:', Array.from(unmappedSlots));
       if (Object.keys(gear).length === 0 && nd?.props?.pageProps) {
         console.log('ℹ️ pageProps keys:', Object.keys(nd.props.pageProps));
       }
@@ -19035,6 +19042,9 @@
           resolvedGear[slot] = 0;
         }
         if (data.gear && typeof data.gear === 'object') {
+          if (data.gear.ranged !== undefined && data.gear.relic === undefined) {
+            data.gear.relic = data.gear.ranged;
+          }
           for (const slot of Object.keys(resolvedGear)) {
             const rawSlotVal = data.gear[slot];
             if (rawSlotVal !== undefined && rawSlotVal !== null && rawSlotVal !== 0 && rawSlotVal !== '') {
