@@ -4120,7 +4120,7 @@
           <div style="display: flex; flex-direction: column; gap: 10px;">
             <div style="display: flex; justify-content: space-between; align-items: center; gap: 10px;">
               <label for="cfg-duration" style="font-size: 0.76rem; color: #cbd5e1;">Fight Duration:</label>
-              <select id="cfg-duration" class="filter-select" onchange="updateSimCfgSummaryLabel(); onSettingChanged();">
+              <select id="cfg-duration" class="filter-select" onchange="onFightDurationChanged();">
                 <option value="15">15s (Short Skirmish)</option>
                 <option value="30" selected>30s (Standard Combat)</option>
                 <option value="45">45s (Mid Encounter)</option>
@@ -7784,7 +7784,7 @@
           level: currentLvl,
           imbue: imbueOverride || currentImbueVal,
           talents: (typeof getSerializedTalents === 'function') ? getSerializedTalents() : '--',
-          duration: 30,
+          duration: getCurrentFightDuration(),
           iterations: 45,
           seed: 42,
           fastMode: true,
@@ -8533,6 +8533,37 @@
       setTimeout(refreshWowhead, 50);
     }
 
+    function getCurrentFightDuration() {
+      const el = document.getElementById('cfg-duration');
+      return Math.max(5, Math.min(300, parseInt(el ? el.value : '30') || 30));
+    }
+
+    async function onFightDurationChanged() {
+      const dur = getCurrentFightDuration();
+      updateSimCfgSummaryLabel();
+      saveUserSettings();
+      if (isInitializing) return;
+
+      // Re-optimize rotation & totems for the new fight length (e.g. Mana Spring / Searing vs Magma on long fights)
+      if (typeof autoOptimizeRotationForCurrentGear === 'function') {
+        await autoOptimizeRotationForCurrentGear(true);
+      }
+      // Recompute dynamic stat weights (Int, MP5, Spirit scale up automatically when going OOM on longer fights!)
+      const roleMode = (typeof getActiveCharacterRoleMode === 'function') ? getActiveCharacterRoleMode() : 'dps';
+      if (typeof computeDynamicStatWeights === 'function') {
+        await computeDynamicStatWeights(roleMode);
+      }
+      if (typeof renderEquipmentSlots === 'function') renderEquipmentSlots();
+      if (typeof runOneStopSimulate === 'function') {
+        await runOneStopSimulate();
+      } else if (typeof runSimulation === 'function') {
+        await runSimulation();
+      }
+      if (typeof showToast === 'function') {
+        showToast(`⏱️ Fight duration set to <strong>${dur}s</strong> — Rotation, Totems &amp; Stat Weights updated for ${dur}s sustain. Click <strong>Auto-Build BiS</strong> to re-gear for ${dur}s!`);
+      }
+    }
+
     function updateSimCfgSummaryLabel() {
       const dur = document.getElementById('cfg-duration') ? document.getElementById('cfg-duration').value : '30';
       const iters = document.getElementById('cfg-iterations') ? document.getElementById('cfg-iterations').value : '200';
@@ -8575,7 +8606,7 @@
         level: currentLvl,
         imbue: currentImbueVal,
         talents: talStr,
-        duration: 30,
+        duration: getCurrentFightDuration(),
         iterations: 40,
         seed: 42,
         fastMode: true,
@@ -8600,7 +8631,7 @@
       } else {
         const isCaster = (activeCharacterClass === 'mage' || activeCharacterClass === 'priest' || activeCharacterClass === 'warlock' || (activeCharacterClass === 'shaman' && currentCharacterSpec === 'elemental'));
         if (isCaster) {
-          testStats = { SP: 15, Int: 15, Crit: 2, Hit: 2, Sta: 15, Spi: 15 };
+          testStats = { SP: 15, Int: 15, Crit: 2, Hit: 2, Sta: 15, Spi: 15, MP5: 5 };
           if (activeCharacterClass === 'mage' && currentCharacterSpec === 'fire') testStats.FireSP = 15;
           if (activeCharacterClass === 'mage' && currentCharacterSpec === 'frost') testStats.FrostSP = 15;
           if (activeCharacterClass === 'warlock' || activeCharacterClass === 'priest') testStats.ShadowSP = 15;
@@ -8609,6 +8640,9 @@
           testStats = { Str: 15, Agi: 15, AP: 30, Crit: 2, Hit: 2, Sta: 15, Armor: 50 };
           if (['shaman', 'paladin', 'druid'].includes(activeCharacterClass)) {
             testStats.Int = 15;
+            testStats.Spi = 15;
+            testStats.MP5 = 5;
+            testStats.SP = 15;
           }
         }
       }
@@ -8622,7 +8656,7 @@
             level: currentLvl,
             imbue: currentImbueVal,
             talents: talStr,
-            duration: 30,
+            duration: getCurrentFightDuration(),
             iterations: 40,
             seed: 42,
             fastMode: true,
@@ -8699,7 +8733,7 @@
             level: currentLvl,
             imbue: currentImbueVal,
             talents: talStr,
-            duration: 30,
+            duration: getCurrentFightDuration(),
             iterations: 50,
             seed: 42,
             fastMode: true,
@@ -8745,7 +8779,7 @@
                 level: currentLvl,
                 imbue: currentImbueVal,
                 talents: talStr,
-                duration: 30,
+                duration: getCurrentFightDuration(),
                 iterations: 50,
                 seed: 42,
                 fastMode: true,
@@ -14115,6 +14149,9 @@
 
       let blockVal = hasShield ? Math.round(8 + (level * 0.65) + (totalStr / 20) + (gearStats.Block || 0)) : 0;
       let iterationDpsList = [];
+      let totalEndManaPct = 0;
+      let totalOomTimeSum = 0;
+      let oomIterCount = 0;
 
       // Resolve Active APL Steps (Respects custom_rotation order, checkboxes, and conditions!)
       let aplSteps = [];
@@ -14175,6 +14212,7 @@
         let crusaderActiveUntil = -1;
         let iterDamage = 0;
         let curMana = maxMana;
+        let firstOomAt = -1;
         let nextResourceTick = 2.0;
         let lastManaCastTime = -10.0;
         let rage = (charClass === 'warrior') ? 15 : 0;
@@ -14502,7 +14540,10 @@
               const rageCost = rData.rageCost || 0;
               const energyCost = rData.energy || 0;
 
-              if (manaCost > 0 && curMana < manaCost) continue;
+              if (manaCost > 0 && curMana < manaCost) {
+                if (firstOomAt < 0 && maxMana > 0) firstOomAt = t;
+                continue;
+              }
               if (rageCost > 0 && rage < rageCost) continue;
               if (energyCost > 0 && energy < energyCost) continue;
 
@@ -15061,6 +15102,13 @@
         }
 
         iterationDpsList.push(iterDamage / duration);
+        if (maxMana > 0) {
+          totalEndManaPct += Math.max(0, Math.min(100, (curMana / maxMana) * 100));
+          if (firstOomAt >= 0) {
+            totalOomTimeSum += firstOomAt;
+            oomIterCount += 1;
+          }
+        }
       }
 
       if (!reqBody.fastMode && onProgress) onProgress(iterations, iterations);
@@ -15236,6 +15284,10 @@
           ehp: ehp,
           maxHP: maxHP,
           maxMana: maxMana,
+          avgEndManaPct: maxMana > 0 ? Math.round(totalEndManaPct / iterations) : 100,
+          avgOomTime: (maxMana > 0 && oomIterCount > 0) ? Math.round((totalOomTimeSum / oomIterCount) * 10) / 10 : null,
+          oomRatePct: maxMana > 0 ? Math.round((oomIterCount / iterations) * 100) : 0,
+          simDuration: duration,
           defense: (level * 5) + (gearStats.Def || 0) + (talentDefBonus || 0),
           dodgePct: Math.round(dodgePct * 10) / 10,
           parryPct: Math.round(parryPct * 10) / 10,
@@ -15622,7 +15674,32 @@
         const spCritEl = document.getElementById('stat-bar-spcrit');
         if (spCritEl) spCritEl.textContent = `${st.spellCritPct || 0}%`;
         const manaEl = document.getElementById('stat-bar-mana');
-        if (manaEl) manaEl.textContent = (st.maxMana > 0) ? `${Math.round(st.maxMana)}` : 'None (Rage/Energy)';
+        if (manaEl) {
+          if (st.maxMana > 0) {
+            const oomTag = (st.avgOomTime !== null && st.oomRatePct >= 25)
+              ? ` (OOM @ ${st.avgOomTime}s)`
+              : (st.avgEndManaPct !== undefined ? ` (${st.avgEndManaPct}% left)` : '');
+            manaEl.textContent = `${Math.round(st.maxMana)}${oomTag}`;
+            manaEl.style.color = (st.avgOomTime !== null && st.oomRatePct >= 25) ? '#f87171' : '#60a5fa';
+          } else {
+            manaEl.textContent = 'None (Rage/Energy)';
+            manaEl.style.color = '#60a5fa';
+          }
+        }
+        const rotManaEst = document.getElementById('rotation-mana-estimate');
+        if (rotManaEst) {
+          const durLbl = st.simDuration || getCurrentFightDuration();
+          if (st.maxMana > 0) {
+            if (st.avgOomTime !== null && st.oomRatePct >= 25) {
+              const oomPctOfFight = Math.round(((durLbl - st.avgOomTime) / Math.max(1, durLbl)) * 100);
+              rotManaEst.innerHTML = `<span style="color:#f87171;font-weight:700;">⚠️ OOM @ ~${st.avgOomTime}s</span> <span style="color:#94a3b8;">(${oomPctOfFight}% of ${durLbl}s fight dry — Int/MP5/Spirit/Mana Spring gain value)</span>`;
+            } else {
+              rotManaEst.innerHTML = `<span style="color:#34d399;font-weight:700;">💧 Sustainable</span> <span style="color:#94a3b8;">(${st.avgEndManaPct}% mana left after ${durLbl}s)</span>`;
+            }
+          } else {
+            rotManaEst.innerHTML = '';
+          }
+        }
         const drEl = document.getElementById('stat-bar-armordr');
         if (drEl) drEl.textContent = `${(st.armorDrPct || 0).toFixed(1)}%`;
         const specLbl = document.getElementById('stat-bar-spec-lbl');
