@@ -18652,140 +18652,135 @@
       }
     }
 
-    function copyArmoryExtractorSnippet() {
-      // Deep extractor for worldofwarcraft.blizzard.com/en-us/forever/.../armory/character/...
-      // Handles slot-keyed equipment objects & arrays, newline-separated DOM professions (110 / 150), PvP Rank (ignoring Talent ranks!), and Talents!
-      const snippet = `(() => {
-  const url = location.href;
-  const slug = (url.split('/character/')[1] || 'character').split(/[?#]/)[0];
-  const nd = window.__NEXT_DATA__ || window.characterProfileInitialState || window.__INITIAL_STATE__ || {};
-  const txt = document.body.innerText || '';
-  const SLOT_MAP = {
-    HEAD:'head', NECK:'neck', SHOULDER:'shoulders', SHOULDERS:'shoulders', BACK:'back', CLOAK:'back',
-    CHEST:'chest', WRIST:'wrist', WRISTS:'wrist', HANDS:'hands', WAIST:'waist', LEGS:'legs', FEET:'feet',
-    FINGER_1:'ring1', FINGER1:'ring1', RING1:'ring1', FINGER_2:'ring2', FINGER2:'ring2', RING2:'ring2',
-    TRINKET_1:'trinket1', TRINKET1:'trinket1', TRINKET_2:'trinket2', TRINKET2:'trinket2',
-    MAIN_HAND:'mainhand', MAINHAND:'mainhand', OFF_HAND:'offhand', OFFHAND:'offhand', RANGED:'ranged', RELIC:'ranged'
-  };
-  const normSlot = (k) => SLOT_MAP[String(k || '').toUpperCase().replace(/[^A-Z0-9]+/g, '_').replace(/^_|_$/g, '')] || SLOT_MAP[String(k || '').toUpperCase().replace(/[^A-Z0-9]/g, '')] || null;
-  const PVP_TITLES = [
-    ['high warlord',14],['grand marshal',14],['warlord',13],['field marshal',13],['general',12],['marshal',12],
-    ['lieutenant general',11],['commander',11],['champion',10],['lieutenant commander',10],['centurion',9],['knight-champion',9],
-    ['legionnaire',8],['knight-captain',8],['blood guard',7],['knight-lieutenant',7],['stone guard',6],['knight',6],
-    ['first sergeant',5],['sergeant major',5],['senior sergeant',4],['master sergeant',4],['sergeant',3],
-    ['grunt',2],['corporal',2],['scout',1],['private',1]
-  ];
-  const PROF_NAMES = ['engineering','leatherworking','blacksmithing','tailoring','alchemy','enchanting','skinning','mining','herbalism'];
-  const gear = {}, enchants = {}, reputations = {}, profMap = {}, talents = {};
-  let level = 0, cls = '', race = '', faction = '', pvpRank = 0;
+    function _armoryPageExtractor() {
+      const url = location.href;
+      const slug = (url.split('/character/')[1] || 'character').split(/[?#]/)[0];
+      const nd = window.__NEXT_DATA__ || window.characterProfileInitialState || window.__INITIAL_STATE__ || {};
+      const txt = document.body.innerText || '';
+      const SLOT_MAP = {
+        HEAD:'head', NECK:'neck', SHOULDER:'shoulders', SHOULDERS:'shoulders', BACK:'back', CLOAK:'back',
+        CHEST:'chest', WRIST:'wrist', WRISTS:'wrist', HANDS:'hands', WAIST:'waist', LEGS:'legs', FEET:'feet',
+        FINGER_1:'ring1', FINGER1:'ring1', RING1:'ring1', FINGER_2:'ring2', FINGER2:'ring2', RING2:'ring2',
+        TRINKET_1:'trinket1', TRINKET1:'trinket1', TRINKET_2:'trinket2', TRINKET2:'trinket2',
+        MAIN_HAND:'mainhand', MAINHAND:'mainhand', OFF_HAND:'offhand', OFFHAND:'offhand', RANGED:'ranged', RELIC:'ranged'
+      };
+      const normSlot = (k) => SLOT_MAP[String(k || '').toUpperCase().replace(/[^A-Z0-9]+/g, '_').replace(/^_|_$/g, '')] || SLOT_MAP[String(k || '').toUpperCase().replace(/[^A-Z0-9]/g, '')] || null;
+      const PVP_TITLES = [
+        ['high warlord',14],['grand marshal',14],['warlord',13],['field marshal',13],['general',12],['marshal',12],
+        ['lieutenant general',11],['commander',11],['champion',10],['lieutenant commander',10],['centurion',9],['knight-champion',9],
+        ['legionnaire',8],['knight-captain',8],['blood guard',7],['knight-lieutenant',7],['stone guard',6],['knight',6],
+        ['first sergeant',5],['sergeant major',5],['senior sergeant',4],['master sergeant',4],['sergeant',3],
+        ['grunt',2],['corporal',2],['scout',1],['private',1]
+      ];
+      const PROF_NAMES = ['engineering','leatherworking','blacksmithing','tailoring','alchemy','enchanting','skinning','mining','herbalism'];
+      const gear = {}, enchants = {}, reputations = {}, profMap = {};
+      let level = 0, cls = '', race = '', faction = '', pvpRank = 0;
 
-  const extractItem = (slotKey, obj) => {
-    if (!slotKey || !obj || typeof obj !== 'object') return;
-    const itemId = (obj.item && obj.item.id) || obj.itemId || (typeof obj.id === 'number' ? obj.id : 0);
-    const itemName = obj.name || (obj.item && obj.item.name) || '';
-    if (itemId || itemName) {
-      gear[slotKey] = itemId ? Number(itemId) : String(itemName);
-      const enc = Array.isArray(obj.enchantments) ? obj.enchantments[0] : (obj.enchant || null);
-      if (enc && (enc.enchantment_id || enc.id)) enchants[slotKey] = Number(enc.enchantment_id || enc.id);
-    }
-  };
+      const extractItem = (slotKey, obj) => {
+        if (!slotKey || !obj || typeof obj !== 'object') return;
+        const itemId = (obj.item && obj.item.id) || obj.itemId || (typeof obj.id === 'number' ? obj.id : 0);
+        const itemName = obj.name || (obj.item && obj.item.name) || '';
+        if (itemId || itemName) {
+          gear[slotKey] = itemId ? Number(itemId) : String(itemName);
+          const enc = Array.isArray(obj.enchantments) ? obj.enchantments[0] : (obj.enchant || null);
+          if (enc && (enc.enchantment_id || enc.id)) enchants[slotKey] = Number(enc.enchantment_id || enc.id);
+        }
+      };
 
-  const walk = (obj, depth = 0, parentKey = '') => {
-    if (!obj || typeof obj !== 'object' || depth > 14) return;
-    if (Array.isArray(obj)) {
-      for (const el of obj) {
-        if (el && typeof el === 'object') {
-          const slotRaw = (el.slot && (el.slot.type || el.slot.name || el.slot)) || el.slotType || el.inventoryType;
-          const slotKey = normSlot(slotRaw);
-          if (slotKey) extractItem(slotKey, el);
+      const walk = (obj, depth = 0, parentKey = '') => {
+        if (!obj || typeof obj !== 'object' || depth > 14) return;
+        if (Array.isArray(obj)) {
+          for (const el of obj) {
+            if (el && typeof el === 'object') {
+              const slotRaw = (el.slot && (el.slot.type || el.slot.name || el.slot)) || el.slotType || el.inventoryType;
+              const slotKey = normSlot(slotRaw);
+              if (slotKey) extractItem(slotKey, el);
 
-          const pName = ((el.profession && el.profession.name) || el.name || '').toLowerCase();
-          if (PROF_NAMES.includes(pName)) {
-            const sk = el.skill_points ?? el.skill ?? el.skillLevel ?? el.points ?? el.current ?? el.value ?? (Array.isArray(el.tiers) ? Math.max(...el.tiers.map(t => t.skill_points || t.points || 0)) : 0);
-            const mx = el.max_skill_points ?? el.max ?? el.maxSkillPoints ?? el.limit ?? 300;
-            if (Number(sk) > 0 || !profMap[pName]) profMap[pName] = { id: pName, skill: Number(sk) || 0, max: Number(mx) || 300 };
+              const pName = ((el.profession && el.profession.name) || el.name || '').toLowerCase();
+              if (PROF_NAMES.includes(pName)) {
+                const sk = el.skill_points ?? el.skill ?? el.skillLevel ?? el.points ?? el.current ?? el.value ?? (Array.isArray(el.tiers) ? Math.max(...el.tiers.map(t => t.skill_points || t.points || 0)) : 0);
+                const mx = el.max_skill_points ?? el.max ?? el.maxSkillPoints ?? el.limit ?? 300;
+                if (Number(sk) > 0 || !profMap[pName]) profMap[pName] = { id: pName, skill: Number(sk) || 0, max: Number(mx) || 300 };
+              }
+
+              const fName = (el.faction && el.faction.name) || (el.standing && el.name);
+              const stName = el.standing && (el.standing.name || el.standing);
+              if (fName && typeof stName === 'string' && /neutral|friendly|honored|revered|exalted/i.test(stName)) {
+                reputations[fName] = stName.charAt(0).toUpperCase() + stName.slice(1).toLowerCase();
+              }
+            }
+            walk(el, depth + 1, parentKey);
           }
+          return;
+        }
 
-          const fName = (el.faction && el.faction.name) || (el.standing && el.name);
-          const stName = el.standing && (el.standing.name || el.standing);
-          if (fName && typeof stName === 'string' && /neutral|friendly|honored|revered|exalted/i.test(stName)) {
-            reputations[fName] = stName.charAt(0).toUpperCase() + stName.slice(1).toLowerCase();
+        for (const [k, v] of Object.entries(obj)) {
+          const sk = normSlot(k);
+          if (sk && v && typeof v === 'object' && !Array.isArray(v) && (v.id || v.itemId || v.name || (v.item && v.item.id))) {
+            extractItem(sk, v);
           }
         }
-        walk(el, depth + 1, parentKey);
+
+        if (!level && typeof obj.level === 'number' && obj.level >= 1 && obj.level <= 60) level = obj.level;
+        if (!cls && (obj.character_class?.name || obj.className || (typeof obj.class === 'object' && obj.class?.name))) {
+          cls = String(obj.character_class?.name || obj.className || obj.class.name).toLowerCase();
+        }
+        if (!race && (obj.race?.name || obj.raceName)) race = String(obj.race?.name || obj.raceName).toLowerCase().replace(/\s+/g,'_');
+        if (!faction && (obj.faction?.name || obj.faction?.type)) faction = /alliance/i.test(String(obj.faction.name || obj.faction.type)) ? 'Alliance' : 'Horde';
+
+        for (const k of ['pvp_rank','pvpRank','honor_rank','highest_rank','currentRank']) {
+          if (typeof obj[k] === 'number' && obj[k] > 0 && obj[k] <= 14) pvpRank = obj[k];
+          if (obj[k] && typeof obj[k] === 'object' && typeof obj[k].rank === 'number' && obj[k].rank <= 14) pvpRank = obj[k].rank;
+        }
+        if (/pvp|honor/i.test(parentKey) && typeof obj.rank === 'number' && obj.rank > 0 && obj.rank <= 14) {
+          pvpRank = obj.rank;
+        }
+
+        for (const [k, v] of Object.entries(obj)) walk(v, depth + 1, k);
+      };
+      walk(nd);
+
+      for (const p of PROF_NAMES) {
+        if (!profMap[p] || !profMap[p].skill) {
+          const m = txt.match(new RegExp('\\b' + p + '[\\s\\S]{0,40}?(\\d{1,3})\\s*/\\s*(\\d{1,3})', 'i'));
+          if (m) profMap[p] = { id: p, skill: parseInt(m[1]), max: parseInt(m[2]) };
+        }
       }
-      return;
-    }
 
-    // Slot-keyed equipment objects (e.g. { head: { id, name }, mainHand: { id, name } })
-    for (const [k, v] of Object.entries(obj)) {
-      const sk = normSlot(k);
-      if (sk && v && typeof v === 'object' && !Array.isArray(v) && (v.id || v.itemId || v.name || (v.item && v.item.id))) {
-        extractItem(sk, v);
+      if (!pvpRank) {
+        const pvpSec = txt.match(/PLAYER\s+VS\s+PLAYER[\s\S]{0,250}?\bRank\s+(\d{1,2})\b/i) || txt.match(/Honorable\s+Kills[\s\S]{0,120}?\bRank\s+(\d{1,2})\b/i);
+        if (pvpSec) {
+          pvpRank = parseInt(pvpSec[1]);
+        } else {
+          const headerTxt = txt.slice(0, 300).toLowerCase();
+          for (const [title, r] of PVP_TITLES) {
+            if (new RegExp('\\b' + title + '\\b').test(headerTxt)) { pvpRank = r; break; }
+          }
+        }
+      }
+
+      const out = {
+        name: slug,
+        armoryUrl: url,
+        level: level || parseInt(txt.match(/\b(\d{1,2})\s+(?:Tauren|Orc|Troll|Undead|Human|Dwarf|Night Elf|Gnome)\b/i)?.[1] || txt.match(/Level\s+(\d+)/i)?.[1] || '30'),
+        class: cls || (txt.match(/\b(Shaman|Warrior|Rogue|Hunter|Druid|Priest|Mage|Warlock|Paladin)\b/i)?.[1] || 'shaman').toLowerCase(),
+        race: race || (txt.match(/\b(Tauren|Orc|Troll|Undead|Human|Dwarf|Night Elf|Gnome)\b/i)?.[1] || 'tauren').toLowerCase().replace(/\s+/g,'_'),
+        faction: faction || (/\b(Human|Dwarf|Night Elf|Gnome|Alliance)\b/i.test(txt.slice(0, 400)) ? 'Alliance' : 'Horde'),
+        pvpRank,
+        professions: Object.values(profMap),
+        reputations,
+        gear,
+        enchants
+      };
+      copy(JSON.stringify(out, null, 2));
+      console.log('✅ Copied WoW Forever JSON!', { slots: Object.keys(gear).length, profs: out.professions, pvpRank, reps: Object.keys(reputations).length });
+      if (Object.keys(gear).length === 0 && nd?.props?.pageProps) {
+        console.log('ℹ️ pageProps keys:', Object.keys(nd.props.pageProps));
       }
     }
 
-    if (!level && typeof obj.level === 'number' && obj.level >= 1 && obj.level <= 60) level = obj.level;
-    if (!cls && (obj.character_class?.name || obj.className || (typeof obj.class === 'object' && obj.class?.name))) {
-      cls = String(obj.character_class?.name || obj.className || obj.class.name).toLowerCase();
-    }
-    if (!race && (obj.race?.name || obj.raceName)) race = String(obj.race?.name || obj.raceName).toLowerCase().replace(/\s+/g,'_');
-    if (!faction && (obj.faction?.name || obj.faction?.type)) faction = /alliance/i.test(String(obj.faction.name || obj.faction.type)) ? 'Alliance' : 'Horde';
-
-    // PvP Rank ONLY from PvP-named fields (NEVER generic talent .rank!)
-    for (const k of ['pvp_rank','pvpRank','honor_rank','highest_rank','currentRank']) {
-      if (typeof obj[k] === 'number' && obj[k] > 0 && obj[k] <= 14) pvpRank = obj[k];
-      if (obj[k] && typeof obj[k] === 'object' && typeof obj[k].rank === 'number' && obj[k].rank <= 14) pvpRank = obj[k].rank;
-    }
-    if (/pvp|honor/i.test(parentKey) && typeof obj.rank === 'number' && obj.rank > 0 && obj.rank <= 14) {
-      pvpRank = obj.rank;
-    }
-
-    for (const [k, v] of Object.entries(obj)) walk(v, depth + 1, k);
-  };
-  walk(nd);
-
-  // DOM fallback for Professions (handles newline between "Leatherworking" and "110 / 150"!)
-  for (const p of PROF_NAMES) {
-    if (!profMap[p] || !profMap[p].skill) {
-      const m = txt.match(new RegExp('\\b' + p + '[\\s\\S]{0,40}?(\\d{1,3})\\s*/\\s*(\\d{1,3})', 'i'));
-      if (m) profMap[p] = { id: p, skill: parseInt(m[1]), max: parseInt(m[2]) };
-    }
-  }
-
-  // DOM fallback for PvP Rank (reads "PLAYER VS PLAYER ... Rank
-3", ignoring Talent "Rank 5"!)
-  if (!pvpRank) {
-    const pvpSec = txt.match(/PLAYER\s+VS\s+PLAYER[\s\S]{0,250}?\bRank\s+(\d{1,2})\b/i) || txt.match(/Honorable\s+Kills[\s\S]{0,120}?\bRank\s+(\d{1,2})\b/i);
-    if (pvpSec) {
-      pvpRank = parseInt(pvpSec[1]);
-    } else {
-      const headerTxt = txt.slice(0, 300).toLowerCase();
-      for (const [title, r] of PVP_TITLES) {
-        if (new RegExp('\\b' + title + '\\b').test(headerTxt)) { pvpRank = r; break; }
-      }
-    }
-  }
-
-  const out = {
-    name: slug,
-    armoryUrl: url,
-    level: level || parseInt(txt.match(/\b(\d{1,2})\s+(?:Tauren|Orc|Troll|Undead|Human|Dwarf|Night Elf|Gnome)\b/i)?.[1] || txt.match(/Level\s+(\d+)/i)?.[1] || '30'),
-    class: cls || (txt.match(/\b(Shaman|Warrior|Rogue|Hunter|Druid|Priest|Mage|Warlock|Paladin)\b/i)?.[1] || 'shaman').toLowerCase(),
-    race: race || (txt.match(/\b(Tauren|Orc|Troll|Undead|Human|Dwarf|Night Elf|Gnome)\b/i)?.[1] || 'tauren').toLowerCase().replace(/\s+/g,'_'),
-    faction: faction || (/\b(Human|Dwarf|Night Elf|Gnome|Alliance)\b/i.test(txt.slice(0, 400)) ? 'Alliance' : 'Horde'),
-    pvpRank,
-    professions: Object.values(profMap),
-    reputations,
-    gear,
-    enchants
-  };
-  copy(JSON.stringify(out, null, 2));
-  console.log('✅ Copied WoW Forever JSON!', { slots: Object.keys(gear).length, profs: out.professions, pvpRank, reps: Object.keys(reputations).length });
-  if (Object.keys(gear).length === 0 && nd?.props?.pageProps) {
-    console.log('ℹ️ pageProps keys:', Object.keys(nd.props.pageProps));
-  }
-})();`;
+    function copyArmoryExtractorSnippet() {
+      const snippet = '(' + _armoryPageExtractor.toString() + ')();';
       if (navigator.clipboard && navigator.clipboard.writeText) {
         navigator.clipboard.writeText(snippet).then(() => {
           if (typeof showToastNotice === 'function') showToastNotice('📋 Copied fixed Armory Console Extractor! Paste in F12 Console on your Armory page.');
