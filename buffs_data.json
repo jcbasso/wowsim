@@ -8,7 +8,7 @@
       "Healing": 6,
       "MP5": 6
     },
-    "icon": "inv_misc_fish_02",
+    "icon": "inv_misc_fish_21",
     "desc": "+6 Spell Damage, +6 Healing, and +6 Mana every 5 sec for 15 min (Well Fed - Caster / Healer Top BiS)",
     "level": 25,
     "itemId": 21217
@@ -22,7 +22,7 @@
       "Healing": 3,
       "MP5": 3
     },
-    "icon": "inv_misc_fish_02",
+    "icon": "inv_misc_fish_20",
     "desc": "+3 Spell Damage, +3 Healing, and +3 Mana every 5 sec for 15 min (Well Fed - Caster / Healer BiS Level 10-24)",
     "level": 10,
     "itemId": 21072
@@ -35,7 +35,7 @@
       "Sta": 8,
       "Spi": 8
     },
-    "icon": "inv_misc_food_14",
+    "icon": "inv_misc_food_64",
     "desc": "+8 Stamina and +8 Spirit for 15 min (Well Fed - Top Level 25-29 Stamina BiS)",
     "level": 25,
     "itemId": 20074
@@ -48,7 +48,7 @@
       "Spi": 8,
       "Sta": 8
     },
-    "icon": "inv_misc_food_09",
+    "icon": "inv_misc_food_48",
     "desc": "+8 Spirit and +8 Stamina for 15 min (Well Fed - Level 25+)",
     "level": 25,
     "itemId": 13851
@@ -61,7 +61,7 @@
       "FireSP": 8,
       "SP": 6
     },
-    "icon": "spell_fire_incinerate",
+    "icon": "inv_drink_17",
     "desc": "Periodically belches fire at enemies in combat for 10 min (Damage/Fire Caster BiS)",
     "level": 25,
     "itemId": 12217
@@ -74,7 +74,7 @@
       "Sta": 6,
       "Spi": 6
     },
-    "icon": "inv_misc_food_14",
+    "icon": "inv_misc_food_50",
     "desc": "+6 Stamina and +6 Spirit for 15 min (Well Fed - Level 15-24 Stamina BiS)",
     "level": 15,
     "itemId": 12210
@@ -87,7 +87,7 @@
       "Str": 6,
       "Spi": 6
     },
-    "icon": "inv_misc_food_23",
+    "icon": "inv_misc_food_14",
     "desc": "+6 Strength and +6 Spirit for 15 min (Well Fed - Level 15-24 Melee DPS BiS)",
     "level": 15,
     "itemId": 3728
@@ -100,7 +100,7 @@
       "Agi": 6,
       "Spi": 6
     },
-    "icon": "inv_misc_food_11",
+    "icon": "inv_misc_bowl_01",
     "desc": "+6 Agility and +6 Spirit for 15 min (Well Fed - Level 15-24 Agility BiS)",
     "level": 15,
     "itemId": 5478
@@ -113,7 +113,7 @@
       "Sta": 4,
       "Spi": 4
     },
-    "icon": "inv_misc_food_05",
+    "icon": "inv_misc_food_46",
     "desc": "+4 Stamina and +4 Spirit for 15 min (Well Fed - Level 10-14)",
     "level": 10,
     "itemId": 12224
@@ -126,7 +126,7 @@
       "Sta": 2,
       "Spi": 2
     },
-    "icon": "inv_misc_food_16",
+    "icon": "inv_egg_03",
     "desc": "+2 Stamina and +2 Spirit for 15 min (Well Fed - Level 1-9 Starter BiS)",
     "level": 1,
     "itemId": 6888
@@ -151,7 +151,7 @@
     "stats": {
       "Sta": 10
     },
-    "icon": "inv_drink_07",
+    "icon": "inv_drink_03",
     "desc": "Increases Stamina by 10 for 15 min (Alcohol / Stackable)",
     "level": 1,
     "itemId": 18269
@@ -176,7 +176,7 @@
     "stats": {
       "Str": 8
     },
-    "icon": "inv_potion_14",
+    "icon": "inv_potion_10",
     "desc": "Increases Strength by 8 and character size for 20 min",
     "level": 8,
     "itemId": 6662
@@ -188,7 +188,7 @@
     "stats": {
       "Agi": 8
     },
-    "icon": "inv_potion_93",
+    "icon": "inv_potion_92",
     "desc": "Increases Agility by 8 for 1 hr",
     "level": 18,
     "itemId": 3390
@@ -200,7 +200,7 @@
     "stats": {
       "Agi": 4
     },
-    "icon": "inv_potion_93",
+    "icon": "inv_potion_91",
     "desc": "Increases Agility by 4 for 1 hr",
     "level": 2,
     "itemId": 2457
@@ -212,7 +212,7 @@
     "stats": {
       "Int": 6
     },
-    "icon": "inv_potion_91",
+    "icon": "inv_potion_06",
     "desc": "Increases Intellect by 6 for 1 hr",
     "level": 17,
     "itemId": 3383
@@ -224,7 +224,7 @@
     "stats": {
       "Armor": 50
     },
-    "icon": "inv_potion_66",
+    "icon": "inv_potion_64",
     "desc": "Increases Armor by 50 for 1 hr",
     "level": 16,
     "itemId": 3389
@@ -248,7 +248,7 @@
     "stats": {
       "Str": 8
     },
-    "icon": "inv_potion_87",
+    "icon": "inv_potion_57",
     "desc": "Increases Strength by 8 for 1 hr",
     "level": 20,
     "itemId": 3391
@@ -284,7 +284,7 @@
     "stats": {
       "Str": 5
     },
-    "icon": "inv_scroll_01",
+    "icon": "inv_scroll_02",
     "desc": "Increases the target's Strength by 5 for 30 min",
     "level": 15,
     "itemId": 2289
@@ -296,7 +296,7 @@
     "stats": {
       "Armor": 60
     },
-    "icon": "inv_scroll_08",
+    "icon": "inv_scroll_07",
     "desc": "Increases Armor by 60 for 30 min",
     "level": 15,
     "itemId": 3013
@@ -320,7 +320,7 @@
     "stats": {
       "Int": 5
     },
-    "icon": "inv_scroll_04",
+    "icon": "inv_scroll_01",
     "desc": "Increases the target's Intellect by 5 for 30 min",
     "level": 15,
     "itemId": 2290
@@ -332,7 +332,7 @@
     "stats": {
       "SP": 10
     },
-    "icon": "inv_potion_105",
+    "icon": "inv_potion_103",
     "desc": "While applied to target weapon it increases spell damage by up to 10 for 30 min",
     "level": 20,
     "itemId": 20746
@@ -344,7 +344,7 @@
     "stats": {
       "MP5": 4
     },
-    "icon": "inv_potion_99",
+    "icon": "inv_potion_98",
     "desc": "While applied to target weapon it restores 4 mana every 5 seconds for 30 min",
     "level": 20,
     "itemId": 20745
@@ -356,7 +356,7 @@
     "stats": {
       "Hit": 2
     },
-    "icon": "inv_potion_26",
+    "icon": "inv_misc_rune_04",
     "desc": "Increases chance to hit with melee and spells by 2% for 30 min",
     "level": 15,
     "itemId": 211845
@@ -443,19 +443,20 @@
     "name": "Mana Well (Alchemy)",
     "category": "campfire",
     "level": 1,
-    "icon": "spell_holy_sealofwisdom",
+    "icon": "spell_arcane_manatap",
     "stats": {
       "MP5": 6
     },
     "desc": "Campfire (Alchemy): +6 MP5 for 1 hr. Parallel to Blessing of Wisdom (does not stack).",
-    "searchQuery": "Mana Well"
+    "searchQuery": "Mana Well",
+    "spellId": 1230564
   },
   "camp_enchanted_lute": {
     "id": "camp_enchanted_lute",
     "name": "Enchanted Lute (Enchanting)",
     "category": "campfire",
     "level": 1,
-    "icon": "spell_nature_regeneration",
+    "icon": "inv_10_enchanting2_magicswirl_bronze",
     "stats": {
       "Str": 2,
       "Agi": 2,
@@ -468,14 +469,15 @@
       "buff_motw"
     ],
     "desc": "Campfire (Enchanting): All Stats +2 & +15 Armor. Parallel to Mark of the Wild (does not stack).",
-    "searchQuery": "Enchanted Lute"
+    "searchQuery": "Enchanted Lute",
+    "spellId": 1230643
   },
   "camp_first_aid_kit": {
     "id": "camp_first_aid_kit",
     "name": "First Aid Kit (First Aid)",
     "category": "campfire",
     "level": 1,
-    "icon": "spell_holy_wordfortitude",
+    "icon": "inv_misc_bandage_11",
     "stats": {
       "Sta": 10
     },
@@ -483,14 +485,15 @@
       "buff_fortitude"
     ],
     "desc": "Campfire (First Aid): +10 Stamina for 1 hr. Parallel to Power Word: Fortitude (does not stack).",
-    "searchQuery": "First Aid Kit"
+    "searchQuery": "First Aid Kit",
+    "spellId": 1230117
   },
   "camp_lodestone": {
     "id": "camp_lodestone",
     "name": "Lodestone (Mining)",
     "category": "campfire",
     "level": 1,
-    "icon": "spell_holy_fistofjustice",
+    "icon": "inv_misc_rune_06",
     "stats": {
       "AP": 15
     },
@@ -498,14 +501,15 @@
       "buff_might"
     ],
     "desc": "Campfire (Mining): +15 Attack Power for 1 hr. Parallel to Blessing of Might (does not stack).",
-    "searchQuery": "Lodestone"
+    "searchQuery": "Lodestone",
+    "spellId": 1230161
   },
   "camp_incense_candle": {
     "id": "camp_incense_candle",
     "name": "Incense Candle (Herbalism)",
     "category": "campfire",
     "level": 1,
-    "icon": "spell_holy_magicalsentry",
+    "icon": "inv_misc_candle_02",
     "stats": {
       "Int": 5
     },
@@ -513,14 +517,15 @@
       "buff_intellect"
     ],
     "desc": "Campfire (Herbalism): +5 Intellect for 1 hr. Parallel to Arcane Intellect (does not stack).",
-    "searchQuery": "Incense Candle"
+    "searchQuery": "Incense Candle",
+    "spellId": 1229705
   },
   "camp_fish_bowl": {
     "id": "camp_fish_bowl",
     "name": "Fish Bowl (Fishing)",
     "category": "campfire",
     "level": 1,
-    "icon": "spell_magic_magearmor",
+    "icon": "inv_magicalfishpet",
     "stats": {
       "Str": 3,
       "Agi": 3,
@@ -529,42 +534,46 @@
       "Spi": 3
     },
     "desc": "Campfire (Fishing): +3 All Stats for 1 hr. Parallel to Blessing of Kings (does not stack).",
-    "searchQuery": "Fish Bowl"
+    "searchQuery": "Fish Bowl",
+    "spellId": 1229745
   },
   "camp_sharpening_wheel": {
     "id": "camp_sharpening_wheel",
     "name": "Sharpening Wheel (Blacksmithing)",
     "category": "campfire",
     "level": 1,
-    "icon": "spell_nature_earthbindtotem",
+    "icon": "inv_stone_grindingstone_01",
     "stats": {
       "Str": 10
     },
     "desc": "Campfire (Blacksmithing): +10 Strength for 1 hr. Parallel to Strength of Earth Totem.",
-    "searchQuery": "Sharpening Wheel"
+    "searchQuery": "Sharpening Wheel",
+    "spellId": 1230171
   },
   "camp_chair": {
     "id": "camp_chair",
     "name": "Camp Chair (Skinning)",
     "category": "campfire",
     "level": 1,
-    "icon": "spell_nature_forceofnature",
+    "icon": "inv_crate_01",
     "stats": {
       "Crit": 2
     },
     "desc": "Campfire (Skinning): +2% Critical Strike for 1 hr. Parallel to Moonkin / Crit Aura.",
-    "searchQuery": "Camp Chair"
+    "searchQuery": "Camp Chair",
+    "spellId": 1229517
   },
   "camp_faction_banner": {
     "id": "camp_faction_banner",
     "name": "Faction Banner (Tailoring)",
     "category": "campfire",
     "level": 1,
-    "icon": "spell_holy_divinespirit",
+    "icon": "inv_banner_03",
     "stats": {
       "Spi": 10
     },
     "desc": "Campfire (Tailoring): +10 Spirit for 1 hr. Parallel to Divine Spirit.",
-    "searchQuery": "Faction Banner"
+    "searchQuery": "Faction Banner",
+    "spellId": 1229504
   }
 }
