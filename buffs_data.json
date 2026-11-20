@@ -10,7 +10,8 @@
     },
     "icon": "inv_misc_fish_02",
     "desc": "+6 Spell Damage, +6 Healing, and +6 Mana every 5 sec for 15 min (Well Fed - Caster / Healer Top BiS)",
-    "level": 25
+    "level": 25,
+    "itemId": 21217
   },
   "food_sagefish": {
     "id": "food_sagefish",
@@ -23,7 +24,8 @@
     },
     "icon": "inv_misc_fish_02",
     "desc": "+3 Spell Damage, +3 Healing, and +3 Mana every 5 sec for 15 min (Well Fed - Caster / Healer BiS Level 10-24)",
-    "level": 10
+    "level": 10,
+    "itemId": 21072
   },
   "food_heavy_croc": {
     "id": "food_heavy_croc",
@@ -35,7 +37,8 @@
     },
     "icon": "inv_misc_food_14",
     "desc": "+8 Stamina and +8 Spirit for 15 min (Well Fed - Top Level 25-29 Stamina BiS)",
-    "level": 25
+    "level": 25,
+    "itemId": 20074
   },
   "food_wolf_ribs": {
     "id": "food_wolf_ribs",
@@ -47,7 +50,8 @@
     },
     "icon": "inv_misc_food_09",
     "desc": "+8 Spirit and +8 Stamina for 15 min (Well Fed - Level 25+)",
-    "level": 25
+    "level": 25,
+    "itemId": 13851
   },
   "food_dragonbreath": {
     "id": "food_dragonbreath",
@@ -59,7 +63,8 @@
     },
     "icon": "spell_fire_incinerate",
     "desc": "Periodically belches fire at enemies in combat for 10 min (Damage/Fire Caster BiS)",
-    "level": 25
+    "level": 25,
+    "itemId": 12217
   },
   "food_raptor": {
     "id": "food_raptor",
@@ -71,7 +76,8 @@
     },
     "icon": "inv_misc_food_14",
     "desc": "+6 Stamina and +6 Spirit for 15 min (Well Fed - Level 15-24 Stamina BiS)",
-    "level": 15
+    "level": 15,
+    "itemId": 12210
   },
   "food_lion": {
     "id": "food_lion",
@@ -83,7 +89,8 @@
     },
     "icon": "inv_misc_food_23",
     "desc": "+6 Strength and +6 Spirit for 15 min (Well Fed - Level 15-24 Melee DPS BiS)",
-    "level": 15
+    "level": 15,
+    "itemId": 3728
   },
   "food_digrat": {
     "id": "food_digrat",
@@ -95,7 +102,8 @@
     },
     "icon": "inv_misc_food_11",
     "desc": "+6 Agility and +6 Spirit for 15 min (Well Fed - Level 15-24 Agility BiS)",
-    "level": 15
+    "level": 15,
+    "itemId": 5478
   },
   "food_crispy_bat": {
     "id": "food_crispy_bat",
@@ -107,7 +115,8 @@
     },
     "icon": "inv_misc_food_05",
     "desc": "+4 Stamina and +4 Spirit for 15 min (Well Fed - Level 10-14)",
-    "level": 10
+    "level": 10,
+    "itemId": 12224
   },
   "food_eggs": {
     "id": "food_eggs",
@@ -119,7 +128,8 @@
     },
     "icon": "inv_misc_food_16",
     "desc": "+2 Stamina and +2 Spirit for 15 min (Well Fed - Level 1-9 Starter BiS)",
-    "level": 1
+    "level": 1,
+    "itemId": 6888
   },
   "consum_rumsey_black": {
     "id": "consum_rumsey_black",
@@ -131,7 +141,8 @@
     },
     "icon": "inv_drink_04",
     "desc": "Increases Stamina by 15, decreases Spirit by 5 for 15 min (Alcohol / Stackable)",
-    "level": 1
+    "level": 1,
+    "itemId": 21151
   },
   "consum_gordok_grog": {
     "id": "consum_gordok_grog",
@@ -142,7 +153,8 @@
     },
     "icon": "inv_drink_07",
     "desc": "Increases Stamina by 10 for 15 min (Alcohol / Stackable)",
-    "level": 1
+    "level": 1,
+    "itemId": 18269
   },
   "consum_kreeg_stout": {
     "id": "consum_kreeg_stout",
@@ -154,7 +166,8 @@
     },
     "icon": "inv_drink_05",
     "desc": "Increases Spirit by 25, decreases Intellect by 5 for 15 min (Alcohol / Stackable)",
-    "level": 1
+    "level": 1,
+    "itemId": 18284
   },
   "elixir_giant_growth": {
     "id": "elixir_giant_growth",
@@ -165,7 +178,8 @@
     },
     "icon": "inv_potion_14",
     "desc": "Increases Strength by 8 and character size for 20 min",
-    "level": 8
+    "level": 8,
+    "itemId": 6662
   },
   "elixir_lesser_agility": {
     "id": "elixir_lesser_agility",
@@ -176,7 +190,8 @@
     },
     "icon": "inv_potion_93",
     "desc": "Increases Agility by 8 for 1 hr",
-    "level": 18
+    "level": 18,
+    "itemId": 3390
   },
   "elixir_minor_agility": {
     "id": "elixir_minor_agility",
@@ -187,7 +202,8 @@
     },
     "icon": "inv_potion_93",
     "desc": "Increases Agility by 4 for 1 hr",
-    "level": 2
+    "level": 2,
+    "itemId": 2457
   },
   "elixir_wisdom": {
     "id": "elixir_wisdom",
@@ -198,7 +214,8 @@
     },
     "icon": "inv_potion_91",
     "desc": "Increases Intellect by 6 for 1 hr",
-    "level": 17
+    "level": 17,
+    "itemId": 3383
   },
   "elixir_defense": {
     "id": "elixir_defense",
@@ -209,7 +226,8 @@
     },
     "icon": "inv_potion_66",
     "desc": "Increases Armor by 50 for 1 hr",
-    "level": 16
+    "level": 16,
+    "itemId": 3389
   },
   "elixir_troll_blood": {
     "id": "elixir_troll_blood",
@@ -220,7 +238,8 @@
     },
     "icon": "inv_potion_79",
     "desc": "Regenerates 6 health every 5 seconds for 1 hr",
-    "level": 15
+    "level": 15,
+    "itemId": 3388
   },
   "elixir_ogre_strength": {
     "id": "elixir_ogre_strength",
@@ -231,7 +250,8 @@
     },
     "icon": "inv_potion_87",
     "desc": "Increases Strength by 8 for 1 hr",
-    "level": 20
+    "level": 20,
+    "itemId": 3391
   },
   "elixir_fortitude": {
     "id": "elixir_fortitude",
@@ -242,7 +262,8 @@
     },
     "icon": "inv_potion_43",
     "desc": "Increases maximum health by 120 (+12 Stamina equivalent) for 1 hr",
-    "level": 25
+    "level": 25,
+    "itemId": 3825
   },
   "scroll_agi_2": {
     "id": "scroll_agi_2",
@@ -253,7 +274,8 @@
     },
     "icon": "inv_scroll_02",
     "desc": "Increases the target's Agility by 5 for 30 min",
-    "level": 15
+    "level": 15,
+    "itemId": 3012
   },
   "scroll_str_2": {
     "id": "scroll_str_2",
@@ -264,7 +286,8 @@
     },
     "icon": "inv_scroll_01",
     "desc": "Increases the target's Strength by 5 for 30 min",
-    "level": 15
+    "level": 15,
+    "itemId": 2289
   },
   "scroll_prot_2": {
     "id": "scroll_prot_2",
@@ -275,7 +298,8 @@
     },
     "icon": "inv_scroll_08",
     "desc": "Increases Armor by 60 for 30 min",
-    "level": 15
+    "level": 15,
+    "itemId": 3013
   },
   "scroll_sta_2": {
     "id": "scroll_sta_2",
@@ -286,7 +310,8 @@
     },
     "icon": "inv_scroll_07",
     "desc": "Increases the target's Stamina by 5 for 30 min",
-    "level": 15
+    "level": 15,
+    "itemId": 1711
   },
   "scroll_int_2": {
     "id": "scroll_int_2",
@@ -297,7 +322,8 @@
     },
     "icon": "inv_scroll_04",
     "desc": "Increases the target's Intellect by 5 for 30 min",
-    "level": 15
+    "level": 15,
+    "itemId": 2290
   },
   "oil_wizard": {
     "id": "oil_wizard",
@@ -308,7 +334,8 @@
     },
     "icon": "inv_potion_105",
     "desc": "While applied to target weapon it increases spell damage by up to 10 for 30 min",
-    "level": 20
+    "level": 20,
+    "itemId": 20746
   },
   "oil_mana": {
     "id": "oil_mana",
@@ -319,7 +346,8 @@
     },
     "icon": "inv_potion_99",
     "desc": "While applied to target weapon it restores 4 mana every 5 seconds for 30 min",
-    "level": 20
+    "level": 20,
+    "itemId": 20745
   },
   "oil_blackfathom": {
     "id": "oil_blackfathom",
@@ -330,7 +358,8 @@
     },
     "icon": "inv_potion_26",
     "desc": "Increases chance to hit with melee and spells by 2% for 30 min",
-    "level": 15
+    "level": 15,
+    "itemId": 211845
   },
   "buff_fortitude": {
     "id": "buff_fortitude",
@@ -341,7 +370,11 @@
     },
     "icon": "spell_holy_wordfortitude",
     "desc": "Priest Buff: Increases Stamina by 14 for 30 min",
-    "level": 12
+    "level": 12,
+    "spellId": 1245,
+    "conflictsWith": [
+      "camp_first_aid_kit"
+    ]
   },
   "buff_intellect": {
     "id": "buff_intellect",
@@ -352,7 +385,11 @@
     },
     "icon": "spell_holy_magicalsentry",
     "desc": "Mage Buff: Increases Intellect by 7 for 30 min",
-    "level": 14
+    "level": 14,
+    "spellId": 1460,
+    "conflictsWith": [
+      "camp_incense_candle"
+    ]
   },
   "buff_motw": {
     "id": "buff_motw",
@@ -368,7 +405,11 @@
     },
     "icon": "spell_nature_regeneration",
     "desc": "Druid Buff: Increases all attributes by 1 and Armor by 25 for 30 min",
-    "level": 10
+    "level": 10,
+    "spellId": 5232,
+    "conflictsWith": [
+      "camp_enchanted_lute"
+    ]
   },
   "buff_battle_shout": {
     "id": "buff_battle_shout",
@@ -379,7 +420,8 @@
     },
     "icon": "ability_warrior_battleshout",
     "desc": "Warrior Shout: Increases Attack Power by 15 for 2 min",
-    "level": 12
+    "level": 12,
+    "spellId": 5242
   },
   "buff_might": {
     "id": "buff_might",
@@ -390,6 +432,139 @@
     },
     "icon": "spell_holy_fistofjustice",
     "desc": "Paladin Blessing: Increases Attack Power by 20 for 5 min",
-    "level": 12
+    "level": 12,
+    "spellId": 19835,
+    "conflictsWith": [
+      "camp_lodestone"
+    ]
+  },
+  "camp_mana_well": {
+    "id": "camp_mana_well",
+    "name": "Mana Well (Alchemy)",
+    "category": "campfire",
+    "level": 1,
+    "icon": "spell_holy_sealofwisdom",
+    "stats": {
+      "MP5": 6
+    },
+    "desc": "Campfire (Alchemy): +6 MP5 for 1 hr. Parallel to Blessing of Wisdom (does not stack).",
+    "searchQuery": "Mana Well"
+  },
+  "camp_enchanted_lute": {
+    "id": "camp_enchanted_lute",
+    "name": "Enchanted Lute (Enchanting)",
+    "category": "campfire",
+    "level": 1,
+    "icon": "spell_nature_regeneration",
+    "stats": {
+      "Str": 2,
+      "Agi": 2,
+      "Sta": 2,
+      "Int": 2,
+      "Spi": 2,
+      "Armor": 15
+    },
+    "conflictsWith": [
+      "buff_motw"
+    ],
+    "desc": "Campfire (Enchanting): All Stats +2 & +15 Armor. Parallel to Mark of the Wild (does not stack).",
+    "searchQuery": "Enchanted Lute"
+  },
+  "camp_first_aid_kit": {
+    "id": "camp_first_aid_kit",
+    "name": "First Aid Kit (First Aid)",
+    "category": "campfire",
+    "level": 1,
+    "icon": "spell_holy_wordfortitude",
+    "stats": {
+      "Sta": 10
+    },
+    "conflictsWith": [
+      "buff_fortitude"
+    ],
+    "desc": "Campfire (First Aid): +10 Stamina for 1 hr. Parallel to Power Word: Fortitude (does not stack).",
+    "searchQuery": "First Aid Kit"
+  },
+  "camp_lodestone": {
+    "id": "camp_lodestone",
+    "name": "Lodestone (Mining)",
+    "category": "campfire",
+    "level": 1,
+    "icon": "spell_holy_fistofjustice",
+    "stats": {
+      "AP": 15
+    },
+    "conflictsWith": [
+      "buff_might"
+    ],
+    "desc": "Campfire (Mining): +15 Attack Power for 1 hr. Parallel to Blessing of Might (does not stack).",
+    "searchQuery": "Lodestone"
+  },
+  "camp_incense_candle": {
+    "id": "camp_incense_candle",
+    "name": "Incense Candle (Herbalism)",
+    "category": "campfire",
+    "level": 1,
+    "icon": "spell_holy_magicalsentry",
+    "stats": {
+      "Int": 5
+    },
+    "conflictsWith": [
+      "buff_intellect"
+    ],
+    "desc": "Campfire (Herbalism): +5 Intellect for 1 hr. Parallel to Arcane Intellect (does not stack).",
+    "searchQuery": "Incense Candle"
+  },
+  "camp_fish_bowl": {
+    "id": "camp_fish_bowl",
+    "name": "Fish Bowl (Fishing)",
+    "category": "campfire",
+    "level": 1,
+    "icon": "spell_magic_magearmor",
+    "stats": {
+      "Str": 3,
+      "Agi": 3,
+      "Sta": 3,
+      "Int": 3,
+      "Spi": 3
+    },
+    "desc": "Campfire (Fishing): +3 All Stats for 1 hr. Parallel to Blessing of Kings (does not stack).",
+    "searchQuery": "Fish Bowl"
+  },
+  "camp_sharpening_wheel": {
+    "id": "camp_sharpening_wheel",
+    "name": "Sharpening Wheel (Blacksmithing)",
+    "category": "campfire",
+    "level": 1,
+    "icon": "spell_nature_earthbindtotem",
+    "stats": {
+      "Str": 10
+    },
+    "desc": "Campfire (Blacksmithing): +10 Strength for 1 hr. Parallel to Strength of Earth Totem.",
+    "searchQuery": "Sharpening Wheel"
+  },
+  "camp_chair": {
+    "id": "camp_chair",
+    "name": "Camp Chair (Skinning)",
+    "category": "campfire",
+    "level": 1,
+    "icon": "spell_nature_forceofnature",
+    "stats": {
+      "Crit": 2
+    },
+    "desc": "Campfire (Skinning): +2% Critical Strike for 1 hr. Parallel to Moonkin / Crit Aura.",
+    "searchQuery": "Camp Chair"
+  },
+  "camp_faction_banner": {
+    "id": "camp_faction_banner",
+    "name": "Faction Banner (Tailoring)",
+    "category": "campfire",
+    "level": 1,
+    "icon": "spell_holy_divinespirit",
+    "stats": {
+      "Spi": 10
+    },
+    "desc": "Campfire (Tailoring): +10 Spirit for 1 hr. Parallel to Divine Spirit.",
+    "searchQuery": "Faction Banner"
   }
 }

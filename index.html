@@ -4600,6 +4600,9 @@
               <button class="btn btn-secondary btn-sm" onclick="applyBuffPreset('flag_runner')">
                 🚩 WSG Flag Runner
               </button>
+              <button class="btn btn-secondary btn-sm" onclick="applyBuffPreset('campfire')" style="border-color: rgba(249, 115, 22, 0.5); color: #fb923c;">
+                🏕️ Campfire Buffed
+              </button>
               <button class="btn btn-secondary btn-sm" onclick="applyBuffPreset('full_raid')">
                 ⭐ Full Raid Buffed
               </button>
@@ -4658,6 +4661,17 @@
                 </div>
               </div>
               <div id="buffs-list-class" class="buffs-list-items"></div>
+            </div>
+
+            <div class="buff-category-box" style="border-color: rgba(249, 115, 22, 0.3);">
+              <div class="buff-cat-header">
+                <span style="font-size: 1.1rem;">🔥</span>
+                <div>
+                  <div style="font-weight: 700; color: #fb923c; font-size: 0.85rem;">Campfire Buffs (Profession Camp)</div>
+                  <div style="font-size: 0.7rem; color: #a0aec0;">Parallel to Raid Buffs • Do not stack with matching Class Buff</div>
+                </div>
+              </div>
+              <div id="buffs-list-campfire" class="buffs-list-items"></div>
             </div>
           </div>
         </div>
@@ -17488,14 +17502,36 @@
       runSimulation();
     }
 
+    function getWowheadBuffUrl(buff) {
+      if (!buff) return '#';
+      const base = (typeof WOWHEAD_BASE_URL !== 'undefined') ? WOWHEAD_BASE_URL : 'https://www.wowhead.com/forever';
+      if (buff.itemId) return `${base}/item=${buff.itemId}`;
+      if (buff.spellId) return `${base}/spell=${buff.spellId}`;
+      const q = buff.searchQuery || (buff.name || '').split('(')[0].split('/')[0].trim();
+      return `${base}/search?q=${encodeURIComponent(q)}`;
+    }
+
     function toggleBuff(buffId) {
       if (activeBuffs[buffId]) {
         delete activeBuffs[buffId];
       } else {
-        if (buffsCatalog[buffId] && buffsCatalog[buffId].category === 'food') {
+        const bObj = buffsCatalog[buffId];
+        if (bObj && bObj.category === 'food') {
           Object.keys(buffsCatalog).forEach(k => {
             if (buffsCatalog[k].category === 'food') {
               delete activeBuffs[k];
+            }
+          });
+        }
+        // Campfire buffs & parallel Class/Raid buffs do not stack in WoW Forever
+        if (bObj && Array.isArray(bObj.conflictsWith)) {
+          bObj.conflictsWith.forEach(cId => {
+            if (activeBuffs[cId]) {
+              delete activeBuffs[cId];
+              const cName = buffsCatalog[cId] ? buffsCatalog[cId].name : cId;
+              if (typeof showToastNotice === 'function') {
+                showToastNotice(`ℹ️ Replaced ${cName} (${bObj.name} does not stack with it).`);
+              }
             }
           });
         }
@@ -17783,6 +17819,17 @@
         activeBuffs['scroll_prot_2'] = true;
         activeBuffs['scroll_sta_2'] = true;
         showToastNotice('✨ Applied WSG Flag Runner Tank Consumes (+110 Armor, +11 Sta, +6 HP5)!');
+      } else if (preset === 'campfire') {
+        activeBuffs['camp_mana_well'] = true;
+        activeBuffs['camp_enchanted_lute'] = true;
+        activeBuffs['camp_first_aid_kit'] = true;
+        activeBuffs['camp_lodestone'] = true;
+        activeBuffs['camp_incense_candle'] = true;
+        activeBuffs['camp_fish_bowl'] = true;
+        activeBuffs['camp_sharpening_wheel'] = true;
+        activeBuffs['camp_chair'] = true;
+        activeBuffs['camp_faction_banner'] = true;
+        showToastNotice('🏕️ Applied Full Campfire Buffs (+All Stats, +10 Str, +15 AP, +10 Sta, +5 Int, +10 Spi, +2% Crit, +6 MP5)!');
       } else if (preset === 'full_raid') {
         activeBuffs['food_raptor'] = true;
         activeBuffs['elixir_giant_growth'] = true;
@@ -17858,7 +17905,8 @@
         'potion': document.getElementById('buffs-list-potion'),
         'scroll': document.getElementById('buffs-list-scrolls'),
         'oil': document.getElementById('buffs-list-scrolls'),
-        'class': document.getElementById('buffs-list-class')
+        'class': document.getElementById('buffs-list-class'),
+        'campfire': document.getElementById('buffs-list-campfire')
       };
 
       Object.values(categories).forEach(c => { if (c) c.innerHTML = ''; });
@@ -17938,14 +17986,18 @@
           };
 
           const iconUrl = `https://wow.zamimg.com/images/wow/icons/medium/${buff.icon || 'inv_misc_questionmark'}.jpg`;
+          const whUrl = getWowheadBuffUrl(buff);
 
           card.innerHTML = `
             <input type="${buff.category === 'food' ? 'radio' : 'checkbox'}" ${isActive ? 'checked' : ''} style="cursor: pointer;" onclick="event.stopPropagation(); toggleBuff('${buff.id}')" />
             <div class="buff-item-icon" style="background-image: url('${iconUrl}');"></div>
-            <div style="flex: 1;">
-              <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div style="flex: 1; min-width: 0;">
+              <div style="display: flex; justify-content: space-between; align-items: center; gap: 6px;">
                 <span style="font-weight: 700; font-size: 0.78rem; color: ${isActive ? 'var(--gold-bright)' : '#f1f5f9'};">${buff.name}${rankBadge}</span>
-                <span style="font-size: 0.7rem; font-weight: 700; color: #4ade80;">${statStrs}</span>
+                <div style="display: flex; align-items: center; gap: 6px; flex-shrink: 0;">
+                  <span style="font-size: 0.7rem; font-weight: 700; color: #4ade80;">${statStrs}</span>
+                  <a href="${whUrl}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()" title="Open ${buff.name} on Wowhead Forever" style="font-size: 0.66rem; padding: 1px 5px; border-radius: 3px; background: rgba(245, 158, 11, 0.14); border: 1px solid rgba(245, 158, 11, 0.4); color: #fbbf24; text-decoration: none; font-weight: 700;">🔗 WH</a>
+                </div>
               </div>
               <div style="font-size: 0.68rem; color: #94a3b8; margin-top: 1px;">
                 ${buff.desc} ${reqLvl > 1 ? `<span style="color:#f59e0b; margin-left:4px;">(Req Lvl ${reqLvl})</span>` : ''}
