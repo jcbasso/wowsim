@@ -14266,11 +14266,11 @@
         baseInt = 22 + Math.floor(level * 1.3);
         baseSpi = 24 + Math.floor(level * 1.4);
       } else { // shaman
-        baseStr = 24 + Math.floor(level * 1.35);
-        baseAgi = 14 + Math.floor(level * 1.05);
-        baseSta = 20 + Math.floor(level * 1.6);
-        baseInt = 15 + Math.floor(level * 1.1);
-        baseSpi = 20 + Math.floor(level * 0.9);
+        baseStr = 18 + Math.round(level * 1.0);
+        baseAgi = 16 + Math.round(level * 0.55);
+        baseSta = 19 + Math.round(level * 1.06);
+        baseInt = 17 + Math.round(level * 1.06);
+        baseSpi = 20 + Math.round(level * 1.1);
       }
 
       // Apply Racial base attribute modifiers
@@ -14283,11 +14283,57 @@
         baseSpi += (raceDef.stats.spi || 0);
       }
 
+      // Exact Armory Base-Stat Calibration when importedCharacter & armoryStats match active class & level
+      const impCharRef = (typeof importedCharacter !== 'undefined' && importedCharacter && importedCharacter.armoryStats &&
+        importedCharacter.class === charClass && importedCharacter.level === level) ? importedCharacter : null;
+      const armoryRef = impCharRef ? impCharRef.armoryStats : null;
+      const intMult = (charClass === 'shaman' && ancKnowRank > 0) ? (1 + 0.01 * ancKnowRank) : (charRace === 'gnome' ? 1.05 : 1.0);
+
+      if (armoryRef) {
+        const baseGearSt = { Str: 0, Agi: 0, Sta: 0, Int: 0, Spi: 0 };
+        const impGear = impCharRef.baselineGear || {};
+        for (const sl in impGear) {
+          const it = impGear[sl] ? itemLookup[impGear[sl]] : null;
+          if (it && it.parsedStats) {
+            for (const k in baseGearSt) {
+              if (it.parsedStats[k]) baseGearSt[k] += it.parsedStats[k];
+            }
+          }
+        }
+        const impEnc = impCharRef.baselineEnchants || {};
+        for (const sl in impEnc) {
+          const e = impEnc[sl] ? encLookup[impEnc[sl]] : null;
+          if (e && e.stats) {
+            for (const k in baseGearSt) {
+              if (e.stats[k]) baseGearSt[k] += e.stats[k];
+            }
+          }
+        }
+        if (typeof armoryRef.str === 'number') baseStr = Math.max(1, armoryRef.str - baseGearSt.Str);
+        if (typeof armoryRef.agi === 'number') baseAgi = Math.max(1, armoryRef.agi - baseGearSt.Agi);
+        if (typeof armoryRef.sta === 'number') {
+          const staMult = (charClass === 'shaman' && toughnessRank > 0) ? (1 + 0.02 * toughnessRank) : 1.0;
+          baseSta = Math.max(1, Math.round(armoryRef.sta / staMult) - baseGearSt.Sta);
+        }
+        if (typeof armoryRef.spi === 'number') {
+          const spiMult = (charRace === 'human') ? 1.05 : 1.0;
+          baseSpi = Math.max(1, Math.round(armoryRef.spi / spiMult) - baseGearSt.Spi);
+        }
+        if (typeof armoryRef.int === 'number') {
+          baseInt = Math.max(1, Math.round(armoryRef.int / intMult) - baseGearSt.Int);
+          if (Math.round((baseInt + baseGearSt.Int) * intMult) !== armoryRef.int) {
+            if (Math.round((baseInt - 1 + baseGearSt.Int) * intMult) === armoryRef.int) baseInt -= 1;
+            else if (Math.round((baseInt + 1 + baseGearSt.Int) * intMult) === armoryRef.int) baseInt += 1;
+          }
+        }
+      }
+
       let totalStr = baseStr + gearStats.Str;
       let totalAgi = baseAgi + gearStats.Agi;
       let totalSta = baseSta + gearStats.Sta;
       if (charClass === 'shaman' && toughnessRank > 0) totalSta = Math.round(totalSta * (1 + 0.02 * toughnessRank));
       let totalInt = baseInt + gearStats.Int;
+      if (charClass === 'shaman' && ancKnowRank > 0) totalInt = Math.round(totalInt * (1 + 0.01 * ancKnowRank));
       if (charRace === 'gnome') totalInt = Math.round(totalInt * 1.05); // Gnome Expansive Mind (+5% Int)
       let totalSpi = baseSpi + gearStats.Spi;
       if (charRace === 'human') totalSpi = Math.round(totalSpi * 1.05); // Human Spirit (+5% Spi)
@@ -14383,7 +14429,8 @@
       gearStats.Parry = (gearStats.Parry || 0) + talentParryBonus;
       gearStats.Block = (gearStats.Block || 0) + talentBlockBonus;
 
-      let meleeCritPct = 4.0 + (totalAgi / 19.5) + (charClass === 'shaman' ? thunderingStrikesRank * 1.0 : 0) + talentCritBonus + (gearStats.Crit || 0);
+      const agiPerCrit = (charClass === 'rogue' || charClass === 'hunter') ? (10.0 + level * 0.30) : (10.0 + level * 0.16);
+      let meleeCritPct = 2.2 + (totalAgi / agiPerCrit) + (charClass === 'shaman' ? thunderingStrikesRank * 1.0 : 0) + talentCritBonus + (gearStats.Crit || 0);
       let meleeHitPct = (gearStats.Hit || 0) + talentHitBonus;
       if (talentArmorBonusPct > 0) totalArmor = Math.round(totalArmor * (1 + talentArmorBonusPct));
       let spellPower = (gearStats.SP || 0) + (charClass === 'shaman' && mentalQuickRank > 0 ? Math.round(totalAP * (0.15 * mentalQuickRank)) : 0);
@@ -14395,10 +14442,29 @@
       let healPower = spellPower + (gearStats.Healing || 0);
       let spellCritPct = 2.5 + (totalInt / 59.5) + (gearStats.Crit || 0);
 
-      let maxHP = 260 + (level * 24) + (totalSta * 10);
+      // Authentic Classic scaling: first 20 Sta/Int give 1 HP/Mana per point, remaining give 10 HP / 15 Mana
+      const staHpBonus = totalSta <= 20 ? totalSta : 20 + (totalSta - 20) * 10;
+      let baseClassHP = Math.round(45 + level * 9.75);
+      if (armoryRef && typeof armoryRef.health === 'number' && armoryRef.health > 0) {
+        const baseStaForArmory = armoryRef.sta || totalSta;
+        const baseStaHp = baseStaForArmory <= 20 ? baseStaForArmory : 20 + (baseStaForArmory - 20) * 10;
+        const unenduredHP = (charRace === 'tauren') ? (armoryRef.health / 1.05) : armoryRef.health;
+        baseClassHP = Math.round(unenduredHP - baseStaHp);
+      }
+      let maxHP = Math.round(baseClassHP + staHpBonus);
       if (charRace === 'tauren') maxHP = Math.round(maxHP * 1.05); // Tauren Endurance (+5% Max HP)
-      let maxMana = (charClass === 'warrior' || charClass === 'rogue') ? 0 : 400 + (level * 25) + (totalInt * 15);
-      if (charClass === 'shaman' && ancKnowRank > 0) maxMana = Math.round(maxMana * (1 + 0.01 * ancKnowRank));
+
+      let maxMana = 0;
+      if (charClass !== 'warrior' && charClass !== 'rogue') {
+        const intManaBonus = totalInt <= 20 ? totalInt : 20 + (totalInt - 20) * 15;
+        let baseClassMana = Math.round(110 + level * 19.0);
+        if (armoryRef && typeof armoryRef.mana === 'number' && armoryRef.mana > 0) {
+          const baseIntForArmory = armoryRef.int || totalInt;
+          const baseIntMana = baseIntForArmory <= 20 ? baseIntForArmory : 20 + (baseIntForArmory - 20) * 15;
+          baseClassMana = Math.round(armoryRef.mana - baseIntMana);
+        }
+        maxMana = Math.max(0, Math.round(baseClassMana + intManaBonus));
+      }
 
       // Weapon specs
       let wpnSpeed = mhItem && mhItem.speed > 0 ? mhItem.speed : (charClass === 'mage' || charClass === 'priest' || charClass === 'warlock' ? 1.8 : 2.4);
@@ -19122,17 +19188,26 @@
         }
         currentGear = Object.assign({}, resolvedGear);
 
-        // Reset enchants so unenchanted Armory items don't inherit old BiS enchants!
+        // Reset enchants so unenchanted Armory items don't inherit old BiS enchants,
+        // and ignore non-enchant internal IDs (like #14) not found in enchantsCatalog!
         const resetEnchants = {};
         for (const slot of Object.keys(currentEnchants)) {
           resetEnchants[slot] = 0;
         }
         if (data.enchants && typeof data.enchants === 'object') {
           for (const [slot, encVal] of Object.entries(data.enchants)) {
-            if (encVal) resetEnchants[slot] = encVal;
+            const numEnc = Number(encVal);
+            if (numEnc && (enchantsCatalog || []).some(e => e.id === numEnc || e.effectId === numEnc)) {
+              resetEnchants[slot] = numEnc;
+            }
           }
         }
         currentEnchants = resetEnchants;
+
+        // Clear active consumables/buffs so imported Armory characters start unbuffed!
+        if (typeof activeBuffs !== 'undefined') activeBuffs = {};
+        if (typeof saveActiveBuffs === 'function') saveActiveBuffs();
+        if (typeof renderBuffsView === 'function') renderBuffsView();
       } finally {
         isInitializing = false;
       }
@@ -19147,6 +19222,7 @@
         pvpRank: pvpRank,
         professions: profs,
         reputations: reps,
+        armoryStats: (data.armoryStats && typeof data.armoryStats === 'object') ? data.armoryStats : null,
         baselineGear: JSON.parse(JSON.stringify(currentGear)),
         baselineEnchants: JSON.parse(JSON.stringify(currentEnchants)),
         baselineTalents: JSON.parse(JSON.stringify(talentPoints)),
@@ -19262,6 +19338,9 @@
       if (!importedCharacter || !importedCharacter.baselineGear) return;
       currentGear = JSON.parse(JSON.stringify(importedCharacter.baselineGear));
       if (importedCharacter.baselineEnchants) currentEnchants = JSON.parse(JSON.stringify(importedCharacter.baselineEnchants));
+      if (typeof activeBuffs !== 'undefined') activeBuffs = {};
+      if (typeof saveActiveBuffs === 'function') saveActiveBuffs();
+      if (typeof renderBuffsView === 'function') renderBuffsView();
       if (typeof renderGearSlots === 'function') renderGearSlots();
       if (typeof runOneStopSimulate === 'function') runOneStopSimulate();
       if (typeof showToastNotice === 'function') showToastNotice(`↺ Reverted to ${importedCharacter.name}'s starting Armory gear!`);
