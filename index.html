@@ -5706,6 +5706,85 @@
           { rank: 5, minLvl: 58, mp2Gain: 25, mana: 120 }
         ]
       },
+      flametongue_totem: {
+        baseName: "Flametongue Totem", icon: "spell_nature_guardianward", school: "Fire", minLvl: 28,
+        ranks: [
+          { rank: 1, minLvl: 28, baseDmg: 12, mana: 115 },
+          { rank: 2, minLvl: 38, baseDmg: 21, mana: 170 },
+          { rank: 3, minLvl: 48, baseDmg: 30, mana: 225 },
+          { rank: 4, minLvl: 58, baseDmg: 40, mana: 275 }
+        ]
+      },
+      frost_resist_totem: {
+        baseName: "Frost Resistance Totem", icon: "spell_frost_frostresistancetotem", school: "Frost", minLvl: 24,
+        ranks: [
+          { rank: 1, minLvl: 24, res: 30, mana: 80 },
+          { rank: 2, minLvl: 38, res: 45, mana: 120 },
+          { rank: 3, minLvl: 54, res: 60, mana: 165 }
+        ]
+      },
+      fire_resist_totem: {
+        baseName: "Fire Resistance Totem", icon: "spell_fireresistancetotem_01", school: "Fire", minLvl: 28,
+        ranks: [
+          { rank: 1, minLvl: 28, res: 30, mana: 90 },
+          { rank: 2, minLvl: 42, res: 45, mana: 135 },
+          { rank: 3, minLvl: 58, res: 60, mana: 180 }
+        ]
+      },
+      nature_resist_totem: {
+        baseName: "Nature Resistance Totem", icon: "spell_nature_natureresistancetotem", school: "Nature", minLvl: 30,
+        ranks: [
+          { rank: 1, minLvl: 30, res: 30, mana: 95 },
+          { rank: 2, minLvl: 44, res: 45, mana: 140 },
+          { rank: 3, minLvl: 60, res: 60, mana: 190 }
+        ]
+      },
+      healing_stream_totem: {
+        baseName: "Healing Stream Totem", icon: "inv_spear_04", school: "Nature", minLvl: 20,
+        ranks: [
+          { rank: 1, minLvl: 20, hp2: 6, mana: 40 },
+          { rank: 2, minLvl: 30, hp2: 8, mana: 60 },
+          { rank: 3, minLvl: 40, hp2: 10, mana: 80 },
+          { rank: 4, minLvl: 50, hp2: 12, mana: 100 },
+          { rank: 5, minLvl: 60, hp2: 14, mana: 120 }
+        ]
+      },
+      poison_cleansing_totem: {
+        baseName: "Poison Cleansing Totem", icon: "spell_nature_poisoncleansingtotem", school: "Nature", minLvl: 22,
+        ranks: [{ rank: 1, minLvl: 22, mana: 55 }]
+      },
+      disease_cleansing_totem: {
+        baseName: "Disease Cleansing Totem", icon: "spell_nature_diseasecleansingtotem", school: "Nature", minLvl: 38,
+        ranks: [{ rank: 1, minLvl: 38, mana: 75 }]
+      },
+      tremor_totem: {
+        baseName: "Tremor Totem", icon: "spell_nature_tremortotem", school: "Nature", minLvl: 18,
+        ranks: [{ rank: 1, minLvl: 18, mana: 60 }]
+      },
+      earthbind_totem: {
+        baseName: "Earthbind Totem", icon: "spell_nature_strengthofearthtotem02", school: "Nature", minLvl: 6,
+        ranks: [{ rank: 1, minLvl: 6, mana: 40 }]
+      },
+      stoneclaw_totem: {
+        baseName: "Stoneclaw Totem", icon: "spell_nature_stoneclawtotem", school: "Nature", minLvl: 8,
+        ranks: [{ rank: 1, minLvl: 8, mana: 45 }]
+      },
+      grounding_totem: {
+        baseName: "Grounding Totem", icon: "spell_nature_groundingtotem", school: "Nature", minLvl: 30,
+        ranks: [{ rank: 1, minLvl: 30, mana: 60 }]
+      },
+      windwall_totem: {
+        baseName: "Windwall Totem", icon: "spell_nature_earthbind", school: "Nature", minLvl: 36,
+        ranks: [
+          { rank: 1, minLvl: 36, mana: 115 },
+          { rank: 2, minLvl: 46, mana: 150 },
+          { rank: 3, minLvl: 56, mana: 185 }
+        ]
+      },
+      tranquil_air_totem: {
+        baseName: "Tranquil Air Totem", icon: "spell_nature_brilliance", school: "Nature", minLvl: 50,
+        ranks: [{ rank: 1, minLvl: 50, mana: 165 }]
+      },
       lightning_shield: {
         baseName: "Lightning Shield", icon: "spell_nature_lightningshield", school: "Nature", minLvl: 8,
         ranks: [
@@ -6258,6 +6337,19 @@
       8075: 'strength_of_earth_totem',
       8071: 'stoneskin_totem',
       5675: 'mana_spring_totem',
+      8227: 'flametongue_totem',
+      8181: 'frost_resist_totem',
+      8184: 'fire_resist_totem',
+      10595: 'nature_resist_totem',
+      5394: 'healing_stream_totem',
+      8166: 'poison_cleansing_totem',
+      8170: 'disease_cleansing_totem',
+      8143: 'tremor_totem',
+      2484: 'earthbind_totem',
+      5730: 'stoneclaw_totem',
+      8177: 'grounding_totem',
+      15107: 'windwall_totem',
+      25908: 'tranquil_air_totem',
       324: 'lightning_shield',
       913: 'healing_wave',
       547: 'healing_wave',
@@ -6758,6 +6850,19 @@
         8075: { name: "Strength of Earth Totem", icon: "spell_nature_earthbindtotem", school: "Nature", defaultCondition: "totem_le_1s", conditions: [{ id: "totem_le_1s", label: "Drop on pull & refresh when expiring (≤1s)" }] },
         8071: { name: "Stoneskin Totem", icon: "spell_nature_stoneskintotem", school: "Nature", defaultCondition: "totem_le_1s", conditions: [{ id: "totem_le_1s", label: "Drop on pull & refresh when expiring (≤1s)" }] },
         5675: { name: "Mana Spring Totem", icon: "spell_nature_manaregentotem", school: "Nature", defaultCondition: "totem_le_1s", conditions: [{ id: "totem_le_1s", label: "Drop on pull & refresh when expiring (≤1s)" }] },
+        8227: { name: "Flametongue Totem", icon: "spell_nature_guardianward", school: "Fire", defaultCondition: "totem_le_1s", conditions: [{ id: "totem_le_1s", label: "Drop on pull & refresh when expiring (≤1s)" }] },
+        8181: { name: "Frost Resistance Totem", icon: "spell_frost_frostresistancetotem", school: "Frost", defaultCondition: "totem_le_1s", conditions: [{ id: "totem_le_1s", label: "Drop on pull & refresh when expiring (≤1s)" }] },
+        8184: { name: "Fire Resistance Totem", icon: "spell_fireresistancetotem_01", school: "Fire", defaultCondition: "totem_le_1s", conditions: [{ id: "totem_le_1s", label: "Drop on pull & refresh when expiring (≤1s)" }] },
+        10595: { name: "Nature Resistance Totem", icon: "spell_nature_natureresistancetotem", school: "Nature", defaultCondition: "totem_le_1s", conditions: [{ id: "totem_le_1s", label: "Drop on pull & refresh when expiring (≤1s)" }] },
+        5394: { name: "Healing Stream Totem", icon: "inv_spear_04", school: "Nature", defaultCondition: "totem_le_1s", conditions: [{ id: "totem_le_1s", label: "Drop on pull & refresh when expiring (≤1s)" }] },
+        8166: { name: "Poison Cleansing Totem", icon: "spell_nature_poisoncleansingtotem", school: "Nature", defaultCondition: "totem_le_1s", conditions: [{ id: "totem_le_1s", label: "Drop on pull & refresh when expiring (≤1s)" }] },
+        8170: { name: "Disease Cleansing Totem", icon: "spell_nature_diseasecleansingtotem", school: "Nature", defaultCondition: "totem_le_1s", conditions: [{ id: "totem_le_1s", label: "Drop on pull & refresh when expiring (≤1s)" }] },
+        8143: { name: "Tremor Totem", icon: "spell_nature_tremortotem", school: "Nature", defaultCondition: "totem_le_1s", conditions: [{ id: "totem_le_1s", label: "Drop on pull & refresh when expiring (≤1s)" }] },
+        2484: { name: "Earthbind Totem", icon: "spell_nature_strengthofearthtotem02", school: "Nature", defaultCondition: "on_cd", conditions: [{ id: "on_cd", label: "Cast on cooldown" }] },
+        5730: { name: "Stoneclaw Totem", icon: "spell_nature_stoneclawtotem", school: "Nature", defaultCondition: "on_cd", conditions: [{ id: "on_cd", label: "Cast on cooldown" }] },
+        8177: { name: "Grounding Totem", icon: "spell_nature_groundingtotem", school: "Nature", defaultCondition: "on_cd", conditions: [{ id: "on_cd", label: "Cast on cooldown" }] },
+        15107: { name: "Windwall Totem", icon: "spell_nature_earthbind", school: "Nature", defaultCondition: "totem_le_1s", conditions: [{ id: "totem_le_1s", label: "Drop on pull & refresh when expiring (≤1s)" }] },
+        25908: { name: "Tranquil Air Totem", icon: "spell_nature_brilliance", school: "Nature", defaultCondition: "totem_le_1s", conditions: [{ id: "totem_le_1s", label: "Drop on pull & refresh when expiring (≤1s)" }] },
         324: { name: "Lightning Shield", icon: "spell_nature_lightningshield", school: "Nature", defaultCondition: "buff_not_active", conditions: [{ id: "buff_not_active", label: "Maintain 3 Reactive Orb Charges" }] },
         403: { name: "Lightning Bolt", icon: "spell_nature_lightning", school: "Nature", defaultCondition: "continuous", conditions: [{ id: "continuous", label: "Continuous Nature Nuke" }, { id: "on_cd", label: "Cast on cooldown" }] },
         913: { name: "Healing Wave", icon: "spell_nature_magicimmunity", school: "Nature (Heal)", defaultCondition: "continuous_heal", conditions: [{ id: "continuous_heal", label: "Continuous Throughput Spam (Max HPS)" }, { id: "self_heal_hp50", label: "Emergency Heal (HP < 50%)" }] }
@@ -7525,7 +7630,20 @@
                   5675: { badge: '💧 Water Totem', color: '#60a5fa', tip: 'Drop on pull (1m) • Restores Mana every 2s — best in longer fights if running OOM' },
                   3599: { badge: '🔥 Fire Totem', color: '#f87171', tip: 'Single-target Fire bolts (35s) • Best single-target & mana efficiency' },
                   8190: { badge: '🔥 Fire Totem', color: '#f87171', tip: 'AoE Fire pulse every 2s (20s) • Best for AoE/cleave or high-mana endgame' },
-                  1535: { badge: '🔥 Fire Totem', color: '#f87171', tip: '4s delayed AoE Fire blast (15s CD) • Best for short burst or AoE pulls' }
+                  1535: { badge: '🔥 Fire Totem', color: '#f87171', tip: '4s delayed AoE Fire blast (15s CD) • Best for short burst or AoE pulls' },
+                  8227: { badge: '🔥 Fire Totem', color: '#f87171', tip: 'Drop on pull (2m) • Adds Fire dmg on every melee hit — stacks with Weapon Imbue!' },
+                  8181: { badge: '🔥 Fire Totem', color: '#f87171', tip: 'Drop on pull (2m) • +Frost Resistance for party' },
+                  5394: { badge: '💧 Water Totem', color: '#60a5fa', tip: 'Drop on pull (1m) • Periodic party heal' },
+                  8184: { badge: '💧 Water Totem', color: '#60a5fa', tip: 'Drop on pull (2m) • +Fire Resistance for party' },
+                  8166: { badge: '💧 Water Totem', color: '#60a5fa', tip: 'Drop on pull (2m) • Dispels Poison effects' },
+                  8170: { badge: '💧 Water Totem', color: '#60a5fa', tip: 'Drop on pull (2m) • Dispels Disease effects' },
+                  8143: { badge: '🪨 Earth Totem', color: '#fbbf24', tip: 'Drop on pull (2m) • Dispels Fear/Charm/Sleep' },
+                  2484: { badge: '🪨 Earth Totem', color: '#fbbf24', tip: 'AoE 50% movement slow pulse' },
+                  5730: { badge: '🪨 Earth Totem', color: '#fbbf24', tip: 'Taunts nearby enemies onto totem' },
+                  8177: { badge: '🌪️ Air Totem', color: '#67e8f9', tip: 'Redirects next harmful spell (15s CD)' },
+                  15107: { badge: '🌪️ Air Totem', color: '#67e8f9', tip: 'Drop on pull (2m) • Reduces ranged damage taken' },
+                  25908: { badge: '🌪️ Air Totem', color: '#67e8f9', tip: 'Drop on pull (2m) • -20% party threat' },
+                  10595: { badge: '🌪️ Air Totem', color: '#67e8f9', tip: 'Drop on pull (2m) • +Nature Resistance for party' }
                 }[sidNum];
                 if (totemMeta) {
                   return `<span style="font-size: 0.66rem; padding: 1px 6px; border-radius: 3px; background: rgba(255,255,255,0.06); border: 1px solid ${totemMeta.color}55; color: ${totemMeta.color}; font-weight: 700;">${totemMeta.badge}</span>`;
@@ -7544,7 +7662,20 @@
                 5675: 'Drop on pull (1m) • Restores Mana every 2s — best in longer fights if running OOM',
                 3599: 'Single-target Fire bolts (35s) • Best single-target DPS per mana',
                 8190: 'AoE Fire pulse every 2s (20s) • Best for AoE/cleave or high-mana endgame',
-                1535: '4s delayed AoE Fire blast (15s CD) • Best for short burst or AoE pulls'
+                1535: '4s delayed AoE Fire blast (15s CD) • Best for short burst or AoE pulls',
+                8227: 'Drop on pull (2m) • Adds Fire dmg on every melee hit — stacks with Weapon Imbue!',
+                8181: 'Drop on pull (2m) • +Frost Resistance for party',
+                5394: 'Drop on pull (1m) • Periodic party heal',
+                8184: 'Drop on pull (2m) • +Fire Resistance for party',
+                8166: 'Drop on pull (2m) • Dispels Poison effects',
+                8170: 'Drop on pull (2m) • Dispels Disease effects',
+                8143: 'Drop on pull (2m) • Dispels Fear, Charm, and Sleep',
+                2484: 'AoE 50% movement slow pulse',
+                5730: 'Taunts nearby enemies onto the totem',
+                8177: 'Redirects next harmful spell to the totem',
+                15107: 'Drop on pull (2m) • Reduces ranged damage taken',
+                25908: 'Drop on pull (2m) • Reduces party threat by 20%',
+                10595: 'Drop on pull (2m) • +Nature Resistance for party'
               };
               return tipMap[sidNum] ? `<div style="font-size: 0.69rem; color: #94a3b8; margin-top: 1px;">${tipMap[sidNum]}</div>` : '';
             })()}
@@ -7900,8 +8031,12 @@
           },
           {
             elem: 'fire',
-            allIds: [3599, 8190, 1535],
-            candidates: [null].concat(currentLvl >= 10 && roleMode !== 'healer' ? [3599] : []).concat(currentLvl >= 26 && roleMode !== 'healer' ? [8190] : []).concat(currentLvl >= 12 && roleMode !== 'healer' ? [1535] : [])
+            allIds: [3599, 8190, 1535, 8227, 8181],
+            candidates: [null]
+              .concat(currentLvl >= 10 && roleMode !== 'healer' ? [3599] : [])
+              .concat(currentLvl >= 26 && roleMode !== 'healer' ? [8190] : [])
+              .concat(currentLvl >= 28 && roleMode !== 'healer' ? [8227] : [])
+              .concat(currentLvl >= 12 && roleMode !== 'healer' ? [1535] : [])
           }
         ];
 
@@ -13317,6 +13452,31 @@
             }
           },
           {
+            key: "grounding_totem",
+            name: "Grounding Totem",
+            icon: "spell_nature_groundingtotem",
+            minLvl: 30,
+            getRanks: (lvl) => (lvl < 30 ? { rank: 0, available: false, desc: "Requires Level 30" } : { rank: 1, available: true, desc: "Redirects next harmful spell to the totem (15s CD)" })
+          },
+          {
+            key: "windwall_totem",
+            name: "Windwall Totem",
+            icon: "spell_nature_earthbind",
+            minLvl: 36,
+            getRanks: (lvl) => {
+              if (lvl < 36) return { rank: 0, available: false, desc: "Requires Level 36" };
+              const r = lvl >= 56 ? 3 : (lvl >= 46 ? 2 : 1);
+              return { rank: r, available: true, desc: `Reduces ranged damage taken by party (Rank ${r})` };
+            }
+          },
+          {
+            key: "tranquil_air_totem",
+            name: "Tranquil Air Totem",
+            icon: "spell_nature_brilliance",
+            minLvl: 50,
+            getRanks: (lvl) => (lvl < 50 ? { rank: 0, available: false, desc: "Requires Level 50" } : { rank: 1, available: true, desc: "Reduces party threat generated by 20%" })
+          },
+          {
             key: "nature_resist_totem",
             name: "Nature Resistance Totem",
             icon: "spell_nature_natureresistancetotem",
@@ -13379,6 +13539,20 @@
             }
           },
           {
+            key: "earthbind_totem",
+            name: "Earthbind Totem",
+            icon: "spell_nature_strengthofearthtotem02",
+            minLvl: 6,
+            getRanks: (lvl) => (lvl < 6 ? { rank: 0, available: false, desc: "Requires Level 6" } : { rank: 1, available: true, desc: "Slows nearby enemies' movement speed by 50%" })
+          },
+          {
+            key: "stoneclaw_totem",
+            name: "Stoneclaw Totem",
+            icon: "spell_nature_stoneclawtotem",
+            minLvl: 8,
+            getRanks: (lvl) => (lvl < 8 ? { rank: 0, available: false, desc: "Requires Level 8" } : { rank: 1, available: true, desc: "Taunts nearby enemies onto the totem" })
+          },
+          {
             key: "none",
             name: "None",
             icon: "spell_chargepositive",
@@ -13417,6 +13591,32 @@
               const hp = lvl >= 60 ? 14 : (lvl >= 50 ? 12 : (lvl >= 40 ? 10 : (lvl >= 30 ? 8 : 6)));
               return { rank: r, available: true, desc: `Restores ${hp} Health every 2 sec to party` };
             }
+          },
+          {
+            key: "poison_cleansing_totem",
+            name: "Poison Cleansing Totem",
+            icon: "spell_nature_poisoncleansingtotem",
+            minLvl: 22,
+            getRanks: (lvl) => (lvl < 22 ? { rank: 0, available: false, desc: "Requires Level 22" } : { rank: 1, available: true, desc: "Periodically dispels Poison effects from party" })
+          },
+          {
+            key: "fire_resist_totem",
+            name: "Fire Resistance Totem",
+            icon: "spell_fireresistancetotem_01",
+            minLvl: 28,
+            getRanks: (lvl) => {
+              if (lvl < 28) return { rank: 0, available: false, desc: "Requires Level 28" };
+              const r = lvl >= 58 ? 3 : (lvl >= 42 ? 2 : 1);
+              const res = lvl >= 58 ? 60 : (lvl >= 42 ? 45 : 30);
+              return { rank: r, available: true, desc: `+${res} Fire Resistance to party` };
+            }
+          },
+          {
+            key: "disease_cleansing_totem",
+            name: "Disease Cleansing Totem",
+            icon: "spell_nature_diseasecleansingtotem",
+            minLvl: 38,
+            getRanks: (lvl) => (lvl < 38 ? { rank: 0, available: false, desc: "Requires Level 38" } : { rank: 1, available: true, desc: "Periodically dispels Disease effects from party" })
           },
           {
             key: "none",
@@ -13468,6 +13668,30 @@
             }
           },
           {
+            key: "flametongue_totem",
+            name: "Flametongue Totem",
+            icon: "spell_nature_guardianward",
+            minLvl: 28,
+            getRanks: (lvl) => {
+              if (lvl < 28) return { rank: 0, available: false, desc: "Requires Level 28" };
+              const r = lvl >= 58 ? 4 : (lvl >= 48 ? 3 : (lvl >= 38 ? 2 : 1));
+              const d = lvl >= 58 ? 40 : (lvl >= 48 ? 30 : (lvl >= 38 ? 21 : 12));
+              return { rank: r, available: true, desc: `Adds ~${d} Fire dmg per melee hit (2m, stacks w/ Weapon Imbue!)` };
+            }
+          },
+          {
+            key: "frost_resist_totem",
+            name: "Frost Resistance Totem",
+            icon: "spell_frost_frostresistancetotem",
+            minLvl: 24,
+            getRanks: (lvl) => {
+              if (lvl < 24) return { rank: 0, available: false, desc: "Requires Level 24" };
+              const r = lvl >= 54 ? 3 : (lvl >= 38 ? 2 : 1);
+              const res = lvl >= 54 ? 60 : (lvl >= 38 ? 45 : 30);
+              return { rank: r, available: true, desc: `+${res} Frost Resistance to party` };
+            }
+          },
+          {
             key: "none",
             name: "None",
             icon: "spell_chargepositive",
@@ -13479,10 +13703,10 @@
     };
 
     const TOTEM_ELEMENT_SPELL_MAP = {
-      air: { windfury_totem: 8512, grace_of_air_totem: 8835 },
-      earth: { strength_of_earth_totem: 8075, stoneskin_totem: 8071 },
-      water: { mana_spring_totem: 5675 },
-      fire: { magma_totem: 8190, searing_totem: 3599, fire_nova_totem: 1535 }
+      air: { windfury_totem: 8512, grace_of_air_totem: 8835, grounding_totem: 8177, windwall_totem: 15107, tranquil_air_totem: 25908, nature_resist_totem: 10595 },
+      earth: { strength_of_earth_totem: 8075, stoneskin_totem: 8071, tremor_totem: 8143, earthbind_totem: 2484, stoneclaw_totem: 5730 },
+      water: { mana_spring_totem: 5675, healing_stream_totem: 5394, poison_cleansing_totem: 8166, fire_resist_totem: 8184, disease_cleansing_totem: 8170 },
+      fire: { flametongue_totem: 8227, magma_totem: 8190, searing_totem: 3599, fire_nova_totem: 1535, frost_resist_totem: 8181 }
     };
 
     let _isSyncingTotemsFromRotation = false;
@@ -14194,6 +14418,9 @@
         let nextGcdTime = 0;
         let nextPetAttackTime = (charClass === 'hunter') ? 0 : -1;
         let totemActiveUntil = -1; // Fire totem timer
+        let activeFireTotem = null;
+        let activeFtTotemDmg = 0;
+        let activeFtTotemRank = 1;
         let airTotemUntil = -1;
         let activeAirTotem = null;
         let activeAirAgi = 0;
@@ -14426,6 +14653,15 @@
                 recordAction(socInfo.name, 'Holy', 'ability_warrior_innerrage', socDmg, false, true, socCrit, false);
               }
 
+              // Shaman Flametongue Totem on-hit Fire damage (Fire Totem - stacks with Weapon Imbue in WoW Forever!)
+              if (charClass === 'shaman' && t <= totemActiveUntil && activeFireTotem === 'flametongue_totem') {
+                let ftTotemDmg = (activeFtTotemDmg * (wpnSpeed / 2.6)) + (fireSP * 0.10 * (wpnSpeed / 2.6));
+                let ftTotemCrit = Math.random() < spellCritChance;
+                if (ftTotemCrit) ftTotemDmg *= 1.5;
+                iterDamage += ftTotemDmg;
+                recordAction(`Flametongue Totem (Rank ${activeFtTotemRank})`, 'Fire', 'spell_nature_guardianward', ftTotemDmg, false, true, ftTotemCrit, false);
+              }
+
               // Shaman Windfury Totem proc (Air Totem - stacks & procs independently from Windfury Weapon imbue in WoW Forever!)
               if (hasActiveWfTotem) {
                 if (Math.random() < 0.20) {
@@ -14512,11 +14748,11 @@
                 if (sid === 6774 && t < sliceDiceActiveUntil) continue;
                 if (sid === 20375 && t < sealCommandUntil) continue;
               } else if (cond === 'totem_le_1s') {
-                if (sid === 8512 || sid === 8835) {
+                if ([8512, 8835, 8177, 15107, 25908, 10595].includes(sid)) {
                   if ((airTotemUntil - t) > 1.0) continue;
-                } else if (sid === 8075 || sid === 8071) {
+                } else if ([8075, 8071, 8143, 2484, 5730].includes(sid)) {
                   if ((earthTotemUntil - t) > 1.0) continue;
-                } else if (sid === 5675) {
+                } else if ([5675, 5394, 8166, 8184, 8170].includes(sid)) {
                   if ((waterTotemUntil - t) > 1.0) continue;
                 } else {
                   if ((totemActiveUntil - t) > 1.0) continue;
@@ -14584,6 +14820,15 @@
                   recordAction('Windfury Weapon (Rank ' + wfRank + ')', 'Physical', 'spell_nature_cyclone', wfSwingDmg, false, true, wfCrit, false);
                 }
 
+                // Stormstrike weapon hit also triggers Flametongue Totem if active
+                if (charClass === 'shaman' && t <= totemActiveUntil && activeFireTotem === 'flametongue_totem') {
+                  let ftTotemDmg = (activeFtTotemDmg * (wpnSpeed / 2.6)) + (fireSP * 0.10 * (wpnSpeed / 2.6));
+                  let ftTotemCrit = Math.random() < spellCritChance;
+                  if (ftTotemCrit) ftTotemDmg *= 1.5;
+                  iterDamage += ftTotemDmg;
+                  recordAction(`Flametongue Totem (Rank ${activeFtTotemRank})`, 'Fire', 'spell_nature_guardianward', ftTotemDmg, false, true, ftTotemCrit, false);
+                }
+
                 // Stormstrike weapon hit can ALSO independently proc Windfury Totem!
                 if (hasActiveWfTotem && Math.random() < 0.20) {
                   let wfTotemSwingDmg = (wpnMin + Math.random() * (wpnMax - wpnMin) + ((curAP + activeAirWfAP) / 14.0) * wpnSpeed) * (1.0 - curArmorDR) * talentDmgBonus;
@@ -14645,6 +14890,7 @@
                 cdUntil[sid] = t + 15.0;
                 recordAction(sInfo.name, 'Fire', sInfo.icon, 0, true, true, false, false);
               } else if (sid === 8190) { // Magma Totem
+                activeFireTotem = 'magma_totem';
                 totemActiveUntil = t + 20.0;
                 nextTotemBoltTime = t + 2.0;
                 totemPulseInterval = 2.0;
@@ -14654,6 +14900,7 @@
                 totemIcon = sInfo.icon;
                 recordAction(sInfo.name, 'Fire', sInfo.icon, 0, true, true, false, false);
               } else if (sid === 3599) { // Searing Totem
+                activeFireTotem = 'searing_totem';
                 totemActiveUntil = t + 35.0;
                 nextTotemBoltTime = t + 2.0;
                 totemPulseInterval = 2.2;
@@ -14686,6 +14933,33 @@
                 waterTotemUntil = t + 60.0;
                 activeWaterTotem = 'mana_spring_totem';
                 activeWaterMp2 = rData.mp2Gain || 4;
+                recordAction(sInfo.name, 'Nature', sInfo.icon, 0, true, false, false, false);
+              } else if (sid === 8227) { // Flametongue Totem (Fire)
+                activeFireTotem = 'flametongue_totem';
+                totemActiveUntil = t + 120.0;
+                nextTotemBoltTime = -1;
+                activeFtTotemDmg = rData.baseDmg || 12;
+                activeFtTotemRank = sInfo.rank || 1;
+                recordAction(sInfo.name, 'Fire', sInfo.icon, 0, true, false, false, false);
+              } else if (sid === 8181) { // Frost Resistance Totem (Fire)
+                activeFireTotem = 'frost_resist_totem';
+                totemActiveUntil = t + 120.0;
+                nextTotemBoltTime = -1;
+                recordAction(sInfo.name, 'Frost', sInfo.icon, 0, true, false, false, false);
+              } else if (sid === 8177 || sid === 15107 || sid === 25908 || sid === 10595) { // Air utility totems
+                airTotemUntil = t + (sid === 8177 ? 45.0 : 120.0);
+                activeAirTotem = SPELL_ID_TO_KEY[sid];
+                if (sid === 8177) cdUntil[sid] = t + 15.0;
+                recordAction(sInfo.name, 'Nature', sInfo.icon, 0, true, false, false, false);
+              } else if (sid === 8143 || sid === 2484 || sid === 5730) { // Earth utility totems
+                earthTotemUntil = t + (sid === 2484 ? 45.0 : (sid === 5730 ? 15.0 : 120.0));
+                activeEarthTotem = SPELL_ID_TO_KEY[sid];
+                if (sid === 2484) cdUntil[sid] = t + 15.0;
+                if (sid === 5730) cdUntil[sid] = t + 30.0;
+                recordAction(sInfo.name, 'Nature', sInfo.icon, 0, true, false, false, false);
+              } else if (sid === 5394 || sid === 8166 || sid === 8184 || sid === 8170) { // Water utility totems
+                waterTotemUntil = t + (sid === 5394 ? 60.0 : 120.0);
+                activeWaterTotem = SPELL_ID_TO_KEY[sid];
                 recordAction(sInfo.name, 'Nature', sInfo.icon, 0, true, false, false, false);
               } else if (sid === 324) { // Lightning Shield
                 lsCharges = 3;
