@@ -10472,9 +10472,25 @@
       if (item.parsedStats) {
         for (const [stat, val] of Object.entries(item.parsedStats)) {
           if (w[stat] !== undefined) {
-            score += val * w[stat];
+            let effVal = val;
+            // Normalize legacy rating-encoded percentage stats in catalog_full.json (1% Crit = 14, 1% Hit = 10, 1% Dodge = 12, 1% Parry = 15, 1% Block = 5)
+            if (stat === 'Crit' && val >= 5) effVal = val / 14.0;
+            else if (stat === 'Hit' && val >= 3) effVal = val / 10.0;
+            else if (stat === 'Dodge' && val >= 4) effVal = val / 12.0;
+            else if (stat === 'Parry' && val >= 5) effVal = val / 15.0;
+            else if (stat === 'Block' && val >= 4) effVal = val / 5.0;
+            score += effVal * w[stat];
           }
         }
+      }
+
+      // WoW Forever Custom Item Passive Effects (e.g. Rage of the Storm +10% Stormstrike, Tidebringer's Claw +2% Healing Wave Crit, Lightning's Grasp +1% LB Crit)
+      if (item.id === 280604 && activeCharacterClass === 'shaman' && currentCharacterSpec === 'enhancement') {
+        score += 18; // Equip: Increases the damage dealt by your Stormstrike ability by 10%
+      } else if (item.id === 280605 && activeCharacterClass === 'shaman' && (currentCharacterSpec === 'resto' || currentCharacterSpec === 'restoration')) {
+        score += 2.0 * (w.Crit || 10.0); // Equip: +2% Healing Wave / Lesser Healing Wave Crit
+      } else if (item.id === 280607 && activeCharacterClass === 'shaman' && currentCharacterSpec === 'elemental') {
+        score += 1.0 * (w.Crit || 10.0); // Equip: +1% Lightning Bolt Crit
       }
 
       // Armor
@@ -11685,7 +11701,7 @@
       const equippedItem = equippedId > 0 ? getCatalogForSlot(slot).find(i => i.id === equippedId) : null;
       const equippedScore = equippedItem ? calculateItemScore(equippedItem, baseLvl).score : 0;
 
-      // Find best score already available at baseLvl so future steps only show genuine NEW unlocks at lvl > baseLvl
+      // Find best score already available at baseLvl
       let bestBaseScore = equippedScore;
       let bestBaseItem = equippedItem;
       for (const it of pool) {
@@ -11697,9 +11713,35 @@
       }
 
       let runningBestScore = bestBaseScore;
-      let prevMilestoneItem = bestBaseItem || equippedItem;
-      let prevMilestoneScore = runningBestScore;
+      let prevMilestoneItem = equippedItem;
+      let prevMilestoneScore = equippedScore;
       const chain = [];
+
+      // Include immediate current-level BiS upgrade if the character currently has a lower-scoring item equipped (e.g. after Armory Import)
+      if (bestBaseItem && (!equippedItem || bestBaseItem.id !== equippedItem.id) && bestBaseScore > equippedScore + 0.05) {
+        const deltaFromEquipped = Math.round((bestBaseScore - equippedScore) * 10) / 10;
+        const pctFromEquipped = equippedScore > 0 ? Math.round((deltaFromEquipped / equippedScore) * 100) : 100;
+        chain.push({
+          slot: slot,
+          slotLabel: slotLabels[slot] || slot,
+          unlockLevel: baseLvl,
+          isAvailableNow: true,
+          item: bestBaseItem,
+          score: bestBaseScore,
+          equippedItem: equippedItem,
+          equippedScore: equippedScore,
+          prevItem: equippedItem,
+          prevScore: equippedScore,
+          deltaFromEquipped: deltaFromEquipped,
+          deltaFromPrev: deltaFromEquipped,
+          pctFromEquipped: pctFromEquipped
+        });
+        prevMilestoneItem = bestBaseItem;
+        prevMilestoneScore = bestBaseScore;
+      } else {
+        prevMilestoneItem = bestBaseItem || equippedItem;
+        prevMilestoneScore = runningBestScore;
+      }
 
       for (let lvl = baseLvl + 1; lvl <= maxTargetLvl; lvl++) {
         let bestUnlockAtLvl = null;
@@ -11930,14 +11972,15 @@
 
           const header = document.createElement('div');
           header.className = 'roadmap-level-header';
+          const isNowGroup = (lvl === baseLvl);
           header.innerHTML = `
             <div class="roadmap-level-badge">
-              <span style="background: rgba(255, 209, 0, 0.2); border: 1px solid var(--border-gold); padding: 2px 8px; border-radius: 5px;">🔓 Level ${lvl}</span>
-              <span style="font-size: 0.76rem; color: #cbd5e1; font-weight: 600;">${steps.length} BiS ${steps.length === 1 ? 'Upgrade Unlocks' : 'Upgrades Unlock'}</span>
+              <span style="background: ${isNowGroup ? 'rgba(52, 211, 153, 0.2)' : 'rgba(255, 209, 0, 0.2)'}; border: 1px solid ${isNowGroup ? '#34d399' : 'var(--border-gold)'}; color: ${isNowGroup ? '#34d399' : 'inherit'}; padding: 2px 8px; border-radius: 5px;">${isNowGroup ? `✅ Available Now (Lvl ${lvl})` : `🔓 Level ${lvl}`}</span>
+              <span style="font-size: 0.76rem; color: #cbd5e1; font-weight: 600;">${steps.length} BiS ${steps.length === 1 ? (isNowGroup ? 'Upgrade Available' : 'Upgrade Unlocks') : (isNowGroup ? 'Upgrades Available' : 'Upgrades Unlock')}</span>
               <span style="font-size: 0.74rem; color: #34d399; font-weight: 700;">(+${totalLvlGain} pts total)</span>
             </div>
-            <button type="button" class="btn btn-secondary btn-xs" onclick="equipAllBiSAtTargetLevel(${lvl})" title="Set character level to ${lvl} and equip full Level ${lvl} BiS">
-              ⚡ Jump to Lvl ${lvl} BiS
+            <button type="button" class="btn btn-secondary btn-xs" onclick="equipAllBiSAtTargetLevel(${lvl})" title="${isNowGroup ? `Equip all available Level ${lvl} BiS upgrades` : `Set character level to ${lvl} and equip full Level ${lvl} BiS`}">
+              ⚡ ${isNowGroup ? `Equip Lvl ${lvl} BiS Now` : `Jump to Lvl ${lvl} BiS`}
             </button>
           `;
           group.appendChild(header);
@@ -11975,8 +12018,8 @@
                   <div style="font-size: 0.8rem; font-weight: 800; color: #34d399;">+${step.deltaFromPrev} pts <span style="font-size: 0.7rem; color: #6ee7b7; font-weight: 600;">(${step.score} pts)</span></div>
                   <div style="font-size: 0.68rem; color: var(--text-muted);">+${step.deltaFromEquipped} pts vs Lvl ${baseLvl} Equipped</div>
                 </div>
-                <button type="button" class="btn btn-secondary btn-xs" onclick="event.stopPropagation(); previewUpgradeAtLevel(${step.unlockLevel}, '${step.slot}', ${it.id})" title="Level up to ${step.unlockLevel} and equip ${it.name}">
-                  ⚡ Equip @ Lvl ${step.unlockLevel}
+                <button type="button" class="btn btn-secondary btn-xs" onclick="event.stopPropagation(); previewUpgradeAtLevel(${step.unlockLevel}, '${step.slot}', ${it.id})" title="${step.isAvailableNow ? `Equip ${it.name} now` : `Level up to ${step.unlockLevel} and equip ${it.name}`}">
+                  ⚡ ${step.isAvailableNow ? 'Equip Now' : `Equip @ Lvl ${step.unlockLevel}`}
                 </button>
               </div>
             `;
@@ -14161,7 +14204,15 @@
           if (it.armor) gearStats.Armor += it.armor;
           if (it.parsedStats) {
             for (const k in it.parsedStats) {
-              if (gearStats[k] !== undefined) gearStats[k] += it.parsedStats[k];
+              if (gearStats[k] !== undefined) {
+                let v = it.parsedStats[k];
+                if (k === 'Crit' && v >= 5) v = v / 14.0;
+                else if (k === 'Hit' && v >= 3) v = v / 10.0;
+                else if (k === 'Dodge' && v >= 4) v = v / 12.0;
+                else if (k === 'Parry' && v >= 5) v = v / 15.0;
+                else if (k === 'Block' && v >= 4) v = v / 5.0;
+                gearStats[k] += v;
+              }
             }
           }
         }
@@ -14986,7 +15037,8 @@
 
               // SHAMAN SPELLS
               if (sid === 17364) { // Stormstrike
-                let ssDmg = (wpnMin + Math.random() * (wpnMax - wpnMin) + (curAP / 14.0) * wpnSpeed) * 1.45 * (1.0 - curArmorDR);
+                const hasRageOfTheStorm = Boolean(mhItem && mhItem.id === 280604); // Rage of the Storm: +10% Stormstrike damage
+                let ssDmg = (wpnMin + Math.random() * (wpnMax - wpnMin) + (curAP / 14.0) * wpnSpeed) * 1.45 * (hasRageOfTheStorm ? 1.10 : 1.0) * (1.0 - curArmorDR);
                 let isCrit = Math.random() < critChance;
                 if (isCrit) ssDmg *= 2.0;
                 iterDamage += ssDmg;
@@ -15157,7 +15209,8 @@
                 let lbBase = (rData.minD || 15) + Math.random() * ((rData.maxD || 18) - (rData.minD || 15));
                 let lbDmg = lbBase + (natureSP * 0.714);
                 if (stormstrikeNatureCharges > 0) { lbDmg *= 1.20; stormstrikeNatureCharges -= 1; }
-                let isCrit = Math.random() < spellCritChance;
+                const hasLightningsGrasp = Boolean(mhItem && mhItem.id === 280607); // Lightning's Grasp: +1% Lightning Bolt crit
+                let isCrit = Math.random() < (spellCritChance + (hasLightningsGrasp ? 0.01 : 0));
                 if (isCrit) lbDmg *= 1.5;
                 iterDamage += lbDmg;
                 gcdAdvance = 2.0;
@@ -15656,7 +15709,7 @@
         total_int: totalInt,
         total_spi: totalSpi,
         total_mp5: gearStats.MP5 || 0,
-        spell_crit: Math.round(spellCritPct * 10) / 10,
+        spell_crit: Math.round((spellCritPct + (mhItem && mhItem.id === 280605 ? 2.0 : 0)) * 10) / 10,
         ranks: {}
       };
 
