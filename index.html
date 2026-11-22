@@ -4007,9 +4007,9 @@
 
       <!-- TOP RIGHT ACTION BUTTONS: SIMLAB VALIDATOR + MASTER SIMULATE -->
       <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
-        <button id="btn-open-armory" type="button" class="btn-simlab-open" style="border-color: rgba(59, 130, 246, 0.55); color: #93c5fd;" onclick="openArmoryImportModal()" title="Import a WoW Forever Armory character (JSON/Manual) as your starting gear, profession skills, reputations &amp; PvP rank">
-          <span>👤</span>
-          <span>Import Armory</span>
+        <button id="btn-open-armory" type="button" class="btn-simlab-open" style="border-color: rgba(59, 130, 246, 0.55); color: #93c5fd;" onclick="openArmoryImportModal()" title="Sync your WoW Forever character via Drag &amp; Drop (WoWSimLab.lua), /simsync In-Game Addon JSON, or Armory Console Extractor (Equipped + Bags + Bank + Professions + Reputations + PvP Rank)">
+          <span>🔄</span>
+          <span>Sync Account &amp; Armory</span>
         </button>
         <button id="btn-open-simlab" type="button" class="btn-simlab-open" onclick="openSimLabDialog()" title="Import WoWSimLab In-Game Export & Combat Log to validate simulator math">
           <span>🧪</span>
@@ -4148,25 +4148,38 @@
     </div>
   </header>
 
-  <!-- IMPORTED ARMORY CHARACTER & CONSTRAINT BAR -->
+  <!-- IMPORTED ARMORY CHARACTER, INVENTORY & MULTI-BUILD BAR -->
   <div id="imported-char-banner" style="display: none; background: linear-gradient(90deg, rgba(30, 58, 138, 0.28), rgba(15, 23, 42, 0.92)); border-bottom: 1px solid rgba(59, 130, 246, 0.4); padding: 8px 18px; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; font-size: 0.76rem;">
     <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
       <span style="font-size: 1rem;">👤</span>
       <div>
         <strong id="imp-char-name" style="color: #93c5fd; font-size: 0.84rem;">Character</strong>
         <span id="imp-char-meta" style="color: #cbd5e1; margin-left: 6px;"></span>
+        <span id="imp-char-inv-badge" onclick="openArmoryImportModal('inventory')" style="display: none; cursor: pointer; margin-left: 8px; padding: 2px 7px; border-radius: 4px; background: rgba(16,185,129,0.18); border: 1px solid rgba(16,185,129,0.45); color: #34d399; font-weight: 700; font-size: 0.7rem;" title="Click to inspect your synced Bags &amp; Bank inventory">🎒 0 Bags • 🏦 0 Bank</span>
         <a id="imp-char-armory-link" href="#" target="_blank" rel="noopener noreferrer" style="display: none; color: #60a5fa; font-size: 0.7rem; margin-left: 8px; text-decoration: underline;">↗ Armory</a>
       </div>
       <span id="imp-char-dps-delta" style="display: none; padding: 2px 8px; border-radius: 12px; font-weight: 700; font-size: 0.72rem; background: rgba(16, 185, 129, 0.16); border: 1px solid rgba(16, 185, 129, 0.45); color: #34d399;"></span>
     </div>
 
     <div style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
+      <!-- Multi-Build Locker Controls -->
+      <div style="display: flex; align-items: center; gap: 4px; background: rgba(15, 23, 42, 0.75); border: 1px solid #334155; border-radius: 5px; padding: 2px 6px; margin-right: 4px;">
+        <span style="font-size: 0.67rem; color: #fbbf24; font-weight: 800; text-transform: uppercase;">🗂️ Build:</span>
+        <select id="char-saved-builds-select" onchange="loadCharacterBuildById(this.value)" style="background: #0b0e14; border: 1px solid #334155; color: #f8fafc; border-radius: 4px; padding: 2px 6px; font-size: 0.71rem; font-weight: 600; max-width: 190px;">
+          <option value="">-- Current Setup --</option>
+        </select>
+        <button type="button" onclick="promptSaveCurrentCharacterBuild()" style="cursor: pointer; padding: 2px 7px; border-radius: 4px; font-size: 0.7rem; font-weight: 700; border: 1px solid rgba(16,185,129,0.5); background: rgba(16,185,129,0.18); color: #34d399;" title="Save current Spec, Gear, Enchants, Talents, Rotation &amp; Consumables as a named build for this character">💾 Save Build</button>
+        <button type="button" onclick="openArmoryImportModal('builds')" style="cursor: pointer; padding: 2px 6px; border-radius: 4px; font-size: 0.7rem; font-weight: 700; border: 1px solid #475569; background: #1e293b; color: #cbd5e1;" title="Manage all saved builds for this character">🗂️</button>
+      </div>
+
       <span style="font-size: 0.68rem; color: #94a3b8; font-weight: 700; text-transform: uppercase;">Limits:</span>
+      <button type="button" id="btn-toggle-owned-only" onclick="toggleCharacterConstraint('ownedOnly')" style="display: none; cursor: pointer; padding: 3px 8px; border-radius: 4px; font-size: 0.71rem; font-weight: 700; border: 1px solid rgba(16,185,129,0.5); background: rgba(16,185,129,0.2); color: #34d399;" title="Toggle BiS &amp; Item Picker between ONLY items you own in Equipped + Bags + Bank vs All Catalog Items">🎒 Owned Gear Only</button>
       <button type="button" id="btn-toggle-strict-prof" onclick="toggleCharacterConstraint('strictProf')" style="cursor: pointer; padding: 3px 8px; border-radius: 4px; font-size: 0.71rem; font-weight: 700; border: 1px solid rgba(59,130,246,0.5); background: rgba(59,130,246,0.2); color: #93c5fd;" title="Click to toggle strict Profession Skill limit vs preview future crafts">🔒 Prof Skills</button>
       <button type="button" id="btn-toggle-strict-rep" onclick="toggleCharacterConstraint('strictRep')" style="cursor: pointer; padding: 3px 8px; border-radius: 4px; font-size: 0.71rem; font-weight: 700; border: 1px solid rgba(59,130,246,0.5); background: rgba(59,130,246,0.2); color: #93c5fd;" title="Click to toggle strict Reputation limit vs preview future rep rewards">🔒 Reputations</button>
       <button type="button" id="btn-toggle-strict-pvp" onclick="toggleCharacterConstraint('strictPvp')" style="cursor: pointer; padding: 3px 8px; border-radius: 4px; font-size: 0.71rem; font-weight: 700; border: 1px solid rgba(59,130,246,0.5); background: rgba(59,130,246,0.2); color: #93c5fd;" title="Click to toggle strict PvP Rank limit vs preview future PvP rank gear">🔒 PvP Rank</button>
-      <button type="button" onclick="openArmoryImportModal('limits')" style="cursor: pointer; padding: 3px 8px; border-radius: 4px; font-size: 0.71rem; font-weight: 700; border: 1px solid #475569; background: #1e293b; color: #e2e8f0;" title="Edit Profession Skills, Reputations &amp; PvP Rank">⚙️ Edit Limits</button>
-      <button type="button" onclick="revertToArmoryGear()" style="cursor: pointer; padding: 3px 8px; border-radius: 4px; font-size: 0.71rem; font-weight: 700; border: 1px solid rgba(245,158,11,0.5); background: rgba(245,158,11,0.15); color: #fbbf24;" title="Restore your imported Armory starting gear, enchants, and talents">↺ Revert to Armory</button>
+      <button type="button" id="btn-quick-resync-file" onclick="resyncFromLinkedSavedVarsFile()" style="display: none; cursor: pointer; padding: 3px 8px; border-radius: 4px; font-size: 0.71rem; font-weight: 700; border: 1px solid rgba(34,211,238,0.55); background: rgba(34,211,238,0.16); color: #67e8f9;" title="1-Click Re-Sync from your linked WoWSimLab.lua SavedVariables file">🔄 Re-Sync File</button>
+      <button type="button" onclick="openArmoryImportModal('limits')" style="cursor: pointer; padding: 3px 8px; border-radius: 4px; font-size: 0.71rem; font-weight: 700; border: 1px solid #475569; background: #1e293b; color: #e2e8f0;" title="Edit Profession Skills, Reputations &amp; PvP Rank">⚙️ Limits</button>
+      <button type="button" onclick="revertToArmoryGear()" style="cursor: pointer; padding: 3px 8px; border-radius: 4px; font-size: 0.71rem; font-weight: 700; border: 1px solid rgba(245,158,11,0.5); background: rgba(245,158,11,0.15); color: #fbbf24;" title="Restore your imported starting gear, enchants, and talents">↺ Revert</button>
       <button type="button" onclick="clearImportedCharacter()" style="cursor: pointer; padding: 3px 7px; border-radius: 4px; font-size: 0.71rem; font-weight: 700; border: 1px solid rgba(239,68,68,0.45); background: rgba(239,68,68,0.12); color: #fca5a5;" title="Exit Character Mode and return to unrestricted sandbox">✕</button>
     </div>
   </div>
@@ -10401,9 +10414,23 @@
 
       // --- IMPORTED CHARACTER CONSTRAINTS (Strict by default, toggleable to preview milestones!) ---
       if (typeof importedCharacter !== 'undefined' && importedCharacter) {
-        const isBaselineOrEquipped = Object.values(importedCharacter.baselineGear || {}).includes(item.id);
+        const isBaselineOrEquipped = Object.values(importedCharacter.baselineGear || {}).includes(item.id) || Object.values(currentGear || {}).includes(item.id);
+        const ownedLoc = (typeof getOwnedItemLocation === 'function') ? getOwnedItemLocation(item.id) : null;
 
-        if (!isBaselineOrEquipped) {
+        // 0. Owned Inventory Gate (Equipped + Bags + Bank only!)
+        if (characterConstraints.ownedOnly && !isBaselineOrEquipped && !ownedLoc) {
+          return {
+            score: 0,
+            isOverlevel: false,
+            isLockedByConstraint: true,
+            isNotInOwnedInventory: true,
+            constraintType: 'owned',
+            reqLvl: req,
+            reason: 'Not in your Synced Bags or Bank'
+          };
+        }
+
+        if (!isBaselineOrEquipped && !ownedLoc) {
           // 1. Profession Skill Gate
           if (characterConstraints.strictProf && item.requiredProfessionSkill) {
             const reqProf = (item.requiredProfessionName || item.craftedProfession || '').toLowerCase();
@@ -12186,6 +12213,8 @@
           score: res.score,
           isOverlevel: res.isOverlevel,
           isProfessionIneligible: res.isProfessionIneligible,
+          isLockedByConstraint: res.isLockedByConstraint,
+          isNotInOwnedInventory: res.isNotInOwnedInventory,
           profReason: res.profReason || res.reason || '',
           reqLvl: res.reqLvl || it.reqLvl || 0
         };
@@ -12310,8 +12339,18 @@
         const bindFilterVal = bindFilterEl ? bindFilterEl.value : 'all';
         if (bindFilterVal === 'bop' && !item.isBoP) continue;
         if (bindFilterVal === 'boe' && !item.isBoE) continue;
+        if (entry.isNotInOwnedInventory && !query) continue;
 
         const isEquippedHere = (currentGear[activeSlotPicking] === item.id);
+        const ownedLoc = (typeof getOwnedItemLocation === 'function') ? getOwnedItemLocation(item.id) : null;
+        let ownedBadgeHtml = '';
+        if (ownedLoc === 'bag') {
+          ownedBadgeHtml = `<span style="background:rgba(16,185,129,0.2);border:1px solid #10b981;color:#34d399;font-size:0.66rem;padding:1px 6px;border-radius:4px;font-weight:700;margin-left:6px;">🎒 In Bags</span>`;
+        } else if (ownedLoc === 'bank') {
+          ownedBadgeHtml = `<span style="background:rgba(245,158,11,0.2);border:1px solid #f59e0b;color:#fbbf24;font-size:0.66rem;padding:1px 6px;border-radius:4px;font-weight:700;margin-left:6px;">🏦 In Bank</span>`;
+        } else if (ownedLoc === 'equipped' && !isEquippedHere) {
+          ownedBadgeHtml = `<span style="background:rgba(59,130,246,0.2);border:1px solid #3b82f6;color:#93c5fd;font-size:0.66rem;padding:1px 6px;border-radius:4px;font-weight:700;margin-left:6px;">🛡️ Owned</span>`;
+        }
         const isEquippedInCompanion = companionItem && (
           companionItem.id === item.id ||
           (isUniqueItem(item) && (companionItem.name || '').toLowerCase().trim() === normName)
@@ -12368,7 +12407,7 @@
             <div class="picker-icon ${item.quality}" style="background-image: url('${getIconUrl(item.icon, item)}');"></div>
             <div class="picker-details">
               <div class="picker-name ${item.quality}">
-                ${item.name} ${item.source === 'WoW Forever (Custom Scaled)' ? '<span style="color:#f59e0b;font-size:0.68rem;font-weight:700;margin-left:4px;">[Twink Scaled]</span>' : ''} ${uniqueBadgeHtml} ${isEquippedHere ? '<span style="color: #2ecc71; font-size: 0.7rem; font-weight: 700; margin-left: 6px;">✓ Equipped</span>' : ''}
+                ${item.name} ${item.source === 'WoW Forever (Custom Scaled)' ? '<span style="color:#f59e0b;font-size:0.68rem;font-weight:700;margin-left:4px;">[Twink Scaled]</span>' : ''} ${uniqueBadgeHtml} ${ownedBadgeHtml} ${isEquippedHere ? '<span style="color: #2ecc71; font-size: 0.7rem; font-weight: 700; margin-left: 6px;">✓ Equipped</span>' : ''}
               </div>
               <div class="picker-sub">${subtitle}</div>
               <div class="picker-source-row">${getSourceBadgeHtml(item)}</div>
@@ -18764,11 +18803,175 @@
     })();
   
     // =========================================================================
-    // WOW FOREVER ARMORY IMPORT & CHARACTER CONSTRAINT ENGINE
+    // WOW FOREVER ACCOUNT, INVENTORY, ARMORY SYNC & MULTI-BUILD LOCKER ENGINE
     // =========================================================================
     const ARMORY_STORAGE_KEY = 'wowsim_imported_character_v1';
+    const SAVED_BUILDS_STORAGE_KEY = 'wowsim_character_builds_v1';
     let importedCharacter = null;
-    let characterConstraints = { strictProf: true, strictRep: true, strictPvp: true };
+    let characterConstraints = { strictProf: true, strictRep: true, strictPvp: true, ownedOnly: false };
+    let characterSavedBuilds = [];
+    let activeCharacterBuildId = '';
+    let linkedSavedVarsFileHandle = null;
+    let lastParsedSavedVarsDB = null;
+
+    function getOwnedItemLocation(itemId) {
+      if (!importedCharacter || !itemId) return null;
+      const numId = Number(itemId);
+      if (Object.values(currentGear || {}).includes(numId) || Object.values(importedCharacter.baselineGear || {}).includes(numId)) {
+        return 'equipped';
+      }
+      if (Array.isArray(importedCharacter.bags) && importedCharacter.bags.some(b => Number(b.id || b) === numId)) {
+        return 'bag';
+      }
+      if (Array.isArray(importedCharacter.bank) && importedCharacter.bank.some(b => Number(b.id || b) === numId)) {
+        return 'bank';
+      }
+      if (Array.isArray(importedCharacter.ownedItems)) {
+        const found = importedCharacter.ownedItems.find(o => Number(o.id || o) === numId);
+        if (found) return found.location || 'bag';
+      }
+      return null;
+    }
+
+    function getAllOwnedItemIdsSet() {
+      const s = new Set();
+      if (!importedCharacter) return s;
+      Object.values(importedCharacter.baselineGear || {}).forEach(id => { if (id > 0) s.add(Number(id)); });
+      Object.values(currentGear || {}).forEach(id => { if (id > 0) s.add(Number(id)); });
+      (importedCharacter.bags || []).forEach(b => { const id = Number(b.id || b); if (id > 0) s.add(id); });
+      (importedCharacter.bank || []).forEach(b => { const id = Number(b.id || b); if (id > 0) s.add(id); });
+      (importedCharacter.ownedItems || []).forEach(o => { const id = Number(o.id || o); if (id > 0) s.add(id); });
+      return s;
+    }
+
+    // Parse WoW SavedVariables Lua file (WoWSimLabDB = { ... }) into a JavaScript Object!
+    function parseWoWSavedVariablesLua(luaText) {
+      const text = String(luaText || '').trim();
+      if (!text) throw new Error('File is empty');
+      if (text.startsWith('{')) {
+        return JSON.parse(text);
+      }
+
+      // Fast path: if WoWSimLab.lua contains ["lastSyncJson"] = "...", we can also parse the full table or extract all characters
+      const eqIdx = text.indexOf('=');
+      if (eqIdx === -1) throw new Error('Not a valid WoW SavedVariables .lua file (missing "WoWSimLabDB = { ... }")');
+      const src = text.slice(eqIdx + 1);
+      let i = 0;
+      const n = src.length;
+
+      const skipWsAndComments = () => {
+        while (i < n) {
+          const c = src[i];
+          if (c === ' ' || c === '\t' || c === '\r' || c === '\n') { i++; continue; }
+          if (c === '-' && src[i + 1] === '-') {
+            i += 2;
+            while (i < n && src[i] !== '\n') i++;
+            continue;
+          }
+          break;
+        }
+      };
+
+      const parseString = () => {
+        const quote = src[i++];
+        let out = '';
+        while (i < n) {
+          const c = src[i++];
+          if (c === quote) return out;
+          if (c === '\\') {
+            const esc = src[i++];
+            if (esc === 'n') out += '\n';
+            else if (esc === 'r') out += '\r';
+            else if (esc === 't') out += '\t';
+            else if (esc === '"' || esc === "'" || esc === '\\') out += esc;
+            else if (esc >= '0' && esc <= '9') {
+              let digits = esc;
+              while (i < n && digits.length < 3 && src[i] >= '0' && src[i] <= '9') digits += src[i++];
+              out += String.fromCharCode(parseInt(digits, 10));
+            } else out += esc;
+          } else {
+            out += c;
+          }
+        }
+        return out;
+      };
+
+      const parseTable = () => {
+        i++; // skip '{'
+        const entries = [];
+        let isSequential = true;
+        let autoIndex = 1;
+
+        while (i < n) {
+          skipWsAndComments();
+          if (i >= n || src[i] === '}') { i++; break; }
+          let key = null;
+
+          if (src[i] === '[') {
+            i++; // skip '['
+            skipWsAndComments();
+            key = parseValue();
+            skipWsAndComments();
+            if (src[i] === ']') i++;
+            skipWsAndComments();
+            if (src[i] === '=') i++;
+            skipWsAndComments();
+            const val = parseValue();
+            if (typeof key !== 'number' || key !== autoIndex) isSequential = false;
+            autoIndex++;
+            entries.push([key, val]);
+          } else {
+            // Check identifier = value vs bare array value
+            const saveI = i;
+            let ident = '';
+            while (i < n && /[A-Za-z0-9_]/.test(src[i])) ident += src[i++];
+            skipWsAndComments();
+            if (ident && src[i] === '=' && src[i + 1] !== '=') {
+              i++; // skip '='
+              skipWsAndComments();
+              isSequential = false;
+              const val = parseValue();
+              entries.push([ident, val]);
+            } else {
+              i = saveI;
+              const val = parseValue();
+              entries.push([autoIndex++, val]);
+            }
+          }
+          skipWsAndComments();
+          if (src[i] === ',' || src[i] === ';') i++;
+        }
+
+        if (entries.length === 0) return {};
+        if (isSequential) return entries.map(e => e[1]);
+        const obj = {};
+        for (const [k, v] of entries) obj[k] = v;
+        return obj;
+      };
+
+      const parseValue = () => {
+        skipWsAndComments();
+        if (i >= n) return null;
+        const c = src[i];
+        if (c === '{') return parseTable();
+        if (c === '"' || c === "'") return parseString();
+        if (c === '-' || (c >= '0' && c <= '9')) {
+          let numStr = '';
+          if (src[i] === '-') numStr += src[i++];
+          while (i < n && /[0-9.eE+-]/.test(src[i])) numStr += src[i++];
+          const num = Number(numStr);
+          return isNaN(num) ? 0 : num;
+        }
+        let word = '';
+        while (i < n && /[A-Za-z0-9_]/.test(src[i])) word += src[i++];
+        if (word === 'true') return true;
+        if (word === 'false') return false;
+        if (word === 'nil' || word === 'null') return null;
+        return word;
+      };
+
+      return parseValue();
+    }
 
     const KNOWN_REPUTATION_FACTIONS = [
       'The Defilers',
@@ -18787,15 +18990,21 @@
     function loadImportedCharacterFromStorage() {
       try {
         const raw = localStorage.getItem(ARMORY_STORAGE_KEY);
-        if (!raw) return;
-        const parsed = JSON.parse(raw);
-        if (parsed && parsed.character) {
-          importedCharacter = parsed.character;
-          if (parsed.constraints) {
-            characterConstraints = Object.assign({ strictProf: true, strictRep: true, strictPvp: true }, parsed.constraints);
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          if (parsed && parsed.character) {
+            importedCharacter = parsed.character;
+            if (parsed.constraints) {
+              characterConstraints = Object.assign({ strictProf: true, strictRep: true, strictPvp: true, ownedOnly: false }, parsed.constraints);
+            }
           }
-          renderImportedCharacterBanner();
         }
+        const rawBuilds = localStorage.getItem(SAVED_BUILDS_STORAGE_KEY);
+        if (rawBuilds) {
+          const parsedBuilds = JSON.parse(rawBuilds);
+          if (Array.isArray(parsedBuilds)) characterSavedBuilds = parsedBuilds;
+        }
+        renderImportedCharacterBanner();
       } catch (e) {}
     }
 
@@ -18809,6 +19018,7 @@
             constraints: characterConstraints
           }));
         }
+        localStorage.setItem(SAVED_BUILDS_STORAGE_KEY, JSON.stringify(characterSavedBuilds || []));
       } catch (e) {}
     }
 
@@ -18817,6 +19027,9 @@
       if (!modal) return;
       modal.style.display = 'flex';
       populateManualLimitsForm();
+      renderSyncedInventoryGrid();
+      renderCharacterBuildsLocker();
+      initSavedVarsDropzoneOnce();
       switchArmoryModalTab(defaultTab);
     }
 
@@ -18826,21 +19039,162 @@
     }
 
     function switchArmoryModalTab(tab) {
-      const tImp = document.getElementById('armory-tab-import');
-      const tLim = document.getElementById('armory-tab-limits');
-      const bImp = document.getElementById('armory-tab-btn-import');
-      const bLim = document.getElementById('armory-tab-btn-limits');
-      if (!tImp || !tLim) return;
-      if (tab === 'limits') {
-        tImp.style.display = 'none';
-        tLim.style.display = 'block';
-        bLim.style.background = 'rgba(59,130,246,0.22)'; bLim.style.borderColor = '#3b82f6'; bLim.style.color = '#fff';
-        bImp.style.background = '#1e293b'; bImp.style.borderColor = '#334155'; bImp.style.color = '#94a3b8';
-      } else {
-        tImp.style.display = 'block';
-        tLim.style.display = 'none';
-        bImp.style.background = 'rgba(59,130,246,0.22)'; bImp.style.borderColor = '#3b82f6'; bImp.style.color = '#fff';
-        bLim.style.background = '#1e293b'; bLim.style.borderColor = '#334155'; bLim.style.color = '#94a3b8';
+      const tabs = ['import', 'inventory', 'builds', 'limits'];
+      tabs.forEach(t => {
+        const panel = document.getElementById('armory-tab-' + t);
+        const btn = document.getElementById('armory-tab-btn-' + t);
+        if (panel) panel.style.display = (t === tab) ? 'block' : 'none';
+        if (btn) {
+          if (t === tab) {
+            btn.style.background = 'rgba(59,130,246,0.22)';
+            btn.style.borderColor = '#3b82f6';
+            btn.style.color = '#fff';
+          } else {
+            btn.style.background = '#1e293b';
+            btn.style.borderColor = '#334155';
+            btn.style.color = '#94a3b8';
+          }
+        }
+      });
+      if (tab === 'inventory') renderSyncedInventoryGrid();
+      if (tab === 'builds') renderCharacterBuildsLocker();
+      if (tab === 'limits') populateManualLimitsForm();
+    }
+
+    let _savedVarsDropzoneInitialized = false;
+    function initSavedVarsDropzoneOnce() {
+      if (_savedVarsDropzoneInitialized) return;
+      const dz = document.getElementById('savedvars-dropzone');
+      if (!dz) return;
+      _savedVarsDropzoneInitialized = true;
+      dz.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        dz.style.borderColor = '#22d3ee';
+        dz.style.background = 'rgba(14, 116, 144, 0.32)';
+      });
+      dz.addEventListener('dragleave', () => {
+        dz.style.borderColor = 'rgba(56, 189, 248, 0.55)';
+        dz.style.background = 'linear-gradient(135deg, rgba(14, 116, 144, 0.16), rgba(15, 23, 42, 0.85))';
+      });
+      dz.addEventListener('drop', (e) => {
+        e.preventDefault();
+        dz.style.borderColor = 'rgba(56, 189, 248, 0.55)';
+        dz.style.background = 'linear-gradient(135deg, rgba(14, 116, 144, 0.16), rgba(15, 23, 42, 0.85))';
+        if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0]) {
+          handleSavedVarsFileDrop(e.dataTransfer.files[0]);
+        }
+      });
+    }
+
+    function triggerSavedVarsFilePicker() {
+      const inp = document.getElementById('savedvars-file-input');
+      if (inp) inp.click();
+    }
+
+    async function linkSavedVarsFileWithHandle() {
+      if (typeof window.showOpenFilePicker !== 'function') {
+        triggerSavedVarsFilePicker();
+        return;
+      }
+      try {
+        const [handle] = await window.showOpenFilePicker({
+          types: [{
+            description: 'WoW SavedVariables Lua or JSON',
+            accept: { 'text/plain': ['.lua', '.json', '.txt'] }
+          }],
+          multiple: false
+        });
+        if (handle) {
+          linkedSavedVarsFileHandle = handle;
+          const file = await handle.getFile();
+          const btn1 = document.getElementById('btn-quick-resync-file');
+          const btn2 = document.getElementById('modal-btn-resync-handle');
+          if (btn1) btn1.style.display = 'inline-block';
+          if (btn2) btn2.style.display = 'inline-block';
+          await handleSavedVarsFileDrop(file, true);
+        }
+      } catch (e) {}
+    }
+
+    async function resyncFromLinkedSavedVarsFile() {
+      if (!linkedSavedVarsFileHandle) {
+        await linkSavedVarsFileWithHandle();
+        return;
+      }
+      try {
+        const file = await linkedSavedVarsFileHandle.getFile();
+        await handleSavedVarsFileDrop(file, true);
+      } catch (e) {
+        if (typeof showToastNotice === 'function') showToastNotice('⚠️ Could not read linked WoWSimLab.lua: ' + e.message);
+      }
+    }
+
+    function extractCharacterPayloadFromSavedVars(parsedObj, preferredCharKey = '') {
+      if (!parsedObj || typeof parsedObj !== 'object') return null;
+      // Direct snapshot JSON or table
+      if (parsedObj.gear && (parsedObj.name || parsedObj.character)) {
+        return parsedObj;
+      }
+      // WoWSimLabDB structure: { characters = { ["Cotto-Forever"] = { ... } }, lastSyncedChar = "...", lastSyncJson = "...", sessions = { ... } }
+      if (parsedObj.characters && typeof parsedObj.characters === 'object') {
+        const keys = Object.keys(parsedObj.characters);
+        const selRow = document.getElementById('savedvars-char-picker-row');
+        const selEl = document.getElementById('savedvars-char-select');
+        if (selRow && selEl && keys.length > 0) {
+          selRow.style.display = 'block';
+          const targetKey = (preferredCharKey && parsedObj.characters[preferredCharKey])
+            ? preferredCharKey
+            : ((parsedObj.lastSyncedChar && parsedObj.characters[parsedObj.lastSyncedChar]) ? parsedObj.lastSyncedChar : keys[0]);
+          selEl.innerHTML = keys.map(k => {
+            const c = parsedObj.characters[k] || {};
+            const bagCnt = Array.isArray(c.bags) ? c.bags.length : 0;
+            const bankCnt = Array.isArray(c.bank) ? c.bank.length : 0;
+            return `<option value="${k}" ${k === targetKey ? 'selected' : ''}>${c.name || k} (Lvl ${c.level || '?'} ${(c.class || '').toUpperCase()} • ${bagCnt} Bags / ${bankCnt} Bank)</option>`;
+          }).join('');
+          return parsedObj.characters[targetKey];
+        }
+      }
+      if (typeof parsedObj.lastSyncJson === 'string' && parsedObj.lastSyncJson.trim().startsWith('{')) {
+        try { return JSON.parse(parsedObj.lastSyncJson); } catch (e) {}
+      }
+      if (parsedObj.sessions && typeof parsedObj.sessions === 'object') {
+        const sKeys = Object.keys(parsedObj.sessions);
+        if (sKeys.length > 0) return parsedObj.sessions[sKeys[sKeys.length - 1]];
+      }
+      return parsedObj;
+    }
+
+    async function onSelectCharacterFromSavedVars(charKey) {
+      if (!lastParsedSavedVarsDB) return;
+      const charPayload = extractCharacterPayloadFromSavedVars(lastParsedSavedVarsDB, charKey);
+      if (charPayload) {
+        const jsonEl = document.getElementById('armory-json-input');
+        if (jsonEl) jsonEl.value = JSON.stringify(charPayload, null, 2);
+        await applyArmoryJsonImport();
+      }
+    }
+
+    async function handleSavedVarsFileDrop(file, autoImport = true) {
+      const errEl = document.getElementById('armory-import-error');
+      if (errEl) { errEl.style.display = 'none'; errEl.textContent = ''; }
+      try {
+        const text = await file.text();
+        const parsed = parseWoWSavedVariablesLua(text);
+        lastParsedSavedVarsDB = parsed;
+        const charPayload = extractCharacterPayloadFromSavedVars(parsed);
+        if (!charPayload) {
+          throw new Error('No character snapshot found inside ' + file.name);
+        }
+        const jsonEl = document.getElementById('armory-json-input');
+        if (jsonEl) jsonEl.value = JSON.stringify(charPayload, null, 2);
+        if (autoImport) {
+          await applyArmoryJsonImport();
+        }
+      } catch (e) {
+        if (errEl) {
+          errEl.style.display = 'block';
+          errEl.textContent = `Could not parse ${file.name}: ${e.message}`;
+        }
       }
     }
 
@@ -19082,35 +19436,61 @@
 
     function loadSampleArmoryJson() {
       const sample = {
-        name: "Cotto-Earthshaker",
-        region: "us",
+        name: "cotto-earthshaker",
         armoryUrl: "https://worldofwarcraft.blizzard.com/en-us/forever/us/armory/character/cotto-earthshaker",
         level: 31,
         class: "shaman",
         race: "tauren",
         faction: "Horde",
-        spec: "enhancement",
-        pvpRank: 2,
+        pvpRank: 3,
         professions: [
-          { id: "leatherworking", skill: 150, max: 225 },
-          { id: "skinning", skill: 205, max: 225 }
+          { id: "leatherworking", skill: 110, max: 150 },
+          { id: "skinning", skill: 180, max: 225 }
         ],
         reputations: {
           "The Defilers": "Friendly",
           "Warsong Outriders": "Honored",
-          "Frostwolf Clan": "Neutral"
+          "Thunder Bluff": "Revered"
         },
         gear: {
-          head: "Totemic Leather Helm",
-          neck: "Mark of the Marsh",
-          shoulders: "Seared Grove Shoulderpads",
-          chest: "Tree Bark Jacket",
-          wrist: "Thicket Bindings",
-          hands: "Fletcher's Gloves",
-          waist: "Moss Cinch",
-          legs: "Ferine Leggings",
-          feet: "Shapeshifting Sentinel's Strides",
-          mainhand: "Corpsemaker"
+          head: 252448,
+          neck: 277204,
+          shoulders: 5964,
+          back: 2316,
+          chest: 270043,
+          wrist: 271732,
+          hands: 888,
+          waist: 16987,
+          legs: 252446,
+          feet: 271214,
+          ring1: 6321,
+          ring2: 279862,
+          trinket1: 18853,
+          mainhand: 6905,
+          relic: 263412
+        },
+        bags: [
+          { id: 280604, name: "Rage of the Storm", location: "bag" },
+          { id: 280605, name: "Tidebringer's Claw", location: "bag" },
+          { id: 280607, name: "Lightning's Grasp", location: "bag" },
+          { id: 280696, name: "Elementalist's Guard", location: "bag" },
+          { id: 6687, name: "Corpsemaker", location: "bag" },
+          { id: 6689, name: "Wind Spirit Staff", location: "bag" }
+        ],
+        bank: [
+          { id: 279844, name: "Striking Staff", location: "bank" },
+          { id: 7002, name: "Arctic Buckler", location: "bank" },
+          { id: 6725, name: "Marbled Buckler", location: "bank" },
+          { id: 271767, name: "Healer's Staff", location: "bank" }
+        ],
+        armoryStats: {
+          health: 1204,
+          mana: 1259,
+          str: 101,
+          agi: 42,
+          sta: 98,
+          int: 56,
+          spi: 73
         }
       };
       const urlEl = document.getElementById('armory-url-input');
@@ -19194,9 +19574,24 @@
 
       let data;
       try {
-        data = JSON.parse(raw);
+        if (raw.startsWith('{') || raw.startsWith('[')) {
+          data = JSON.parse(raw);
+        } else {
+          const parsedLua = parseWoWSavedVariablesLua(raw);
+          lastParsedSavedVarsDB = parsedLua;
+          data = extractCharacterPayloadFromSavedVars(parsedLua);
+        }
       } catch (e) {
-        if (errEl) { errEl.style.display = 'block'; errEl.textContent = 'Invalid JSON: ' + e.message; }
+        if (errEl) { errEl.style.display = 'block'; errEl.textContent = 'Invalid JSON or WoWSimLab.lua format: ' + e.message; }
+        return;
+      }
+
+      if (data && data.characters && !data.gear) {
+        lastParsedSavedVarsDB = data;
+        data = extractCharacterPayloadFromSavedVars(data);
+      }
+      if (!data) {
+        if (errEl) { errEl.style.display = 'block'; errEl.textContent = 'No valid character payload found.'; }
         return;
       }
 
@@ -19250,15 +19645,31 @@
         data = { name: nameFound, level: lvlFound, class: clsFound, race: raceFound, faction: facFound, pvpRank: rankFound, professions: Object.values(profMap), reputations, gear, enchants };
       }
 
-      // Normalize character profile
-      const charName = data.name || (urlVal.split('/character/')[1] || 'Imported Hero').split(/[?#]/)[0];
-      const cls = (data.class || activeCharacterClass || 'shaman').toLowerCase();
-      const faction = data.faction || activeCharacterFaction || 'Horde';
-      const race = (data.race || activeCharacterRace || 'tauren').toLowerCase().replace(/\s+/g, '_');
-      const lvl = Math.max(1, Math.min(60, parseInt(data.level) || getCurrentPlayerLevel()));
+      // Normalize character profile (supports both top-level fields and WoWSimLab data.character sub-object)
+      const cSub = (data.character && typeof data.character === 'object') ? data.character : {};
+      const charName = data.name || cSub.name || (urlVal.split('/character/')[1] || 'Imported Hero').split(/[?#]/)[0];
+      const cls = (data.class || cSub.class || activeCharacterClass || 'shaman').toLowerCase();
+      const faction = data.faction || cSub.faction || activeCharacterFaction || 'Horde';
+      const race = (data.race || cSub.race || activeCharacterRace || 'tauren').toLowerCase().replace(/\s+/g, '_');
+      const lvl = Math.max(1, Math.min(60, parseInt(data.level || cSub.level) || getCurrentPlayerLevel()));
       const profs = Array.isArray(data.professions) ? data.professions : [];
       const reps = (data.reputations && typeof data.reputations === 'object') ? data.reputations : {};
-      const pvpRank = Math.max(0, Math.min(14, parseInt(data.pvpRank) || 0));
+      const pvpRank = Math.max(0, Math.min(14, parseInt(data.pvpRank ?? cSub.pvpRank) || 0));
+      const bagItems = Array.isArray(data.bags) ? data.bags : [];
+      const bankItems = Array.isArray(data.bank) ? data.bank : [];
+      const ownedItemsList = Array.isArray(data.ownedItems) ? data.ownedItems : [];
+      const empStats = data.empirical_stats || null;
+      const resolvedArmoryStats = (data.armoryStats && typeof data.armoryStats === 'object')
+        ? data.armoryStats
+        : (empStats ? {
+            health: empStats.health,
+            mana: empStats.mana,
+            str: empStats.strength,
+            agi: empStats.agility,
+            sta: empStats.stamina,
+            int: empStats.intellect,
+            spi: empStats.spirit
+          } : null);
 
       // Apply Faction, Class, Race, Level, Professions to simulator UI
       isInitializing = true;
@@ -19291,6 +19702,12 @@
         if (data.gear && typeof data.gear === 'object') {
           if (data.gear.ranged !== undefined && data.gear.relic === undefined) {
             data.gear.relic = data.gear.ranged;
+          }
+          if (data.gear.finger1 !== undefined && data.gear.ring1 === undefined) {
+            data.gear.ring1 = data.gear.finger1;
+          }
+          if (data.gear.finger2 !== undefined && data.gear.ring2 === undefined) {
+            data.gear.ring2 = data.gear.finger2;
           }
           for (const slot of Object.keys(resolvedGear)) {
             const rawSlotVal = data.gear[slot];
@@ -19336,13 +19753,26 @@
         pvpRank: pvpRank,
         professions: profs,
         reputations: reps,
-        armoryStats: (data.armoryStats && typeof data.armoryStats === 'object') ? data.armoryStats : null,
+        bags: bagItems,
+        bank: bankItems,
+        ownedItems: ownedItemsList,
+        bankLastUpdated: data.bankLastUpdated || null,
+        armoryStats: resolvedArmoryStats,
         baselineGear: JSON.parse(JSON.stringify(currentGear)),
         baselineEnchants: JSON.parse(JSON.stringify(currentEnchants)),
         baselineTalents: JSON.parse(JSON.stringify(talentPoints)),
         baselineDps: null
       };
-      characterConstraints = { strictProf: true, strictRep: true, strictPvp: true };
+      const hasInventory = (bagItems.length > 0 || bankItems.length > 0 || ownedItemsList.length > 0);
+      characterConstraints = {
+        strictProf: true,
+        strictRep: true,
+        strictPvp: true,
+        ownedOnly: Boolean(characterConstraints && characterConstraints.ownedOnly && hasInventory)
+      };
+
+      // Automatically save or update the "Baseline (Synced Equipped)" build in the character's Multi-Build Locker!
+      upsertBaselineCharacterBuild();
 
       saveImportedCharacterToStorage();
       saveUserSettings();
@@ -19361,7 +19791,8 @@
         await runSimulation();
       }
       if (typeof showToastNotice === 'function') {
-        showToastNotice(`👤 Imported ${charName} (Lvl ${lvl})! Constraints active: Prof Skills, Reputations &amp; PvP Rank.`);
+        const invMsg = hasInventory ? ` (${bagItems.length} Bag items, ${bankItems.length} Bank items synced!)` : '';
+        showToastNotice(`🔄 Synced ${charName} (Lvl ${lvl})${invMsg}`);
       }
     }
 
@@ -19442,9 +19873,362 @@
       saveImportedCharacterToStorage();
       renderImportedCharacterBanner();
       if (typeof renderGearSlots === 'function') renderGearSlots();
+      if (typeof renderModalItems === 'function') renderModalItems();
       if (typeof showToastNotice === 'function') {
-        const label = key === 'strictProf' ? 'Profession Skill limits' : (key === 'strictRep' ? 'Reputation limits' : 'PvP Rank limits');
-        showToastNotice(characterConstraints[key] ? `🔒 ${label} enforced (Strict Mode)` : `🔓 Previewing future ${label.replace(' limits', '')} milestones!`);
+        if (key === 'ownedOnly') {
+          showToastNotice(characterConstraints.ownedOnly ? '🎒 Owned Gear Only Mode ON: BiS & Picker restricted to your Equipped + Bags + Bank!' : '🌍 All Database Items Mode: Showing all eligible items in the game.');
+        } else {
+          const label = key === 'strictProf' ? 'Profession Skill limits' : (key === 'strictRep' ? 'Reputation limits' : 'PvP Rank limits');
+          showToastNotice(characterConstraints[key] ? `🔒 ${label} enforced (Strict Mode)` : `🔓 Previewing future ${label.replace(' limits', '')} milestones!`);
+        }
+      }
+    }
+
+    function findCatalogItemByIdAcrossAllSlots(itemId) {
+      if (!catalog || !itemId) return null;
+      const numId = Number(itemId);
+      for (const [slotKey, list] of Object.entries(catalog)) {
+        if (!Array.isArray(list)) continue;
+        const found = list.find(i => i.id === numId);
+        if (found) return { item: found, catalogSlot: slotKey };
+      }
+      return null;
+    }
+
+    function equipOwnedInventoryItem(itemId) {
+      const res = findCatalogItemByIdAcrossAllSlots(itemId);
+      if (!res || !res.item) {
+        if (typeof showToastNotice === 'function') showToastNotice('ℹ️ This item is not an equippable armor/weapon in the simulator catalog.');
+        return;
+      }
+      const { item, catalogSlot } = res;
+      let targetSlot = catalogSlot;
+      if (catalogSlot === 'finger') {
+        targetSlot = (!currentGear.ring1 || currentGear.ring1 === item.id) ? 'ring1' : 'ring2';
+      } else if (catalogSlot === 'trinket') {
+        targetSlot = (!currentGear.trinket1 || currentGear.trinket1 === item.id) ? 'trinket1' : 'trinket2';
+      }
+      currentGear[targetSlot] = item.id;
+      if (targetSlot === 'mainhand' && item.is2H) {
+        currentGear.offhand = 0;
+      }
+      renderGearSlots();
+      renderSyncedInventoryGrid();
+      onSettingChanged();
+      if (typeof showToastNotice === 'function') {
+        showToastNotice(`🛡️ Equipped ${item.name} in ${getSlotDisplayName(targetSlot)}!`);
+      }
+    }
+
+    function renderSyncedInventoryGrid() {
+      const grid = document.getElementById('synced-inventory-grid');
+      const titleEl = document.getElementById('inv-summary-title');
+      const subEl = document.getElementById('inv-summary-subtitle');
+      if (!grid) return;
+
+      if (!importedCharacter) {
+        grid.innerHTML = `<div style="grid-column:1/-1;padding:24px;text-align:center;color:#94a3b8;background:#0b0e14;border:1px solid #1e293b;border-radius:6px;">No character synced yet. Drag &amp; drop <code style="color:#67e8f9;">WoWSimLab.lua</code> or click <strong>Load Sample</strong> on the first tab!</div>`;
+        return;
+      }
+
+      const bagCount = (importedCharacter.bags || []).length;
+      const bankCount = (importedCharacter.bank || []).length;
+      const ownedIds = Array.from(getAllOwnedItemIdsSet());
+      if (titleEl) {
+        titleEl.textContent = `${importedCharacter.name}'s Synced Locker (${ownedIds.length} Unique Items • ${bagCount} Bag Slots • ${bankCount} Bank Slots)`;
+      }
+      if (subEl) {
+        subEl.textContent = importedCharacter.bankLastUpdated
+          ? `Bank last cached in-game: ${importedCharacter.bankLastUpdated} • Click any equippable item below to equip it immediately.`
+          : `Click any equippable item below to equip it immediately, or click "Auto-Equip Best From My Bags & Bank".`;
+      }
+
+      // Resolve all owned items against catalog
+      const resolvedEntries = [];
+      const currentLvl = getCurrentPlayerLevel();
+      for (const id of ownedIds) {
+        const res = findCatalogItemByIdAcrossAllSlots(id);
+        const loc = getOwnedItemLocation(id) || 'bag';
+        const isCurrentlyEquipped = Object.values(currentGear || {}).includes(id);
+        if (res && res.item) {
+          const sc = calculateItemScore(res.item, currentLvl);
+          resolvedEntries.push({
+            id,
+            item: res.item,
+            catalogSlot: res.catalogSlot,
+            loc,
+            isCurrentlyEquipped,
+            score: sc.score
+          });
+        } else {
+          // Non-catalog item (e.g. quest material/consumable from bag/bank)
+          const rawEntry = (importedCharacter.bags || []).find(b => Number(b.id) === id)
+            || (importedCharacter.bank || []).find(b => Number(b.id) === id)
+            || (importedCharacter.ownedItems || []).find(b => Number(b.id) === id);
+          if (rawEntry && rawEntry.name) {
+            resolvedEntries.push({
+              id,
+              item: { id, name: rawEntry.name, quality: 'common', icon: 'inv_misc_bag_08', ilvl: 0, summary: 'Bag / Bank Item' },
+              catalogSlot: null,
+              loc,
+              isCurrentlyEquipped: false,
+              score: -1
+            });
+          }
+        }
+      }
+
+      resolvedEntries.sort((a, b) => {
+        if (a.isCurrentlyEquipped !== b.isCurrentlyEquipped) return a.isCurrentlyEquipped ? -1 : 1;
+        if ((a.catalogSlot !== null) !== (b.catalogSlot !== null)) return a.catalogSlot !== null ? -1 : 1;
+        return b.score - a.score;
+      });
+
+      if (resolvedEntries.length === 0) {
+        grid.innerHTML = `<div style="grid-column:1/-1;padding:24px;text-align:center;color:#94a3b8;background:#0b0e14;border:1px solid #1e293b;border-radius:6px;">No bag or bank items found in this sync payload. Use the in-game <code style="color:#67e8f9;">WoWSimLab</code> addon (<code style="color:#34d399;">/simsync</code> or <code style="color:#67e8f9;">WoWSimLab.lua</code>) to include your full Bags &amp; Bank!</div>`;
+        return;
+      }
+
+      grid.innerHTML = '';
+      for (const entry of resolvedEntries) {
+        const it = entry.item;
+        const card = document.createElement('div');
+        card.style.cssText = `display:flex;align-items:center;justify-content:space-between;gap:8px;background:${entry.isCurrentlyEquipped ? 'rgba(16,185,129,0.12)' : '#151922'};border:1px solid ${entry.isCurrentlyEquipped ? 'rgba(16,185,129,0.45)' : '#1e293b'};border-radius:6px;padding:7px 9px;cursor:${entry.catalogSlot ? 'pointer' : 'default'};`;
+        if (entry.catalogSlot) {
+          card.onmouseenter = (e) => showItemTooltip(e, it);
+          card.onmousemove = (e) => moveUnifiedTooltip(e);
+          card.onmouseleave = () => hideUnifiedTooltip();
+          card.onclick = () => equipOwnedInventoryItem(it.id);
+        }
+        const locBadge = entry.isCurrentlyEquipped
+          ? `<span style="color:#34d399;font-size:0.65rem;font-weight:700;">✓ Equipped</span>`
+          : (entry.loc === 'bank'
+              ? `<span style="color:#fbbf24;font-size:0.65rem;font-weight:700;">🏦 Bank</span>`
+              : `<span style="color:#93c5fd;font-size:0.65rem;font-weight:700;">🎒 Bag</span>`);
+        card.innerHTML = `
+          <div style="display:flex;align-items:center;gap:8px;min-width:0;flex:1;">
+            <div class="picker-icon ${it.quality || 'common'}" style="width:32px;height:32px;flex-shrink:0;background-image:url('${getIconUrl(it.icon, it)}');"></div>
+            <div style="min-width:0;flex:1;">
+              <div class="${it.quality || 'common'}" style="font-size:0.75rem;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${it.name}</div>
+              <div style="font-size:0.65rem;color:#94a3b8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${it.summary || (it.slotName || 'Item')}</div>
+            </div>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:flex-end;gap:2px;flex-shrink:0;">
+            ${locBadge}
+            ${entry.score > 0 ? `<span style="font-size:0.65rem;color:#cbd5e1;font-weight:700;">${entry.score} pts</span>` : ''}
+          </div>
+        `;
+        grid.appendChild(card);
+      }
+    }
+
+    function autoBuildBiSFromOwnedInventory() {
+      if (!importedCharacter) return;
+      characterConstraints.ownedOnly = true;
+      saveImportedCharacterToStorage();
+      autoEquipLevelingBiS();
+      renderImportedCharacterBanner();
+      renderSyncedInventoryGrid();
+      closeArmoryImportModal();
+      if (typeof runOneStopSimulate === 'function') runOneStopSimulate();
+      if (typeof showToastNotice === 'function') {
+        showToastNotice(`🎒 Equipped best ${currentCharacterSpec.toUpperCase()} set using ONLY your Synced Equipped + Bags + Bank items!`);
+      }
+    }
+
+    // --- MULTI-BUILD CHARACTER LOCKER ---
+    function upsertBaselineCharacterBuild() {
+      if (!importedCharacter) return;
+      const charKey = (importedCharacter.name || 'hero').toLowerCase();
+      const baseId = `baseline_${charKey}`;
+      const existingIdx = characterSavedBuilds.findIndex(b => b.id === baseId);
+      const snap = {
+        id: baseId,
+        charName: importedCharacter.name,
+        name: `📌 Synced Baseline (${importedCharacter.name})`,
+        spec: currentCharacterSpec || 'enhancement',
+        weaponStyle: document.getElementById('cfg-weapon-style')?.value || 'auto',
+        imbue: (typeof currentImbue !== 'undefined') ? currentImbue : 'None',
+        gear: JSON.parse(JSON.stringify(currentGear)),
+        enchants: JSON.parse(JSON.stringify(currentEnchants)),
+        talents: JSON.parse(JSON.stringify(talentPoints)),
+        rotationPreset: activeRotationPresetKey,
+        customRotation: JSON.parse(JSON.stringify(currentRotation || [])),
+        buffs: JSON.parse(JSON.stringify((typeof activeBuffs !== 'undefined' && activeBuffs) ? activeBuffs : {})),
+        dps: importedCharacter.baselineDps || null,
+        updatedAt: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+      };
+      if (existingIdx >= 0) characterSavedBuilds[existingIdx] = snap;
+      else characterSavedBuilds.unshift(snap);
+      activeCharacterBuildId = baseId;
+      saveImportedCharacterToStorage();
+    }
+
+    function createBuildSnapshotObject(buildName) {
+      const cName = importedCharacter ? importedCharacter.name : `Lvl ${getCurrentPlayerLevel()} ${activeCharacterClass}`;
+      const specLabel = (currentCharacterSpec || 'enhancement').charAt(0).toUpperCase() + (currentCharacterSpec || 'enhancement').slice(1);
+      const mhId = currentGear.mainhand || 0;
+      const mhItem = mhId > 0 ? getCatalogForSlot('mainhand').find(i => i.id === mhId) : null;
+      const defaultName = `${specLabel} (${mhItem ? mhItem.name : 'Unarmed'})`;
+      return {
+        id: 'build_' + Date.now() + '_' + Math.floor(Math.random() * 1000),
+        charName: cName,
+        name: (buildName || '').trim() || defaultName,
+        spec: currentCharacterSpec || 'enhancement',
+        weaponStyle: document.getElementById('cfg-weapon-style')?.value || 'auto',
+        imbue: (typeof currentImbue !== 'undefined') ? currentImbue : 'None',
+        gear: JSON.parse(JSON.stringify(currentGear)),
+        enchants: JSON.parse(JSON.stringify(currentEnchants)),
+        talents: JSON.parse(JSON.stringify(talentPoints)),
+        rotationPreset: activeRotationPresetKey,
+        customRotation: JSON.parse(JSON.stringify(currentRotation || [])),
+        buffs: JSON.parse(JSON.stringify((typeof activeBuffs !== 'undefined' && activeBuffs) ? activeBuffs : {})),
+        dps: (typeof previousDps === 'number' && previousDps > 0) ? Math.round(previousDps * 10) / 10 : null,
+        updatedAt: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+      };
+    }
+
+    function promptSaveCurrentCharacterBuild() {
+      const specLabel = (currentCharacterSpec || 'enhancement').charAt(0).toUpperCase() + (currentCharacterSpec || 'enhancement').slice(1);
+      const mhId = currentGear.mainhand || 0;
+      const mhItem = mhId > 0 ? getCatalogForSlot('mainhand').find(i => i.id === mhId) : null;
+      const suggested = `${specLabel} • ${mhItem ? mhItem.name : 'Custom'}`;
+      const name = window.prompt('Save current character build as:', suggested);
+      if (name === null) return;
+      const b = createBuildSnapshotObject(name || suggested);
+      characterSavedBuilds.push(b);
+      activeCharacterBuildId = b.id;
+      saveImportedCharacterToStorage();
+      renderImportedCharacterBanner();
+      renderCharacterBuildsLocker();
+      if (typeof showToastNotice === 'function') showToastNotice(`💾 Saved build "${b.name}"!`);
+    }
+
+    function saveCurrentCharacterBuildFromModal() {
+      const inp = document.getElementById('new-char-build-name');
+      const b = createBuildSnapshotObject(inp ? inp.value : '');
+      if (inp) inp.value = '';
+      characterSavedBuilds.push(b);
+      activeCharacterBuildId = b.id;
+      saveImportedCharacterToStorage();
+      renderImportedCharacterBanner();
+      renderCharacterBuildsLocker();
+      if (typeof showToastNotice === 'function') showToastNotice(`💾 Saved build "${b.name}"!`);
+    }
+
+    async function loadCharacterBuildById(buildId) {
+      if (!buildId) return;
+      const b = characterSavedBuilds.find(x => x.id === buildId);
+      if (!b) return;
+      activeCharacterBuildId = b.id;
+
+      isInitializing = true;
+      try {
+        if (b.spec && b.spec !== currentCharacterSpec) {
+          selectCharacterSpec(b.spec, false);
+        }
+        const wEl = document.getElementById('cfg-weapon-style');
+        if (wEl && b.weaponStyle) wEl.value = b.weaponStyle;
+        if (b.imbue && typeof setImbue === 'function') setImbue(b.imbue);
+        if (b.gear) currentGear = JSON.parse(JSON.stringify(b.gear));
+        if (b.enchants) currentEnchants = JSON.parse(JSON.stringify(b.enchants));
+        if (b.talents && Array.isArray(b.talents)) {
+          talentPoints = JSON.parse(JSON.stringify(b.talents));
+        }
+        if (b.customRotation && Array.isArray(b.customRotation) && b.customRotation.length > 0) {
+          currentRotation = JSON.parse(JSON.stringify(b.customRotation));
+        }
+        if (b.buffs && typeof activeBuffs !== 'undefined') {
+          activeBuffs = JSON.parse(JSON.stringify(b.buffs));
+          if (typeof saveActiveBuffs === 'function') saveActiveBuffs();
+          if (typeof renderBuffsView === 'function') renderBuffsView();
+        }
+      } finally {
+        isInitializing = false;
+      }
+
+      if (typeof syncTotemsFromRotation === 'function') syncTotemsFromRotation();
+      updateTalentHeader();
+      renderTalentTrees();
+      renderRotationUI();
+      renderGearSlots();
+      renderImportedCharacterBanner();
+      renderCharacterBuildsLocker();
+      saveUserSettings();
+      if (typeof runOneStopSimulate === 'function') await runOneStopSimulate();
+      if (typeof showToastNotice === 'function') showToastNotice(`🗂️ Loaded build "${b.name}"!`);
+    }
+
+    function deleteCharacterBuildById(buildId) {
+      characterSavedBuilds = characterSavedBuilds.filter(b => b.id !== buildId);
+      if (activeCharacterBuildId === buildId) activeCharacterBuildId = '';
+      saveImportedCharacterToStorage();
+      renderImportedCharacterBanner();
+      renderCharacterBuildsLocker();
+    }
+
+    async function autoGenerateAllSpecBuildsFromOwned() {
+      const cDef = WOW_CLASSES[activeCharacterClass] || WOW_CLASSES.shaman;
+      const specs = cDef.specs || [];
+      const hasInv = getAllOwnedItemIdsSet().size > 0;
+      const prevOwnedOnly = characterConstraints.ownedOnly;
+      if (hasInv) characterConstraints.ownedOnly = true;
+
+      for (const sp of specs) {
+        selectCharacterSpec(sp.id, false);
+        autoOptimizeTalentsForLevel(true);
+        autoEquipLevelingBiS();
+        const mhId = currentGear.mainhand || 0;
+        const mhItem = mhId > 0 ? getCatalogForSlot('mainhand').find(i => i.id === mhId) : null;
+        const tag = hasInv ? '🎒 Owned BiS' : '⚡ Full BiS';
+        const bName = `${sp.name} (${tag} • ${mhItem ? mhItem.name : 'Unarmed'})`;
+        const b = createBuildSnapshotObject(bName);
+        characterSavedBuilds.push(b);
+        activeCharacterBuildId = b.id;
+      }
+
+      characterConstraints.ownedOnly = prevOwnedOnly;
+      saveImportedCharacterToStorage();
+      renderImportedCharacterBanner();
+      renderCharacterBuildsLocker();
+      if (typeof runOneStopSimulate === 'function') await runOneStopSimulate();
+      if (typeof showToastNotice === 'function') {
+        showToastNotice(`✨ Generated ${specs.length} Spec Builds for ${importedCharacter ? importedCharacter.name : cDef.name}! Switch anytime from the Build dropdown.`);
+      }
+    }
+
+    function renderCharacterBuildsLocker() {
+      const listEl = document.getElementById('char-builds-locker-list');
+      if (!listEl) return;
+      if (!characterSavedBuilds || characterSavedBuilds.length === 0) {
+        listEl.innerHTML = `<div style="padding:20px;text-align:center;color:#94a3b8;background:#0b0e14;border:1px solid #1e293b;border-radius:6px;">No saved builds yet. Click <strong>💾 Save Current Build</strong> or <strong>✨ Auto-Generate All Spec Builds</strong> above!</div>`;
+        return;
+      }
+      listEl.innerHTML = '';
+      for (const b of characterSavedBuilds) {
+        const isCurrent = (b.id === activeCharacterBuildId);
+        const mhId = (b.gear && b.gear.mainhand) || 0;
+        const mhItem = mhId > 0 ? getCatalogForSlot('mainhand').find(i => i.id === mhId) : null;
+        const ohId = (b.gear && b.gear.offhand) || 0;
+        const ohItem = ohId > 0 ? getCatalogForSlot('offhand').find(i => i.id === ohId) : null;
+        const wpnSummary = [mhItem ? mhItem.name : null, ohItem ? ohItem.name : null].filter(Boolean).join(' + ') || 'No Weapon';
+        const row = document.createElement('div');
+        row.style.cssText = `display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;background:${isCurrent ? 'rgba(59,130,246,0.16)' : '#151922'};border:1px solid ${isCurrent ? '#3b82f6' : '#1e293b'};border-radius:6px;padding:9px 12px;`;
+        row.innerHTML = `
+          <div style="min-width:0;flex:1;">
+            <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+              <strong style="color:${isCurrent ? '#93c5fd' : '#f8fafc'};font-size:0.8rem;">${b.name}</strong>
+              <span style="font-size:0.66rem;text-transform:uppercase;padding:1px 6px;border-radius:4px;background:#1e293b;color:#fbbf24;font-weight:700;">${b.spec || 'spec'}</span>
+              ${b.dps ? `<span style="font-size:0.68rem;color:#34d399;font-weight:700;">⚡ ${b.dps} DPS</span>` : ''}
+            </div>
+            <div style="font-size:0.69rem;color:#94a3b8;margin-top:2px;">⚔️ ${wpnSummary} • Saved ${b.updatedAt || ''}</div>
+          </div>
+          <div style="display:flex;gap:6px;align-items:center;">
+            <button type="button" onclick="loadCharacterBuildById('${b.id}'); closeArmoryImportModal();" style="cursor:pointer;padding:4px 10px;border-radius:4px;font-size:0.72rem;font-weight:700;background:${isCurrent ? 'rgba(16,185,129,0.22)' : 'rgba(59,130,246,0.22)'};border:1px solid ${isCurrent ? '#10b981' : '#3b82f6'};color:${isCurrent ? '#34d399' : '#93c5fd'};">${isCurrent ? '✓ Active' : 'Equip Build'}</button>
+            <button type="button" onclick="deleteCharacterBuildById('${b.id}')" style="cursor:pointer;padding:4px 8px;border-radius:4px;font-size:0.72rem;background:rgba(239,68,68,0.14);border:1px solid rgba(239,68,68,0.45);color:#fca5a5;" title="Delete Build">🗑️</button>
+          </div>
+        `;
+        listEl.appendChild(row);
       }
     }
 
@@ -19478,12 +20262,36 @@
       banner.style.display = 'flex';
       const nameEl = document.getElementById('imp-char-name');
       const metaEl = document.getElementById('imp-char-meta');
+      const invBadge = document.getElementById('imp-char-inv-badge');
       const linkEl = document.getElementById('imp-char-armory-link');
       const deltaEl = document.getElementById('imp-char-dps-delta');
+      const buildsSel = document.getElementById('char-saved-builds-select');
+      const ownedBtn = document.getElementById('btn-toggle-owned-only');
 
       if (nameEl) nameEl.textContent = importedCharacter.name;
       const profStr = (importedCharacter.professions || []).map(p => `${p.id.slice(0,4).toUpperCase()} ${p.skill}`).join(' / ') || 'No Profs';
       if (metaEl) metaEl.textContent = `Lvl ${importedCharacter.level} • ${profStr} • Rank ${importedCharacter.pvpRank || 0}`;
+
+      const bagCnt = Array.isArray(importedCharacter.bags) ? importedCharacter.bags.length : 0;
+      const bankCnt = Array.isArray(importedCharacter.bank) ? importedCharacter.bank.length : 0;
+      const totalOwned = getAllOwnedItemIdsSet().size;
+      if (invBadge) {
+        if (bagCnt > 0 || bankCnt > 0) {
+          invBadge.style.display = 'inline-block';
+          invBadge.textContent = `🎒 ${bagCnt} Bags • 🏦 ${bankCnt} Bank (${totalOwned} Owned)`;
+        } else {
+          invBadge.style.display = 'none';
+        }
+      }
+      if (ownedBtn) {
+        ownedBtn.style.display = (totalOwned > 0) ? 'inline-block' : 'none';
+      }
+
+      if (buildsSel) {
+        buildsSel.innerHTML = `<option value="">-- Switch Build (${characterSavedBuilds.length}) --</option>` +
+          characterSavedBuilds.map(b => `<option value="${b.id}" ${b.id === activeCharacterBuildId ? 'selected' : ''}>${b.name}${b.dps ? ` (${b.dps} DPS)` : ''}</option>`).join('');
+      }
+
       if (linkEl) {
         if (importedCharacter.armoryUrl) {
           linkEl.href = importedCharacter.armoryUrl;
@@ -19501,6 +20309,7 @@
         b.style.borderColor = active ? 'rgba(59,130,246,0.55)' : 'rgba(245,158,11,0.5)';
         b.style.color = active ? '#93c5fd' : '#fbbf24';
       };
+      styleToggle('btn-toggle-owned-only', Boolean(characterConstraints.ownedOnly), '🎒 Owned Gear Only', '🌍 All DB Items');
       styleToggle('btn-toggle-strict-prof', characterConstraints.strictProf, '🔒 Prof Skills', '🔓 Preview Profs');
       styleToggle('btn-toggle-strict-rep', characterConstraints.strictRep, '🔒 Reputations', '🔓 Preview Reps');
       styleToggle('btn-toggle-strict-pvp', characterConstraints.strictPvp, '🔒 PvP Rank', '🔓 Preview PvP');
@@ -19532,38 +20341,60 @@
   </script>
 
 
-  <!-- ARMORY CHARACTER IMPORT & LIMITS MODAL -->
+  <!-- ACCOUNT, ARMORY, BAGS/BANK INVENTORY & MULTI-BUILD MODAL -->
   <div id="armory-import-modal" style="display: none; position: fixed; inset: 0; z-index: 9999; background: rgba(2, 6, 23, 0.82); backdrop-filter: blur(4px); align-items: center; justify-content: center; padding: 16px;">
-    <div style="background: #111622; border: 1px solid rgba(59, 130, 246, 0.5); border-radius: 10px; max-width: 720px; width: 100%; max-height: 90vh; overflow-y: auto; box-shadow: 0 20px 50px rgba(0,0,0,0.75); padding: 18px 20px; color: #f8fafc;">
+    <div style="background: #111622; border: 1px solid rgba(59, 130, 246, 0.5); border-radius: 10px; max-width: 780px; width: 100%; max-height: 92vh; overflow-y: auto; box-shadow: 0 20px 50px rgba(0,0,0,0.75); padding: 18px 20px; color: #f8fafc;">
       <div style="display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 10px; margin-bottom: 12px;">
         <div style="display: flex; align-items: center; gap: 8px;">
-          <span style="font-size: 1.3rem;">👤</span>
+          <span style="font-size: 1.3rem;">🔄</span>
           <div>
-            <h3 style="margin: 0; font-size: 1rem; color: #93c5fd;">Import WoW Forever Character &amp; Progression Limits</h3>
-            <div style="font-size: 0.72rem; color: #94a3b8;">Use your real Armory gear, profession skills, reputations &amp; PvP rank as your starting baseline</div>
+            <h3 style="margin: 0; font-size: 1rem; color: #93c5fd;">Sync WoW Forever Account, Bags &amp; Bank Inventory &amp; Multi-Build Locker</h3>
+            <div style="font-size: 0.72rem; color: #94a3b8;">Drag &amp; drop <code style="color:#67e8f9;">WoWSimLab.lua</code>, paste <code style="color:#34d399;">/simsync</code> Addon JSON, or paste Armory JSON to sync Equipped + Bags + Bank + Professions + Reputations + PvP Rank</div>
           </div>
         </div>
         <button type="button" onclick="closeArmoryImportModal()" style="background: transparent; border: none; color: #94a3b8; font-size: 1.2rem; cursor: pointer;">✕</button>
       </div>
 
       <!-- Modal Tabs -->
-      <div style="display: flex; gap: 6px; margin-bottom: 14px; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 8px;">
-        <button type="button" id="armory-tab-btn-import" onclick="switchArmoryModalTab('import')" style="cursor: pointer; padding: 6px 12px; border-radius: 5px; font-size: 0.76rem; font-weight: 700; border: 1px solid #3b82f6; background: rgba(59,130,246,0.22); color: #fff;">📋 Paste Armory JSON</button>
-        <button type="button" id="armory-tab-btn-limits" onclick="switchArmoryModalTab('limits')" style="cursor: pointer; padding: 6px 12px; border-radius: 5px; font-size: 0.76rem; font-weight: 700; border: 1px solid #334155; background: #1e293b; color: #94a3b8;">🛠️ Profession Skills, Reputations &amp; PvP Rank</button>
+      <div style="display: flex; gap: 6px; margin-bottom: 14px; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 8px; flex-wrap: wrap;">
+        <button type="button" id="armory-tab-btn-import" onclick="switchArmoryModalTab('import')" style="cursor: pointer; padding: 6px 12px; border-radius: 5px; font-size: 0.75rem; font-weight: 700; border: 1px solid #3b82f6; background: rgba(59,130,246,0.22); color: #fff;">📂 Drag &amp; Drop File / Paste Sync</button>
+        <button type="button" id="armory-tab-btn-inventory" onclick="switchArmoryModalTab('inventory')" style="cursor: pointer; padding: 6px 12px; border-radius: 5px; font-size: 0.75rem; font-weight: 700; border: 1px solid #334155; background: #1e293b; color: #94a3b8;">🎒 Bags &amp; Bank Inventory</button>
+        <button type="button" id="armory-tab-btn-builds" onclick="switchArmoryModalTab('builds')" style="cursor: pointer; padding: 6px 12px; border-radius: 5px; font-size: 0.75rem; font-weight: 700; border: 1px solid #334155; background: #1e293b; color: #94a3b8;">🗂️ Multi-Build Locker</button>
+        <button type="button" id="armory-tab-btn-limits" onclick="switchArmoryModalTab('limits')" style="cursor: pointer; padding: 6px 12px; border-radius: 5px; font-size: 0.75rem; font-weight: 700; border: 1px solid #334155; background: #1e293b; color: #94a3b8;">🛠️ Skills, Reps &amp; PvP Rank</button>
       </div>
 
-      <!-- TAB 1: PASTE ARMORY JSON -->
+      <!-- TAB 1: DRAG & DROP SAVEDVARIABLES FILE OR PASTE /SIMSYNC / ARMORY JSON -->
       <div id="armory-tab-import">
-        <div style="background: rgba(15, 23, 42, 0.8); border: 1px solid #1e293b; border-radius: 6px; padding: 10px 12px; margin-bottom: 12px;">
-          <div style="font-size: 0.75rem; font-weight: 700; color: #fbbf24; margin-bottom: 6px;">How to pull directly from your WoW Forever Armory (Zero Backend):</div>
-          <ol style="margin: 0; padding-left: 18px; font-size: 0.72rem; color: #cbd5e1; line-height: 1.55;">
-            <li>Open your Armory page (e.g. <code style="color:#93c5fd;">worldofwarcraft.blizzard.com/en-us/forever/us/armory/character/cotto-earthshaker</code>).</li>
-            <li>Press <strong>F12</strong> → <strong>Console</strong>, paste our 1-line extractor snippet, and hit Enter — it copies your character JSON automatically!</li>
-            <li>Paste the JSON below and click <strong>Import Character</strong>.</li>
-          </ol>
+        <!-- MODE 2: DRAG & DROP SAVEDVARIABLES FILE (WoWSimLab.lua) -->
+        <div id="savedvars-dropzone" onclick="triggerSavedVarsFilePicker()" style="border: 2px dashed rgba(56, 189, 248, 0.55); background: linear-gradient(135deg, rgba(14, 116, 144, 0.16), rgba(15, 23, 42, 0.85)); border-radius: 8px; padding: 14px 16px; margin-bottom: 12px; text-align: center; cursor: pointer; transition: all 0.15s ease;">
+          <input type="file" id="savedvars-file-input" accept=".lua,.json,.txt" style="display: none;" onchange="if(this.files && this.files[0]) handleSavedVarsFileDrop(this.files[0]);" />
+          <div style="font-size: 1.35rem; margin-bottom: 4px;">📂 Drag &amp; Drop <code style="color:#67e8f9;">WoWSimLab.lua</code> Here (or Click to Browse)</div>
+          <div style="font-size: 0.73rem; color: #cbd5e1; margin-bottom: 6px;">
+            Syncs your <strong>Equipped Gear, All Bags (0–4), Cached Bank (-1 &amp; 5–10), Professions, Reputations, PvP Rank, Talents &amp; Live Attributes</strong> directly from your WoW folder:
+          </div>
+          <div style="font-size: 0.69rem; color: #93c5fd; font-family: monospace; background: rgba(2, 6, 23, 0.65); display: inline-block; padding: 3px 8px; border-radius: 4px; border: 1px solid rgba(59,130,246,0.3);">
+            World of Warcraft/_classic_era_/WTF/Account/&lt;YourAccount&gt;/SavedVariables/WoWSimLab.lua
+          </div>
+          <div style="display: flex; justify-content: center; gap: 8px; margin-top: 10px; flex-wrap: wrap;" onclick="event.stopPropagation();">
+            <button type="button" onclick="linkSavedVarsFileWithHandle()" style="cursor: pointer; padding: 5px 11px; border-radius: 5px; font-size: 0.72rem; font-weight: 700; background: rgba(34,211,238,0.2); border: 1px solid #22d3ee; color: #67e8f9;" title="Link WoWSimLab.lua once so you can click 'Re-Sync File' anytime after /reload in WoW!">🔗 Link WoWSimLab.lua for 1-Click Re-Sync</button>
+            <button type="button" id="modal-btn-resync-handle" onclick="resyncFromLinkedSavedVarsFile()" style="display: none; cursor: pointer; padding: 5px 11px; border-radius: 5px; font-size: 0.72rem; font-weight: 700; background: rgba(16,185,129,0.22); border: 1px solid #10b981; color: #34d399;">🔄 Re-Sync Linked File Now</button>
+          </div>
+          <div id="savedvars-char-picker-row" style="display: none; margin-top: 10px; padding-top: 8px; border-top: 1px solid rgba(255,255,255,0.1);" onclick="event.stopPropagation();">
+            <label style="font-size: 0.72rem; color: #fbbf24; font-weight: 700; margin-right: 6px;">Select Character in SavedVariables:</label>
+            <select id="savedvars-char-select" onchange="onSelectCharacterFromSavedVars(this.value)" style="background: #0b0e14; border: 1px solid #38bdf8; color: #fff; border-radius: 4px; padding: 3px 8px; font-size: 0.74rem;"></select>
+          </div>
+        </div>
+
+        <!-- MODE 1: IN-GAME /SIMSYNC ADDON COMMAND OR ARMORY CONSOLE SNIPPET -->
+        <div style="background: rgba(15, 23, 42, 0.8); border: 1px solid #1e293b; border-radius: 6px; padding: 10px 12px; margin-bottom: 10px;">
+          <div style="font-size: 0.74rem; font-weight: 700; color: #fbbf24; margin-bottom: 4px;">Two Ways to Sync (Both Supported):</div>
+          <ul style="margin: 0; padding-left: 18px; font-size: 0.71rem; color: #cbd5e1; line-height: 1.5;">
+            <li><strong style="color:#67e8f9;">In-Game Addon (`WoWSimLab`):</strong> Copy <code style="color:#93c5fd;">addon/WoWSimLab</code> to <code style="color:#93c5fd;">Interface/AddOns/WoWSimLab</code>. Open your Bank once in-game (auto-caches all Bank items!), then type <code style="color:#34d399;">/simsync</code> to copy JSON (<kbd>Ctrl+C</kbd>) <strong>OR</strong> type <code style="color:#67e8f9;">/reload</code> and drag-and-drop <code style="color:#67e8f9;">WoWSimLab.lua</code> above!</li>
+            <li><strong style="color:#93c5fd;">Web Armory F12 Console:</strong> Open your WoW Forever Armory page, press <strong>F12 → Console</strong>, paste the Armory Console Extractor, and paste the JSON below.</li>
+          </ul>
           <div style="display: flex; gap: 8px; margin-top: 8px; flex-wrap: wrap;">
-            <button type="button" onclick="copyArmoryExtractorSnippet()" style="cursor: pointer; padding: 5px 10px; border-radius: 5px; font-size: 0.72rem; font-weight: 700; background: rgba(59,130,246,0.2); border: 1px solid #3b82f6; color: #93c5fd;">📋 Copy Armory Console Extractor</button>
-            <button type="button" onclick="loadSampleArmoryJson()" style="cursor: pointer; padding: 5px 10px; border-radius: 5px; font-size: 0.72rem; font-weight: 700; background: rgba(16,185,129,0.16); border: 1px solid #10b981; color: #34d399;">⚡ Load Sample (Cotto-Earthshaker Lvl 31)</button>
+            <button type="button" onclick="copyArmoryExtractorSnippet()" style="cursor: pointer; padding: 5px 10px; border-radius: 5px; font-size: 0.72rem; font-weight: 700; background: rgba(59,130,246,0.2); border: 1px solid #3b82f6; color: #93c5fd;">📋 Copy Web Armory F12 Extractor</button>
+            <button type="button" onclick="loadSampleArmoryJson()" style="cursor: pointer; padding: 5px 10px; border-radius: 5px; font-size: 0.72rem; font-weight: 700; background: rgba(16,185,129,0.16); border: 1px solid #10b981; color: #34d399;">⚡ Load Sample (Cotto-Earthshaker + Bags &amp; Bank)</button>
           </div>
         </div>
 
@@ -19573,16 +20404,44 @@
         </div>
 
         <div style="margin-bottom: 10px;">
-          <label style="font-size: 0.72rem; color: #94a3b8; display: block; margin-bottom: 4px;">Character JSON Payload:</label>
-          <textarea id="armory-json-input" rows="10" placeholder='{ "name": "Cotto-Earthshaker", "level": 31, "class": "shaman", "race": "tauren", "faction": "Horde", "pvpRank": 2, "professions": [...], "reputations": {...}, "gear": { "head": 286984, ... } }' style="width: 100%; background: #0b0e14; border: 1px solid #334155; color: #e2e8f0; border-radius: 5px; padding: 8px 10px; font-size: 0.73rem; font-family: monospace;"></textarea>
+          <label style="font-size: 0.72rem; color: #94a3b8; display: block; margin-bottom: 4px;">Paste <code style="color:#34d399;">/simsync</code> JSON, <code style="color:#67e8f9;">WoWSimLab.lua</code> content, or Armory JSON Payload:</label>
+          <textarea id="armory-json-input" rows="8" placeholder='Paste /simsync JSON, WoWSimLab.lua text, or Armory JSON here...' style="width: 100%; background: #0b0e14; border: 1px solid #334155; color: #e2e8f0; border-radius: 5px; padding: 8px 10px; font-size: 0.73rem; font-family: monospace;"></textarea>
         </div>
 
         <div id="armory-import-error" style="display: none; color: #f87171; font-size: 0.74rem; margin-bottom: 8px;"></div>
 
         <div style="display: flex; justify-content: flex-end; gap: 8px;">
           <button type="button" onclick="closeArmoryImportModal()" style="cursor: pointer; padding: 7px 14px; border-radius: 5px; font-size: 0.76rem; background: #1e293b; border: 1px solid #475569; color: #cbd5e1;">Cancel</button>
-          <button type="button" onclick="applyArmoryJsonImport()" style="cursor: pointer; padding: 7px 16px; border-radius: 5px; font-size: 0.78rem; font-weight: 700; background: linear-gradient(135deg, #2563eb, #1d4ed8); border: 1px solid #60a5fa; color: #fff;">✨ Import &amp; Set Starting Baseline</button>
+          <button type="button" onclick="applyArmoryJsonImport()" style="cursor: pointer; padding: 7px 16px; border-radius: 5px; font-size: 0.78rem; font-weight: 700; background: linear-gradient(135deg, #2563eb, #1d4ed8); border: 1px solid #60a5fa; color: #fff;">✨ Sync Account &amp; Set Starting Baseline</button>
         </div>
+      </div>
+
+      <!-- TAB 2: SYNCED BAGS & BANK INVENTORY VIEWER -->
+      <div id="armory-tab-inventory" style="display: none;">
+        <div style="display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; background: #0b0e14; border: 1px solid #1e293b; border-radius: 6px; padding: 10px 12px; margin-bottom: 12px;">
+          <div>
+            <div style="font-size: 0.8rem; font-weight: 700; color: #34d399;" id="inv-summary-title">Synced Inventory (Equipped + Bags + Bank)</div>
+            <div style="font-size: 0.71rem; color: #94a3b8;" id="inv-summary-subtitle">Sync via WoWSimLab.lua or /simsync to populate your owned bags &amp; bank items.</div>
+          </div>
+          <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
+            <button type="button" onclick="autoBuildBiSFromOwnedInventory()" style="cursor: pointer; padding: 6px 12px; border-radius: 5px; font-size: 0.74rem; font-weight: 700; background: rgba(16,185,129,0.22); border: 1px solid #10b981; color: #34d399;" title="Auto-equip the best combination of items for your active Spec using ONLY your Equipped + Bags + Bank items!">⚡ Auto-Equip Best From My Bags &amp; Bank</button>
+          </div>
+        </div>
+        <div id="synced-inventory-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 8px; max-height: 52vh; overflow-y: auto; padding-right: 4px;"></div>
+      </div>
+
+      <!-- TAB 3: MULTI-BUILD CHARACTER LOCKER -->
+      <div id="armory-tab-builds" style="display: none;">
+        <div style="background: #0b0e14; border: 1px solid #1e293b; border-radius: 6px; padding: 10px 12px; margin-bottom: 12px;">
+          <div style="font-size: 0.78rem; font-weight: 700; color: #fbbf24; margin-bottom: 6px;">Save Multiple Builds for This Character (Enhancement, Warden Tank, Elemental, Restoration, PvP)</div>
+          <div style="font-size: 0.71rem; color: #94a3b8; margin-bottom: 8px;">All builds share your synced character level, professions, reputations, PvP rank, and bag/bank inventory.</div>
+          <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+            <input type="text" id="new-char-build-name" placeholder="e.g. Enhancement 2H (Rage of the Storm), Warden Tank RFK, Resto Healer..." style="flex: 1; min-width: 220px; background: #151922; border: 1px solid #334155; color: #fff; border-radius: 5px; padding: 6px 10px; font-size: 0.75rem;" />
+            <button type="button" onclick="saveCurrentCharacterBuildFromModal()" style="cursor: pointer; padding: 6px 14px; border-radius: 5px; font-size: 0.75rem; font-weight: 700; background: linear-gradient(135deg, #059669, #047857); border: 1px solid #34d399; color: #fff;">💾 Save Current Build</button>
+            <button type="button" onclick="autoGenerateAllSpecBuildsFromOwned()" style="cursor: pointer; padding: 6px 12px; border-radius: 5px; font-size: 0.73rem; font-weight: 700; background: rgba(59,130,246,0.2); border: 1px solid #3b82f6; color: #93c5fd;" title="Automatically create &amp; save best builds for every spec of your class using your owned items!">✨ Auto-Generate All Spec Builds</button>
+          </div>
+        </div>
+        <div id="char-builds-locker-list" style="display: flex; flex-direction: column; gap: 8px; max-height: 48vh; overflow-y: auto;"></div>
       </div>
 
       <!-- TAB 2: MANUAL LIMITS EDITOR -->

@@ -1,0 +1,12 @@
+## Interface: 16001, 11504, 11505, 11404
+## Title: |cff00e5ffWoWSimLab|r |cffffd100[Simulation Verification Lab]|r
+## Notes: In-game guided benchmark testing, RXP-style waypoint navigation, and instant JSON state export for WoW Forever Sim.
+## Author: WoW Forever Team
+## Version: 1.0.0
+## SavedVariables: WoWSimLabDB
+
+Coords.lua
+Arrow.lua
+Gear.lua
+Export.lua
+WoWSimLab.lua
