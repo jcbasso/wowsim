@@ -5,14 +5,18 @@ WoWSimLab = WoWSimLab or {}
 -- Slash Commands registered at the very top so they are ALWAYS available
 SLASH_WOWSIMLAB1 = "/simlab"
 SLASH_WOWSIMLAB2 = "/wowsim"
-SLASH_WOWSIMLAB3 = "/simsync"
 SlashCmdList["WOWSIMLAB"] = function(msg)
     local cmd = (msg or ""):lower():match("^%s*(%S+)")
     if cmd == "reset" or cmd == "clear" then
         WoWSimLab:ResetTest()
     elseif cmd == "sync" or cmd == "export" then
-        local snap = WoWSimLab:CaptureCharacterSnapshot()
-        print(string.format("|cff00e5ff[WoWSimLab]|r Synced %s (Lvl %d): %d Bag items, %d Bank items, %d Professions, %d Reputations. Type |cffffd100/reload|r to write WoWSimLab.lua to disk or press Ctrl+C!", snap.name or "Character", snap.level or 1, #(snap.bags or {}), #(snap.bank or {}), #(snap.professions or {}), #(snap.ownedItems or {})))
+        local ok, snapOrErr = pcall(function() return WoWSimLab:CaptureCharacterSnapshot() end)
+        if not ok then
+            print("|cffff4444[WoWSimLab] Sync error:|r " .. tostring(snapOrErr))
+            return
+        end
+        local snap = snapOrErr
+        print(string.format("|cff00e5ff[WoWSimLab]|r Synced %s (Lvl %d): %d Bag items, %d Bank items, %d Professions, %d Owned total. Type |cffffd100/reload|r to save WoWSimLab.lua for Drag & Drop, or press Ctrl+C!", snap.name or "Character", snap.level or 1, #(snap.bags or {}), #(snap.bank or {}), #(snap.professions or {}), #(snap.ownedItems or {})))
         WoWSimLab:ShowExportPopup(snap)
     else
         WoWSimLab:ToggleUI()
@@ -21,7 +25,12 @@ end
 
 SLASH_SIMSYNC1 = "/simsync"
 SlashCmdList["SIMSYNC"] = function()
-    local snap = WoWSimLab:CaptureCharacterSnapshot()
+    local ok, snapOrErr = pcall(function() return WoWSimLab:CaptureCharacterSnapshot() end)
+    if not ok then
+        print("|cffff4444[WoWSimLab] Sync error:|r " .. tostring(snapOrErr))
+        return
+    end
+    local snap = snapOrErr
     print(string.format("|cff00e5ff[WoWSimLab]|r Synced %s (Lvl %d): %d Bag items, %d Bank items, %d Owned items total. Type |cffffd100/reload|r to save WoWSimLab.lua for Drag & Drop, or press Ctrl+C!", snap.name or "Character", snap.level or 1, #(snap.bags or {}), #(snap.bank or {}), #(snap.ownedItems or {})))
     WoWSimLab:ShowExportPopup(snap)
 end
