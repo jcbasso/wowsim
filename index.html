@@ -3272,27 +3272,86 @@
     }
   }
 
+  /* DESKTOP DEFAULT: Hide mobile-only short labels & collapse toggles */
+  .btn-label-short,
+  .mobile-hdr-toggle,
+  .modal-mobile-filter-toggle {
+    display: none;
+  }
+
   /* PHONE-SPECIFIC REFINEMENTS (< 640px) */
   @media (max-width: 640px) {
     header.studio-topbar {
       padding: 6px 8px;
+      gap: 5px;
+      position: static !important;
+    }
+    .topbar-row-header {
       gap: 6px;
+      flex-wrap: nowrap !important;
+    }
+    .brand {
+      gap: 6px !important;
+      min-width: 0;
+    }
+    .shaman-icon {
+      width: 28px !important;
+      height: 28px !important;
+      flex-shrink: 0;
     }
     .brand-title h1 {
-      font-size: 0.88rem !important;
+      font-size: 0.78rem !important;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
     .patch-version-pill {
       display: none !important;
     }
+    .topbar-header-actions {
+      gap: 4px !important;
+      flex-wrap: nowrap !important;
+      flex-shrink: 0;
+    }
+    .btn-label-full {
+      display: none !important;
+    }
+    .btn-label-short {
+      display: inline !important;
+    }
+    .btn-simlab-open {
+      padding: 5px 7px !important;
+      font-size: 0.7rem !important;
+      gap: 3px !important;
+    }
     #btn-simulate {
-      padding: 6px 14px !important;
-      font-size: 0.8rem !important;
+      padding: 5px 10px !important;
+      font-size: 0.74rem !important;
+    }
+    /* Mobile collapsible header summary bar */
+    .mobile-hdr-toggle {
+      display: flex !important;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid #334155;
+      border-radius: 6px;
+      padding: 5px 9px;
+      color: #e2e8f0;
+      font-size: 0.72rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    header.studio-topbar:not(.mobile-expanded) .character-identity-bar,
+    header.studio-topbar:not(.mobile-expanded) .master-actions-bar {
+      display: none !important;
     }
     .char-id-row {
       display: grid !important;
       grid-template-columns: 1fr 1fr;
       align-items: stretch;
-      gap: 6px !important;
+      gap: 5px !important;
       width: 100%;
     }
     .char-id-row .config-pill-lvl {
@@ -3300,15 +3359,15 @@
       justify-content: space-between;
     }
     .class-selector-pill {
-      padding: 4px 6px;
-      font-size: 0.74rem;
+      padding: 3px 6px;
+      font-size: 0.72rem;
       width: 100%;
       min-width: 0;
       overflow: hidden;
       gap: 4px !important;
     }
     .class-dropdown-select {
-      font-size: 0.74rem;
+      font-size: 0.72rem;
       min-width: 0;
       flex: 1;
       white-space: nowrap;
@@ -3318,31 +3377,48 @@
       flex: 1 1 100% !important;
     }
     .char-sheet-tabs {
-      grid-template-columns: repeat(2, 1fr) !important;
-      gap: 4px !important;
+      grid-template-columns: repeat(4, 1fr) !important;
+      gap: 3px !important;
+      margin-bottom: 6px !important;
     }
     .char-sheet-tab {
-      font-size: 0.72rem !important;
-      padding: 6px 6px !important;
+      font-size: 0.65rem !important;
+      padding: 5px 3px !important;
+      flex-direction: column;
+      gap: 2px !important;
+      text-align: center;
     }
-    .gear-slot-card {
-      min-width: 0 !important;
-      max-width: 100% !important;
-      flex-wrap: wrap !important;
-      gap: 8px !important;
+    .char-sheet-tab .tab-pill-badge {
+      display: none !important;
+    }
+    /* Compact Equipment Panel Header on Phone */
+    #view-gear .panel {
+      padding: 8px !important;
+    }
+    #view-gear .panel-header {
+      gap: 6px !important;
+      padding-bottom: 6px !important;
+      margin-bottom: 8px !important;
     }
     .toolbar-group {
-      flex-wrap: wrap !important;
+      flex-wrap: nowrap !important;
       width: 100% !important;
       gap: 4px !important;
+      padding: 3px 6px !important;
+    }
+    .toolbar-group-label {
+      font-size: 0.64rem !important;
     }
     .toolbar-select, .toolbar-group .filter-select {
       flex: 1 !important;
-      min-width: 120px !important;
+      min-width: 0 !important;
+      font-size: 0.7rem !important;
+      padding: 3px 5px !important;
     }
     .gear-toolbar-controls {
       width: 100% !important;
       margin-left: 0 !important;
+      gap: 5px !important;
     }
     .gear-subview-switcher {
       width: 100% !important;
@@ -3351,6 +3427,14 @@
     .gear-subview-btn {
       flex: 1 !important;
       justify-content: center !important;
+      font-size: 0.68rem !important;
+      padding: 5px 4px !important;
+    }
+    .gear-slot-card {
+      min-width: 0 !important;
+      max-width: 100% !important;
+      flex-wrap: wrap !important;
+      gap: 8px !important;
     }
     .gear-grid {
       grid-template-columns: 1fr !important;
@@ -3370,6 +3454,90 @@
       display: flex;
       flex-wrap: wrap;
       gap: 4px;
+    }
+    /* MOBILE ITEM PICKER MODAL: Maximizes visible item list! */
+    .modal-overlay {
+      padding: 8px !important;
+    }
+    .modal-box {
+      max-height: 92vh !important;
+    }
+    .modal-header {
+      padding: 8px 12px !important;
+    }
+    .modal-header h3 {
+      font-size: 0.85rem !important;
+    }
+    .modal-search-bar {
+      padding: 8px 10px !important;
+      gap: 6px !important;
+    }
+    .modal-input {
+      padding: 7px 10px !important;
+      font-size: 0.8rem !important;
+    }
+    .modal-mobile-filter-toggle {
+      display: inline-flex !important;
+      align-items: center;
+      gap: 4px;
+      background: #1e293b;
+      border: 1px solid #475569;
+      color: #fbbf24;
+      border-radius: 6px;
+      padding: 7px 9px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      white-space: nowrap;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+    .modal-filters-collapsible {
+      display: none !important;
+    }
+    .modal-filters-collapsible.open {
+      display: block !important;
+    }
+    .modal-chips-scroll {
+      flex-wrap: nowrap !important;
+      overflow-x: auto !important;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      width: 100%;
+      padding-bottom: 2px;
+    }
+    .modal-chips-scroll::-webkit-scrollbar { display: none; }
+    .modal-chips-scroll .chip {
+      flex-shrink: 0;
+      padding: 3px 8px !important;
+      font-size: 0.68rem !important;
+    }
+    .modal-dropdowns-row {
+      width: 100%;
+    }
+    .modal-dropdowns-row select {
+      flex: 1;
+      min-width: 0;
+    }
+    .modal-items-list {
+      padding: 8px 10px !important;
+      gap: 6px !important;
+    }
+    .picker-item-row {
+      flex-direction: column !important;
+      align-items: stretch !important;
+      padding: 8px 10px !important;
+      gap: 6px !important;
+    }
+    .picker-left {
+      gap: 8px !important;
+    }
+    .picker-item-row > div:last-child {
+      flex-direction: row !important;
+      justify-content: space-between !important;
+      align-items: center !important;
+      width: 100% !important;
+      padding-top: 4px;
+      border-top: 1px solid rgba(255,255,255,0.06);
     }
   }
 </style>
@@ -4006,14 +4174,16 @@
       </div>
 
       <!-- TOP RIGHT ACTION BUTTONS: SIMLAB VALIDATOR + MASTER SIMULATE -->
-      <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+      <div class="topbar-header-actions" style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
         <button id="btn-open-armory" type="button" class="btn-simlab-open" style="border-color: rgba(59, 130, 246, 0.55); color: #93c5fd;" onclick="openArmoryImportModal()" title="Sync your WoW Forever character via Drag &amp; Drop (WoWSimLab.lua), /simsync In-Game Addon JSON, or Armory Console Extractor (Equipped + Bags + Bank + Professions + Reputations + PvP Rank)">
           <span>🔄</span>
-          <span>Sync Account &amp; Armory</span>
+          <span class="btn-label-full">Sync Account &amp; Armory</span>
+          <span class="btn-label-short">Sync</span>
         </button>
         <button id="btn-open-simlab" type="button" class="btn-simlab-open" onclick="openSimLabDialog()" title="Import WoWSimLab In-Game Export & Combat Log to validate simulator math">
           <span>🧪</span>
-          <span>SimLab Validator</span>
+          <span class="btn-label-full">SimLab Validator</span>
+          <span class="btn-label-short">Lab</span>
         </button>
         <button id="btn-simulate" class="btn-sim" onclick="runOneStopSimulate()" style="position: relative; overflow: hidden;" title="Run Single-Target Simulation and 12-Scenario Benchmark Suite">
           <span id="btn-text">▶ SIMULATE</span>
@@ -4021,6 +4191,12 @@
         </button>
       </div>
     </div>
+
+    <!-- MOBILE HEADER COLLAPSE TOGGLE (Hidden on Desktop >= 641px) -->
+    <button type="button" id="btn-mobile-hdr-toggle" class="mobile-hdr-toggle" onclick="toggleMobileHeaderControls()">
+      <span id="mobile-hdr-summary">⚡ Lvl 1 Shaman • Enhancement • Auto-BiS</span>
+      <span id="mobile-hdr-chevron" style="color: #fbbf24; font-weight: 800;">⚙️ Edit ▾</span>
+    </button>
 
     <!-- ROW 2: CHARACTER IDENTITY CONTROLS (FACTION, CLASS, SPEC, LEVEL) -->
     <div class="character-identity-bar">
@@ -5061,52 +5237,60 @@
       </div>
       
       <div class="modal-search-bar">
-        <input type="text" id="modal-search-input" class="modal-input" placeholder="Search by name, stat, ilvl (e.g. Agility, Staff, Soran'ruk)..." oninput="filterModalItems()">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 8px; flex-wrap: wrap; gap: 6px;">
-          <div class="chips-row" style="margin-top: 0;">
-            <span class="chip active" id="chip-filter-all" onclick="setModalStatFilter('all')">All Stats</span>
-            <span class="chip" id="chip-filter-heal" onclick="setModalStatFilter('heal')">💚 +Healing / SP</span>
-            <span class="chip" id="chip-filter-agi" onclick="setModalStatFilter('agi')">Agility</span>
-            <span class="chip" id="chip-filter-ap" onclick="setModalStatFilter('ap')">Attack Power</span>
-            <span class="chip" id="chip-filter-str" onclick="setModalStatFilter('str')">Strength</span>
-            <span class="chip" id="chip-filter-sta" onclick="setModalStatFilter('sta')">Stamina</span>
-            <span class="chip" id="chip-filter-int" onclick="setModalStatFilter('int')">Intellect</span>
-            <span class="chip" id="chip-filter-spi" onclick="setModalStatFilter('spi')">Spirit</span>
-          </div>
-          <label style="font-size: 0.74rem; color: var(--gold-bright); display: flex; align-items: center; gap: 6px; cursor: pointer; user-select: none;">
-            <input type="checkbox" id="modal-hide-overlevel" checked onchange="renderModalItems()" style="cursor: pointer; accent-color: var(--gold-bright);">
-            <span>Hide items above Lvl <strong class="cur-lvl-label">19</strong></span>
-          </label>
+        <div class="modal-search-top-row" style="display: flex; align-items: center; gap: 8px;">
+          <input type="text" id="modal-search-input" class="modal-input" placeholder="Search by name, stat, ilvl..." oninput="filterModalItems()" style="flex: 1; min-width: 0;">
+          <button type="button" id="btn-modal-toggle-filters" class="modal-mobile-filter-toggle" onclick="toggleModalMobileFilters()">
+            <span>🎛️ Filters</span>
+            <span id="modal-filter-chevron">▾</span>
+          </button>
         </div>
-
-        <!-- MODAL SOURCE & PROFESSION FILTER CHIPS -->
-        <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 6px; margin-top: 8px; padding-top: 8px; border-top: 1px solid rgba(255,255,255,0.08);">
-          <div class="chips-row" style="margin-top: 0;">
-            <span class="chip active" id="chip-source-all" onclick="setModalSourceFilter('all')">All Sources</span>
-            <span class="chip" id="chip-source-dungeon" onclick="setModalSourceFilter('dungeon')">🏰 Dungeons</span>
-            <span class="chip" id="chip-source-quest" onclick="setModalSourceFilter('quest')">📜 Quests</span>
-            <span class="chip" id="chip-source-crafted" onclick="setModalSourceFilter('crafted')">🔨 Crafted</span>
-            <span class="chip" id="chip-source-world" onclick="setModalSourceFilter('world')">🌍 World (BoE)</span>
-            <span class="chip" id="chip-source-pvp" onclick="setModalSourceFilter('pvp')">⚔️ PvP / Rep</span>
-            <span class="chip" id="chip-source-vendor" onclick="setModalSourceFilter('vendor')">💰 Vendors</span>
+        <div class="modal-filters-collapsible" id="modal-filters-collapsible">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 6px; flex-wrap: wrap; gap: 6px;">
+            <div class="chips-row modal-chips-scroll" style="margin-top: 0;">
+              <span class="chip active" id="chip-filter-all" onclick="setModalStatFilter('all')">All Stats</span>
+              <span class="chip" id="chip-filter-heal" onclick="setModalStatFilter('heal')">💚 +Healing / SP</span>
+              <span class="chip" id="chip-filter-agi" onclick="setModalStatFilter('agi')">Agility</span>
+              <span class="chip" id="chip-filter-ap" onclick="setModalStatFilter('ap')">Attack Power</span>
+              <span class="chip" id="chip-filter-str" onclick="setModalStatFilter('str')">Strength</span>
+              <span class="chip" id="chip-filter-sta" onclick="setModalStatFilter('sta')">Stamina</span>
+              <span class="chip" id="chip-filter-int" onclick="setModalStatFilter('int')">Intellect</span>
+              <span class="chip" id="chip-filter-spi" onclick="setModalStatFilter('spi')">Spirit</span>
+            </div>
+            <label style="font-size: 0.74rem; color: var(--gold-bright); display: flex; align-items: center; gap: 6px; cursor: pointer; user-select: none;">
+              <input type="checkbox" id="modal-hide-overlevel" checked onchange="renderModalItems()" style="cursor: pointer; accent-color: var(--gold-bright);">
+              <span>Hide items above Lvl <strong class="cur-lvl-label">19</strong></span>
+            </label>
           </div>
 
-          <div style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
-            <select id="modal-prof-filter" class="filter-select" onchange="renderModalItems()" style="font-size: 0.72rem; padding: 2px 6px;">
-              <option value="my_profs" selected>🎯 Usable (My Professions)</option>
-              <option value="all">🌐 All Professions (Include Unobtainable)</option>
-              <option value="engineering">🛠️ Engineering</option>
-              <option value="leatherworking">🧵 Leatherworking</option>
-              <option value="tailoring">🧶 Tailoring</option>
-              <option value="blacksmithing">🔨 Blacksmithing</option>
-              <option value="enchanting">✨ Enchanting</option>
-              <option value="alchemy">🧪 Alchemy</option>
-            </select>
-            <select id="modal-binding-filter" class="filter-select" onchange="renderModalItems()" style="font-size: 0.72rem; padding: 2px 6px;">
-              <option value="all">BoP & BoE</option>
-              <option value="bop">BoP Only</option>
-              <option value="boe">BoE Only (Tradeable)</option>
-            </select>
+          <!-- MODAL SOURCE & PROFESSION FILTER CHIPS -->
+          <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 6px; margin-top: 6px; padding-top: 6px; border-top: 1px solid rgba(255,255,255,0.08);">
+            <div class="chips-row modal-chips-scroll" style="margin-top: 0;">
+              <span class="chip active" id="chip-source-all" onclick="setModalSourceFilter('all')">All Sources</span>
+              <span class="chip" id="chip-source-dungeon" onclick="setModalSourceFilter('dungeon')">🏰 Dungeons</span>
+              <span class="chip" id="chip-source-quest" onclick="setModalSourceFilter('quest')">📜 Quests</span>
+              <span class="chip" id="chip-source-crafted" onclick="setModalSourceFilter('crafted')">🔨 Crafted</span>
+              <span class="chip" id="chip-source-world" onclick="setModalSourceFilter('world')">🌍 World (BoE)</span>
+              <span class="chip" id="chip-source-pvp" onclick="setModalSourceFilter('pvp')">⚔️ PvP / Rep</span>
+              <span class="chip" id="chip-source-vendor" onclick="setModalSourceFilter('vendor')">💰 Vendors</span>
+            </div>
+
+            <div class="modal-dropdowns-row" style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
+              <select id="modal-prof-filter" class="filter-select" onchange="renderModalItems()" style="font-size: 0.72rem; padding: 2px 6px;">
+                <option value="my_profs" selected>🎯 Usable (My Professions)</option>
+                <option value="all">🌐 All Professions (Include Unobtainable)</option>
+                <option value="engineering">🛠️ Engineering</option>
+                <option value="leatherworking">🧵 Leatherworking</option>
+                <option value="tailoring">🧶 Tailoring</option>
+                <option value="blacksmithing">🔨 Blacksmithing</option>
+                <option value="enchanting">✨ Enchanting</option>
+                <option value="alchemy">🧪 Alchemy</option>
+              </select>
+              <select id="modal-binding-filter" class="filter-select" onchange="renderModalItems()" style="font-size: 0.72rem; padding: 2px 6px;">
+                <option value="all">BoP & BoE</option>
+                <option value="bop">BoP Only</option>
+                <option value="boe">BoE Only (Tradeable)</option>
+              </select>
+            </div>
           </div>
         </div>
       </div>
@@ -11081,6 +11265,7 @@
 
     // --- GEAR RENDERING WITH AUTHENTIC WOW ICONS & TOOLTIPS ---
     function renderGearSlots() {
+      if (typeof updateMobileHeaderSummary === 'function') updateMobileHeaderSummary();
       const container = document.getElementById('gear-grid-container');
       container.innerHTML = '';
 
@@ -12146,6 +12331,41 @@
       return catalog[slot] || [];
     }
 
+    // --- MOBILE HEADER & ITEM PICKER COLLAPSE HELPERS ---
+    function toggleMobileHeaderControls() {
+      const hdr = document.querySelector('header.studio-topbar');
+      const chev = document.getElementById('mobile-hdr-chevron');
+      if (!hdr) return;
+      const isExpanded = hdr.classList.toggle('mobile-expanded');
+      if (chev) chev.textContent = isExpanded ? '✕ Close ▴' : '⚙️ Edit ▾';
+    }
+
+    function updateMobileHeaderSummary() {
+      const el = document.getElementById('mobile-hdr-summary');
+      if (!el) return;
+      const lvl = (typeof getCurrentPlayerLevel === 'function') ? getCurrentPlayerLevel() : (parseInt(document.getElementById('cfg-level')?.value) || 1);
+      const clsDef = (typeof WOW_CLASSES !== 'undefined' && WOW_CLASSES[activeCharacterClass]) ? WOW_CLASSES[activeCharacterClass] : null;
+      const clsName = clsDef ? clsDef.name : (activeCharacterClass || 'Shaman');
+      const specDef = clsDef && clsDef.specs ? clsDef.specs[activeCharacterSpec] : null;
+      const specName = specDef ? specDef.name : (activeCharacterSpec || '');
+      const raceSel = document.getElementById('cfg-active-race');
+      let raceName = '';
+      if (raceSel && raceSel.selectedOptions && raceSel.selectedOptions[0]) {
+        raceName = raceSel.selectedOptions[0].textContent.replace(/^[^A-Za-z]+/, '').trim();
+      }
+      const parts = [`Lvl ${lvl}`, [raceName, clsName].filter(Boolean).join(' ')];
+      if (specName) parts.push(specName);
+      el.textContent = `⚡ ${parts.join(' • ')}`;
+    }
+
+    function toggleModalMobileFilters() {
+      const box = document.getElementById('modal-filters-collapsible');
+      const chev = document.getElementById('modal-filter-chevron');
+      if (!box) return;
+      const isOpen = box.classList.toggle('open');
+      if (chev) chev.textContent = isOpen ? '▴' : '▾';
+    }
+
     // --- INTERACTIVE ITEM PICKER MODAL ---
     function openPickerModal(slot) {
       activeSlotPicking = (slot === 'ranged') ? 'relic' : slot;
@@ -12163,9 +12383,15 @@
       }
       if (document.getElementById('modal-prof-filter')) document.getElementById('modal-prof-filter').value = 'my_profs';
       if (document.getElementById('modal-binding-filter')) document.getElementById('modal-binding-filter').value = 'all';
+
+      // Collapse mobile filters by default when opening so the item list gets maximum vertical height
+      const filterBox = document.getElementById('modal-filters-collapsible');
+      const filterChev = document.getElementById('modal-filter-chevron');
+      if (filterBox) filterBox.classList.remove('open');
+      if (filterChev) filterChev.textContent = '▾';
       
       modal.classList.add('open');
-      searchInput.focus();
+      if (window.innerWidth > 640) searchInput.focus();
       renderModalItems();
     }
 
