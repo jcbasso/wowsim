@@ -12341,21 +12341,27 @@
     }
 
     function updateMobileHeaderSummary() {
-      const el = document.getElementById('mobile-hdr-summary');
-      if (!el) return;
-      const lvl = (typeof getCurrentPlayerLevel === 'function') ? getCurrentPlayerLevel() : (parseInt(document.getElementById('cfg-level')?.value) || 1);
-      const clsDef = (typeof WOW_CLASSES !== 'undefined' && WOW_CLASSES[activeCharacterClass]) ? WOW_CLASSES[activeCharacterClass] : null;
-      const clsName = clsDef ? clsDef.name : (activeCharacterClass || 'Shaman');
-      const specDef = clsDef && clsDef.specs ? clsDef.specs[activeCharacterSpec] : null;
-      const specName = specDef ? specDef.name : (activeCharacterSpec || '');
-      const raceSel = document.getElementById('cfg-active-race');
-      let raceName = '';
-      if (raceSel && raceSel.selectedOptions && raceSel.selectedOptions[0]) {
-        raceName = raceSel.selectedOptions[0].textContent.replace(/^[^A-Za-z]+/, '').trim();
+      try {
+        const el = document.getElementById('mobile-hdr-summary');
+        if (!el) return;
+        const lvl = (typeof getCurrentPlayerLevel === 'function') ? getCurrentPlayerLevel() : (parseInt(document.getElementById('cfg-level')?.value) || 1);
+        const clsKey = (typeof activeCharacterClass !== 'undefined' && activeCharacterClass) ? activeCharacterClass : 'shaman';
+        const clsDef = (typeof WOW_CLASSES !== 'undefined' && WOW_CLASSES[clsKey]) ? WOW_CLASSES[clsKey] : null;
+        const clsName = clsDef ? clsDef.name : clsKey;
+        const specId = (typeof currentCharacterSpec !== 'undefined') ? currentCharacterSpec : '';
+        const specDef = (clsDef && Array.isArray(clsDef.specs)) ? clsDef.specs.find(sp => sp.id === specId) : null;
+        const specName = specDef ? specDef.name : specId;
+        const raceSel = document.getElementById('cfg-active-race');
+        let raceName = '';
+        if (raceSel && raceSel.selectedOptions && raceSel.selectedOptions[0]) {
+          raceName = raceSel.selectedOptions[0].textContent.replace(/^[^A-Za-z]+/, '').trim();
+        }
+        const parts = [`Lvl ${lvl}`, [raceName, clsName].filter(Boolean).join(' ')];
+        if (specName) parts.push(specName);
+        el.textContent = `⚡ ${parts.join(' • ')}`;
+      } catch (e) {
+        console.warn('updateMobileHeaderSummary failed:', e);
       }
-      const parts = [`Lvl ${lvl}`, [raceName, clsName].filter(Boolean).join(' ')];
-      if (specName) parts.push(specName);
-      el.textContent = `⚡ ${parts.join(' • ')}`;
     }
 
     function toggleModalMobileFilters() {
